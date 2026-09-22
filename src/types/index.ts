@@ -13,6 +13,7 @@ export interface User {
 export type StudentGoal =
   | 'Emagrecimento'
   | 'Hipertrofia'
+  | 'Definição'
   | 'Condicionamento'
   | 'Força'
   | 'Saúde'

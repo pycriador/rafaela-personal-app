@@ -9,6 +9,8 @@ export interface IUserRepository {
   getByEmail(email: string): Promise<User | null>;
   create(user: User): Promise<User>;
   update(id: string, updates: Partial<User>): Promise<User | null>;
+  delete(id: string): Promise<boolean>;
+  deleteByStudentProfileId(studentProfileId: string): Promise<boolean>;
 }
 
 function mapFromDb(row: any): User {
@@ -127,6 +129,36 @@ export class SupabaseUserRepository implements IUserRepository {
     users[index] = { ...users[index], ...updates };
     setItem(STORAGE_KEYS.USERS, users);
     return updatedUser || users[index];
+  }
+
+  async delete(id: string): Promise<boolean> {
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('users').delete().eq('id', id);
+      } catch (err) {
+        console.error('Supabase delete user error:', err);
+      }
+    }
+
+    const users = await this.getAll();
+    const filtered = users.filter((u) => u.id !== id);
+    setItem(STORAGE_KEYS.USERS, filtered);
+    return true;
+  }
+
+  async deleteByStudentProfileId(studentProfileId: string): Promise<boolean> {
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('users').delete().eq('student_profile_id', studentProfileId);
+      } catch (err) {
+        console.error('Supabase delete user by studentProfileId error:', err);
+      }
+    }
+
+    const users = await this.getAll();
+    const filtered = users.filter((u) => u.studentProfileId !== studentProfileId);
+    setItem(STORAGE_KEYS.USERS, filtered);
+    return true;
   }
 }
 
