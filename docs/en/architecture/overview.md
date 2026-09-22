@@ -60,6 +60,8 @@ Mobile-first web platform for a personal trainer and her students. Single-traine
 | exercise-catalog | Exercise catalog + frames | [../application/exercise-catalog.md](../application/exercise-catalog.md) |
 | auth | Mock auth + route guards | [../application/auth.md](../application/auth.md) |
 | exercise-frame-player | Animated frames + rest timer | [../application/exercise-frame-player.md](../application/exercise-frame-player.md) |
+| workout-templates | Template sets + versioning | [../application/workout-templates.md](../application/workout-templates.md) |
+| student-chat | Trainer↔student messages | [../application/student-chat.md](../application/student-chat.md) |
 
 ## Main Data Flows
 
@@ -69,8 +71,11 @@ Personal / Student UI
         ▼
 repositories (hybrid)
    ├── Supabase (REST) ──────────► Supabase project (PostgreSQL)
-   └── localStorage (fallback / cache)
+   │      └── Storage bucket `student-avatars` (avatar photos)
+   └── localStorage / sessionStorage (fallback, cache, simulation sandbox)
 ```
+
+> In "Test as student" simulation mode, repository reads check a `sessionStorage` sandbox (`sim_sandbox_*`) first, and writes land in the sandbox only — Supabase writes are skipped and permanent localStorage is never mutated.
 
 ## Diagram
 
@@ -78,16 +83,20 @@ repositories (hybrid)
 flowchart LR
   Browser[Browser - GitHub Pages SPA]
   FE[React SPA - portals]
-  Auth[Mock auth - localStorage]
+  Auth[Mock auth - localStorage + simulation mode]
   Repos[repositories - hybrid]
   SB[(Supabase - PostgreSQL/REST)]
+  St[(Supabase Storage - student-avatars)]
   LS[(localStorage)]
+  SS{{sessionStorage - sim sandbox}}
   Frames[Local frame assets]
   Browser --> FE
   FE --> Auth
   FE --> Repos
   Repos --> SB
+  Repos --> St
   Repos --> LS
+  Repos --> SS
   FE --> Frames
 ```
 
@@ -95,7 +104,8 @@ flowchart LR
 
 | Dependency | Type | Purpose | Classification |
 | --- | --- | --- | --- |
-| Supabase project | runtime | Data persistence (10 tables) | Confirmed |
+| Supabase project | runtime | Data persistence (10+ tables via migration; template/chat tables best-effort) | Confirmed |
+| Supabase Storage | runtime (avatar photos) | Bucket `student-avatars`, path `avatars/*.jpg`; local Data-URL fallback | Confirmed |
 | GitHub Pages | runtime | Static hosting | Confirmed |
 | @bryllim/workout-guide | build/runtime | Exercise catalog + frames | Confirmed |
 | Free Exercise DB (yuhonas) | data | Reference images (The Unlicense) | Confirmed |
@@ -117,6 +127,8 @@ flowchart LR
 | --- | --- | --- |
 | Supabase unreachable | Data reads fail | repositories fall back to localStorage |
 | Supabase unconfigured | No REST configured | repositories use localStorage only |
+| Supabase Storage upload fails | Avatar persisted with Data URL instead | Local optimistic write; `console.warn` |
+| New tables missing in migration | `student_messages`/`workout_templates` queries error | Fallback to localStorage lists |
 | GitHub Pages down | App unreachable | None (static hosting) |
 | localStorage unavailable | Reads/writes fail silently | Repository returns fallback data |
 

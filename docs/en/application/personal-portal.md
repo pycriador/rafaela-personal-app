@@ -32,11 +32,17 @@ Trainer-side experience of the Rafaela Personal App: manage students, exercises,
 | Student list/detail with tabs and URL pagination | `StudentsListPage.tsx`, `StudentDetailPage.tsx` | Confirmed |
 | Student create/edit intake | `StudentCreateEditPage.tsx` | Confirmed |
 | Workout builder with granular permissions | `WorkoutBuilderPage.tsx` | Confirmed |
-| Exercise catalog CRUD + frame player | `ExercisesPage.tsx` | Confirmed |
+| Workout template sets (CRUD, versioning, archive) | `WorkoutTemplatesPage.tsx` + `WorkoutTemplatesModal.tsx` | Confirmed |
+| Exercise catalog CRUD + frame player + media assignment | `ExercisesPage.tsx`, `ExerciseMediaModal.tsx` | Confirmed |
 | Nutrition management CRUD | `NutritionManagementPage.tsx` | Confirmed |
 | Evolution overview (weight/load charts) | `EvolutionOverviewPage.tsx` | Confirmed |
 | Reports + CSV + JSON backup exports | `ReportsPage.tsx`, `SettingsPage.tsx` | Confirmed |
 | Settings: theme, DB counters, backup with hashed passwords | `SettingsPage.tsx` | Confirmed |
+| Student full management: photos (Supabase Storage), password reset, archive/delete | `StudentManagerSection.tsx` | Confirmed |
+| Trainer↔student message thread | `StudentTrainerChatSection.tsx` in `StudentDetailPage` | Confirmed |
+| Session feedback (text, tag, rating) | `StudentDetailPage.tsx` (`updateSessionFeedback`) | Confirmed |
+| Plan cycle versioning + activate version | `StudentDetailPage.tsx` (`activatePlanVersion`) | Confirmed |
+| "Test as student" simulation launcher | `PersonalLayout.tsx` (`enterStudentSimulation`) | Confirmed |
 
 ## Non-Responsibilities
 
@@ -51,7 +57,8 @@ Trainer-side experience of the Rafaela Personal App: manage students, exercises,
 | `/personal/students` | Student list |
 | `/personal/students/new` | Create student |
 | `/personal/students/:id` | Student detail |
-| `/personal/exercises` | Exercise catalog |
+| `/personal/exercises` | Exercise catalog + media |
+| `/personal/templates` | Workout template sets |
 | `/personal/workouts/new` | Workout builder |
 | `/personal/nutrition` | Nutrition management |
 | `/personal/evolution` | Evolution overview |

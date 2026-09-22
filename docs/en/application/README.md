@@ -25,12 +25,14 @@ Describe application components, responsibilities, interfaces, configuration, an
 
 | Component | Responsibility | Doc |
 | --- | --- | --- |
-| personal-portal | Trainer UX (10 routes) | [personal-portal.md](personal-portal.md) |
+| personal-portal | Trainer UX (11 routes) | [personal-portal.md](personal-portal.md) |
 | student-portal | Student UX (8 routes) | [student-portal.md](student-portal.md) |
-| repositories | Hybrid data access (8 repositories) | [repositories.md](repositories.md) |
+| repositories | Hybrid data access (10 repositories) | [repositories.md](repositories.md) |
 | exercise-catalog | 302-exercise catalog + frames | [exercise-catalog.md](exercise-catalog.md) |
 | auth | Mock auth + route guards | [auth.md](auth.md) |
 | exercise-frame-player | Animated frames + rest timer | [exercise-frame-player.md](exercise-frame-player.md) |
+| workout-templates | Template sets + versioning | [workout-templates.md](workout-templates.md) |
+| student-chat | Trainer↔student messages | [student-chat.md](student-chat.md) |
 
 ## Related
 

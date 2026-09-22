@@ -28,11 +28,13 @@ Hybrid data-access layer abstracting the data source: Supabase (PostgreSQL REST)
 
 | Responsibility | Evidence | Classification |
 | --- | --- | --- |
-| CRUD + filtered reads for all domains | `src/repositories/*.ts` (8 repositories) | Confirmed |
+| CRUD + filtered reads for all domains | `src/repositories/*.ts` (10 repositories) | Confirmed |
 | Supabase fallback to localStorage on error/unconfigured | `src/lib/supabase.ts` (`isSupabaseConfigured`) | Confirmed |
 | snake_case ↔ camelCase mapping | `mapFromDb`/`mapToDb` in repositories | Confirmed |
 | In-memory filter application after fetch/search/status/etc. | Repository `getAll` implementations | Confirmed |
 | localStorage seeding with initial data | `src/repositories/storage.ts` (`initStorage`) | Confirmed |
+| Simulation sandbox read-through and shadow writes | `storage.ts` (`isSimulationModeActive`, `sim_sandbox_*`) | Confirmed |
+| Skip Supabase writes while simulating | Repositories gate on `isSimulationModeActive()` | Confirmed |
 
 ## Repository inventory
 
@@ -45,7 +47,11 @@ Hybrid data-access layer abstracting the data source: Supabase (PostgreSQL REST)
 | `nutritionRepository` | `nutrition_plans` | `rafaela_app_nutrition_v1` |
 | `activityRepository` | `activity_logs` | `rafaela_app_activities_v1` |
 | `notificationRepository` | `notifications` | `rafaela_app_notifications_v1` |
-| `storage.ts` | — | seeds + `getItem`/`setItem` helpers |
+| `messageRepository` | `student_messages` (best-effort) | `rafaela_app_student_messages_v1` |
+| `workoutTemplateRepository` | `workout_templates` (best-effort) | `rafaela_app_workout_templates_v1` |
+| `storage.ts` | — | seeds + `getItem`/`setItem` helpers + sandbox |
+
+> `student_messages` and `workout_templates` are **not part of the migration SQL**. Queries against them fail in a fresh Supabase and transparently fall back to the localStorage lists (see [../contracts/supabase-rest.md](../contracts/supabase-rest.md)).
 
 ## Behavior
 
@@ -55,6 +61,8 @@ Hybrid data-access layer abstracting the data source: Supabase (PostgreSQL REST)
 | Query errors or returns nothing | Falls back to localStorage list | Confirmed |
 | `isSupabaseConfigured` false | localStorage only | Confirmed |
 | Writes | Written to Supabase (best-effort) AND localStorage | Confirmed |
+| Simulation active (`simulation mode`) | Supabase writes skipped; `getItem`/`setItem` route through `sim_sandbox_*` in sessionStorage | Confirmed |
+| Supabase tables missing from migration | Best-effort queries fail silently; localStorage wins | Confirmed |
 
 ## Technology
 

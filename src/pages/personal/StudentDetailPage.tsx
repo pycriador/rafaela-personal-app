@@ -58,7 +58,28 @@ import {
   FoodItem,
   WorkoutTemplate,
   DayOfWeek,
+  WorkoutDay,
 } from '../../types';
+
+const ALL_DAYS_OF_WEEK: DayOfWeek[] = [
+  'Segunda',
+  'Terça',
+  'Quarta',
+  'Quinta',
+  'Sexta',
+  'Sábado',
+  'Domingo',
+];
+
+const DAY_ORDER: Record<DayOfWeek, number> = {
+  Segunda: 1,
+  Terça: 2,
+  Quarta: 3,
+  Quinta: 4,
+  Sexta: 5,
+  Sábado: 6,
+  Domingo: 7,
+};
 
 export const StudentDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -96,9 +117,17 @@ export const StudentDetailPage: React.FC = () => {
   const [newCycleName, setNewCycleName] = useState('');
   const [cloneCurrentCycle, setCloneCurrentCycle] = useState(true);
 
-  // Template central modal states
+  // Template central modal states & day assignment
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [targetTemplateDay, setTargetTemplateDay] = useState<DayOfWeek | null>(null);
+  const [selectedTemplateForAssignment, setSelectedTemplateForAssignment] = useState<WorkoutTemplate | null>(null);
+  const [isAssignDayModalOpen, setIsAssignDayModalOpen] = useState(false);
+  const [assignmentMode, setAssignmentMode] = useState<'existing' | 'new'>('existing');
+  const [selectedExistingDayId, setSelectedExistingDayId] = useState<string>('');
+  const [selectedNewDayOfWeek, setSelectedNewDayOfWeek] = useState<DayOfWeek>('Segunda');
+  const [assignmentDayName, setAssignmentDayName] = useState<string>('');
+  const [assignmentMuscleFocus, setAssignmentMuscleFocus] = useState<string>('');
+  const [replaceOrAppend, setReplaceOrAppend] = useState<'replace' | 'append'>('replace');
 
   // Tab and session pagination synced with URL
   const activeTab = searchParams.get('tab') || 'resumo';
@@ -235,33 +264,123 @@ export const StudentDetailPage: React.FC = () => {
   };
 
   // Workout Template Handlers
-  const handleSelectTemplate = async (template: WorkoutTemplate) => {
-    if (!student || !workoutPlan) return;
+  const handleSelectTemplate = (template: WorkoutTemplate) => {
+    setSelectedTemplateForAssignment(template);
+    setIsTemplateModalOpen(false);
+
+    const currentPlan = allStudentPlans.find((p) => p.id === selectedPlanId) || workoutPlan;
+    const existingDays = currentPlan?.days || [];
+
+    if (targetTemplateDay) {
+      const match = existingDays.find((d) => d.dayOfWeek === targetTemplateDay);
+      if (match) {
+        setAssignmentMode('existing');
+        setSelectedExistingDayId(match.id);
+        setSelectedNewDayOfWeek(targetTemplateDay);
+      } else {
+        setAssignmentMode('new');
+        setSelectedNewDayOfWeek(targetTemplateDay);
+        if (existingDays.length > 0) {
+          setSelectedExistingDayId(existingDays[0].id);
+        }
+      }
+    } else if (existingDays.length > 0) {
+      setAssignmentMode('existing');
+      setSelectedExistingDayId(existingDays[0].id);
+      const usedDays = new Set(existingDays.map((d) => d.dayOfWeek));
+      const firstFreeDay = ALL_DAYS_OF_WEEK.find((d) => !usedDays.has(d)) || 'Segunda';
+      setSelectedNewDayOfWeek(firstFreeDay);
+    } else {
+      setAssignmentMode('new');
+      setSelectedNewDayOfWeek('Segunda');
+    }
+
+    setAssignmentDayName(template.name.split(' - ')[0] || template.name);
+    setAssignmentMuscleFocus(template.muscleFocus || template.category);
+    setReplaceOrAppend('replace');
+    setIsAssignDayModalOpen(true);
+  };
+
+  const handleConfirmAssignTemplate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!student || !selectedTemplateForAssignment) return;
 
     try {
-      const updatedDays = [...workoutPlan.days];
-      const targetDay = targetTemplateDay || (updatedDays[0]?.dayOfWeek || 'Segunda');
-      const dayIdx = updatedDays.findIndex((d) => d.dayOfWeek === targetDay);
+      const currentPlan = allStudentPlans.find((p) => p.id === selectedPlanId) || workoutPlan;
 
-      if (dayIdx >= 0) {
-        updatedDays[dayIdx] = {
-          ...updatedDays[dayIdx],
-          name: template.name.split(' - ')[0] || updatedDays[dayIdx].name,
-          muscleFocus: template.muscleFocus || updatedDays[dayIdx].muscleFocus,
-          exercises: [...template.exercises],
-        };
+      let basePlan: WorkoutPlan;
+      if (currentPlan) {
+        basePlan = { ...currentPlan };
       } else {
-        updatedDays.push({
-          id: `day-${Date.now()}`,
-          name: template.name,
-          dayOfWeek: targetDay,
-          muscleFocus: template.muscleFocus,
-          exercises: [...template.exercises],
-        });
+        basePlan = {
+          id: `plan-${Date.now()}`,
+          studentId: student.id,
+          trainerId: 'user-rafaela',
+          name: `Treino - ${student.name}`,
+          active: true,
+          version: 1,
+          cycleName: 'Fase 1 - Inicial',
+          validFrom: new Date().toISOString().split('T')[0],
+          days: [],
+          createdAt: new Date().toISOString().split('T')[0],
+          updatedAt: new Date().toISOString().split('T')[0],
+        };
       }
 
+      let updatedDays = [...basePlan.days];
+      let assignedDayNameResult = '';
+
+      if (assignmentMode === 'existing') {
+        const dayIdx = updatedDays.findIndex((d) => d.id === selectedExistingDayId);
+        if (dayIdx >= 0) {
+          const currentDay = updatedDays[dayIdx];
+          assignedDayNameResult = `${currentDay.dayOfWeek} (${currentDay.name})`;
+
+          if (replaceOrAppend === 'replace') {
+            updatedDays[dayIdx] = {
+              ...currentDay,
+              name: assignmentDayName.trim() || selectedTemplateForAssignment.name,
+              muscleFocus: assignmentMuscleFocus.trim() || selectedTemplateForAssignment.muscleFocus,
+              exercises: [...selectedTemplateForAssignment.exercises],
+            };
+          } else {
+            updatedDays[dayIdx] = {
+              ...currentDay,
+              exercises: [...currentDay.exercises, ...selectedTemplateForAssignment.exercises],
+            };
+          }
+        }
+      } else {
+        // Mode: 'new'
+        assignedDayNameResult = `${selectedNewDayOfWeek}`;
+        const newDay: WorkoutDay = {
+          id: `day-${Date.now()}`,
+          name: assignmentDayName.trim() || selectedTemplateForAssignment.name,
+          dayOfWeek: selectedNewDayOfWeek,
+          muscleFocus: assignmentMuscleFocus.trim() || selectedTemplateForAssignment.muscleFocus,
+          exercises: [...selectedTemplateForAssignment.exercises],
+        };
+
+        const existingWithSameDayIdx = updatedDays.findIndex((d) => d.dayOfWeek === selectedNewDayOfWeek);
+        if (existingWithSameDayIdx >= 0) {
+          if (replaceOrAppend === 'replace') {
+            updatedDays[existingWithSameDayIdx] = newDay;
+          } else {
+            updatedDays[existingWithSameDayIdx] = {
+              ...updatedDays[existingWithSameDayIdx],
+              exercises: [...updatedDays[existingWithSameDayIdx].exercises, ...selectedTemplateForAssignment.exercises],
+            };
+          }
+        } else {
+          updatedDays.push(newDay);
+        }
+      }
+
+      // Sort days of the week chronologically
+      updatedDays.sort((a, b) => (DAY_ORDER[a.dayOfWeek] || 99) - (DAY_ORDER[b.dayOfWeek] || 99));
+
       const updatedPlan: WorkoutPlan = {
-        ...workoutPlan,
+        ...basePlan,
         days: updatedDays,
         updatedAt: new Date().toISOString().split('T')[0],
       };
@@ -270,10 +389,26 @@ export const StudentDetailPage: React.FC = () => {
       setWorkoutPlan(updatedPlan);
       const updatedList = await workoutRepository.getPlansByStudentId(student.id);
       setAllStudentPlans(updatedList);
+      if (selectedPlanId && selectedPlanId === updatedPlan.id) {
+        setSelectedPlanId(updatedPlan.id);
+      }
 
-      success(`Série "${template.name}" vinculada ao dia ${targetDay}!`);
+      await activityRepository.log({
+        actorId: 'user-rafaela',
+        actorName: 'Rafaela Personal',
+        actorRole: 'personal',
+        action: 'Série modelo vinculada ao treino',
+        description: `Rafaela adicionou o modelo "${selectedTemplateForAssignment.name}" para ${student.name} no treino de ${assignedDayNameResult}.`,
+        studentId: student.id,
+        iconType: 'dumbbell',
+      });
+
+      success(`Série "${selectedTemplateForAssignment.name}" vinculada com sucesso no treino de ${assignedDayNameResult}!`);
+      setIsAssignDayModalOpen(false);
+      setSelectedTemplateForAssignment(null);
+      setTargetTemplateDay(null);
     } catch (err) {
-      toastError('Erro ao vincular série modelo.');
+      toastError('Erro ao vincular série modelo ao cronograma.');
     }
   };
 
@@ -945,6 +1080,22 @@ export const StudentDetailPage: React.FC = () => {
                         </p>
                       </div>
                     </div>
+
+                    {isPlanActive && (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => {
+                          setTargetTemplateDay(day.dayOfWeek);
+                          setIsTemplateModalOpen(true);
+                        }}
+                        leftIcon={<Sparkles className="w-3.5 h-3.5 text-emerald-500" />}
+                        className="text-xs"
+                        title={`Carregar uma série pronta para ${day.dayOfWeek}`}
+                      >
+                        Carregar Série Aqui
+                      </Button>
+                    )}
                   </div>
 
                   <div className="p-4 divide-y divide-slate-100 dark:divide-dark-border/60">
@@ -1928,6 +2079,276 @@ export const StudentDetailPage: React.FC = () => {
         title="Central de Séries Modelos Pré-Cadastradas"
         description={`Selecione uma série pré-montada para vincular a ${student.name}${targetTemplateDay ? ` no treino de ${targetTemplateDay}` : ''}.`}
       />
+
+      {/* Modal: Escolha do Dia para Adicionar a Série (Novo ou Existente) */}
+      {isAssignDayModalOpen && selectedTemplateForAssignment && (
+        <Modal
+          isOpen={isAssignDayModalOpen}
+          onClose={() => {
+            setIsAssignDayModalOpen(false);
+            setSelectedTemplateForAssignment(null);
+          }}
+          title="Adicionar Série ao Treino do Aluno"
+          description={`Defina onde e como adicionar "${selectedTemplateForAssignment.name}" no cronograma de ${student.name}.`}
+          size="lg"
+        >
+          <form onSubmit={handleConfirmAssignTemplate} className="space-y-4">
+            {/* Selected Template Summary Card */}
+            <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                  <Layers className="w-5 h-5 text-emerald-400" />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400">
+                      Série Selecionada
+                    </span>
+                    <span className="px-1.5 py-0.2 rounded text-[10px] bg-white/10 font-mono text-slate-300">
+                      {selectedTemplateForAssignment.category}
+                    </span>
+                    {selectedTemplateForAssignment.versionTag && (
+                      <span className="px-1.5 py-0.2 rounded text-[10px] bg-emerald-500/20 text-emerald-300 font-mono font-bold">
+                        {selectedTemplateForAssignment.versionTag}
+                      </span>
+                    )}
+                  </div>
+                  <h4 className="text-sm font-bold text-white mt-0.5 truncate">
+                    {selectedTemplateForAssignment.name}
+                  </h4>
+                  <p className="text-[11px] text-slate-400 mt-0.5 truncate">
+                    {selectedTemplateForAssignment.exercises.length} exercícios • {selectedTemplateForAssignment.estimatedMinutes || 50} min • Foco: {selectedTemplateForAssignment.muscleFocus}
+                  </p>
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setIsAssignDayModalOpen(false);
+                  setIsTemplateModalOpen(true);
+                }}
+                className="text-xs shrink-0 bg-slate-800 hover:bg-slate-700 text-white border-white/10"
+              >
+                Trocar Série
+              </Button>
+            </div>
+
+            {/* Mode Selector: Existing Day vs New Day */}
+            <div>
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">
+                Onde deseja incluir esta série no cronograma?
+              </label>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Option 1: Existing Day */}
+                <button
+                  type="button"
+                  disabled={!workoutPlan || workoutPlan.days.length === 0}
+                  onClick={() => setAssignmentMode('existing')}
+                  className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer flex items-start gap-3 ${
+                    assignmentMode === 'existing'
+                      ? 'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500/30'
+                      : 'border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-slate-300 dark:hover:border-slate-700'
+                  } ${!workoutPlan || workoutPlan.days.length === 0 ? 'opacity-40 cursor-not-allowed' : ''}`}
+                >
+                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${assignmentMode === 'existing' ? 'bg-emerald-500 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400'}`}>
+                    <Calendar className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs font-bold text-slate-900 dark:text-white block">
+                      Substituir em Dia Existente
+                    </span>
+                    <span className="text-[11px] text-slate-500 dark:text-dark-muted block mt-0.5">
+                      Atualiza os exercícios de um dia que já está na ficha do aluno
+                    </span>
+                  </div>
+                </button>
+
+                {/* Option 2: New Day */}
+                <button
+                  type="button"
+                  onClick={() => setAssignmentMode('new')}
+                  className={`p-3.5 rounded-2xl border text-left transition-all cursor-pointer flex items-start gap-3 ${
+                    assignmentMode === 'new'
+                      ? 'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500/30'
+                      : 'border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-slate-300 dark:hover:border-slate-700'
+                  }`}
+                >
+                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${assignmentMode === 'new' ? 'bg-emerald-500 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400'}`}>
+                    <Plus className="w-4 h-4" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs font-bold text-slate-900 dark:text-white block">
+                      Criar um Novo Dia de Treino
+                    </span>
+                    <span className="text-[11px] text-slate-500 dark:text-dark-muted block mt-0.5">
+                      Adiciona um novo dia na semana (ex: Terça, Quinta ou Sábado)
+                    </span>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* Sub-section: Existing Day Options */}
+            {assignmentMode === 'existing' && (
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border space-y-3 animate-fade-in">
+                <label className="text-xs font-bold text-slate-800 dark:text-white block">
+                  Selecione qual dia existente deseja atualizar:
+                </label>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                  {(allStudentPlans.find((p) => p.id === selectedPlanId) || workoutPlan)?.days.map((day) => {
+                    const isSelected = selectedExistingDayId === day.id;
+                    return (
+                      <div
+                        key={day.id}
+                        onClick={() => setSelectedExistingDayId(day.id)}
+                        className={`p-3 rounded-xl border cursor-pointer transition-all ${
+                          isSelected
+                            ? 'border-emerald-500 bg-emerald-500/15 ring-2 ring-emerald-500/20'
+                            : 'border-slate-200 dark:border-dark-border hover:bg-white dark:hover:bg-slate-800/60'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="px-2 py-0.5 rounded-md bg-emerald-500 text-white text-[10px] font-black uppercase">
+                            {day.dayOfWeek}
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-medium">
+                            {day.exercises.length} ex.
+                          </span>
+                        </div>
+                        <h5 className="text-xs font-bold text-slate-900 dark:text-white mt-1.5 truncate">
+                          {day.name}
+                        </h5>
+                        <p className="text-[11px] text-slate-500 dark:text-dark-muted truncate">
+                          {day.muscleFocus}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="pt-2 border-t border-slate-200 dark:border-dark-border/60">
+                  <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300 block mb-1.5">
+                    Modo de Inserção dos Exercícios:
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                    <label className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-colors ${replaceOrAppend === 'replace' ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/20 font-semibold text-emerald-800 dark:text-emerald-300' : 'border-slate-200 dark:border-dark-border text-slate-600 dark:text-slate-400'}`}>
+                      <input
+                        type="radio"
+                        name="replaceOrAppend"
+                        checked={replaceOrAppend === 'replace'}
+                        onChange={() => setReplaceOrAppend('replace')}
+                        className="text-emerald-500 focus:ring-emerald-500"
+                      />
+                      <span>Substituir todo o treino deste dia</span>
+                    </label>
+
+                    <label className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-colors ${replaceOrAppend === 'append' ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/20 font-semibold text-emerald-800 dark:text-emerald-300' : 'border-slate-200 dark:border-dark-border text-slate-600 dark:text-slate-400'}`}>
+                      <input
+                        type="radio"
+                        name="replaceOrAppend"
+                        checked={replaceOrAppend === 'append'}
+                        onChange={() => setReplaceOrAppend('append')}
+                        className="text-emerald-500 focus:ring-emerald-500"
+                      />
+                      <span>Acrescentar ao final dos exercícios atuais</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Sub-section: New Day Options */}
+            {assignmentMode === 'new' && (
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border space-y-3.5 animate-fade-in">
+                <div>
+                  <label className="text-xs font-bold text-slate-800 dark:text-white block mb-1.5">
+                    Selecione o Dia da Semana:
+                  </label>
+
+                  {/* 7 Days of the week pills */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+                    {ALL_DAYS_OF_WEEK.map((dayName) => {
+                      const currentDays = (allStudentPlans.find((p) => p.id === selectedPlanId) || workoutPlan)?.days || [];
+                      const existingDay = currentDays.find((d) => d.dayOfWeek === dayName);
+                      const isSelected = selectedNewDayOfWeek === dayName;
+
+                      return (
+                        <button
+                          key={dayName}
+                          type="button"
+                          onClick={() => setSelectedNewDayOfWeek(dayName)}
+                          className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
+                            isSelected
+                              ? 'border-emerald-500 bg-emerald-500 text-white shadow-md shadow-emerald-500/20 font-bold'
+                              : 'border-slate-200 dark:border-dark-border bg-white dark:bg-dark-card hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200'
+                          }`}
+                        >
+                          <span className="text-xs font-bold">{dayName}</span>
+                          <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                            isSelected
+                              ? 'bg-white/20 text-white'
+                              : existingDay
+                              ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 font-medium'
+                              : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium'
+                          }`}>
+                            {existingDay ? 'Em uso' : 'Livre'}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  <Input
+                    label="Nome do Treino *"
+                    placeholder="Ex: Treino D - Pernas e Glúteos"
+                    value={assignmentDayName}
+                    onChange={(e) => setAssignmentDayName(e.target.value)}
+                    required
+                  />
+
+                  <Input
+                    label="Foco Muscular *"
+                    placeholder="Ex: Quadríceps, Glúteos e Posterior"
+                    value={assignmentMuscleFocus}
+                    onChange={(e) => setAssignmentMuscleFocus(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Actions Bar */}
+            <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-dark-border/60">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  setIsAssignDayModalOpen(false);
+                  setSelectedTemplateForAssignment(null);
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                size="sm"
+                leftIcon={<CheckCircle2 className="w-4 h-4" />}
+              >
+                Confirmar e Adicionar Série
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
     </div>
   );
 };

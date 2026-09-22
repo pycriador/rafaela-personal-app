@@ -30,13 +30,18 @@ A personal trainer needs to prescribe structured training, allow students to log
 
 | In scope | Notes | Classification |
 | --- | --- | --- |
-| Trainer portal (`/personal/*`) | Dashboard, students, exercises, workouts, nutrition, evolution, reports, settings | Confirmed |
-| Student portal (`/student/*`) | Dashboard, workouts, active execution, history, evolution, nutrition, profile | Confirmed |
+| Trainer portal (`/personal/*`) | Dashboard, students, exercises, workout templates, workouts, nutrition, evolution, reports, settings | Confirmed |
+| Student portal (`/student/*`) | Dashboard, workouts, active execution, history, evolution, nutrition, profile, trainer-message thread | Confirmed |
 | Hybrid repository pattern | Supabase (PostgreSQL) primary with transparent localStorage fallback | Confirmed |
 | Local exercise animation frames | 302 exercises, 1,002 local frame files (SVG/PNG) | Confirmed |
 | Auditable workout modifications | Audit trail of weight/sets/reps/skips/substitutions | Confirmed |
 | Backup and export | Full JSON backup with hashed passwords + per-table CSV exports | Confirmed |
 | Mock authentication | Email lookup without real password validation | Confirmed |
+| Workout template sets ("Séries Prontas") | Reusable routine templates with versioning and archive | Confirmed |
+| Trainer↔student message thread | Categorized chat per student with seeded conversation | Confirmed |
+| Plan versioning + session feedback | Cycle versions per student; trainer feedback with tag/rating | Confirmed |
+| "Test as student" simulation | Session-scoped sandbox; no permanent writes | Confirmed |
+| Custom exercise media | Per-exercise image gallery/upload/URL (local Data URLs; optional Supabase Storage) | Confirmed |
 
 ## Non-Goals
 
@@ -77,6 +82,8 @@ A personal trainer needs to prescribe structured training, allow students to log
 | exercise-catalog | 302-exercise catalog and frame assets | [application/exercise-catalog.md](application/exercise-catalog.md) |
 | auth | Mock auth + role-based route protection | [application/auth.md](application/auth.md) |
 | exercise-frame-player | Animated local exercise frames + rest timer | [application/exercise-frame-player.md](application/exercise-frame-player.md) |
+| workout-templates | Template sets CRUD, versioning, archive | [application/workout-templates.md](application/workout-templates.md) |
+| student-chat | Trainer↔student message thread | [application/student-chat.md](application/student-chat.md) |
 
 ## Security / Ops / Gaps
 

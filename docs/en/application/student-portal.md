@@ -35,11 +35,20 @@ Student-side experience of the Rafaela Personal App: view prescribed workouts, e
 | Student evolution charts | `StudentEvolutionPage.tsx` | Confirmed |
 | Nutrition plan with substitutions + demo disclaimer | `StudentNutritionPage.tsx` | Confirmed |
 | Profile (theme, logout, switch-to-personal) | `StudentProfilePage.tsx` | Confirmed |
+| Simulation banner + simulated student switch (no writes) | `StudentLayout.tsx` (`exitStudentSimulation`, `enterStudentSimulation`) | Confirmed |
+| Seeded trainer conversation thread | Via `messageRepository` data in trainer's chat (read-only for student sessions today) | Confirmed |
 
 ## Non-Responsibilities
 
 - Not responsible for prescribing or auditing (trainer side).
 - Does not write nutrition plans directly (trainer does).
+- Does not expose the trainer message composer (chat UI lives in the trainer's student detail page).
+
+## Simulation mode
+
+While "Test as student" is active, the layout shows a **Modo Simulação** banner, allows switching the simulated student (dropdown), and an **Encerrar Teste** action that restores the trainer session. All data changes land in the `sessionStorage` sandbox only.
+
+> See [../contracts/local-storage.md](../contracts/local-storage.md) and [../decisions/adr-005-simulation-sandbox.md](../decisions/adr-005-simulation-sandbox.md).
 
 ## Routes
 

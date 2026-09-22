@@ -34,6 +34,9 @@ Client-side session management with **mock authentication**: login is an email l
 | Session persistence in localStorage | `rafaela_app_current_user_v1` | Confirmed |
 | Role-based route guard | `src/components/ProtectedRoute.tsx` | Confirmed |
 | Student profile loading for student sessions | AuthContext on login/init | Confirmed |
+| `enterStudentSimulation(studentId)` — sandboxed student switch | AuthContext (`setSimulationMode`, `rafaela_sim_user`) | Confirmed |
+| `exitStudentSimulation()` — restore trainer session | AuthContext (`rafaela_original_trainer_id`) | Confirmed |
+| Password-reset UI (credential generator) | `StudentManagerSection.tsx` (sets name only; password not stored) | Confirmed |
 
 ## Threat-relevant facts
 
