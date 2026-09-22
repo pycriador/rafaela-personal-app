@@ -280,38 +280,49 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title="Central de Mídia & Imagens dos Exercícios"
-      description="Suba novas ilustrações do seu computador, selecione da biblioteca de 302 exercícios ou gerencie imagens enviadas"
-      size="xl"
+      description="Suba novas ilustrações em alta definição, selecione da biblioteca de 302 exercícios ou gerencie imagens enviadas"
+      size="fullscreen"
     >
-      <div className="space-y-5">
+      <div className="space-y-4 flex flex-col flex-1">
         {/* Selected Exercise Target Banner */}
-        <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-              <Dumbbell className="w-5 h-5 text-emerald-400" />
+        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs shrink-0 shadow-lg">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 shadow-inner">
+              <Dumbbell className="w-6 h-6 text-emerald-400" />
             </div>
             <div>
-              <span className="text-[10px] text-slate-400 uppercase font-bold block">
-                Exercício de Destino:
-              </span>
-              <span className="text-sm font-bold text-white">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">
+                  Exercício Selecionado
+                </span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-mono text-[10px] border border-emerald-500/20">
+                  {activeAssignedExercise?.id || 'id'}
+                </span>
+              </div>
+              <h4 className="text-base font-bold text-white mt-0.5">
                 {activeAssignedExercise?.name || 'Selecione um exercício...'}
-              </span>
-              <span className="text-[11px] text-slate-400 block">
-                {activeAssignedExercise?.category} • {activeAssignedExercise?.equipment}
-              </span>
+              </h4>
+              <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-2">
+                <span>{activeAssignedExercise?.category}</span>
+                <span>•</span>
+                <span>{activeAssignedExercise?.equipment}</span>
+                <span>•</span>
+                <span className="text-emerald-400 font-medium">
+                  {activeAssignedExercise?.muscleGroups?.join(', ')}
+                </span>
+              </p>
             </div>
           </div>
 
           {/* Destination Selector Dropdown */}
-          <div className="w-full sm:w-64">
-            <label className="text-[10px] text-slate-400 font-bold block mb-1">
-              Trocar Exercício Alvo:
+          <div className="w-full md:w-80">
+            <label className="text-[11px] text-slate-300 font-semibold block mb-1.5">
+              Trocar Exercício de Destino:
             </label>
             <select
               value={selectedExerciseId}
               onChange={(e) => setSelectedExerciseId(e.target.value)}
-              className="w-full px-2.5 py-1.5 rounded-lg bg-slate-800 text-white text-xs border border-white/10 focus:ring-1 focus:ring-emerald-500 focus:outline-hidden"
+              className="w-full px-3 py-2 rounded-xl bg-slate-800 text-white text-xs border border-white/10 focus:ring-2 focus:ring-emerald-500 focus:outline-hidden cursor-pointer"
             >
               {allExercises.map((ex) => (
                 <option key={ex.id} value={ex.id}>
@@ -323,13 +334,13 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
         </div>
 
         {/* Modal Navigation Tabs */}
-        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-dark-border/60 pb-2 overflow-x-auto">
+        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-dark-border/60 pb-3 overflow-x-auto shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab('upload')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
               activeTab === 'upload'
-                ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 scale-[1.02]'
                 : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -340,9 +351,9 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('library')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
               activeTab === 'library'
-                ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 scale-[1.02]'
                 : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -353,9 +364,9 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('custom')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
               activeTab === 'custom'
-                ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 scale-[1.02]'
                 : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -366,9 +377,9 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('url')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
               activeTab === 'url'
-                ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 scale-[1.02]'
                 : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -379,16 +390,16 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
 
         {/* TAB 1: UPLOAD DO COMPUTADOR */}
         {activeTab === 'upload' && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-stretch">
+          <div className="flex-1 flex flex-col justify-between pt-1">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch flex-1">
               {/* Dropzone Area Left */}
-              <div className="md:col-span-7 flex flex-col justify-between space-y-3">
+              <div className="lg:col-span-7 flex flex-col justify-between space-y-4">
                 <div
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className={`border-2 border-dashed rounded-3xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all min-h-[260px] ${
+                  className={`border-2 border-dashed rounded-3xl p-10 flex flex-col items-center justify-center text-center cursor-pointer transition-all min-h-[380px] sm:min-h-[420px] flex-1 ${
                     isDragging
                       ? 'border-emerald-500 bg-emerald-500/10 scale-[1.01]'
                       : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-dark-cardElevated hover:border-emerald-500/60'
@@ -402,88 +413,105 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                     className="hidden"
                   />
 
-                  <div className="w-14 h-14 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mb-3 shadow-lg shadow-emerald-500/10">
+                  <div className="w-20 h-20 rounded-3xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mb-4 shadow-xl shadow-emerald-500/10">
                     {isProcessing ? (
-                      <RefreshCw className="w-7 h-7 text-emerald-500 animate-spin" />
+                      <RefreshCw className="w-10 h-10 text-emerald-500 animate-spin" />
                     ) : (
-                      <UploadCloud className="w-7 h-7 text-emerald-500" />
+                      <UploadCloud className="w-10 h-10 text-emerald-500" />
                     )}
                   </div>
 
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                    Arraste a foto ou clique para procurar no seu computador
+                  <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white max-w-md">
+                    Arraste sua foto para cá ou clique para selecionar no computador
                   </h4>
-                  <p className="text-xs text-slate-500 dark:text-dark-muted mt-1 max-w-xs">
-                    Suporta PNG, JPG, WebP ou SVG. A imagem é otimizada automaticamente com proporção 512x512.
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-dark-muted mt-2 max-w-md leading-relaxed">
+                    Suporte completo a arquivos PNG, JPG, WebP e SVG. O sistema otimiza a imagem automaticamente para 512x512 pixels preservando o aspecto original.
                   </p>
 
-                  <div className="mt-4 flex items-center gap-2">
-                    <span className="px-2.5 py-1 rounded-md bg-white dark:bg-slate-800 text-[11px] font-semibold text-slate-600 dark:text-slate-300 shadow-xs border border-slate-200 dark:border-slate-700">
-                      Upload Seguro
+                  <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
+                    <span className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-xs border border-slate-200 dark:border-slate-700">
+                      Otimização Automática
                     </span>
-                    <span className="px-2.5 py-1 rounded-md bg-white dark:bg-slate-800 text-[11px] font-semibold text-slate-600 dark:text-slate-300 shadow-xs border border-slate-200 dark:border-slate-700">
-                      Resolução 512x512
+                    <span className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-xs border border-slate-200 dark:border-slate-700">
+                      Proporção 512x512 HD
+                    </span>
+                    <span className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-xs border border-slate-200 dark:border-slate-700">
+                      Máx. 10MB
                     </span>
                   </div>
                 </div>
 
-                <div className="text-[11px] text-slate-500 dark:text-dark-muted flex items-center gap-2">
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+                <div className="text-xs text-slate-500 dark:text-dark-muted flex items-center gap-2.5 p-3 rounded-2xl bg-emerald-500/5 border border-emerald-500/15">
+                  <Sparkles className="w-4 h-4 text-emerald-500 shrink-0" />
                   <span>
-                    Dica: Prefira imagens com fundo transparente ou escuro para harmonizar com o layout do app.
+                    Dica profissional: Imagens com fundo transparente ou tons escuros oferecem a melhor experiência visual no app dos alunos e no modo escuro.
                   </span>
                 </div>
               </div>
 
               {/* Real-time Preview Area Right */}
-              <div className="md:col-span-5 flex flex-col justify-between p-4 rounded-3xl bg-slate-900 border border-slate-800 text-white min-h-[260px]">
-                <div>
-                  <div className="flex items-center justify-between pb-2 border-b border-white/10 mb-3">
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                      Pré-visualização ao Vivo
-                    </span>
+              <div className="lg:col-span-5 flex flex-col justify-between p-6 rounded-3xl bg-slate-900 border border-slate-800 text-white min-h-[380px] sm:min-h-[420px]">
+                <div className="flex-1 flex flex-col">
+                  <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+                    <div>
+                      <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
+                        Pré-visualização ao Vivo
+                      </span>
+                      <span className="text-[11px] text-slate-400">
+                        Como o aluno verá na execução do exercício
+                      </span>
+                    </div>
                     {uploadedPreview && (
                       <Badge variant="success" size="sm">
-                        Pronta
+                        Imagem Pronta
                       </Badge>
                     )}
                   </div>
 
                   {/* Stage */}
-                  <div className="w-full h-44 rounded-2xl bg-slate-950 border border-white/10 overflow-hidden flex items-center justify-center p-3 relative">
+                  <div className="w-full flex-1 min-h-[220px] rounded-2xl bg-slate-950 border border-white/10 overflow-hidden flex items-center justify-center p-4 relative shadow-inner">
                     <div className="absolute inset-0 bg-radial from-emerald-500/10 via-transparent to-transparent pointer-events-none" />
                     {uploadedPreview ? (
                       <img
                         src={uploadedPreview}
                         alt="Preview"
-                        className="max-w-full max-h-full w-auto h-auto object-contain select-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)]"
+                        className="max-w-full max-h-[320px] w-auto h-auto object-contain select-none drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)]"
                       />
                     ) : (
-                      <div className="text-center space-y-1 text-slate-500">
-                        <ImageIcon className="w-8 h-8 mx-auto opacity-40" />
-                        <span className="text-xs block">Nenhuma imagem carregada</span>
+                      <div className="text-center space-y-2 text-slate-500">
+                        <ImageIcon className="w-12 h-12 mx-auto opacity-40" />
+                        <span className="text-xs block font-medium">Nenhuma foto carregada para prévia</span>
+                        <span className="text-[11px] block opacity-60">
+                          Faça upload ao lado para inspecionar o resultado
+                        </span>
                       </div>
                     )}
                   </div>
 
                   {uploadedPreview && (
-                    <div className="mt-3 space-y-1 text-xs">
+                    <div className="mt-4 p-3 rounded-xl bg-slate-950/60 border border-white/5 space-y-1.5 text-xs">
                       <div className="flex justify-between text-slate-300">
-                        <span className="text-slate-400">Arquivo:</span>
-                        <span className="font-mono truncate max-w-[150px]">{uploadedFileName}</span>
+                        <span className="text-slate-400">Arquivo Original:</span>
+                        <span className="font-mono truncate max-w-[200px]">{uploadedFileName}</span>
                       </div>
                       <div className="flex justify-between text-slate-300">
-                        <span className="text-slate-400">Tamanho Otimizado:</span>
-                        <span className="font-mono text-emerald-400">{uploadedFileSizeKb} KB</span>
+                        <span className="text-slate-400">Tamanho Pós-Otimização:</span>
+                        <span className="font-mono text-emerald-400 font-bold">{uploadedFileSizeKb} KB</span>
+                      </div>
+                      <div className="flex justify-between text-slate-300">
+                        <span className="text-slate-400">Destino:</span>
+                        <span className="text-slate-200 truncate max-w-[200px]">
+                          {activeAssignedExercise?.name}
+                        </span>
                       </div>
                     </div>
                   )}
                 </div>
 
-                <div className="pt-3 border-t border-white/10 flex items-center gap-2">
+                <div className="pt-4 border-t border-white/10 flex items-center gap-3 mt-4">
                   <Button
                     variant="secondary"
-                    size="sm"
+                    size="md"
                     onClick={() => {
                       setUploadedPreview(null);
                       setUploadedFileName('');
@@ -495,13 +523,13 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                   </Button>
                   <Button
                     variant="primary"
-                    size="sm"
+                    size="md"
                     onClick={handleApplyUpload}
                     disabled={!uploadedPreview || isProcessing}
                     leftIcon={<Check className="w-4 h-4" />}
                     className="text-xs flex-1"
                   >
-                    Aplicar ao Exercício
+                    Salvar e Aplicar
                   </Button>
                 </div>
               </div>
@@ -511,40 +539,46 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
 
         {/* TAB 2: GALERIA GERAL DE 302 EXERCÍCIOS */}
         {activeTab === 'library' && (
-          <div className="space-y-4">
+          <div className="space-y-4 flex-1 flex flex-col">
             {/* Filters Bar */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shrink-0">
               <div className="relative flex-1">
                 <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   type="text"
-                  placeholder="Pesquisar exercícios por nome, categoria ou músculo..."
+                  placeholder="Buscar exercício por nome, categoria ou músculo..."
                   value={librarySearch}
                   onChange={(e) => setLibrarySearch(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 rounded-xl text-xs bg-slate-100 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+                  className="w-full pl-9 pr-4 py-2.5 rounded-xl text-xs bg-slate-100 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
-              <select
-                value={libraryCategory}
-                onChange={(e) => setLibraryCategory(e.target.value)}
-                className="px-3 py-2 rounded-xl text-xs bg-slate-100 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
-              >
-                <option value="all">Todas as Categorias</option>
-                <option value="Peito">Peito</option>
-                <option value="Costas">Costas</option>
-                <option value="Pernas">Pernas</option>
-                <option value="Ombros">Ombros</option>
-                <option value="Bíceps">Bíceps</option>
-                <option value="Tríceps">Tríceps</option>
-                <option value="Core">Core</option>
-                <option value="Cardio">Cardio</option>
-                <option value="Mobilidade">Mobilidade</option>
-              </select>
+              <div className="flex items-center gap-2">
+                <select
+                  value={libraryCategory}
+                  onChange={(e) => setLibraryCategory(e.target.value)}
+                  className="px-3.5 py-2.5 rounded-xl text-xs bg-slate-100 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                >
+                  <option value="all">Todas as Categorias</option>
+                  <option value="Peito">Peito</option>
+                  <option value="Costas">Costas</option>
+                  <option value="Pernas">Pernas</option>
+                  <option value="Ombros">Ombros</option>
+                  <option value="Bíceps">Bíceps</option>
+                  <option value="Tríceps">Tríceps</option>
+                  <option value="Core">Core</option>
+                  <option value="Cardio">Cardio</option>
+                  <option value="Mobilidade">Mobilidade</option>
+                </select>
+
+                <div className="hidden sm:block text-xs text-slate-500 dark:text-dark-muted px-2 font-mono shrink-0">
+                  {filteredLibraryExercises.length} de {allExercises.length}
+                </div>
+              </div>
             </div>
 
-            {/* Exercises Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-[360px] overflow-y-auto pr-1">
+            {/* Exercises Grid - Generous full-width layout */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-3 sm:gap-4 max-h-[62vh] overflow-y-auto pr-2 flex-1">
               {filteredLibraryExercises.map((ex) => {
                 const imgSource = ex.imageUrl || `/exercises/frames/${ex.id.replace('exercise-', '')}/frame-1.png`;
                 const resolvedUrl = getAssetUrl(imgSource);
@@ -553,31 +587,31 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                   <div
                     key={ex.id}
                     onClick={() => handleApplyFromLibrary(ex)}
-                    className="group relative rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500/80 p-2.5 flex flex-col justify-between cursor-pointer transition-all hover:shadow-lg hover:shadow-emerald-500/10 text-left"
+                    className="group relative rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 p-3 flex flex-col justify-between cursor-pointer transition-all duration-200 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-0.5 text-left"
                   >
                     {/* Illustration stage */}
-                    <div className="w-full h-24 rounded-xl bg-slate-950 flex items-center justify-center p-2 overflow-hidden mb-2 relative">
+                    <div className="w-full h-28 sm:h-32 rounded-xl bg-slate-950 flex items-center justify-center p-2.5 overflow-hidden mb-2.5 relative border border-white/5">
                       <img
                         src={resolvedUrl}
                         alt={ex.name}
                         loading="lazy"
-                        className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-200 group-hover:scale-110 drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)]"
+                        className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-200 group-hover:scale-110 drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
                       />
                     </div>
 
-                    <div>
-                      <h5 className="text-[11px] font-bold text-white line-clamp-1 group-hover:text-emerald-400 transition-colors">
+                    <div className="flex-1">
+                      <h5 className="text-xs font-bold text-white line-clamp-1 group-hover:text-emerald-400 transition-colors">
                         {ex.name}
                       </h5>
-                      <span className="text-[10px] text-slate-400 block mt-0.5">
+                      <span className="text-[10px] text-slate-400 block mt-0.5 truncate">
                         {ex.category} • {ex.equipment}
                       </span>
                     </div>
 
-                    <div className="mt-2 pt-1.5 border-t border-white/10 flex items-center justify-between">
-                      <span className="text-[9px] font-mono text-emerald-400">Usar Esta</span>
-                      <div className="w-5 h-5 rounded-full bg-white/10 group-hover:bg-emerald-500 text-white flex items-center justify-center transition-colors">
-                        <Check className="w-3 h-3" />
+                    <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between">
+                      <span className="text-[10px] font-semibold text-emerald-400">Usar Esta</span>
+                      <div className="w-6 h-6 rounded-full bg-white/10 group-hover:bg-emerald-500 text-white flex items-center justify-center transition-colors">
+                        <Check className="w-3.5 h-3.5" />
                       </div>
                     </div>
                   </div>
@@ -589,64 +623,66 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
 
         {/* TAB 3: MINHAS IMAGENS PERSONALIZADAS */}
         {activeTab === 'custom' && (
-          <div className="space-y-4">
+          <div className="space-y-4 flex-1 flex flex-col">
             {customMediaList.length === 0 ? (
-              <div className="py-12 text-center space-y-3 bg-slate-50 dark:bg-dark-cardElevated rounded-3xl border border-dashed border-slate-300 dark:border-slate-700">
-                <FolderHeart className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto" />
+              <div className="py-16 text-center space-y-4 bg-slate-50 dark:bg-dark-cardElevated rounded-3xl border border-dashed border-slate-300 dark:border-slate-700 flex-1 flex flex-col items-center justify-center">
+                <div className="w-16 h-16 rounded-2xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+                  <FolderHeart className="w-8 h-8 text-slate-400" />
+                </div>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                  <h4 className="text-base font-bold text-slate-800 dark:text-slate-200">
                     Você ainda não subiu imagens personalizadas
                   </h4>
-                  <p className="text-xs text-slate-500 dark:text-dark-muted mt-1 max-w-sm mx-auto">
-                    Use a aba "Subir do Computador" para fazer upload de fotos ou ilustrações customizadas. Elas ficarão salvas aqui para reutilização em qualquer treino.
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-dark-muted mt-1.5 max-w-md mx-auto leading-relaxed">
+                    Use a aba "Subir do Computador" para fazer upload de fotos ou ilustrações. Elas ficarão arquivadas na sua nuvem local para você reutilizar em qualquer outro treino.
                   </p>
                 </div>
                 <Button
                   variant="primary"
-                  size="sm"
+                  size="md"
                   onClick={() => setActiveTab('upload')}
                   leftIcon={<UploadCloud className="w-4 h-4" />}
                 >
-                  Fazer Primeiro Upload
+                  Fazer Meu Primeiro Upload
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 max-h-[360px] overflow-y-auto pr-1">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-3 sm:gap-4 max-h-[62vh] overflow-y-auto pr-2 flex-1">
                 {customMediaList.map((item) => (
                   <div
                     key={item.id}
                     onClick={() => handleApplyCustom(item)}
-                    className="group relative rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500/80 p-2.5 flex flex-col justify-between cursor-pointer transition-all hover:shadow-lg text-left"
+                    className="group relative rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 p-3 flex flex-col justify-between cursor-pointer transition-all duration-200 hover:shadow-xl text-left"
                   >
-                    <div className="w-full h-24 rounded-xl bg-slate-950 flex items-center justify-center p-2 overflow-hidden mb-2 relative">
+                    <div className="w-full h-28 sm:h-32 rounded-xl bg-slate-950 flex items-center justify-center p-2.5 overflow-hidden mb-2.5 relative border border-white/5">
                       <img
                         src={item.dataUrl}
                         alt={item.name}
-                        className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-200 group-hover:scale-105 drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)]"
+                        className="max-w-full max-h-full w-auto h-auto object-contain transition-transform duration-200 group-hover:scale-105 drop-shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
                       />
                       <button
                         type="button"
                         onClick={(e) => handleDeleteCustom(item.id, e)}
                         title="Remover imagem"
-                        className="absolute top-1.5 right-1.5 p-1 rounded-md bg-black/70 hover:bg-rose-500 text-white transition-colors"
+                        className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/70 hover:bg-rose-500 text-white transition-colors cursor-pointer"
                       >
-                        <Trash2 className="w-3 h-3" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
 
-                    <div>
-                      <h5 className="text-[11px] font-bold text-white line-clamp-1">
+                    <div className="flex-1">
+                      <h5 className="text-xs font-bold text-white line-clamp-1">
                         {item.name}
                       </h5>
-                      <span className="text-[10px] text-slate-400 block mt-0.5">
+                      <span className="text-[10px] text-slate-400 block mt-0.5 truncate">
                         {item.assignedExerciseName} • {item.sizeKb} KB
                       </span>
                     </div>
 
-                    <div className="mt-2 pt-1.5 border-t border-white/10 flex items-center justify-between">
-                      <span className="text-[9px] font-mono text-emerald-400">Reutilizar</span>
-                      <div className="w-5 h-5 rounded-full bg-white/10 group-hover:bg-emerald-500 text-white flex items-center justify-center transition-colors">
-                        <Check className="w-3 h-3" />
+                    <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between">
+                      <span className="text-[10px] font-semibold text-emerald-400">Reutilizar</span>
+                      <div className="w-6 h-6 rounded-full bg-white/10 group-hover:bg-emerald-500 text-white flex items-center justify-center transition-colors">
+                        <Check className="w-3.5 h-3.5" />
                       </div>
                     </div>
                   </div>
@@ -658,31 +694,31 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
 
         {/* TAB 4: LINK WEB / URL EXTERNA */}
         {activeTab === 'url' && (
-          <div className="space-y-4 max-w-lg mx-auto py-3">
+          <div className="space-y-5 max-w-2xl mx-auto py-6 w-full flex-1 flex flex-col justify-center">
             <div>
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                Cole a URL direta da imagem (PNG, JPG, WebP ou SVG):
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">
+                Cole a URL direta da imagem na internet (PNG, JPG, WebP ou SVG):
               </label>
               <div className="flex gap-2">
                 <input
                   type="url"
-                  placeholder="https://exemplo.com/minha-imagem.png"
+                  placeholder="https://exemplo.com/fotos/exercicio.png"
                   value={manualUrl}
                   onChange={(e) => {
                     setManualUrl(e.target.value);
                     setUrlPreviewValid(null);
                   }}
-                  className="flex-1 px-3.5 py-2 rounded-xl text-xs bg-slate-100 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-emerald-500 font-mono"
+                  className="flex-1 px-4 py-3 rounded-xl text-xs bg-slate-100 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-emerald-500 font-mono"
                 />
               </div>
             </div>
 
             {manualUrl && (
-              <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-3">
-                <span className="text-xs font-bold text-slate-400 block">
-                  Teste de Exibição
+              <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-4">
+                <span className="text-xs font-bold text-slate-400 block uppercase tracking-wider">
+                  Teste de Renderização da Imagem
                 </span>
-                <div className="w-full h-40 rounded-xl bg-slate-950 flex items-center justify-center p-3">
+                <div className="w-full h-64 rounded-xl bg-slate-950 flex items-center justify-center p-4 border border-white/5">
                   <img
                     src={manualUrl}
                     alt="Preview URL"
@@ -693,24 +729,24 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                 </div>
                 {urlPreviewValid === true && (
                   <Badge variant="success" size="sm">
-                    URL Válida e Carregada
+                    URL Válida e Carregada com Sucesso
                   </Badge>
                 )}
                 {urlPreviewValid === false && (
                   <Badge variant="danger" size="sm">
-                    Erro ao carregar a imagem desta URL
+                    Não foi possível carregar a imagem desta URL. Verifique o link.
                   </Badge>
                 )}
               </div>
             )}
 
-            <div className="flex justify-end gap-2 pt-2">
-              <Button variant="secondary" size="sm" onClick={onClose}>
+            <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-dark-border/60">
+              <Button variant="secondary" size="md" onClick={onClose}>
                 Cancelar
               </Button>
               <Button
                 variant="primary"
-                size="sm"
+                size="md"
                 onClick={handleApplyManualUrl}
                 disabled={!manualUrl.trim() || urlPreviewValid === false}
                 leftIcon={<Check className="w-4 h-4" />}

@@ -135,7 +135,7 @@ export const WorkoutTemplatesModal: React.FC<WorkoutTemplatesModalProps> = ({
             Nenhum modelo encontrado para a busca informada.
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[460px] overflow-y-auto pr-1">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 max-h-[560px] overflow-y-auto pr-1">
             {filteredTemplates.map((template) => (
               <div
                 key={template.id}

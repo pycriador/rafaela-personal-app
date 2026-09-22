@@ -836,7 +836,7 @@ export const ExercisesPage: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         title={editingExercise ? 'Editar Exercício' : 'Novo Exercício'}
         description="Configure nome, categoria, imagem demonstrativa e alternativas autorizadas"
-        size="lg"
+        size="xl"
       >
         <form onSubmit={handleSave} className="space-y-4">
           <Input
