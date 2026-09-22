@@ -22,6 +22,10 @@ import {
   RotateCcw,
   ChevronLeft,
   ChevronRight,
+  MessageSquare,
+  Award,
+  Star,
+  Layers,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -31,6 +35,8 @@ import { StatCard } from '../../components/ui/StatCard';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
 import { ExerciseFramePlayer } from '../../components/ui/ExerciseFramePlayer';
+import { StudentTrainerChatSection } from '../../components/chat/StudentTrainerChatSection';
+import { WorkoutTemplatesModal } from '../../components/workouts/WorkoutTemplatesModal';
 import { useToast } from '../../context/ToastContext';
 import { getAssetUrl } from '../../utils/assets';
 import { studentRepository } from '../../repositories/studentRepository';
@@ -38,7 +44,19 @@ import { workoutRepository } from '../../repositories/workoutRepository';
 import { nutritionRepository } from '../../repositories/nutritionRepository';
 import { exerciseRepository } from '../../repositories/exerciseRepository';
 import { activityRepository } from '../../repositories/activityRepository';
-import { Student, WorkoutPlan, WorkoutSession, WorkoutModification, NutritionPlan, Exercise, Meal, FoodItem } from '../../types';
+import { messageRepository } from '../../repositories/messageRepository';
+import {
+  Student,
+  WorkoutPlan,
+  WorkoutSession,
+  WorkoutModification,
+  NutritionPlan,
+  Exercise,
+  Meal,
+  FoodItem,
+  WorkoutTemplate,
+  DayOfWeek,
+} from '../../types';
 
 export const StudentDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -49,12 +67,35 @@ export const StudentDetailPage: React.FC = () => {
 
   const [student, setStudent] = useState<Student | null>(null);
   const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null);
+  const [allStudentPlans, setAllStudentPlans] = useState<WorkoutPlan[]>([]);
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
+
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
   const [modifications, setModifications] = useState<WorkoutModification[]>([]);
   const [nutrition, setNutrition] = useState<NutritionPlan | null>(null);
   const [exercisesMap, setExercisesMap] = useState<Record<string, Exercise>>({});
   const [previewExercise, setPreviewExercise] = useState<Exercise | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Subtab for historico: 'sessoes' | 'chat'
+  const [historicoSubTab, setHistoricoSubTab] = useState<'sessoes' | 'chat'>('sessoes');
+
+  // Trainer Feedback modal states
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const [feedbackSession, setFeedbackSession] = useState<WorkoutSession | null>(null);
+  const [feedbackText, setFeedbackText] = useState('');
+  const [feedbackTag, setFeedbackTag] = useState<WorkoutSession['trainerFeedbackTag']>('Excelente');
+  const [feedbackRating, setFeedbackRating] = useState<number>(5);
+  const [sendFeedbackToChat, setSendFeedbackToChat] = useState(true);
+
+  // New Cycle / Version modal states
+  const [isNewCycleModalOpen, setIsNewCycleModalOpen] = useState(false);
+  const [newCycleName, setNewCycleName] = useState('');
+  const [cloneCurrentCycle, setCloneCurrentCycle] = useState(true);
+
+  // Template central modal states
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [targetTemplateDay, setTargetTemplateDay] = useState<DayOfWeek | null>(null);
 
   // Tab and session pagination synced with URL
   const activeTab = searchParams.get('tab') || 'resumo';
@@ -89,9 +130,10 @@ export const StudentDetailPage: React.FC = () => {
   useEffect(() => {
     async function loadData() {
       if (!id) return;
-      const [st, plan, sess, mods, nut, allEx] = await Promise.all([
+      const [st, plan, plansList, sess, mods, nut, allEx] = await Promise.all([
         studentRepository.getById(id),
         workoutRepository.getPlanByStudentId(id),
+        workoutRepository.getPlansByStudentId(id),
         workoutRepository.getSessions(id),
         workoutRepository.getModifications(id),
         nutritionRepository.getByStudentId(id),
@@ -100,6 +142,8 @@ export const StudentDetailPage: React.FC = () => {
 
       setStudent(st);
       setWorkoutPlan(plan);
+      setAllStudentPlans(plansList);
+      setSelectedPlanId(plan ? plan.id : (plansList[0]?.id || null));
       setSessions(sess);
       setModifications(mods);
       setNutrition(nut);
@@ -113,6 +157,169 @@ export const StudentDetailPage: React.FC = () => {
     }
     loadData();
   }, [id]);
+
+  // Workout Plan Versioning Handlers
+  const handleActivatePlanVersion = async (planId: string) => {
+    if (!student) return;
+    try {
+      const activated = await workoutRepository.activatePlanVersion(student.id, planId);
+      if (activated) {
+        setWorkoutPlan(activated);
+        setSelectedPlanId(activated.id);
+        const updatedList = await workoutRepository.getPlansByStudentId(student.id);
+        setAllStudentPlans(updatedList);
+        success(`Versão "${activated.name}" ativada como ciclo vigente!`);
+      }
+    } catch (err) {
+      toastError('Erro ao ativar versão do treino.');
+    }
+  };
+
+  const handleCreateNewCycle = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!student || !newCycleName.trim()) return;
+
+    try {
+      const currentActive = workoutPlan;
+      const maxVersion = allStudentPlans.reduce((max, p) => Math.max(max, p.version || 1), 1);
+      const nextVersion = maxVersion + 1;
+
+      // Deactivate other plans
+      const newPlan: WorkoutPlan = {
+        id: `plan-${student.id}-v${nextVersion}-${Date.now()}`,
+        studentId: student.id,
+        trainerId: 'user-rafaela',
+        name: newCycleName.trim(),
+        version: nextVersion,
+        cycleName: newCycleName.trim(),
+        active: true,
+        validFrom: new Date().toISOString().split('T')[0],
+        days: cloneCurrentCycle && currentActive ? JSON.parse(JSON.stringify(currentActive.days)) : student.availableDays.map((d, i) => ({
+          id: `day-${Date.now()}-${i}`,
+          name: `Treino ${String.fromCharCode(65 + i)}`,
+          dayOfWeek: d,
+          muscleFocus: i === 0 ? 'Peito e Tríceps' : i === 1 ? 'Costas e Bíceps' : 'Pernas e Ombros',
+          exercises: [],
+        })),
+        createdAt: new Date().toISOString().split('T')[0],
+        updatedAt: new Date().toISOString().split('T')[0],
+      };
+
+      await workoutRepository.savePlan(newPlan);
+      await workoutRepository.activatePlanVersion(student.id, newPlan.id);
+
+      const updatedList = await workoutRepository.getPlansByStudentId(student.id);
+      setAllStudentPlans(updatedList);
+      setWorkoutPlan(newPlan);
+      setSelectedPlanId(newPlan.id);
+      setIsNewCycleModalOpen(false);
+      setNewCycleName('');
+
+      await activityRepository.log({
+        actorId: 'user-rafaela',
+        actorName: 'Rafaela Personal',
+        actorRole: 'personal',
+        action: 'Novo ciclo de treino criado',
+        description: `Rafaela criou a Versão V${nextVersion} (${newPlan.name}) para ${student.name}.`,
+        studentId: student.id,
+        iconType: 'dumbbell',
+      });
+
+      success(`Novo ciclo V${nextVersion} ("${newPlan.name}") criado e ativado!`);
+    } catch (err) {
+      toastError('Erro ao criar novo ciclo.');
+    }
+  };
+
+  // Workout Template Handlers
+  const handleSelectTemplate = async (template: WorkoutTemplate) => {
+    if (!student || !workoutPlan) return;
+
+    try {
+      const updatedDays = [...workoutPlan.days];
+      const targetDay = targetTemplateDay || (updatedDays[0]?.dayOfWeek || 'Segunda');
+      const dayIdx = updatedDays.findIndex((d) => d.dayOfWeek === targetDay);
+
+      if (dayIdx >= 0) {
+        updatedDays[dayIdx] = {
+          ...updatedDays[dayIdx],
+          name: template.name.split(' - ')[0] || updatedDays[dayIdx].name,
+          muscleFocus: template.muscleFocus || updatedDays[dayIdx].muscleFocus,
+          exercises: [...template.exercises],
+        };
+      } else {
+        updatedDays.push({
+          id: `day-${Date.now()}`,
+          name: template.name,
+          dayOfWeek: targetDay,
+          muscleFocus: template.muscleFocus,
+          exercises: [...template.exercises],
+        });
+      }
+
+      const updatedPlan: WorkoutPlan = {
+        ...workoutPlan,
+        days: updatedDays,
+        updatedAt: new Date().toISOString().split('T')[0],
+      };
+
+      await workoutRepository.savePlan(updatedPlan);
+      setWorkoutPlan(updatedPlan);
+      const updatedList = await workoutRepository.getPlansByStudentId(student.id);
+      setAllStudentPlans(updatedList);
+
+      success(`Série "${template.name}" vinculada ao dia ${targetDay}!`);
+    } catch (err) {
+      toastError('Erro ao vincular série modelo.');
+    }
+  };
+
+  // Trainer Feedback Handlers
+  const handleOpenFeedback = (session: WorkoutSession) => {
+    setFeedbackSession(session);
+    setFeedbackText(session.trainerFeedback || '');
+    setFeedbackTag(session.trainerFeedbackTag || 'Excelente');
+    setFeedbackRating(session.trainerFeedbackRating || 5);
+    setSendFeedbackToChat(true);
+    setIsFeedbackModalOpen(true);
+  };
+
+  const handleSaveFeedback = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!feedbackSession || !student) return;
+
+    try {
+      const updated = await workoutRepository.updateSessionFeedback(
+        feedbackSession.id,
+        feedbackText.trim(),
+        feedbackTag,
+        feedbackRating
+      );
+
+      if (updated) {
+        setSessions((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
+      }
+
+      if (sendFeedbackToChat && feedbackText.trim()) {
+        await messageRepository.sendMessage({
+          studentId: student.id,
+          senderId: 'user-rafaela',
+          senderName: 'Rafaela Personal',
+          senderRole: 'personal',
+          category: 'assessment',
+          content: `Avaliação do Treino (${feedbackSession.workoutDayName} - ${feedbackSession.date}): "${feedbackText.trim()}" [Classificação: ${feedbackTag}]`,
+          metadata: {
+            sessionId: feedbackSession.id,
+          },
+        });
+      }
+
+      setIsFeedbackModalOpen(false);
+      success('Feedback técnico registrado com sucesso!');
+    } catch (err) {
+      toastError('Erro ao registrar feedback.');
+    }
+  };
 
   // Handlers for Student Status (Pausar e Arquivar)
   const handleTogglePause = async () => {
@@ -560,44 +767,148 @@ export const StudentDetailPage: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 2: TREINOS (Planos Atuais) */}
-      {activeTab === 'treinos' && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                Plano de Treino: {workoutPlan?.name || 'Sem plano ativo'}
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-dark-muted">
-                Treinos divididos por dia da semana com permissões e alternativas
-              </p>
-            </div>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={() => navigate(`/personal/workouts/new?studentId=${student.id}`)}
-              leftIcon={<Edit className="w-3.5 h-3.5" />}
-            >
-              Editar Treino
-            </Button>
-          </div>
+      {/* TAB 2: TREINOS (Planos Atuais & Versionamento) */}
+      {activeTab === 'treinos' && (() => {
+        const displayedPlan = allStudentPlans.find((p) => p.id === selectedPlanId) || workoutPlan;
+        const isPlanActive = displayedPlan?.active ?? true;
 
-          {!workoutPlan || workoutPlan.days.length === 0 ? (
-            <Card className="py-12 text-center">
-              <Dumbbell className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
-              <p className="text-sm font-bold text-slate-700 dark:text-slate-300">Nenhum treino montado</p>
-              <p className="text-xs text-slate-500 mt-1 mb-4">Crie a prescrição de treinos para este aluno.</p>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => navigate(`/personal/workouts/new?studentId=${student.id}`)}
-              >
-                Montar Treino Agora
-              </Button>
-            </Card>
-          ) : (
-            <div className="space-y-6">
-              {workoutPlan.days.map((day) => (
+        return (
+          <div className="space-y-6">
+            {/* Versioning & Header Controls */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated/50 border border-slate-200/60 dark:border-dark-border/40">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-lg font-black text-slate-900 dark:text-white">
+                    {displayedPlan?.name || 'Sem plano configurado'}
+                  </h3>
+                  <Badge variant={isPlanActive ? 'success' : 'neutral'} size="sm">
+                    {isPlanActive ? `Ativo • Versão V${displayedPlan?.version || 1}` : `Histórico • V${displayedPlan?.version || 1}`}
+                  </Badge>
+                  {displayedPlan?.cycleName && (
+                    <span className="text-xs px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">
+                      {displayedPlan.cycleName}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-slate-500 dark:text-dark-muted">
+                  {isPlanActive
+                    ? 'Plano de treinamento atualmente vigente para o aluno'
+                    : 'Ficha histórica arquivada. O histórico de execuções deste período está preservado.'}
+                </p>
+              </div>
+
+              {/* Version selector and actions */}
+              <div className="flex flex-wrap items-center gap-2">
+                {allStudentPlans.length > 1 && (
+                  <div className="flex items-center gap-1 bg-white dark:bg-dark-card p-1 rounded-xl border border-slate-200 dark:border-dark-border text-xs">
+                    <span className="text-[11px] font-bold text-slate-400 px-2">Versões:</span>
+                    {allStudentPlans.map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => setSelectedPlanId(p.id)}
+                        className={`px-2.5 py-1 rounded-lg font-bold text-xs transition-all cursor-pointer ${
+                          p.id === (displayedPlan?.id)
+                            ? 'bg-emerald-500 text-white shadow-xs'
+                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                        }`}
+                      >
+                        V{p.version || 1} {p.active ? '(Ativo)' : ''}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    setTargetTemplateDay(null);
+                    setIsTemplateModalOpen(true);
+                  }}
+                  leftIcon={<Sparkles className="w-3.5 h-3.5 text-emerald-500" />}
+                  className="text-xs"
+                >
+                  Séries Prontas
+                </Button>
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    setNewCycleName(`Fase ${(allStudentPlans.length || 1) + 1} - `);
+                    setIsNewCycleModalOpen(true);
+                  }}
+                  leftIcon={<Plus className="w-3.5 h-3.5" />}
+                  className="text-xs"
+                >
+                  Novo Ciclo
+                </Button>
+
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => navigate(`/personal/workouts/new?studentId=${student.id}`)}
+                  leftIcon={<Edit className="w-3.5 h-3.5" />}
+                  className="text-xs"
+                >
+                  Editar no Construtor
+                </Button>
+              </div>
+            </div>
+
+            {/* Inactive Version Alert Banner */}
+            {!isPlanActive && (
+              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <div className="space-y-0.5">
+                  <span className="font-bold text-amber-900 dark:text-amber-300 block">
+                    Modo de Visualização Histórica (Versão V{displayedPlan?.version || 1})
+                  </span>
+                  <p className="text-amber-800 dark:text-amber-200">
+                    Você está consultando a prescrição antiga deste ciclo. Para torná-la novamente o treino ativo de {student.name}, clique no botão ao lado.
+                  </p>
+                </div>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => handleActivatePlanVersion(displayedPlan!.id)}
+                  leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
+                  className="shrink-0"
+                >
+                  Restaurar como Plano Ativo
+                </Button>
+              </div>
+            )}
+
+            {!displayedPlan || displayedPlan.days.length === 0 ? (
+              <Card className="py-12 text-center">
+                <Dumbbell className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
+                <p className="text-sm font-bold text-slate-700 dark:text-slate-300">Nenhum treino montado</p>
+                <p className="text-xs text-slate-500 mt-1 mb-4">Crie a prescrição de treinos ou carregue um modelo para este aluno.</p>
+                <div className="flex items-center justify-center gap-3">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => {
+                      setTargetTemplateDay(null);
+                      setIsTemplateModalOpen(true);
+                    }}
+                    leftIcon={<Sparkles className="w-3.5 h-3.5 text-emerald-500" />}
+                  >
+                    Carregar Série Pronta
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => navigate(`/personal/workouts/new?studentId=${student.id}`)}
+                  >
+                    Montar Treino Agora
+                  </Button>
+                </div>
+              </Card>
+            ) : (
+              <div className="space-y-6">
+                {displayedPlan.days.map((day) => (
                 <Card key={day.id} className="overflow-hidden">
                   <div className="bg-slate-100 dark:bg-dark-cardElevated p-4 flex items-center justify-between border-b border-slate-200/60 dark:border-dark-border">
                     <div className="flex items-center gap-3">
@@ -691,150 +1002,263 @@ export const StudentDetailPage: React.FC = () => {
             </div>
           )}
         </div>
-      )}
+        );
+      })()}
 
       {/* TAB 3: HISTÓRICO & AUDITORIA (Section 2, 29, 41) */}
       {activeTab === 'historico' && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-              Histórico de Sessões Executadas
-            </h3>
-            <span className="text-xs text-slate-500 dark:text-dark-muted">
-              {sessions.length} treinos registrados
-            </span>
+        <div className="space-y-6">
+          {/* Sub-tab Navigation: Sessões vs Bate-Papo */}
+          <div className="flex items-center gap-2 border-b border-slate-200 dark:border-dark-border pb-1 overflow-x-auto">
+            <button
+              type="button"
+              onClick={() => setHistoricoSubTab('sessoes')}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap ${
+                historicoSubTab === 'sessoes'
+                  ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
+              }`}
+            >
+              <History className="w-4 h-4" />
+              <span>Sessões Executadas & Avaliações</span>
+              <span
+                className={`text-xs px-2 py-0.5 rounded-full font-bold ml-1 ${
+                  historicoSubTab === 'sessoes'
+                    ? 'bg-white/20 text-white'
+                    : 'bg-slate-200 dark:bg-dark-border text-slate-700 dark:text-slate-300'
+                }`}
+              >
+                {sessions.length}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setHistoricoSubTab('chat')}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap ${
+                historicoSubTab === 'chat'
+                  ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
+              }`}
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span>Bate-Papo & Alinhamento Técnico</span>
+              <Badge variant="success" size="sm" className="ml-1">
+                Ativo
+              </Badge>
+            </button>
           </div>
 
-          {sessions.length === 0 ? (
-            <Card className="py-12 text-center text-slate-400 text-xs">
-              Nenhuma sessão de treino executada ainda.
-            </Card>
-          ) : (() => {
-            const totalSessions = sessions.length;
-            const totalPages = Math.max(1, Math.ceil(totalSessions / sessionLimit));
-            const safePage = Math.min(sessionPage, totalPages);
-            const start = (safePage - 1) * sessionLimit;
-            const end = Math.min(start + sessionLimit, totalSessions);
-            const paginatedSessions = sessions.slice(start, end);
+          {/* Subtab 1: Bate-Papo Exclusivo Aluno ↔ Treinadora */}
+          {historicoSubTab === 'chat' && (
+            <StudentTrainerChatSection student={student} />
+          )}
 
-            return (
-              <div className="space-y-4">
-                {paginatedSessions.map((s) => (
-                  <Card key={s.id} className="p-5">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-dark-border/60">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                            {s.workoutDayName}
-                          </h4>
-                          <Badge
-                            variant={s.status === 'completed' ? 'success' : 'warning'}
-                            size="sm"
-                          >
-                            {s.status === 'completed' ? 'Concluído' : 'Incompleto'}
-                          </Badge>
-                        </div>
-                        <p className="text-xs text-slate-500 font-mono mt-0.5">
-                          Data: {s.date} • Duração: {s.durationMinutes || 45} min
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-3 text-xs">
-                        {s.rating && (
-                          <span className="font-bold text-amber-500">
-                            Avaliação: {s.rating}/5 ⭐
-                          </span>
-                        )}
-                        {s.rpe && (
-                          <span className="font-bold text-slate-600 dark:text-slate-300">
-                            RPE: {s.rpe}/10
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Summary of sets and volume */}
-                    <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs bg-slate-50 dark:bg-dark-cardElevated/50 p-2.5 rounded-xl font-mono">
-                      <div>
-                        <span className="text-slate-400 block text-[10px]">SÉRIES</span>
-                        <strong className="text-slate-900 dark:text-white">{s.totalSets}</strong>
-                      </div>
-                      <div>
-                        <span className="text-slate-400 block text-[10px]">CARGA TOTAL</span>
-                        <strong className="text-emerald-500">{s.totalVolumeKg} kg</strong>
-                      </div>
-                      <div>
-                        <span className="text-slate-400 block text-[10px]">PULADOS</span>
-                        <strong className={s.skippedExercises.length > 0 ? 'text-rose-500' : 'text-slate-500'}>
-                          {s.skippedExercises.length}
-                        </strong>
-                      </div>
-                    </div>
-
-                    {s.notes && (
-                      <div className="mt-3 text-xs italic text-slate-600 dark:text-dark-muted bg-slate-100/50 dark:bg-slate-800/30 p-2 rounded-lg">
-                        Feedback do aluno: &ldquo;{s.notes}&rdquo;
-                      </div>
-                    )}
-                  </Card>
-                ))}
-
-                {totalPages > 1 && (
-                  <Card className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <span className="text-xs text-slate-500 font-mono">
-                      Exibindo <strong>{start + 1}</strong> a <strong>{end}</strong> de{' '}
-                      <strong>{totalSessions}</strong> treinos
-                    </span>
-                    <div className="flex items-center gap-1.5">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        disabled={safePage <= 1}
-                        onClick={() => {
-                          const next = new URLSearchParams(searchParams);
-                          next.set('sessionPage', String(safePage - 1));
-                          setSearchParams(next);
-                        }}
-                        leftIcon={<ChevronLeft className="w-3.5 h-3.5" />}
-                      >
-                        Anterior
-                      </Button>
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                        <button
-                          key={p}
-                          onClick={() => {
-                            const next = new URLSearchParams(searchParams);
-                            next.set('sessionPage', String(p));
-                            setSearchParams(next);
-                          }}
-                          className={`w-7 h-7 rounded-lg text-xs font-bold font-mono transition-colors ${
-                            p === safePage
-                              ? 'bg-emerald-500 text-white shadow-sm'
-                              : 'hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
-                          }`}
-                        >
-                          {p}
-                        </button>
-                      ))}
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        disabled={safePage >= totalPages}
-                        onClick={() => {
-                          const next = new URLSearchParams(searchParams);
-                          next.set('sessionPage', String(safePage + 1));
-                          setSearchParams(next);
-                        }}
-                        rightIcon={<ChevronRight className="w-3.5 h-3.5" />}
-                      >
-                        Próximo
-                      </Button>
-                    </div>
-                  </Card>
-                )}
+          {/* Subtab 2: Histórico de Sessões e Avaliações */}
+          {historicoSubTab === 'sessoes' && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                    Histórico de Sessões Executadas
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-dark-muted">
+                    Consulte as cargas executadas, percepção de esforço e registre feedbacks técnicos
+                  </p>
+                </div>
+                <span className="text-xs text-slate-500 dark:text-dark-muted font-mono">
+                  {sessions.length} treinos registrados
+                </span>
               </div>
-            );
-          })()}
+
+              {sessions.length === 0 ? (
+                <Card className="py-12 text-center text-slate-400 text-xs">
+                  Nenhuma sessão de treino executada ainda.
+                </Card>
+              ) : (() => {
+                const totalSessions = sessions.length;
+                const totalPages = Math.max(1, Math.ceil(totalSessions / sessionLimit));
+                const safePage = Math.min(sessionPage, totalPages);
+                const start = (safePage - 1) * sessionLimit;
+                const end = Math.min(start + sessionLimit, totalSessions);
+                const paginatedSessions = sessions.slice(start, end);
+
+                return (
+                  <div className="space-y-4">
+                    {paginatedSessions.map((s) => (
+                      <Card key={s.id} className="p-5">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100 dark:border-dark-border/60">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                                {s.workoutDayName}
+                              </h4>
+                              <Badge
+                                variant={s.status === 'completed' ? 'success' : 'warning'}
+                                size="sm"
+                              >
+                                {s.status === 'completed' ? 'Concluído' : 'Incompleto'}
+                              </Badge>
+                            </div>
+                            <p className="text-xs text-slate-500 font-mono mt-0.5">
+                              Data: {s.date} • Duração: {s.durationMinutes || 45} min
+                            </p>
+                          </div>
+
+                          <div className="flex items-center gap-3 text-xs">
+                            {s.rating && (
+                              <span className="font-bold text-amber-500">
+                                Avaliação Aluno: {s.rating}/5 ⭐
+                              </span>
+                            )}
+                            {s.rpe && (
+                              <span className="font-bold text-slate-600 dark:text-slate-300">
+                                RPE: {s.rpe}/10
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Summary of sets and volume */}
+                        <div className="mt-3 grid grid-cols-3 gap-2 text-center text-xs bg-slate-50 dark:bg-dark-cardElevated/50 p-2.5 rounded-xl font-mono">
+                          <div>
+                            <span className="text-slate-400 block text-[10px]">SÉRIES</span>
+                            <strong className="text-slate-900 dark:text-white">{s.totalSets}</strong>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block text-[10px]">CARGA TOTAL</span>
+                            <strong className="text-emerald-500">{s.totalVolumeKg} kg</strong>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block text-[10px]">PULADOS</span>
+                            <strong className={s.skippedExercises.length > 0 ? 'text-rose-500' : 'text-slate-500'}>
+                              {s.skippedExercises.length}
+                            </strong>
+                          </div>
+                        </div>
+
+                        {s.notes && (
+                          <div className="mt-3 text-xs italic text-slate-600 dark:text-dark-muted bg-slate-100/50 dark:bg-slate-800/30 p-2.5 rounded-xl">
+                            <strong>Observação do aluno:</strong> &ldquo;{s.notes}&rdquo;
+                          </div>
+                        )}
+
+                        {/* Trainer Feedback Section */}
+                        <div className="mt-3 pt-3 border-t border-slate-100 dark:border-dark-border/60">
+                          {s.trainerFeedback ? (
+                            <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 space-y-2 text-xs">
+                              <div className="flex items-center justify-between flex-wrap gap-2">
+                                <div className="flex items-center gap-2 font-bold text-emerald-800 dark:text-emerald-300">
+                                  <Award className="w-4 h-4 text-emerald-500" />
+                                  <span>Feedback Oficial da Treinadora (Rafaela)</span>
+                                  {s.trainerFeedbackTag && (
+                                    <Badge variant="success" size="sm">
+                                      {s.trainerFeedbackTag}
+                                    </Badge>
+                                  )}
+                                  {s.trainerFeedbackRating && (
+                                    <span className="text-amber-500 font-bold ml-1">
+                                      {Array.from({ length: s.trainerFeedbackRating }).map((_, i) => '★').join('')}
+                                    </span>
+                                  )}
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleOpenFeedback(s)}
+                                  leftIcon={<Edit className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />}
+                                  className="text-[11px] h-6 px-2.5 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/15"
+                                >
+                                  Editar Feedback
+                                </Button>
+                              </div>
+                              <p className="text-slate-700 dark:text-slate-200 leading-relaxed">
+                                &ldquo;{s.trainerFeedback}&rdquo;
+                              </p>
+                              {s.trainerFeedbackAt && (
+                                <span className="text-[10px] text-slate-400 block font-mono">
+                                  Registrado em: {new Date(s.trainerFeedbackAt).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
+                                </span>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated/40 border border-dashed border-slate-200 dark:border-dark-border text-xs">
+                              <span className="text-slate-400 italic">
+                                Nenhum feedback técnico registrado para esta sessão de treino.
+                              </span>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={() => handleOpenFeedback(s)}
+                                leftIcon={<Award className="w-3.5 h-3.5 text-emerald-500" />}
+                                className="text-xs shrink-0"
+                              >
+                                Avaliar Treino
+                              </Button>
+                            </div>
+                          )}
+                        </div>
+                      </Card>
+                    ))}
+
+                    {totalPages > 1 && (
+                      <Card className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <span className="text-xs text-slate-500 font-mono">
+                          Exibindo <strong>{start + 1}</strong> a <strong>{end}</strong> de{' '}
+                          <strong>{totalSessions}</strong> treinos
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            disabled={safePage <= 1}
+                            onClick={() => {
+                              const next = new URLSearchParams(searchParams);
+                              next.set('sessionPage', String(safePage - 1));
+                              setSearchParams(next);
+                            }}
+                            leftIcon={<ChevronLeft className="w-3.5 h-3.5" />}
+                          >
+                            Anterior
+                          </Button>
+                          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                            <button
+                              key={p}
+                              onClick={() => {
+                                const next = new URLSearchParams(searchParams);
+                                next.set('sessionPage', String(p));
+                                setSearchParams(next);
+                              }}
+                              className={`w-7 h-7 rounded-lg text-xs font-bold font-mono transition-colors ${
+                                p === safePage
+                                  ? 'bg-emerald-500 text-white shadow-sm'
+                                  : 'hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300'
+                              }`}
+                            >
+                              {p}
+                            </button>
+                          ))}
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            disabled={safePage >= totalPages}
+                            onClick={() => {
+                              const next = new URLSearchParams(searchParams);
+                              next.set('sessionPage', String(safePage + 1));
+                              setSearchParams(next);
+                            }}
+                            rightIcon={<ChevronRight className="w-3.5 h-3.5" />}
+                          >
+                            Próximo
+                          </Button>
+                        </div>
+                      </Card>
+                    )}
+                  </div>
+                );
+              })()}
+            </div>
+          )}
         </div>
       )}
 
@@ -1314,6 +1738,175 @@ export const StudentDetailPage: React.FC = () => {
           </div>
         </Modal>
       )}
+
+      {/* Modal: Feedback Técnico da Treinadora (Rafaela) */}
+      {isFeedbackModalOpen && feedbackSession && (
+        <Modal
+          isOpen={isFeedbackModalOpen}
+          onClose={() => setIsFeedbackModalOpen(false)}
+          title={`Avaliação & Feedback: ${feedbackSession.workoutDayName}`}
+          description={`Sessão executada em ${feedbackSession.date} • Duração: ${feedbackSession.durationMinutes || 45} min`}
+          size="md"
+        >
+          <form onSubmit={handleSaveFeedback} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                Classificação Técnica / Selo
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {(
+                  [
+                    'Excelente',
+                    'Carga Adequada',
+                    'Ajuste Recomendado',
+                    'Atenção à Postura',
+                    'Consistência',
+                  ] as WorkoutSession['trainerFeedbackTag'][]
+                ).map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => setFeedbackTag(tag)}
+                    className={`p-2 rounded-xl text-xs font-bold border transition-all text-left cursor-pointer ${
+                      feedbackTag === tag
+                        ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                        : 'border-slate-200 dark:border-dark-border text-slate-600 dark:text-slate-400 hover:border-slate-300'
+                    }`}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
+                Nota de Desempenho (1 a 5)
+              </label>
+              <div className="flex items-center gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setFeedbackRating(star)}
+                    className={`text-xl transition-all cursor-pointer ${
+                      star <= feedbackRating ? 'text-amber-400 scale-110' : 'text-slate-300 dark:text-slate-700'
+                    }`}
+                  >
+                    ★
+                  </button>
+                ))}
+                <span className="text-xs font-mono font-bold text-slate-500 ml-2">
+                  {feedbackRating} / 5 estrelas
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                Orientação & Parecer da Treinadora
+              </label>
+              <textarea
+                required
+                value={feedbackText}
+                onChange={(e) => setFeedbackText(e.target.value)}
+                rows={4}
+                placeholder="Ex: Excelente execução no supino com os 32kg! Mantenha a cadência de 2 segundos na descida e conserve os 60s de descanso..."
+                className="w-full px-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-dark-card border border-slate-200 dark:border-dark-border focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-white"
+              />
+            </div>
+
+            <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 cursor-pointer pt-1">
+              <input
+                type="checkbox"
+                checked={sendFeedbackToChat}
+                onChange={(e) => setSendFeedbackToChat(e.target.checked)}
+                className="w-4 h-4 accent-emerald-500 rounded"
+              />
+              <span>Enviar este parecer diretamente no <strong>Bate-Papo</strong> com o aluno</span>
+            </label>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-dark-border/60">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsFeedbackModalOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button type="submit" variant="primary" size="sm">
+                Salvar Feedback Oficial
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
+      {/* Modal: Criar Novo Ciclo / Versão de Treino */}
+      {isNewCycleModalOpen && (
+        <Modal
+          isOpen={isNewCycleModalOpen}
+          onClose={() => setIsNewCycleModalOpen(false)}
+          title="Novo Ciclo de Treinamento (Nova Versão)"
+          description="Crie uma nova versão do plano de treino preservando todo o histórico anterior intacto."
+          size="md"
+        >
+          <form onSubmit={handleCreateNewCycle} className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                Nome do Novo Ciclo / Periodização
+              </label>
+              <Input
+                required
+                value={newCycleName}
+                onChange={(e) => setNewCycleName(e.target.value)}
+                placeholder="Ex: Fase 2 - Hipertrofia ABCD, Ciclo de Força Março/2026"
+              />
+            </div>
+
+            <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 cursor-pointer pt-1">
+              <input
+                type="checkbox"
+                checked={cloneCurrentCycle}
+                onChange={(e) => setCloneCurrentCycle(e.target.checked)}
+                className="w-4 h-4 accent-emerald-500 rounded"
+              />
+              <span>Duplicar exercícios e regras do ciclo atual como ponto de partida</span>
+            </label>
+
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border text-xs text-slate-500 space-y-1">
+              <span className="font-bold text-slate-700 dark:text-slate-300 block">Versionamento Seguro:</span>
+              <p>
+                O plano atual será arquivado como versão histórica e o novo plano assumirá o status <strong>Ativo</strong> imediatamente.
+              </p>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-dark-border/60">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsNewCycleModalOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button type="submit" variant="primary" size="sm">
+                Criar e Ativar Ciclo
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
+      {/* Modal: Central de Séries Pré-Cadastradas (Modelos) */}
+      <WorkoutTemplatesModal
+        isOpen={isTemplateModalOpen}
+        onClose={() => setIsTemplateModalOpen(false)}
+        onSelectTemplate={handleSelectTemplate}
+        title="Central de Séries Modelos Pré-Cadastradas"
+        description={`Selecione uma série pré-montada para vincular a ${student.name}${targetTemplateDay ? ` no treino de ${targetTemplateDay}` : ''}.`}
+      />
     </div>
   );
 };

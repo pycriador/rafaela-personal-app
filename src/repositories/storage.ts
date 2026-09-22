@@ -19,6 +19,8 @@ const STORAGE_KEYS = {
   CURRENT_USER: 'rafaela_app_current_user_v1',
   THEME: 'rafaela_app_theme_v1',
   CUSTOM_MEDIA: 'rafaela_app_custom_media_v1',
+  STUDENT_MESSAGES: 'rafaela_app_student_messages_v1',
+  WORKOUT_TEMPLATES: 'rafaela_app_workout_templates_v1',
 };
 
 // Seed storage if empty

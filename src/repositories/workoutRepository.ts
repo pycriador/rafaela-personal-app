@@ -13,9 +13,18 @@ export interface IWorkoutRepository {
   getSessions(studentId?: string): Promise<WorkoutSession[]>;
   getSessionById(id: string): Promise<WorkoutSession | null>;
   saveSession(session: WorkoutSession): Promise<WorkoutSession>;
+  updateSessionFeedback(
+    sessionId: string,
+    feedback: string,
+    tag?: WorkoutSession['trainerFeedbackTag'],
+    rating?: number
+  ): Promise<WorkoutSession | null>;
 
   getModifications(studentId?: string): Promise<WorkoutModification[]>;
   saveModification(mod: Omit<WorkoutModification, 'id' | 'timestamp'>): Promise<WorkoutModification>;
+
+  getPlansByStudentId(studentId: string): Promise<WorkoutPlan[]>;
+  activatePlanVersion(studentId: string, planId: string): Promise<WorkoutPlan | null>;
 }
 
 function mapPlanFromDb(row: any): WorkoutPlan {
@@ -24,7 +33,12 @@ function mapPlanFromDb(row: any): WorkoutPlan {
     studentId: row.student_id || row.studentId,
     trainerId: row.trainer_id || row.trainerId,
     name: row.name,
+    version: row.version ? Number(row.version) : 1,
+    cycleName: row.cycle_name || row.cycleName,
     active: row.active ?? true,
+    validFrom: row.valid_from || row.validFrom,
+    validUntil: row.valid_until || row.validUntil,
+    notes: row.notes,
     days: Array.isArray(row.days) ? row.days : JSON.parse(row.days || '[]'),
     createdAt: row.created_at || row.createdAt,
     updatedAt: row.updated_at || row.updatedAt,
@@ -37,7 +51,12 @@ function mapPlanToDb(plan: WorkoutPlan): any {
     student_id: plan.studentId,
     trainer_id: plan.trainerId,
     name: plan.name,
+    version: plan.version ?? 1,
+    cycle_name: plan.cycleName,
     active: plan.active,
+    valid_from: plan.validFrom,
+    valid_until: plan.validUntil,
+    notes: plan.notes,
     days: plan.days,
     updated_at: new Date().toISOString(),
   };
@@ -71,6 +90,10 @@ function mapSessionFromDb(row: any): WorkoutSession {
     totalVolumeKg: Number(row.total_volume_kg ?? row.totalVolumeKg ?? 0),
     totalSets: Number(row.total_sets ?? row.totalSets ?? 0),
     totalExercises: Number(row.total_exercises ?? row.totalExercises ?? 0),
+    trainerFeedback: row.trainer_feedback || row.trainerFeedback,
+    trainerFeedbackRating: row.trainer_feedback_rating ? Number(row.trainer_feedback_rating) : row.trainerFeedbackRating,
+    trainerFeedbackTag: row.trainer_feedback_tag || row.trainerFeedbackTag,
+    trainerFeedbackAt: row.trainer_feedback_at || row.trainerFeedbackAt,
   };
 }
 
@@ -96,6 +119,10 @@ function mapSessionToDb(s: WorkoutSession): any {
     total_volume_kg: s.totalVolumeKg,
     total_sets: s.totalSets,
     total_exercises: s.totalExercises,
+    trainer_feedback: s.trainerFeedback,
+    trainer_feedback_rating: s.trainerFeedbackRating,
+    trainer_feedback_tag: s.trainerFeedbackTag,
+    trainer_feedback_at: s.trainerFeedbackAt,
   };
 }
 
@@ -309,6 +336,81 @@ export class SupabaseWorkoutRepository implements IWorkoutRepository {
     mods.unshift(newMod);
     setItem(STORAGE_KEYS.MODIFICATIONS, mods);
     return newMod;
+  }
+
+  async getPlansByStudentId(studentId: string): Promise<WorkoutPlan[]> {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase
+          .from('workout_plans')
+          .select('*')
+          .eq('student_id', studentId)
+          .order('active', { ascending: false });
+        if (!error && data && data.length > 0) {
+          return data.map(mapPlanFromDb);
+        }
+      } catch (err) {
+        // fallback
+      }
+    }
+    const plans = await this.getPlans();
+    return plans
+      .filter((p) => p.studentId === studentId)
+      .sort((a, b) => {
+        if (a.active && !b.active) return -1;
+        if (!a.active && b.active) return 1;
+        return (b.version ?? 1) - (a.version ?? 1);
+      });
+  }
+
+  async activatePlanVersion(studentId: string, planId: string): Promise<WorkoutPlan | null> {
+    const plans = await this.getPlans();
+    let target: WorkoutPlan | null = null;
+
+    plans.forEach((p) => {
+      if (p.studentId === studentId) {
+        if (p.id === planId) {
+          p.active = true;
+          p.updatedAt = new Date().toISOString().split('T')[0];
+          target = p;
+        } else {
+          p.active = false;
+        }
+      }
+    });
+
+    if (target) {
+      if (isSupabaseConfigured) {
+        try {
+          await supabase.from('workout_plans').update({ active: false }).eq('student_id', studentId);
+          await supabase.from('workout_plans').update({ active: true, updated_at: new Date().toISOString() }).eq('id', planId);
+        } catch (err) {
+          console.error('Supabase activate plan error:', err);
+        }
+      }
+      setItem(STORAGE_KEYS.WORKOUT_PLANS, plans);
+    }
+
+    return target;
+  }
+
+  async updateSessionFeedback(
+    sessionId: string,
+    feedback: string,
+    tag?: WorkoutSession['trainerFeedbackTag'],
+    rating?: number
+  ): Promise<WorkoutSession | null> {
+    const sessions = await this.getSessions();
+    const session = sessions.find((s) => s.id === sessionId);
+    if (!session) return null;
+
+    session.trainerFeedback = feedback;
+    session.trainerFeedbackTag = tag;
+    session.trainerFeedbackRating = rating;
+    session.trainerFeedbackAt = new Date().toISOString();
+
+    await this.saveSession(session);
+    return session;
   }
 }
 

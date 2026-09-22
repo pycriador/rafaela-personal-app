@@ -116,7 +116,12 @@ export interface WorkoutPlan {
   studentId: string;
   trainerId: string;
   name: string;
+  version?: number; // 1, 2, 3...
+  cycleName?: string; // e.g., "Fase 1 - Adaptação", "Fase 2 - Hipertrofia Acentuada"
   active: boolean;
+  validFrom?: string;
+  validUntil?: string;
+  notes?: string;
   days: WorkoutDay[];
   createdAt: string;
   updatedAt: string;
@@ -170,6 +175,10 @@ export interface WorkoutSession {
   totalVolumeKg: number;
   totalSets: number;
   totalExercises: number;
+  trainerFeedback?: string;
+  trainerFeedbackRating?: number;
+  trainerFeedbackTag?: 'Excelente' | 'Ajuste Recomendado' | 'Atenção à Postura' | 'Carga Adequada' | 'Consistência';
+  trainerFeedbackAt?: string;
 }
 
 export type ModificationAction =
@@ -246,3 +255,43 @@ export interface Notification {
   type: 'alert' | 'info' | 'success' | 'warning';
   link?: string;
 }
+
+export type MessageCategory =
+  | 'general'
+  | 'weight_change'
+  | 'exercise_change'
+  | 'question'
+  | 'assessment'
+  | 'motivation';
+
+export interface StudentMessage {
+  id: string;
+  studentId: string;
+  senderId: string;
+  senderName: string;
+  senderRole: 'personal' | 'student';
+  content: string;
+  category?: MessageCategory;
+  metadata?: {
+    exerciseName?: string;
+    weightBefore?: number;
+    weightAfter?: number;
+    sessionId?: string;
+  };
+  timestamp: string;
+  read: boolean;
+}
+
+export interface WorkoutTemplate {
+  id: string;
+  name: string; // e.g. "Série A - Peito e Tríceps Hipertrofia"
+  description: string;
+  category: ExerciseCategory | 'Full Body' | 'Push' | 'Pull' | 'Legs' | 'Core & Cardio';
+  level: 'iniciante' | 'intermediário' | 'avançado';
+  muscleFocus: string;
+  estimatedMinutes: number;
+  exercises: WorkoutExercise[];
+  createdAt: string;
+  updatedAt: string;
+}
+

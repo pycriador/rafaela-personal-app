@@ -13,6 +13,8 @@ import {
   ChevronsLeft,
   ChevronsRight,
   X,
+  Sparkles,
+  Layers,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -20,6 +22,7 @@ import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Modal } from '../../components/ui/Modal';
 import { Badge } from '../../components/ui/Badge';
+import { WorkoutTemplatesModal } from '../../components/workouts/WorkoutTemplatesModal';
 import { studentRepository } from '../../repositories/studentRepository';
 import { exerciseRepository } from '../../repositories/exerciseRepository';
 import { workoutRepository } from '../../repositories/workoutRepository';
@@ -33,6 +36,7 @@ import {
   WorkoutDay,
   WorkoutExercise,
   DayOfWeek,
+  WorkoutTemplate,
 } from '../../types';
 
 export const WorkoutBuilderPage: React.FC = () => {
@@ -44,6 +48,9 @@ export const WorkoutBuilderPage: React.FC = () => {
   const studentGoal = searchParams.get('studentGoal') || 'all';
   const studentStatus = searchParams.get('studentStatus') || 'all';
   const { success, error: toastError } = useToast();
+
+  const [templatesModalOpen, setTemplatesModalOpen] = useState(false);
+  const [saveAsNewVersion, setSaveAsNewVersion] = useState(false);
 
 
   const [students, setStudents] = useState<Student[]>([]);
@@ -269,6 +276,20 @@ export const WorkoutBuilderPage: React.FC = () => {
     success('Parâmetros e permissões atualizados!');
   };
 
+  const handleSelectTemplate = (template: WorkoutTemplate) => {
+    const updated = [...workoutDays];
+    if (!updated[activeDayIndex]) return;
+
+    updated[activeDayIndex] = {
+      ...updated[activeDayIndex],
+      name: template.name.split(' - ')[0] || updated[activeDayIndex].name,
+      muscleFocus: template.muscleFocus || updated[activeDayIndex].muscleFocus,
+      exercises: [...template.exercises],
+    };
+    setWorkoutDays(updated);
+    success(`Série modelo "${template.name}" carregada no ${updated[activeDayIndex].dayOfWeek}!`);
+  };
+
   const handleSaveFullPlan = async () => {
     if (!selectedStudentId) {
       toastError('Selecione um aluno para o treino.');
@@ -283,11 +304,28 @@ export const WorkoutBuilderPage: React.FC = () => {
 
     try {
       const student = students.find((s) => s.id === selectedStudentId);
+      const existingPlans = await workoutRepository.getPlansByStudentId(selectedStudentId);
+
+      let planId: string;
+      let versionNum: number = 1;
+
+      if (saveAsNewVersion && existingPlans.length > 0) {
+        const maxVersion = existingPlans.reduce((max, p) => Math.max(max, p.version || 1), 1);
+        versionNum = maxVersion + 1;
+        planId = `plan-${selectedStudentId}-v${versionNum}-${Date.now()}`;
+      } else {
+        const existingActive = existingPlans.find((p) => p.active) || existingPlans[0];
+        planId = existingActive ? existingActive.id : `plan-${selectedStudentId}`;
+        versionNum = existingActive?.version || 1;
+      }
+
       const plan: WorkoutPlan = {
-        id: `plan-${selectedStudentId}`,
+        id: planId,
         studentId: selectedStudentId,
         trainerId: 'user-rafaela',
         name: planName,
+        version: versionNum,
+        cycleName: planName,
         active: true,
         days: workoutDays,
         createdAt: new Date().toISOString().split('T')[0],
@@ -295,17 +333,21 @@ export const WorkoutBuilderPage: React.FC = () => {
       };
 
       await workoutRepository.savePlan(plan);
+      if (saveAsNewVersion) {
+        await workoutRepository.activatePlanVersion(selectedStudentId, plan.id);
+      }
+
       await activityRepository.log({
         actorId: 'user-rafaela',
         actorName: 'Rafaela Personal',
         actorRole: 'personal',
-        action: 'Treino montado/atualizado',
-        description: `Rafaela atualizou o plano de treino para ${student?.name} (${workoutDays.length} dias configurados).`,
+        action: saveAsNewVersion ? 'Nova versão de treino prescrita' : 'Treino montado/atualizado',
+        description: `Rafaela salvou ${saveAsNewVersion ? `a Versão V${versionNum}` : 'o plano'} para ${student?.name} (${workoutDays.length} dias configurados).`,
         studentId: selectedStudentId,
         iconType: 'edit',
       });
 
-      success('Plano de treino salvo com sucesso!');
+      success(`Plano de treino (V${versionNum}) salvo com sucesso!`);
       navigate(`/personal/students/${selectedStudentId}`);
     } catch (err) {
       toastError('Erro ao salvar o plano de treino.');
@@ -682,6 +724,28 @@ export const WorkoutBuilderPage: React.FC = () => {
       {/* STEP 3: Montar Exercícios por Dia (Section 11, 16, 17, 18) */}
       {currentStep === 3 && activeDay && (
         <div className="space-y-6">
+          {/* Plan Name & Versioning Options */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated/50 border border-slate-200/60 dark:border-dark-border/40">
+            <div className="flex-1 max-w-md">
+              <Input
+                label="Nome da Ficha / Ciclo de Treino"
+                value={planName}
+                onChange={(e) => setPlanName(e.target.value)}
+                placeholder="Ex: Treino Hipertrofia ABCD, Fase 2 - Força"
+                className="text-xs"
+              />
+            </div>
+            <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 cursor-pointer pt-3 sm:pt-0">
+              <input
+                type="checkbox"
+                checked={saveAsNewVersion}
+                onChange={(e) => setSaveAsNewVersion(e.target.checked)}
+                className="w-4 h-4 accent-emerald-500 rounded"
+              />
+              <span>Salvar como <strong>Nova Versão / Novo Ciclo</strong> (preserva a rotina anterior no histórico)</span>
+            </label>
+          </div>
+
           {/* Day Tabs */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
             {workoutDays.map((day, idx) => (
@@ -733,16 +797,29 @@ export const WorkoutBuilderPage: React.FC = () => {
                 />
               </div>
 
-              <Button
-                variant="primary"
-                onClick={() => {
-                  setPickerSearch('');
-                  setPickerModalOpen(true);
-                }}
-                leftIcon={<Plus className="w-4 h-4" />}
-              >
-                Adicionar Exercício
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => setTemplatesModalOpen(true)}
+                  leftIcon={<Sparkles className="w-3.5 h-3.5 text-emerald-500" />}
+                  className="text-xs"
+                >
+                  Séries Prontas
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => {
+                    setPickerSearch('');
+                    setPickerModalOpen(true);
+                  }}
+                  leftIcon={<Plus className="w-3.5 h-3.5" />}
+                  className="text-xs"
+                >
+                  Adicionar Exercício
+                </Button>
+              </div>
             </div>
 
             {/* Exercises List for this day */}
@@ -1089,6 +1166,15 @@ export const WorkoutBuilderPage: React.FC = () => {
           </div>
         )}
       </Modal>
+
+      {/* Modal: Central de Séries Pré-Cadastradas (Modelos) */}
+      <WorkoutTemplatesModal
+        isOpen={templatesModalOpen}
+        onClose={() => setTemplatesModalOpen(false)}
+        onSelectTemplate={handleSelectTemplate}
+        title="Central de Séries Modelos Pré-Cadastradas"
+        description={`Carregue uma série pronta para o treino de ${activeDay?.dayOfWeek || 'hoje'}.`}
+      />
     </div>
   );
 };
