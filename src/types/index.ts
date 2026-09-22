@@ -58,7 +58,10 @@ export type ExerciseCategory =
   | 'Ombros'
   | 'Bíceps'
   | 'Tríceps'
-  | 'Core';
+  | 'Core'
+  | 'Cardio'
+  | 'Mobilidade';
+
 
 export type ExerciseType =
   | 'máquina'

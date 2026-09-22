@@ -875,7 +875,10 @@ export const WorkoutBuilderPage: React.FC = () => {
                 { value: 'Bíceps', label: 'Bíceps' },
                 { value: 'Tríceps', label: 'Tríceps' },
                 { value: 'Core', label: 'Core / Abdômen' },
+                { value: 'Cardio', label: 'Cardio' },
+                { value: 'Mobilidade', label: 'Mobilidade / Alongamento' },
               ]}
+
             />
           </div>
 
