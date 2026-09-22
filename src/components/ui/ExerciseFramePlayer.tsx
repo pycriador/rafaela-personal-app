@@ -108,14 +108,17 @@ export const ExerciseFramePlayer: React.FC<ExerciseFramePlayerProps> = ({
   if (compact) {
     return (
       <div
-        className={`relative group bg-slate-900 overflow-hidden rounded-2xl flex items-center justify-center select-none ${className}`}
+        className={`relative group bg-slate-900/90 dark:bg-slate-950 overflow-hidden rounded-2xl flex items-center justify-center select-none ${className}`}
         onClick={hasMultipleFrames ? togglePlay : undefined}
       >
-        {/* SVG Display */}
+        {/* Subtle radial spotlight */}
+        <div className="absolute inset-0 bg-radial from-emerald-500/5 via-transparent to-transparent pointer-events-none" />
+
+        {/* Exercise Illustration Display */}
         <img
           src={activeSrc}
           alt={`${title} - frame ${currentFrameIdx + 1}`}
-          className="w-full h-full object-contain p-2 filter drop-shadow-md transition-transform duration-200 group-hover:scale-105"
+          className="max-w-full max-h-full w-auto h-auto object-contain p-3 sm:p-3.5 transition-transform duration-300 group-hover:scale-[1.03] select-none pointer-events-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.18)]"
           loading="lazy"
         />
 
@@ -207,15 +210,15 @@ export const ExerciseFramePlayer: React.FC<ExerciseFramePlayerProps> = ({
         )}
       </div>
 
-      {/* Main Vector Stage */}
-      <div className="relative w-full h-48 sm:h-60 max-h-[250px] flex items-center justify-center p-2 sm:p-3 overflow-hidden">
+      {/* Main Illustration Stage */}
+      <div className="relative w-full h-52 sm:h-64 max-h-[270px] flex items-center justify-center p-3 sm:p-5 overflow-hidden">
         {/* Subtle radial spotlight backdrop */}
         <div className="absolute inset-0 bg-radial from-emerald-500/10 via-transparent to-transparent opacity-60 pointer-events-none" />
 
         <img
           src={activeSrc}
           alt={`${title} - frame ${currentFrameIdx + 1}`}
-          className="w-full h-full object-contain filter drop-shadow-[0_10px_25px_rgba(0,0,0,0.5)] z-0 select-none"
+          className="max-w-full max-h-full w-auto h-auto object-contain z-10 select-none drop-shadow-[0_4px_14px_rgba(0,0,0,0.25)] transition-all duration-150"
         />
       </div>
 

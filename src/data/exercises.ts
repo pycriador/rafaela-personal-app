@@ -14,11 +14,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Banco Reto e Barra Olímpica",
     "difficulty": "intermediário",
     "instructions": "Deite com os olhos alinhados à barra. Pegada ligeiramente mais larga que os ombros. Desça a barra controladamente até o terço médio do esterno e empurre.",
-    "imageUrl": "/exercises/frames/bench-press/frame-1.svg",
+    "imageUrl": "/exercises/frames/bench-press/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/bench-press/frame-1.svg",
-      "/exercises/frames/bench-press/frame-2.svg",
-      "/exercises/frames/bench-press/frame-3.svg"
+      "/exercises/frames/bench-press/frame-1.png",
+      "/exercises/frames/bench-press/frame-2.png",
+      "/exercises/frames/bench-press/frame-3.png"
     ],
     "alternatives": [
       "exercise-peito-01",
@@ -63,11 +63,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Banco Inclinado (30º-45º) e Halteres",
     "difficulty": "intermediário",
     "instructions": "Com o banco em inclinação de 30 a 45 graus, empurre os halteres para cima convergindo levemente no topo sem bater os pesos.",
-    "imageUrl": "/exercises/frames/incline-dumbbell-press/frame-1.svg",
+    "imageUrl": "/exercises/frames/incline-dumbbell-press/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/incline-dumbbell-press/frame-1.svg",
-      "/exercises/frames/incline-dumbbell-press/frame-2.svg",
-      "/exercises/frames/incline-dumbbell-press/frame-3.svg"
+      "/exercises/frames/incline-dumbbell-press/frame-1.png",
+      "/exercises/frames/incline-dumbbell-press/frame-2.png",
+      "/exercises/frames/incline-dumbbell-press/frame-3.png"
     ],
     "alternatives": [
       "exercise-peito-02",
@@ -137,11 +137,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Máquina Convergente / Articulada",
     "difficulty": "iniciante",
     "instructions": "Ajuste o assento para que os pegadores fiquem na linha média do peito. Mantenha os pés firmes no chão, escápulas retraídas e empurre controlando a fase excêntrica.",
-    "imageUrl": "/exercises/frames/machine-chest-press/frame-1.svg",
+    "imageUrl": "/exercises/frames/machine-chest-press/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/machine-chest-press/frame-1.svg",
-      "/exercises/frames/machine-chest-press/frame-2.svg",
-      "/exercises/frames/machine-chest-press/frame-3.svg"
+      "/exercises/frames/machine-chest-press/frame-1.png",
+      "/exercises/frames/machine-chest-press/frame-2.png",
+      "/exercises/frames/machine-chest-press/frame-3.png"
     ],
     "alternatives": [
       "exercise-peito-02",
@@ -210,11 +210,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Peso Corporal (Chão)",
     "difficulty": "iniciante",
     "instructions": "Mantenha o corpo em linha reta e abdômen contraído. Desça o peito próximo ao solo mantendo cotovelos em aproximadamente 45º do tronco.",
-    "imageUrl": "/exercises/frames/push-up/frame-1.svg",
+    "imageUrl": "/exercises/frames/push-up/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/push-up/frame-1.svg",
-      "/exercises/frames/push-up/frame-2.svg",
-      "/exercises/frames/push-up/frame-3.svg"
+      "/exercises/frames/push-up/frame-1.png",
+      "/exercises/frames/push-up/frame-2.png",
+      "/exercises/frames/push-up/frame-3.png"
     ],
     "alternatives": [
       "exercise-peito-01",
@@ -283,11 +283,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Banco 80º-90º e Halteres",
     "difficulty": "intermediário",
     "instructions": "Sentado com as costas firmes no apoio. Eleve os halteres acima da cabeça em movimento controlado e desça até a linha das orelhas.",
-    "imageUrl": "/exercises/frames/seated-dumbbell-press/frame-1.svg",
+    "imageUrl": "/exercises/frames/seated-dumbbell-press/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/seated-dumbbell-press/frame-1.svg",
-      "/exercises/frames/seated-dumbbell-press/frame-2.svg",
-      "/exercises/frames/seated-dumbbell-press/frame-3.svg"
+      "/exercises/frames/seated-dumbbell-press/frame-1.png",
+      "/exercises/frames/seated-dumbbell-press/frame-2.png",
+      "/exercises/frames/seated-dumbbell-press/frame-3.png"
     ],
     "alternatives": [
       "exercise-ombros-01",
@@ -329,11 +329,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Halteres leves a moderados",
     "difficulty": "iniciante",
     "instructions": "Eleve os braços para os lados até a linha dos ombros, mantendo ligeira flexão de cotovelos e sem balanço do tronco.",
-    "imageUrl": "/exercises/frames/lateral-raise/frame-1.svg",
+    "imageUrl": "/exercises/frames/lateral-raise/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/lateral-raise/frame-1.svg",
-      "/exercises/frames/lateral-raise/frame-2.svg",
-      "/exercises/frames/lateral-raise/frame-3.svg"
+      "/exercises/frames/lateral-raise/frame-1.png",
+      "/exercises/frames/lateral-raise/frame-2.png",
+      "/exercises/frames/lateral-raise/frame-3.png"
     ],
     "alternatives": [
       "exercise-ombros-04",
@@ -501,11 +501,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Barra Olímpica e Anilhas",
     "difficulty": "avançado",
     "instructions": "Pés na largura do quadril, coluna neutra. Puxe a barra rente às canelas, estendendo quadril e joelhos sincronizadamente. Trave no topo sem hiperextender a lombar.",
-    "imageUrl": "/exercises/frames/deadlift/frame-1.svg",
+    "imageUrl": "/exercises/frames/deadlift/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/deadlift/frame-1.svg",
-      "/exercises/frames/deadlift/frame-2.svg",
-      "/exercises/frames/deadlift/frame-3.svg"
+      "/exercises/frames/deadlift/frame-1.png",
+      "/exercises/frames/deadlift/frame-2.png",
+      "/exercises/frames/deadlift/frame-3.png"
     ],
     "alternatives": [
       "exercise-pernas-06",
@@ -525,11 +525,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Barra ou Par de Halteres",
     "difficulty": "intermediário",
     "instructions": "Pés paralelos, joelhos semidobrados. Projete o quadril para trás mantendo as costas perfeitamente seladas até sentir o posterior alongar.",
-    "imageUrl": "/exercises/frames/romanian-deadlift/frame-1.svg",
+    "imageUrl": "/exercises/frames/romanian-deadlift/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/romanian-deadlift/frame-1.svg",
-      "/exercises/frames/romanian-deadlift/frame-2.svg",
-      "/exercises/frames/romanian-deadlift/frame-3.svg"
+      "/exercises/frames/romanian-deadlift/frame-1.png",
+      "/exercises/frames/romanian-deadlift/frame-2.png",
+      "/exercises/frames/romanian-deadlift/frame-3.png"
     ],
     "alternatives": [
       "exercise-pernas-05",
@@ -549,11 +549,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Barra Olímpica e Anilhas",
     "difficulty": "avançado",
     "instructions": "Incline o tronco a cerca de 45º mantendo coluna neutra. Puxe a barra até a região do umbigo, contraindo as costas.",
-    "imageUrl": "/exercises/frames/barbell-row/frame-1.svg",
+    "imageUrl": "/exercises/frames/barbell-row/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/barbell-row/frame-1.svg",
-      "/exercises/frames/barbell-row/frame-2.svg",
-      "/exercises/frames/barbell-row/frame-3.svg"
+      "/exercises/frames/barbell-row/frame-1.png",
+      "/exercises/frames/barbell-row/frame-2.png",
+      "/exercises/frames/barbell-row/frame-3.png"
     ],
     "alternatives": [
       "exercise-costas-02",
@@ -623,11 +623,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Banco Plano e Halter",
     "difficulty": "intermediário",
     "instructions": "Apoie um joelho e mão no banco. Com o outro lado, puxe o halter em direção ao quadril mantendo as costas retas e cotovelo colado.",
-    "imageUrl": "/exercises/frames/one-arm-dumbbell-row/frame-1.svg",
+    "imageUrl": "/exercises/frames/one-arm-dumbbell-row/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/one-arm-dumbbell-row/frame-1.svg",
-      "/exercises/frames/one-arm-dumbbell-row/frame-2.svg",
-      "/exercises/frames/one-arm-dumbbell-row/frame-3.svg"
+      "/exercises/frames/one-arm-dumbbell-row/frame-1.png",
+      "/exercises/frames/one-arm-dumbbell-row/frame-2.png",
+      "/exercises/frames/one-arm-dumbbell-row/frame-3.png"
     ],
     "alternatives": [
       "exercise-costas-02",
@@ -697,11 +697,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Máquina Articulada de Remada",
     "difficulty": "iniciante",
     "instructions": "Ajuste o apoio do peito. Puxe os pegadores retraindo as escápulas ao final e expire. Controle o retorno sem arredondar os ombros.",
-    "imageUrl": "/exercises/frames/machine-row/frame-1.svg",
+    "imageUrl": "/exercises/frames/machine-row/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/machine-row/frame-1.svg",
-      "/exercises/frames/machine-row/frame-2.svg",
-      "/exercises/frames/machine-row/frame-3.svg"
+      "/exercises/frames/machine-row/frame-1.png",
+      "/exercises/frames/machine-row/frame-2.png",
+      "/exercises/frames/machine-row/frame-3.png"
     ],
     "alternatives": [
       "exercise-costas-01",
@@ -721,11 +721,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Polia Alta com Barra Longa",
     "difficulty": "iniciante",
     "instructions": "Pegada aberta pronada. Puxe a barra em direção à parte superior do peito projetando o esterno e deprimindo as escápulas.",
-    "imageUrl": "/exercises/frames/lat-pulldown/frame-1.svg",
+    "imageUrl": "/exercises/frames/lat-pulldown/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/lat-pulldown/frame-1.svg",
-      "/exercises/frames/lat-pulldown/frame-2.svg",
-      "/exercises/frames/lat-pulldown/frame-3.svg"
+      "/exercises/frames/lat-pulldown/frame-1.png",
+      "/exercises/frames/lat-pulldown/frame-2.png",
+      "/exercises/frames/lat-pulldown/frame-3.png"
     ],
     "alternatives": [
       "exercise-costas-02",
@@ -793,11 +793,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Barra Fixa",
     "difficulty": "avançado",
     "instructions": "Segure a barra com pegada pronada afastada. Puxe o corpo até que o queixo passe a barra, sem balançar o corpo.",
-    "imageUrl": "/exercises/frames/pull-up/frame-1.svg",
+    "imageUrl": "/exercises/frames/pull-up/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/pull-up/frame-1.svg",
-      "/exercises/frames/pull-up/frame-2.svg",
-      "/exercises/frames/pull-up/frame-3.svg"
+      "/exercises/frames/pull-up/frame-1.png",
+      "/exercises/frames/pull-up/frame-2.png",
+      "/exercises/frames/pull-up/frame-3.png"
     ],
     "alternatives": [
       "exercise-costas-01",
@@ -913,11 +913,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Gaiola de Agachamento e Barra Olímpica",
     "difficulty": "avançado",
     "instructions": "Barra apoiada nos trapézios. Desça flexionando quadril e joelhos mantendo joelhos alinhados com a ponta dos pés até 90º ou mais.",
-    "imageUrl": "/exercises/frames/squat/frame-1.svg",
+    "imageUrl": "/exercises/frames/squat/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/squat/frame-1.svg",
-      "/exercises/frames/squat/frame-2.svg",
-      "/exercises/frames/squat/frame-3.svg"
+      "/exercises/frames/squat/frame-1.png",
+      "/exercises/frames/squat/frame-2.png",
+      "/exercises/frames/squat/frame-3.png"
     ],
     "alternatives": [
       "exercise-pernas-02",
@@ -986,11 +986,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Máquina de Leg Press 45º",
     "difficulty": "iniciante",
     "instructions": "Apoie as costas completamente no encosto. Pés na largura dos ombros na plataforma. Destrave a máquina e desça até 90º sem descolar a lombar.",
-    "imageUrl": "/exercises/frames/leg-press/frame-1.svg",
+    "imageUrl": "/exercises/frames/leg-press/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/leg-press/frame-1.svg",
-      "/exercises/frames/leg-press/frame-2.svg",
-      "/exercises/frames/leg-press/frame-3.svg"
+      "/exercises/frames/leg-press/frame-1.png",
+      "/exercises/frames/leg-press/frame-2.png",
+      "/exercises/frames/leg-press/frame-3.png"
     ],
     "alternatives": [
       "exercise-pernas-01",
@@ -1035,11 +1035,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Par de Halteres",
     "difficulty": "intermediário",
     "instructions": "Dê um passo à frente flexionando ambos os joelhos até 90º. Mantenha o joelho da frente alinhado ao tornozelo e o tronco reto.",
-    "imageUrl": "/exercises/frames/walking-lunge/frame-1.svg",
+    "imageUrl": "/exercises/frames/walking-lunge/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/walking-lunge/frame-1.svg",
-      "/exercises/frames/walking-lunge/frame-2.svg",
-      "/exercises/frames/walking-lunge/frame-3.svg"
+      "/exercises/frames/walking-lunge/frame-1.png",
+      "/exercises/frames/walking-lunge/frame-2.png",
+      "/exercises/frames/walking-lunge/frame-3.png"
     ],
     "alternatives": [
       "exercise-pernas-01",
@@ -1081,11 +1081,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Cadeira Extensora",
     "difficulty": "iniciante",
     "instructions": "Ajuste o encosto e o rolo no tornozelo. Estenda as pernas controlando o movimento e segure 1 segundo no topo antes de descer suavemente.",
-    "imageUrl": "/exercises/frames/leg-extension/frame-1.svg",
+    "imageUrl": "/exercises/frames/leg-extension/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/leg-extension/frame-1.svg",
-      "/exercises/frames/leg-extension/frame-2.svg",
-      "/exercises/frames/leg-extension/frame-3.svg"
+      "/exercises/frames/leg-extension/frame-1.png",
+      "/exercises/frames/leg-extension/frame-2.png",
+      "/exercises/frames/leg-extension/frame-3.png"
     ],
     "alternatives": [
       "exercise-pernas-01",
@@ -1271,11 +1271,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Par de halteres",
     "difficulty": "iniciante",
     "instructions": "Em pé ou sentado, flexione um braço por vez com supinação do punho na subida.",
-    "imageUrl": "/exercises/frames/bicep-curl/frame-1.svg",
+    "imageUrl": "/exercises/frames/bicep-curl/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/bicep-curl/frame-1.svg",
-      "/exercises/frames/bicep-curl/frame-2.svg",
-      "/exercises/frames/bicep-curl/frame-3.svg"
+      "/exercises/frames/bicep-curl/frame-1.png",
+      "/exercises/frames/bicep-curl/frame-2.png",
+      "/exercises/frames/bicep-curl/frame-3.png"
     ],
     "alternatives": [
       "exercise-biceps-01",
@@ -1295,11 +1295,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Par de halteres",
     "difficulty": "iniciante",
     "instructions": "Pegada neutra (palmas voltadas para dentro). Flexione os antebraços mantendo pegada firme durante todo o curso.",
-    "imageUrl": "/exercises/frames/hammer-curl/frame-1.svg",
+    "imageUrl": "/exercises/frames/hammer-curl/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/hammer-curl/frame-1.svg",
-      "/exercises/frames/hammer-curl/frame-2.svg",
-      "/exercises/frames/hammer-curl/frame-3.svg"
+      "/exercises/frames/hammer-curl/frame-1.png",
+      "/exercises/frames/hammer-curl/frame-2.png",
+      "/exercises/frames/hammer-curl/frame-3.png"
     ],
     "alternatives": [
       "exercise-biceps-01",
@@ -1460,11 +1460,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Banco plano e barra W",
     "difficulty": "intermediário",
     "instructions": "Deitado no banco, desça a barra suavemente em direção à testa mantendo os cotovelos fechados e verticais.",
-    "imageUrl": "/exercises/frames/skull-crusher/frame-1.svg",
+    "imageUrl": "/exercises/frames/skull-crusher/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/skull-crusher/frame-1.svg",
-      "/exercises/frames/skull-crusher/frame-2.svg",
-      "/exercises/frames/skull-crusher/frame-3.svg"
+      "/exercises/frames/skull-crusher/frame-1.png",
+      "/exercises/frames/skull-crusher/frame-2.png",
+      "/exercises/frames/skull-crusher/frame-3.png"
     ],
     "alternatives": [
       "exercise-triceps-01",
@@ -1558,11 +1558,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Colchonete",
     "difficulty": "iniciante",
     "instructions": "Apoie antebraços e pontas dos pés no solo. Mantenha linha reta da cabeça aos pés, contraindo glúteos e abdômen.",
-    "imageUrl": "/exercises/frames/plank/frame-1.svg",
+    "imageUrl": "/exercises/frames/plank/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/plank/frame-1.svg",
-      "/exercises/frames/plank/frame-2.svg",
-      "/exercises/frames/plank/frame-3.svg"
+      "/exercises/frames/plank/frame-1.png",
+      "/exercises/frames/plank/frame-2.png",
+      "/exercises/frames/plank/frame-3.png"
     ],
     "alternatives": [
       "exercise-core-02",
@@ -1605,11 +1605,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Barra fixa ou paralela",
     "difficulty": "avançado",
     "instructions": "Suspenso na barra, eleve os joelhos ou pernas estendidas em direção ao peito com controle e sem balançar.",
-    "imageUrl": "/exercises/frames/hanging-leg-raise/frame-1.svg",
+    "imageUrl": "/exercises/frames/hanging-leg-raise/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/hanging-leg-raise/frame-1.svg",
-      "/exercises/frames/hanging-leg-raise/frame-2.svg",
-      "/exercises/frames/hanging-leg-raise/frame-3.svg"
+      "/exercises/frames/hanging-leg-raise/frame-1.png",
+      "/exercises/frames/hanging-leg-raise/frame-2.png",
+      "/exercises/frames/hanging-leg-raise/frame-3.png"
     ],
     "alternatives": [
       "exercise-core-02",
@@ -1795,11 +1795,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Banco Reto e Par de Halteres",
     "difficulty": "intermediário",
     "instructions": "Abra os braços mantendo cotovelos levemente flexionados até sentir o alongamento do peitoral. Retorne contraindo o peito no topo.",
-    "imageUrl": "/exercises/frames/dumbbell-fly/frame-1.svg",
+    "imageUrl": "/exercises/frames/dumbbell-fly/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/dumbbell-fly/frame-1.svg",
-      "/exercises/frames/dumbbell-fly/frame-2.svg",
-      "/exercises/frames/dumbbell-fly/frame-3.svg"
+      "/exercises/frames/dumbbell-fly/frame-1.png",
+      "/exercises/frames/dumbbell-fly/frame-2.png",
+      "/exercises/frames/dumbbell-fly/frame-3.png"
     ],
     "alternatives": [
       "exercise-peito-01",
@@ -1967,11 +1967,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Máquina Articulada de Ombros",
     "difficulty": "iniciante",
     "instructions": "Ajuste a altura do banco para que os apoios fiquem no nível das orelhas. Empurre para cima sem travar bruscamente os cotovelos no topo.",
-    "imageUrl": "/exercises/frames/machine-shoulder-press/frame-1.svg",
+    "imageUrl": "/exercises/frames/machine-shoulder-press/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/machine-shoulder-press/frame-1.svg",
-      "/exercises/frames/machine-shoulder-press/frame-2.svg",
-      "/exercises/frames/machine-shoulder-press/frame-3.svg"
+      "/exercises/frames/machine-shoulder-press/frame-1.png",
+      "/exercises/frames/machine-shoulder-press/frame-2.png",
+      "/exercises/frames/machine-shoulder-press/frame-3.png"
     ],
     "alternatives": [
       "exercise-ombros-02",
@@ -2063,11 +2063,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Polia baixa e barra reta ou corda",
     "difficulty": "iniciante",
     "instructions": "Puxe o cabo à frente do corpo elevando os braços até a altura dos olhos com controle na descida.",
-    "imageUrl": "/exercises/frames/cable-front-raise/frame-1.svg",
+    "imageUrl": "/exercises/frames/cable-front-raise/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/cable-front-raise/frame-1.svg",
-      "/exercises/frames/cable-front-raise/frame-2.svg",
-      "/exercises/frames/cable-front-raise/frame-3.svg"
+      "/exercises/frames/cable-front-raise/frame-1.png",
+      "/exercises/frames/cable-front-raise/frame-2.png",
+      "/exercises/frames/cable-front-raise/frame-3.png"
     ],
     "alternatives": [
       "exercise-ombros-03",
@@ -2430,11 +2430,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Halter ou Kettlebell",
     "difficulty": "iniciante",
     "instructions": "Segure o halter na altura do peito com ambas as mãos. Agache mantendo o tronco ereto e os cotovelos entre os joelhos no ponto baixo.",
-    "imageUrl": "/exercises/frames/goblet-squat/frame-1.svg",
+    "imageUrl": "/exercises/frames/goblet-squat/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/goblet-squat/frame-1.svg",
-      "/exercises/frames/goblet-squat/frame-2.svg",
-      "/exercises/frames/goblet-squat/frame-3.svg"
+      "/exercises/frames/goblet-squat/frame-1.png",
+      "/exercises/frames/goblet-squat/frame-2.png",
+      "/exercises/frames/goblet-squat/frame-3.png"
     ],
     "alternatives": [
       "exercise-pernas-01",
@@ -2551,11 +2551,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Mesa Flexora Horizontal",
     "difficulty": "iniciante",
     "instructions": "Deitado de bruços, flexione as pernas aproximando os calcanhares dos glúteos. Mantenha a pelve pressionada contra o estofado.",
-    "imageUrl": "/exercises/frames/lying-leg-curl/frame-1.svg",
+    "imageUrl": "/exercises/frames/lying-leg-curl/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/lying-leg-curl/frame-1.svg",
-      "/exercises/frames/lying-leg-curl/frame-2.svg",
-      "/exercises/frames/lying-leg-curl/frame-3.svg"
+      "/exercises/frames/lying-leg-curl/frame-1.png",
+      "/exercises/frames/lying-leg-curl/frame-2.png",
+      "/exercises/frames/lying-leg-curl/frame-3.png"
     ],
     "alternatives": [
       "exercise-pernas-06",
@@ -3568,11 +3568,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Barra W e Anilhas",
     "difficulty": "iniciante",
     "instructions": "Cotovelos junto ao tronco, flexione os braços levantando a barra até contração máxima sem projetar o corpo.",
-    "imageUrl": "/exercises/frames/ez-bar-curl/frame-1.svg",
+    "imageUrl": "/exercises/frames/ez-bar-curl/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/ez-bar-curl/frame-1.svg",
-      "/exercises/frames/ez-bar-curl/frame-2.svg",
-      "/exercises/frames/ez-bar-curl/frame-3.svg"
+      "/exercises/frames/ez-bar-curl/frame-1.png",
+      "/exercises/frames/ez-bar-curl/frame-2.png",
+      "/exercises/frames/ez-bar-curl/frame-3.png"
     ],
     "alternatives": [
       "exercise-biceps-02",
@@ -3662,11 +3662,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Polia alta com corda",
     "difficulty": "iniciante",
     "instructions": "Cotovelos firmes nas costelas. Estenda os braços para baixo abrindo as pontas da corda no final da contração.",
-    "imageUrl": "/exercises/frames/rope-tricep-pushdown/frame-1.svg",
+    "imageUrl": "/exercises/frames/rope-tricep-pushdown/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/rope-tricep-pushdown/frame-1.svg",
-      "/exercises/frames/rope-tricep-pushdown/frame-2.svg",
-      "/exercises/frames/rope-tricep-pushdown/frame-3.svg"
+      "/exercises/frames/rope-tricep-pushdown/frame-1.png",
+      "/exercises/frames/rope-tricep-pushdown/frame-2.png",
+      "/exercises/frames/rope-tricep-pushdown/frame-3.png"
     ],
     "alternatives": [
       "exercise-triceps-02",
@@ -3732,11 +3732,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Halter e banco",
     "difficulty": "intermediário",
     "instructions": "Segure o halter acima da cabeça com ambas as mãos. Flexione os cotovelos descendo o peso atrás da cabeça e retorne.",
-    "imageUrl": "/exercises/frames/dumbbell-overhead-tricep-extension/frame-1.svg",
+    "imageUrl": "/exercises/frames/dumbbell-overhead-tricep-extension/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/dumbbell-overhead-tricep-extension/frame-1.svg",
-      "/exercises/frames/dumbbell-overhead-tricep-extension/frame-2.svg",
-      "/exercises/frames/dumbbell-overhead-tricep-extension/frame-3.svg"
+      "/exercises/frames/dumbbell-overhead-tricep-extension/frame-1.png",
+      "/exercises/frames/dumbbell-overhead-tricep-extension/frame-2.png",
+      "/exercises/frames/dumbbell-overhead-tricep-extension/frame-3.png"
     ],
     "alternatives": [
       "exercise-triceps-01",
@@ -3875,11 +3875,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Colchonete",
     "difficulty": "iniciante",
     "instructions": "Joelhos flexionados, pés no chão. Flexione a coluna aproximando as costelas do quadril sem puxar o pescoço.",
-    "imageUrl": "/exercises/frames/crunch/frame-1.svg",
+    "imageUrl": "/exercises/frames/crunch/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/crunch/frame-1.svg",
-      "/exercises/frames/crunch/frame-2.svg",
-      "/exercises/frames/crunch/frame-3.svg"
+      "/exercises/frames/crunch/frame-1.png",
+      "/exercises/frames/crunch/frame-2.png",
+      "/exercises/frames/crunch/frame-3.png"
     ],
     "alternatives": [
       "exercise-core-01",
@@ -3994,11 +3994,11 @@ export const initialExercises: Exercise[] = [
     "equipment": "Colchonete",
     "difficulty": "iniciante",
     "instructions": "Deitado de barriga para cima com braços e joelhos elevados. Estenda braço oposto e perna oposta mantendo lombar colada ao chão.",
-    "imageUrl": "/exercises/frames/dead-bug/frame-1.svg",
+    "imageUrl": "/exercises/frames/dead-bug/frame-1.png",
     "videoFrames": [
-      "/exercises/frames/dead-bug/frame-1.svg",
-      "/exercises/frames/dead-bug/frame-2.svg",
-      "/exercises/frames/dead-bug/frame-3.svg"
+      "/exercises/frames/dead-bug/frame-1.png",
+      "/exercises/frames/dead-bug/frame-2.png",
+      "/exercises/frames/dead-bug/frame-3.png"
     ],
     "alternatives": [
       "exercise-core-01",

@@ -100,11 +100,11 @@ export const HeroSection: React.FC = () => {
                   <ExerciseFramePlayer
                     compact
                     frames={[
-                      '/exercises/frames/bench-press/frame-1.svg',
-                      '/exercises/frames/bench-press/frame-2.svg',
-                      '/exercises/frames/bench-press/frame-3.svg',
+                      '/exercises/frames/bench-press/frame-1.png',
+                      '/exercises/frames/bench-press/frame-2.png',
+                      '/exercises/frames/bench-press/frame-3.png',
                     ]}
-                    fallbackImage="/exercises/frames/bench-press/frame-1.svg"
+                    fallbackImage="/exercises/frames/bench-press/frame-1.png"
                     title="Supino Reto com Barra"
                     autoPlay={true}
                     className="h-48 sm:h-52 w-full"

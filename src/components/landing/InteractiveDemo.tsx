@@ -29,9 +29,9 @@ export const InteractiveDemo: React.FC = () => {
       instructions:
         'Deite com os olhos alinhados à barra. Pegada ligeiramente mais larga que os ombros. Mantenha as escápulas aduzidas e os pés firmes no chão. Desça a barra de forma controlada até o terço médio do esterno.',
       frames: [
-        '/exercises/frames/bench-press/frame-1.svg',
-        '/exercises/frames/bench-press/frame-2.svg',
-        '/exercises/frames/bench-press/frame-3.svg',
+        '/exercises/frames/bench-press/frame-1.png',
+        '/exercises/frames/bench-press/frame-2.png',
+        '/exercises/frames/bench-press/frame-3.png',
       ],
       alternatives: ['Supino com Halteres', 'Supino Máquina Articulada'],
     },
@@ -45,9 +45,9 @@ export const InteractiveDemo: React.FC = () => {
       instructions:
         'Apoie a barra sobre os trapézios (barra alta). Pés na largura dos ombros, pontas ligeiramente para fora. Inicie o movimento flexionando quadris e joelhos simultaneamente, descendo até que as coxas fiquem paralelas ao solo.',
       frames: [
-        '/exercises/frames/barbell-squat/frame-1.png',
-        '/exercises/frames/barbell-squat/frame-2.png',
-        '/exercises/frames/barbell-squat/frame-3.png',
+        '/exercises/frames/squat/frame-1.png',
+        '/exercises/frames/squat/frame-2.png',
+        '/exercises/frames/squat/frame-3.png',
       ],
       alternatives: ['Leg Press 45°', 'Agachamento Hack'],
     },
@@ -77,9 +77,9 @@ export const InteractiveDemo: React.FC = () => {
       instructions:
         'Fique em pé com os joelhos destravados e core ativo. Eleve os braços lateralmente com leve flexão nos cotovelos até a linha dos ombros, controlando rigorosamente a descida (fase excêntrica).',
       frames: [
-        '/exercises/frames/dumbbell-lateral-raise/frame-1.png',
-        '/exercises/frames/dumbbell-lateral-raise/frame-2.png',
-        '/exercises/frames/dumbbell-lateral-raise/frame-3.png',
+        '/exercises/frames/lateral-raise/frame-1.png',
+        '/exercises/frames/lateral-raise/frame-2.png',
+        '/exercises/frames/lateral-raise/frame-3.png',
       ],
       alternatives: ['Elevação Lateral na Polia', 'Desenvolvimento Halteres'],
     },
@@ -93,9 +93,9 @@ export const InteractiveDemo: React.FC = () => {
       instructions:
         'Sentado ou em pé, mantenha o halter acima da cabeça com os cotovelos apontados para cima. Flexione os cotovelos descendo o peso atrás da nuca e estenda totalmente sem abrir os braços.',
       frames: [
-        '/exercises/frames/overhead-triceps-extension/frame-1.png',
-        '/exercises/frames/overhead-triceps-extension/frame-2.png',
-        '/exercises/frames/overhead-triceps-extension/frame-3.png',
+        '/exercises/frames/overhead-tricep-extension/frame-1.png',
+        '/exercises/frames/overhead-tricep-extension/frame-2.png',
+        '/exercises/frames/overhead-tricep-extension/frame-3.png',
       ],
       alternatives: ['Tríceps Corda na Polia', 'Tríceps Testa'],
     },

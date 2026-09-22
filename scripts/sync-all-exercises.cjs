@@ -1,4 +1,4 @@
-﻿const fs = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 const manifest = require('../node_modules/@bryllim/workout-guide/manifest.json');
@@ -443,9 +443,8 @@ const allMappedExercises = manifestList.map((item) => {
 
   const id = legacyId || `exercise-${slug}`;
 
-  // Image & Video frames path
-  const localSvgExists = fs.existsSync(path.join(framesDir, slug, 'frame-1.svg'));
-  const ext = localSvgExists ? 'svg' : 'png';
+  // Image & Video frames path: padronizado em PNG com traço suave e uniforme
+  const ext = 'png';
   const imgUrl = `/exercises/frames/${slug}/frame-1.${ext}`;
   const videoFrames = [
     `/exercises/frames/${slug}/frame-1.${ext}`,
