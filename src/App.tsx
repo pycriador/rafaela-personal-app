@@ -33,6 +33,9 @@ import { StudentEvolutionPage } from './pages/student/StudentEvolutionPage';
 import { StudentNutritionPage } from './pages/student/StudentNutritionPage';
 import { StudentProfilePage } from './pages/student/StudentProfilePage';
 
+// Public Pages
+import { LandingPage } from './pages/public/LandingPage';
+
 const RootRedirect: React.FC = () => {
   const { user, isLoading } = useAuth();
 
@@ -63,8 +66,10 @@ export const App: React.FC = () => {
           <BrowserRouter basename={import.meta.env.BASE_URL}>
             <Routes>
 
-              {/* Root redirect based on auth */}
-              <Route path="/" element={<RootRedirect />} />
+              {/* Public Routes */}
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/home" element={<LandingPage />} />
+              <Route path="/app" element={<RootRedirect />} />
               <Route path="/login" element={<LoginPage />} />
 
               {/* Personal Trainer Routes */}
