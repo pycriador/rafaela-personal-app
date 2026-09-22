@@ -1,0 +1,316 @@
+import { WorkoutPlan, WorkoutSession, WorkoutModification } from '../types';
+import { getItem, setItem, STORAGE_KEYS } from './storage';
+import { initialWorkoutPlans, initialSessions, initialModifications } from '../data/workouts';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
+
+export interface IWorkoutRepository {
+  getPlans(): Promise<WorkoutPlan[]>;
+  getPlanById(id: string): Promise<WorkoutPlan | null>;
+  getPlanByStudentId(studentId: string): Promise<WorkoutPlan | null>;
+  savePlan(plan: WorkoutPlan): Promise<WorkoutPlan>;
+  deletePlan(id: string): Promise<boolean>;
+
+  getSessions(studentId?: string): Promise<WorkoutSession[]>;
+  getSessionById(id: string): Promise<WorkoutSession | null>;
+  saveSession(session: WorkoutSession): Promise<WorkoutSession>;
+
+  getModifications(studentId?: string): Promise<WorkoutModification[]>;
+  saveModification(mod: Omit<WorkoutModification, 'id' | 'timestamp'>): Promise<WorkoutModification>;
+}
+
+function mapPlanFromDb(row: any): WorkoutPlan {
+  return {
+    id: row.id,
+    studentId: row.student_id || row.studentId,
+    trainerId: row.trainer_id || row.trainerId,
+    name: row.name,
+    active: row.active ?? true,
+    days: Array.isArray(row.days) ? row.days : JSON.parse(row.days || '[]'),
+    createdAt: row.created_at || row.createdAt,
+    updatedAt: row.updated_at || row.updatedAt,
+  };
+}
+
+function mapPlanToDb(plan: WorkoutPlan): any {
+  return {
+    id: plan.id,
+    student_id: plan.studentId,
+    trainer_id: plan.trainerId,
+    name: plan.name,
+    active: plan.active,
+    days: plan.days,
+    updated_at: new Date().toISOString(),
+  };
+}
+
+function mapSessionFromDb(row: any): WorkoutSession {
+  return {
+    id: row.id,
+    studentId: row.student_id || row.studentId,
+    workoutPlanId: row.workout_plan_id || row.workoutPlanId,
+    workoutDayId: row.workout_day_id || row.workoutDayId,
+    workoutDayName: row.workout_day_name || row.workoutDayName,
+    date: row.date,
+    status: row.status,
+    startTime: row.start_time || row.startTime,
+    endTime: row.end_time || row.endTime,
+    durationMinutes: Number(row.duration_minutes ?? row.durationMinutes ?? 0),
+    rating: row.rating ? Number(row.rating) : undefined,
+    rpe: row.rpe ? Number(row.rpe) : undefined,
+    energyLevel: row.energy_level ? Number(row.energy_level) : undefined,
+    notes: row.notes,
+    setsCompleted: Array.isArray(row.sets_completed)
+      ? row.sets_completed
+      : JSON.parse(row.sets_completed || '[]'),
+    skippedExercises: Array.isArray(row.skipped_exercises)
+      ? row.skipped_exercises
+      : JSON.parse(row.skipped_exercises || '[]'),
+    substitutedExercises: Array.isArray(row.substituted_exercises)
+      ? row.substituted_exercises
+      : JSON.parse(row.substituted_exercises || '[]'),
+    totalVolumeKg: Number(row.total_volume_kg ?? row.totalVolumeKg ?? 0),
+    totalSets: Number(row.total_sets ?? row.totalSets ?? 0),
+    totalExercises: Number(row.total_exercises ?? row.totalExercises ?? 0),
+  };
+}
+
+function mapSessionToDb(s: WorkoutSession): any {
+  return {
+    id: s.id,
+    student_id: s.studentId,
+    workout_plan_id: s.workoutPlanId,
+    workout_day_id: s.workoutDayId,
+    workout_day_name: s.workoutDayName,
+    date: s.date,
+    status: s.status,
+    start_time: s.startTime,
+    end_time: s.endTime,
+    duration_minutes: s.durationMinutes,
+    rating: s.rating,
+    rpe: s.rpe,
+    energy_level: s.energyLevel,
+    notes: s.notes,
+    sets_completed: s.setsCompleted,
+    skipped_exercises: s.skippedExercises,
+    substituted_exercises: s.substitutedExercises,
+    total_volume_kg: s.totalVolumeKg,
+    total_sets: s.totalSets,
+    total_exercises: s.totalExercises,
+  };
+}
+
+function mapModFromDb(row: any): WorkoutModification {
+  return {
+    id: row.id,
+    studentId: row.student_id || row.studentId,
+    studentName: row.student_name || row.studentName,
+    sessionId: row.session_id || row.sessionId,
+    exerciseName: row.exercise_name || row.exerciseName,
+    action: row.action,
+    before: row.before_value !== undefined ? row.before_value : row.before,
+    after: row.after_value !== undefined ? row.after_value : row.after,
+    difference: row.difference,
+    reason: row.reason,
+    timestamp: row.timestamp,
+  };
+}
+
+function mapModToDb(m: WorkoutModification): any {
+  return {
+    id: m.id,
+    student_id: m.studentId,
+    student_name: m.studentName,
+    session_id: m.sessionId,
+    exercise_name: m.exerciseName,
+    action: m.action,
+    before_value: m.before,
+    after_value: m.after,
+    difference: m.difference,
+    reason: m.reason,
+    timestamp: m.timestamp,
+  };
+}
+
+export class SupabaseWorkoutRepository implements IWorkoutRepository {
+  async getPlans(): Promise<WorkoutPlan[]> {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase.from('workout_plans').select('*');
+        if (!error && data && data.length > 0) {
+          const plans = data.map(mapPlanFromDb);
+          setItem(STORAGE_KEYS.WORKOUT_PLANS, plans);
+          return plans;
+        }
+      } catch (err) {
+        // fallback
+      }
+    }
+    return getItem<WorkoutPlan[]>(STORAGE_KEYS.WORKOUT_PLANS, initialWorkoutPlans);
+  }
+
+  async getPlanById(id: string): Promise<WorkoutPlan | null> {
+    const plans = await this.getPlans();
+    return plans.find((p) => p.id === id) || null;
+  }
+
+  async getPlanByStudentId(studentId: string): Promise<WorkoutPlan | null> {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase
+          .from('workout_plans')
+          .select('*')
+          .eq('student_id', studentId)
+          .order('active', { ascending: false });
+        if (!error && data && data.length > 0) {
+          return mapPlanFromDb(data[0]);
+        }
+      } catch (err) {
+        // fallback
+      }
+    }
+    const plans = await this.getPlans();
+    return (
+      plans.find((p) => p.studentId === studentId && p.active) ||
+      plans.find((p) => p.studentId === studentId) ||
+      null
+    );
+  }
+
+  async savePlan(plan: WorkoutPlan): Promise<WorkoutPlan> {
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('workout_plans').upsert(mapPlanToDb(plan));
+      } catch (err) {
+        console.error('Supabase save plan error:', err);
+      }
+    }
+
+    const plans = await this.getPlans();
+    const index = plans.findIndex((p) => p.id === plan.id);
+    if (index === -1) {
+      plans.unshift(plan);
+    } else {
+      plans[index] = { ...plan, updatedAt: new Date().toISOString().split('T')[0] };
+    }
+    setItem(STORAGE_KEYS.WORKOUT_PLANS, plans);
+    return plan;
+  }
+
+  async deletePlan(id: string): Promise<boolean> {
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('workout_plans').delete().eq('id', id);
+      } catch (err) {
+        console.error('Supabase delete plan error:', err);
+      }
+    }
+    const plans = await this.getPlans();
+    const filtered = plans.filter((p) => p.id !== id);
+    setItem(STORAGE_KEYS.WORKOUT_PLANS, filtered);
+    return true;
+  }
+
+  async getSessions(studentId?: string): Promise<WorkoutSession[]> {
+    if (isSupabaseConfigured) {
+      try {
+        let query = supabase.from('workout_sessions').select('*').order('date', { ascending: false });
+        if (studentId) {
+          query = query.eq('student_id', studentId);
+        }
+        const { data, error } = await query;
+        if (!error && data && data.length > 0) {
+          const sessions = data.map(mapSessionFromDb);
+          if (!studentId) setItem(STORAGE_KEYS.SESSIONS, sessions);
+          return sessions;
+        }
+      } catch (err) {
+        // fallback
+      }
+    }
+
+    const sessions = getItem<WorkoutSession[]>(STORAGE_KEYS.SESSIONS, initialSessions);
+    if (studentId) {
+      return sessions.filter((s) => s.studentId === studentId);
+    }
+    return sessions;
+  }
+
+  async getSessionById(id: string): Promise<WorkoutSession | null> {
+    const sessions = await this.getSessions();
+    return sessions.find((s) => s.id === id) || null;
+  }
+
+  async saveSession(session: WorkoutSession): Promise<WorkoutSession> {
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('workout_sessions').upsert(mapSessionToDb(session));
+      } catch (err) {
+        console.error('Supabase save session error:', err);
+      }
+    }
+
+    const sessions = await this.getSessions();
+    const index = sessions.findIndex((s) => s.id === session.id);
+    if (index === -1) {
+      sessions.unshift(session);
+    } else {
+      sessions[index] = session;
+    }
+    setItem(STORAGE_KEYS.SESSIONS, sessions);
+    return session;
+  }
+
+  async getModifications(studentId?: string): Promise<WorkoutModification[]> {
+    if (isSupabaseConfigured) {
+      try {
+        let query = supabase
+          .from('workout_modifications')
+          .select('*')
+          .order('timestamp', { ascending: false });
+        if (studentId) {
+          query = query.eq('student_id', studentId);
+        }
+        const { data, error } = await query;
+        if (!error && data && data.length > 0) {
+          const mods = data.map(mapModFromDb);
+          if (!studentId) setItem(STORAGE_KEYS.MODIFICATIONS, mods);
+          return mods;
+        }
+      } catch (err) {
+        // fallback
+      }
+    }
+
+    const mods = getItem<WorkoutModification[]>(STORAGE_KEYS.MODIFICATIONS, initialModifications);
+    if (studentId) {
+      return mods.filter((m) => m.studentId === studentId);
+    }
+    return mods;
+  }
+
+  async saveModification(
+    modData: Omit<WorkoutModification, 'id' | 'timestamp'>
+  ): Promise<WorkoutModification> {
+    const newMod: WorkoutModification = {
+      ...modData,
+      id: `mod-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      timestamp: new Date().toISOString(),
+    };
+
+    if (isSupabaseConfigured) {
+      try {
+        await supabase.from('workout_modifications').insert(mapModToDb(newMod));
+      } catch (err) {
+        console.error('Supabase save modification error:', err);
+      }
+    }
+
+    const mods = await this.getModifications();
+    mods.unshift(newMod);
+    setItem(STORAGE_KEYS.MODIFICATIONS, mods);
+    return newMod;
+  }
+}
+
+export const workoutRepository = new SupabaseWorkoutRepository();
+

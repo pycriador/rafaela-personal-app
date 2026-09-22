@@ -1,0 +1,47 @@
+import { Notification } from '../types';
+
+export const initialNotifications: Notification[] = [
+  {
+    id: 'notif-1',
+    recipientId: 'user-rafaela',
+    recipientRole: 'personal',
+    title: 'Carga alterada',
+    message: 'Mariana aumentou a carga no Leg Press 45º para 125 kg.',
+    read: false,
+    timestamp: '2026-09-18T07:23:00',
+    type: 'alert',
+    link: '/personal/students/student-mariana',
+  },
+  {
+    id: 'notif-2',
+    recipientId: 'user-rafaela',
+    recipientRole: 'personal',
+    title: 'Exercício pulado',
+    message: 'João pulou o exercício Agachamento Goblet.',
+    read: false,
+    timestamp: '2026-09-17T18:55:00',
+    type: 'warning',
+    link: '/personal/students/student-joao',
+  },
+  {
+    id: 'notif-3',
+    recipientId: 'user-mariana',
+    recipientRole: 'student',
+    title: 'Treino de hoje pronto',
+    message: 'Seu Treino A de Peito e Tríceps está disponível para hoje!',
+    read: false,
+    timestamp: '2026-09-21T06:00:00',
+    type: 'info',
+    link: '/student/workout/today',
+  },
+  {
+    id: 'notif-4',
+    recipientId: 'user-joao',
+    recipientRole: 'student',
+    title: 'Lembrete de hidratação e descanso',
+    message: 'Mantenha-se hidratado antes do seu treino de amanhã.',
+    read: true,
+    timestamp: '2026-09-20T10:00:00',
+    type: 'info',
+  },
+];

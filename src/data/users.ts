@@ -1,0 +1,57 @@
+import { User } from '../types';
+
+export const initialUsers: User[] = [
+  {
+    id: 'user-rafaela',
+    name: 'Rafaela Personal',
+    email: 'rafaela@mock.com',
+    role: 'personal',
+    avatarUrl: 'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=150&auto=format&fit=crop&q=80',
+    phone: '(11) 98765-4321',
+  },
+  {
+    id: 'user-mariana',
+    name: 'Mariana Silva',
+    email: 'mariana@mock.com',
+    role: 'student',
+    studentProfileId: 'student-mariana',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    phone: '(11) 91234-5678',
+  },
+  {
+    id: 'user-joao',
+    name: 'João Pedro Santos',
+    email: 'joao@mock.com',
+    role: 'student',
+    studentProfileId: 'student-joao',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    phone: '(11) 92345-6789',
+  },
+  {
+    id: 'user-carlos',
+    name: 'Carlos Eduardo Souza',
+    email: 'carlos@mock.com',
+    role: 'student',
+    studentProfileId: 'student-carlos',
+    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+    phone: '(11) 93456-7890',
+  },
+  {
+    id: 'user-ana',
+    name: 'Ana Beatriz Ramos',
+    email: 'ana@mock.com',
+    role: 'student',
+    studentProfileId: 'student-ana',
+    avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+    phone: '(11) 94567-8901',
+  },
+  {
+    id: 'user-fernanda',
+    name: 'Fernanda Lima',
+    email: 'fernanda@mock.com',
+    role: 'student',
+    studentProfileId: 'student-fernanda',
+    avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
+    phone: '(11) 95678-9012',
+  },
+];
