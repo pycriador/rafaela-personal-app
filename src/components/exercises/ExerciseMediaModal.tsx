@@ -283,30 +283,27 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
       description="Suba novas ilustrações em alta definição, selecione da biblioteca de 302 exercícios ou gerencie imagens enviadas"
       size="fullscreen"
     >
-      <div className="space-y-4 flex flex-col flex-1">
-        {/* Selected Exercise Target Banner */}
-        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs shrink-0 shadow-lg">
-          <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 shadow-inner">
-              <Dumbbell className="w-6 h-6 text-emerald-400" />
+      <div className="space-y-3 sm:space-y-3.5 flex flex-col flex-1 min-h-0">
+        {/* Selected Exercise Target Banner - Compact & Clean */}
+        <div className="px-4 py-2.5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shrink-0 shadow-md">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 shadow-inner">
+              <Dumbbell className="w-5 h-5 text-emerald-400" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">
-                  Exercício Selecionado
+                  Exercício Destino
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-mono text-[10px] border border-emerald-500/20">
+                <span className="px-1.5 py-0.2 rounded-full bg-emerald-500/10 text-emerald-400 font-mono text-[10px] border border-emerald-500/20 truncate">
                   {activeAssignedExercise?.id || 'id'}
                 </span>
               </div>
-              <h4 className="text-base font-bold text-white mt-0.5">
+              <h4 className="text-sm font-bold text-white truncate leading-tight mt-0.5">
                 {activeAssignedExercise?.name || 'Selecione um exercício...'}
               </h4>
-              <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-2">
-                <span>{activeAssignedExercise?.category}</span>
-                <span>•</span>
-                <span>{activeAssignedExercise?.equipment}</span>
-                <span>•</span>
+              <p className="text-[11px] text-slate-400 truncate mt-0.5">
+                {activeAssignedExercise?.category} • {activeAssignedExercise?.equipment} •{' '}
                 <span className="text-emerald-400 font-medium">
                   {activeAssignedExercise?.muscleGroups?.join(', ')}
                 </span>
@@ -315,14 +312,14 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
           </div>
 
           {/* Destination Selector Dropdown */}
-          <div className="w-full md:w-80">
-            <label className="text-[11px] text-slate-300 font-semibold block mb-1.5">
-              Trocar Exercício de Destino:
+          <div className="w-full sm:w-72 shrink-0">
+            <label className="text-[10px] text-slate-400 font-semibold block mb-1">
+              Trocar Exercício Alvo:
             </label>
             <select
               value={selectedExerciseId}
               onChange={(e) => setSelectedExerciseId(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl bg-slate-800 text-white text-xs border border-white/10 focus:ring-2 focus:ring-emerald-500 focus:outline-hidden cursor-pointer"
+              className="w-full px-3 py-1.5 rounded-xl bg-slate-800 text-white text-xs border border-white/10 focus:ring-2 focus:ring-emerald-500 focus:outline-hidden cursor-pointer"
             >
               {allExercises.map((ex) => (
                 <option key={ex.id} value={ex.id}>
@@ -334,13 +331,13 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
         </div>
 
         {/* Modal Navigation Tabs */}
-        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-dark-border/60 pb-3 overflow-x-auto shrink-0">
+        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-dark-border/60 pb-2.5 overflow-x-auto shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab('upload')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
               activeTab === 'upload'
-                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 scale-[1.02]'
+                ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
                 : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -351,9 +348,9 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('library')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
               activeTab === 'library'
-                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 scale-[1.02]'
+                ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
                 : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -364,9 +361,9 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('custom')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
               activeTab === 'custom'
-                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 scale-[1.02]'
+                ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
                 : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -377,9 +374,9 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('url')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
               activeTab === 'url'
-                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 scale-[1.02]'
+                ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
                 : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -390,16 +387,16 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
 
         {/* TAB 1: UPLOAD DO COMPUTADOR */}
         {activeTab === 'upload' && (
-          <div className="flex-1 flex flex-col justify-between pt-1">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch flex-1">
+          <div className="flex-1 min-h-0 flex flex-col overflow-y-auto pr-1">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-stretch flex-1">
               {/* Dropzone Area Left */}
-              <div className="lg:col-span-7 flex flex-col justify-between space-y-4">
+              <div className="lg:col-span-7 flex flex-col justify-between space-y-3">
                 <div
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className={`border-2 border-dashed rounded-3xl p-10 flex flex-col items-center justify-center text-center cursor-pointer transition-all min-h-[380px] sm:min-h-[420px] flex-1 ${
+                  className={`border-2 border-dashed rounded-3xl p-6 sm:p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all min-h-[240px] sm:min-h-[280px] flex-1 ${
                     isDragging
                       ? 'border-emerald-500 bg-emerald-500/10 scale-[1.01]'
                       : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-dark-cardElevated hover:border-emerald-500/60'
@@ -413,51 +410,51 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                     className="hidden"
                   />
 
-                  <div className="w-20 h-20 rounded-3xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mb-4 shadow-xl shadow-emerald-500/10">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mb-3 shadow-md shadow-emerald-500/10">
                     {isProcessing ? (
-                      <RefreshCw className="w-10 h-10 text-emerald-500 animate-spin" />
+                      <RefreshCw className="w-7 h-7 sm:w-8 sm:h-8 text-emerald-500 animate-spin" />
                     ) : (
-                      <UploadCloud className="w-10 h-10 text-emerald-500" />
+                      <UploadCloud className="w-7 h-7 sm:w-8 sm:h-8 text-emerald-500" />
                     )}
                   </div>
 
-                  <h4 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white max-w-md">
-                    Arraste sua foto para cá ou clique para selecionar no computador
+                  <h4 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white max-w-md">
+                    Arraste sua foto para cá ou clique para selecionar
                   </h4>
-                  <p className="text-xs sm:text-sm text-slate-500 dark:text-dark-muted mt-2 max-w-md leading-relaxed">
-                    Suporte completo a arquivos PNG, JPG, WebP e SVG. O sistema otimiza a imagem automaticamente para 512x512 pixels preservando o aspecto original.
+                  <p className="text-xs text-slate-500 dark:text-dark-muted mt-1.5 max-w-md leading-relaxed">
+                    Formatos PNG, JPG, WebP e SVG. O sistema otimiza a imagem automaticamente para 512x512 pixels preservando o aspecto visual.
                   </p>
 
-                  <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
-                    <span className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-xs border border-slate-200 dark:border-slate-700">
+                  <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                    <span className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300 shadow-xs border border-slate-200 dark:border-slate-700">
                       Otimização Automática
                     </span>
-                    <span className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-xs border border-slate-200 dark:border-slate-700">
-                      Proporção 512x512 HD
+                    <span className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300 shadow-xs border border-slate-200 dark:border-slate-700">
+                      512x512 HD
                     </span>
-                    <span className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-xs border border-slate-200 dark:border-slate-700">
+                    <span className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300 shadow-xs border border-slate-200 dark:border-slate-700">
                       Máx. 10MB
                     </span>
                   </div>
                 </div>
 
-                <div className="text-xs text-slate-500 dark:text-dark-muted flex items-center gap-2.5 p-3 rounded-2xl bg-emerald-500/5 border border-emerald-500/15">
+                <div className="text-xs text-slate-500 dark:text-dark-muted flex items-center gap-2 p-2.5 rounded-xl bg-emerald-500/5 border border-emerald-500/15">
                   <Sparkles className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span>
-                    Dica profissional: Imagens com fundo transparente ou tons escuros oferecem a melhor experiência visual no app dos alunos e no modo escuro.
+                  <span className="text-[11px]">
+                    Dica: Imagens com fundo transparente ou tons escuros oferecem a melhor experiência no app dos alunos e no modo escuro.
                   </span>
                 </div>
               </div>
 
               {/* Real-time Preview Area Right */}
-              <div className="lg:col-span-5 flex flex-col justify-between p-6 rounded-3xl bg-slate-900 border border-slate-800 text-white min-h-[380px] sm:min-h-[420px]">
+              <div className="lg:col-span-5 flex flex-col justify-between p-4 sm:p-5 rounded-3xl bg-slate-900 border border-slate-800 text-white min-h-[260px] sm:min-h-[300px]">
                 <div className="flex-1 flex flex-col">
-                  <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+                  <div className="flex items-center justify-between pb-2.5 border-b border-white/10 mb-3">
                     <div>
-                      <span className="text-xs font-bold uppercase tracking-wider text-slate-400 block">
-                        Pré-visualização ao Vivo
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+                        Pré-visualização
                       </span>
-                      <span className="text-[11px] text-slate-400">
+                      <span className="text-[10px] text-slate-400">
                         Como o aluno verá na execução do exercício
                       </span>
                     </div>
@@ -469,19 +466,19 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                   </div>
 
                   {/* Stage */}
-                  <div className="w-full flex-1 min-h-[220px] rounded-2xl bg-slate-950 border border-white/10 overflow-hidden flex items-center justify-center p-4 relative shadow-inner">
+                  <div className="w-full flex-1 min-h-[160px] max-h-[220px] rounded-2xl bg-slate-950 border border-white/10 overflow-hidden flex items-center justify-center p-3 relative shadow-inner">
                     <div className="absolute inset-0 bg-radial from-emerald-500/10 via-transparent to-transparent pointer-events-none" />
                     {uploadedPreview ? (
                       <img
                         src={uploadedPreview}
                         alt="Preview"
-                        className="max-w-full max-h-[320px] w-auto h-auto object-contain select-none drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)]"
+                        className="max-w-full max-h-[200px] w-auto h-auto object-contain select-none drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)]"
                       />
                     ) : (
-                      <div className="text-center space-y-2 text-slate-500">
-                        <ImageIcon className="w-12 h-12 mx-auto opacity-40" />
+                      <div className="text-center space-y-1.5 text-slate-500">
+                        <ImageIcon className="w-10 h-10 mx-auto opacity-40" />
                         <span className="text-xs block font-medium">Nenhuma foto carregada para prévia</span>
-                        <span className="text-[11px] block opacity-60">
+                        <span className="text-[10px] block opacity-60">
                           Faça upload ao lado para inspecionar o resultado
                         </span>
                       </div>
@@ -489,29 +486,23 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                   </div>
 
                   {uploadedPreview && (
-                    <div className="mt-4 p-3 rounded-xl bg-slate-950/60 border border-white/5 space-y-1.5 text-xs">
+                    <div className="mt-3 p-2.5 rounded-xl bg-slate-950/60 border border-white/5 space-y-1 text-[11px]">
                       <div className="flex justify-between text-slate-300">
-                        <span className="text-slate-400">Arquivo Original:</span>
-                        <span className="font-mono truncate max-w-[200px]">{uploadedFileName}</span>
+                        <span className="text-slate-400">Arquivo:</span>
+                        <span className="font-mono truncate max-w-[180px]">{uploadedFileName}</span>
                       </div>
                       <div className="flex justify-between text-slate-300">
-                        <span className="text-slate-400">Tamanho Pós-Otimização:</span>
+                        <span className="text-slate-400">Tamanho:</span>
                         <span className="font-mono text-emerald-400 font-bold">{uploadedFileSizeKb} KB</span>
-                      </div>
-                      <div className="flex justify-between text-slate-300">
-                        <span className="text-slate-400">Destino:</span>
-                        <span className="text-slate-200 truncate max-w-[200px]">
-                          {activeAssignedExercise?.name}
-                        </span>
                       </div>
                     </div>
                   )}
                 </div>
 
-                <div className="pt-4 border-t border-white/10 flex items-center gap-3 mt-4">
+                <div className="pt-3 border-t border-white/10 flex items-center gap-2.5 mt-3 shrink-0">
                   <Button
                     variant="secondary"
-                    size="md"
+                    size="sm"
                     onClick={() => {
                       setUploadedPreview(null);
                       setUploadedFileName('');
@@ -523,7 +514,7 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                   </Button>
                   <Button
                     variant="primary"
-                    size="md"
+                    size="sm"
                     onClick={handleApplyUpload}
                     disabled={!uploadedPreview || isProcessing}
                     leftIcon={<Check className="w-4 h-4" />}
@@ -539,7 +530,7 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
 
         {/* TAB 2: GALERIA GERAL DE 302 EXERCÍCIOS */}
         {activeTab === 'library' && (
-          <div className="space-y-4 flex-1 flex flex-col">
+          <div className="space-y-3 flex-1 min-h-0 flex flex-col">
             {/* Filters Bar */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shrink-0">
               <div className="relative flex-1">
@@ -549,7 +540,7 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                   placeholder="Buscar exercício por nome, categoria ou músculo..."
                   value={librarySearch}
                   onChange={(e) => setLibrarySearch(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2.5 rounded-xl text-xs bg-slate-100 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
+                  className="w-full pl-9 pr-4 py-2 rounded-xl text-xs bg-slate-100 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
@@ -557,7 +548,7 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                 <select
                   value={libraryCategory}
                   onChange={(e) => setLibraryCategory(e.target.value)}
-                  className="px-3.5 py-2.5 rounded-xl text-xs bg-slate-100 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                  className="px-3 py-2 rounded-xl text-xs bg-slate-100 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                 >
                   <option value="all">Todas as Categorias</option>
                   <option value="Peito">Peito</option>
@@ -577,8 +568,8 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
               </div>
             </div>
 
-            {/* Exercises Grid - Generous full-width layout */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-3 sm:gap-4 max-h-[62vh] overflow-y-auto pr-2 flex-1">
+            {/* Exercises Grid - Dynamic flex-1 min-h-0 with no bottom cut */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-3 sm:gap-4 overflow-y-auto pr-1 flex-1 min-h-0 pb-2">
               {filteredLibraryExercises.map((ex) => {
                 const imgSource = ex.imageUrl || `/exercises/frames/${ex.id.replace('exercise-', '')}/frame-1.png`;
                 const resolvedUrl = getAssetUrl(imgSource);
@@ -587,10 +578,10 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                   <div
                     key={ex.id}
                     onClick={() => handleApplyFromLibrary(ex)}
-                    className="group relative rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 p-3 flex flex-col justify-between cursor-pointer transition-all duration-200 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-0.5 text-left"
+                    className="group relative rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 p-2.5 sm:p-3 flex flex-col justify-between cursor-pointer transition-all duration-200 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-0.5 text-left"
                   >
                     {/* Illustration stage */}
-                    <div className="w-full h-28 sm:h-32 rounded-xl bg-slate-950 flex items-center justify-center p-2.5 overflow-hidden mb-2.5 relative border border-white/5">
+                    <div className="w-full h-24 sm:h-28 rounded-xl bg-slate-950 flex items-center justify-center p-2 overflow-hidden mb-2 relative border border-white/5">
                       <img
                         src={resolvedUrl}
                         alt={ex.name}
@@ -599,7 +590,7 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                       />
                     </div>
 
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <h5 className="text-xs font-bold text-white line-clamp-1 group-hover:text-emerald-400 transition-colors">
                         {ex.name}
                       </h5>
@@ -608,10 +599,10 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                       </span>
                     </div>
 
-                    <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between">
+                    <div className="mt-2 pt-2 border-t border-white/10 flex items-center justify-between">
                       <span className="text-[10px] font-semibold text-emerald-400">Usar Esta</span>
-                      <div className="w-6 h-6 rounded-full bg-white/10 group-hover:bg-emerald-500 text-white flex items-center justify-center transition-colors">
-                        <Check className="w-3.5 h-3.5" />
+                      <div className="w-5 h-5 rounded-full bg-white/10 group-hover:bg-emerald-500 text-white flex items-center justify-center transition-colors">
+                        <Check className="w-3 h-3" />
                       </div>
                     </div>
                   </div>
@@ -623,23 +614,23 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
 
         {/* TAB 3: MINHAS IMAGENS PERSONALIZADAS */}
         {activeTab === 'custom' && (
-          <div className="space-y-4 flex-1 flex flex-col">
+          <div className="space-y-3 flex-1 min-h-0 flex flex-col">
             {customMediaList.length === 0 ? (
-              <div className="py-16 text-center space-y-4 bg-slate-50 dark:bg-dark-cardElevated rounded-3xl border border-dashed border-slate-300 dark:border-slate-700 flex-1 flex flex-col items-center justify-center">
-                <div className="w-16 h-16 rounded-2xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
-                  <FolderHeart className="w-8 h-8 text-slate-400" />
+              <div className="py-12 text-center space-y-3 bg-slate-50 dark:bg-dark-cardElevated rounded-3xl border border-dashed border-slate-300 dark:border-slate-700 flex-1 flex flex-col items-center justify-center">
+                <div className="w-14 h-14 rounded-2xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+                  <FolderHeart className="w-7 h-7 text-slate-400" />
                 </div>
                 <div>
-                  <h4 className="text-base font-bold text-slate-800 dark:text-slate-200">
+                  <h4 className="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-200">
                     Você ainda não subiu imagens personalizadas
                   </h4>
-                  <p className="text-xs sm:text-sm text-slate-500 dark:text-dark-muted mt-1.5 max-w-md mx-auto leading-relaxed">
-                    Use a aba "Subir do Computador" para fazer upload de fotos ou ilustrações. Elas ficarão arquivadas na sua nuvem local para você reutilizar em qualquer outro treino.
+                  <p className="text-xs text-slate-500 dark:text-dark-muted mt-1 max-w-md mx-auto leading-relaxed">
+                    Use a aba "Subir do Computador" para fazer upload de fotos ou ilustrações. Elas ficarão arquivadas na sua galeria para reutilizar em qualquer exercício.
                   </p>
                 </div>
                 <Button
                   variant="primary"
-                  size="md"
+                  size="sm"
                   onClick={() => setActiveTab('upload')}
                   leftIcon={<UploadCloud className="w-4 h-4" />}
                 >
@@ -647,14 +638,14 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-3 sm:gap-4 max-h-[62vh] overflow-y-auto pr-2 flex-1">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8 gap-3 sm:gap-4 overflow-y-auto pr-1 flex-1 min-h-0 pb-2">
                 {customMediaList.map((item) => (
                   <div
                     key={item.id}
                     onClick={() => handleApplyCustom(item)}
-                    className="group relative rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 p-3 flex flex-col justify-between cursor-pointer transition-all duration-200 hover:shadow-xl text-left"
+                    className="group relative rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 p-2.5 sm:p-3 flex flex-col justify-between cursor-pointer transition-all duration-200 hover:shadow-xl text-left"
                   >
-                    <div className="w-full h-28 sm:h-32 rounded-xl bg-slate-950 flex items-center justify-center p-2.5 overflow-hidden mb-2.5 relative border border-white/5">
+                    <div className="w-full h-24 sm:h-28 rounded-xl bg-slate-950 flex items-center justify-center p-2 overflow-hidden mb-2 relative border border-white/5">
                       <img
                         src={item.dataUrl}
                         alt={item.name}
@@ -664,13 +655,13 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                         type="button"
                         onClick={(e) => handleDeleteCustom(item.id, e)}
                         title="Remover imagem"
-                        className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/70 hover:bg-rose-500 text-white transition-colors cursor-pointer"
+                        className="absolute top-1.5 right-1.5 p-1 rounded-lg bg-black/70 hover:bg-rose-500 text-white transition-colors cursor-pointer"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-3 h-3" />
                       </button>
                     </div>
 
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <h5 className="text-xs font-bold text-white line-clamp-1">
                         {item.name}
                       </h5>
@@ -679,10 +670,10 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                       </span>
                     </div>
 
-                    <div className="mt-2.5 pt-2 border-t border-white/10 flex items-center justify-between">
+                    <div className="mt-2 pt-2 border-t border-white/10 flex items-center justify-between">
                       <span className="text-[10px] font-semibold text-emerald-400">Reutilizar</span>
-                      <div className="w-6 h-6 rounded-full bg-white/10 group-hover:bg-emerald-500 text-white flex items-center justify-center transition-colors">
-                        <Check className="w-3.5 h-3.5" />
+                      <div className="w-5 h-5 rounded-full bg-white/10 group-hover:bg-emerald-500 text-white flex items-center justify-center transition-colors">
+                        <Check className="w-3 h-3" />
                       </div>
                     </div>
                   </div>
@@ -694,12 +685,12 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
 
         {/* TAB 4: LINK WEB / URL EXTERNA */}
         {activeTab === 'url' && (
-          <div className="space-y-5 max-w-2xl mx-auto py-6 w-full flex-1 flex flex-col justify-center">
-            <div>
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-2">
-                Cole a URL direta da imagem na internet (PNG, JPG, WebP ou SVG):
-              </label>
-              <div className="flex gap-2">
+          <div className="space-y-4 max-w-xl mx-auto py-3 w-full flex-1 min-h-0 flex flex-col justify-between overflow-y-auto">
+            <div className="space-y-3">
+              <div>
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1.5">
+                  Cole a URL direta da imagem na internet (PNG, JPG, WebP ou SVG):
+                </label>
                 <input
                   type="url"
                   placeholder="https://exemplo.com/fotos/exercicio.png"
@@ -708,45 +699,45 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                     setManualUrl(e.target.value);
                     setUrlPreviewValid(null);
                   }}
-                  className="flex-1 px-4 py-3 rounded-xl text-xs bg-slate-100 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-emerald-500 font-mono"
+                  className="w-full px-3.5 py-2.5 rounded-xl text-xs bg-slate-100 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-emerald-500 font-mono"
                 />
               </div>
+
+              {manualUrl && (
+                <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-3">
+                  <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">
+                    Prévia da Imagem
+                  </span>
+                  <div className="w-full h-48 rounded-xl bg-slate-950 flex items-center justify-center p-3 border border-white/5">
+                    <img
+                      src={manualUrl}
+                      alt="Preview URL"
+                      onLoad={() => setUrlPreviewValid(true)}
+                      onError={() => setUrlPreviewValid(false)}
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  </div>
+                  {urlPreviewValid === true && (
+                    <Badge variant="success" size="sm">
+                      URL Válida
+                    </Badge>
+                  )}
+                  {urlPreviewValid === false && (
+                    <Badge variant="danger" size="sm">
+                      Não foi possível carregar a imagem desta URL. Verifique o link.
+                    </Badge>
+                  )}
+                </div>
+              )}
             </div>
 
-            {manualUrl && (
-              <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-4">
-                <span className="text-xs font-bold text-slate-400 block uppercase tracking-wider">
-                  Teste de Renderização da Imagem
-                </span>
-                <div className="w-full h-64 rounded-xl bg-slate-950 flex items-center justify-center p-4 border border-white/5">
-                  <img
-                    src={manualUrl}
-                    alt="Preview URL"
-                    onLoad={() => setUrlPreviewValid(true)}
-                    onError={() => setUrlPreviewValid(false)}
-                    className="max-w-full max-h-full object-contain"
-                  />
-                </div>
-                {urlPreviewValid === true && (
-                  <Badge variant="success" size="sm">
-                    URL Válida e Carregada com Sucesso
-                  </Badge>
-                )}
-                {urlPreviewValid === false && (
-                  <Badge variant="danger" size="sm">
-                    Não foi possível carregar a imagem desta URL. Verifique o link.
-                  </Badge>
-                )}
-              </div>
-            )}
-
-            <div className="flex justify-end gap-3 pt-4 border-t border-slate-200 dark:border-dark-border/60">
-              <Button variant="secondary" size="md" onClick={onClose}>
+            <div className="flex justify-end gap-2.5 pt-3 border-t border-slate-200 dark:border-dark-border/60 shrink-0">
+              <Button variant="secondary" size="sm" onClick={onClose}>
                 Cancelar
               </Button>
               <Button
                 variant="primary"
-                size="md"
+                size="sm"
                 onClick={handleApplyManualUrl}
                 disabled={!manualUrl.trim() || urlPreviewValid === false}
                 leftIcon={<Check className="w-4 h-4" />}

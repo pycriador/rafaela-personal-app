@@ -85,6 +85,7 @@ export const ExercisesPage: React.FC = () => {
   const [instructions, setInstructions] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [selectedAlternatives, setSelectedAlternatives] = useState<string[]>([]);
+  const [alternativeSearch, setAlternativeSearch] = useState('');
 
   const handleApplyMediaImage = async (newUrl: string, exerciseId?: string) => {
     setImageUrl(newUrl);
@@ -265,6 +266,8 @@ export const ExercisesPage: React.FC = () => {
     setInstructions('');
     setImageUrl('/exercises/exercise-peito-01.png');
     setSelectedAlternatives([]);
+    setAlternativeSearch('');
+    setShowManualUrlInput(false);
     setIsModalOpen(true);
   };
 
@@ -279,6 +282,8 @@ export const ExercisesPage: React.FC = () => {
     setInstructions(ex.instructions);
     setImageUrl(ex.imageUrl || '');
     setSelectedAlternatives(ex.alternatives || []);
+    setAlternativeSearch('');
+    setShowManualUrlInput(false);
     setIsModalOpen(true);
   };
 
@@ -606,54 +611,61 @@ export const ExercisesPage: React.FC = () => {
                     className="h-48 sm:h-52 w-full"
                   />
 
-                  {/* Top-right badges: Difficulty on top, Category directly below */}
-                  <div className="absolute top-2.5 right-2.5 flex flex-col items-end gap-1.5 pointer-events-none z-10">
-                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-slate-800/80 text-white backdrop-blur-md uppercase tracking-wider border border-white/10 shadow-xs">
-                      {ex.difficulty}
-                    </span>
-                    <Badge variant="brand" size="sm" className="shadow-xs backdrop-blur-md">
+                  {/* Top-right badges: Symmetrical horizontal row */}
+                  <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5 pointer-events-none z-10">
+                    <Badge variant="brand" size="sm" className="shadow-xs backdrop-blur-md text-[10px] font-bold">
                       {ex.category}
                     </Badge>
+                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-slate-800/85 text-white backdrop-blur-md uppercase tracking-wider border border-white/10 shadow-xs">
+                      {ex.difficulty}
+                    </span>
                   </div>
-
                 </div>
 
-                {/* Content Details */}
+                {/* Content Details with Rigorous Height Normalization */}
                 <div className="p-4 space-y-2.5">
                   <div>
-                    <h3 className="text-base font-black text-slate-900 dark:text-white leading-tight">
+                    <h3 className="text-base font-black text-slate-900 dark:text-white leading-tight min-h-[2.5rem] flex items-center line-clamp-2">
                       {ex.name}
                     </h3>
-                    <p className="text-[11px] text-slate-500 dark:text-dark-muted font-medium mt-0.5">
+                    <p className="text-[11px] text-slate-500 dark:text-dark-muted font-medium mt-1 truncate h-4">
                       {ex.equipment} • {ex.type}
                     </p>
                   </div>
 
-                  {/* Muscles */}
-                  <div className="flex flex-wrap gap-1">
-                    {ex.muscleGroups.map((m) => (
+                  {/* Muscles - Fixed 1-line height */}
+                  <div className="h-6 flex items-center gap-1 overflow-hidden">
+                    {ex.muscleGroups.slice(0, 2).map((m) => (
                       <span
                         key={m}
-                        className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300"
+                        className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 truncate max-w-[130px]"
                       >
                         {m}
                       </span>
                     ))}
+                    {ex.muscleGroups.length > 2 && (
+                      <span
+                        className="text-[10px] font-semibold px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-dark-cardElevated text-slate-500 shrink-0"
+                        title={ex.muscleGroups.slice(2).join(', ')}
+                      >
+                        +{ex.muscleGroups.length - 2}
+                      </span>
+                    )}
                   </div>
 
-                  {/* Instructions */}
-                  <p className="text-xs text-slate-600 dark:text-dark-muted line-clamp-2 leading-relaxed">
-                    {ex.instructions}
+                  {/* Instructions - Fixed 2-lines height */}
+                  <p className="text-xs text-slate-600 dark:text-dark-muted line-clamp-2 leading-relaxed h-9">
+                    {ex.instructions || 'Exercício padrão catalogado na biblioteca.'}
                   </p>
                 </div>
               </div>
 
-              {/* Card Footer */}
-              <div className="p-4 pt-0 border-t border-slate-100 dark:border-dark-border/60 flex items-center justify-between text-xs">
-                <span className="text-slate-400 text-[11px]">
-                  {ex.alternatives.length} alternativa{ex.alternatives.length !== 1 ? 's' : ''}
+              {/* Card Footer - Balanced, clean and never breaks */}
+              <div className="px-3.5 py-2.5 border-t border-slate-100 dark:border-dark-border/60 flex items-center justify-between gap-1 text-xs shrink-0 bg-slate-50/40 dark:bg-dark-cardElevated/20">
+                <span className="text-[11px] font-medium text-slate-500 dark:text-dark-muted px-2 py-0.5 rounded-md bg-slate-100 dark:bg-dark-cardElevated shrink-0">
+                  {ex.alternatives.length} alt.
                 </span>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 shrink-0">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -662,26 +674,28 @@ export const ExercisesPage: React.FC = () => {
                       setIsMediaModalOpen(true);
                     }}
                     leftIcon={<UploadCloud className="w-3.5 h-3.5 text-blue-500" />}
-                    className="text-xs text-slate-600 dark:text-slate-300 hover:text-blue-500"
+                    className="text-[11px] px-2 py-1 h-7.5 text-slate-600 dark:text-slate-300 hover:text-blue-500"
                     title="Substituir foto ou ilustração do exercício"
                   >
-                    Trocar Foto
+                    Foto
                   </Button>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setViewImageModal(ex)}
                     leftIcon={<Film className="w-3.5 h-3.5 text-emerald-500" />}
-                    className="text-xs text-emerald-600 dark:text-emerald-400"
+                    className="text-[11px] px-2 py-1 h-7.5 text-emerald-600 dark:text-emerald-400"
+                    title="Ver execução em mini-vídeo animado"
                   >
-                    Ver Vídeo
+                    Vídeo
                   </Button>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => handleOpenEdit(ex)}
                     leftIcon={<Edit2 className="w-3.5 h-3.5" />}
-                    className="text-xs"
+                    className="text-[11px] px-2 py-1 h-7.5"
+                    title="Editar informações e alternativas"
                   >
                     Editar
                   </Button>
@@ -835,96 +849,117 @@ export const ExercisesPage: React.FC = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title={editingExercise ? 'Editar Exercício' : 'Novo Exercício'}
-        description="Configure nome, categoria, imagem demonstrativa e alternativas autorizadas"
+        description="Configure informações biomecânicas, imagem demonstrativa e alternativas autorizadas"
         size="xl"
       >
-        <form onSubmit={handleSave} className="space-y-4">
-          <Input
-            label="Nome do Exercício *"
-            placeholder="Ex: Supino Máquina Articulada"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+        <form onSubmit={handleSave} className="flex-1 flex flex-col justify-between min-h-0">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start overflow-y-auto pr-1 flex-1 min-h-0 pb-1">
+            {/* Left Column: Core Exercise Details */}
+            <div className="lg:col-span-7 space-y-3.5">
+              <Input
+                label="Nome do Exercício *"
+                placeholder="Ex: Supino Máquina Articulada"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Select
-              label="Categoria"
-              value={category}
-              onChange={(e) => setCategory(e.target.value as any)}
-              options={[
-                { value: 'Peito', label: 'Peito' },
-                { value: 'Costas', label: 'Costas' },
-                { value: 'Pernas', label: 'Pernas' },
-                { value: 'Ombros', label: 'Ombros' },
-                { value: 'Bíceps', label: 'Bíceps' },
-                { value: 'Tríceps', label: 'Tríceps' },
-                { value: 'Core', label: 'Core / Abdômen' },
-              ]}
-            />
-            <Select
-              label="Tipo de Execução"
-              value={type}
-              onChange={(e) => setType(e.target.value as any)}
-              options={[
-                { value: 'máquina', label: 'Máquina' },
-                { value: 'halteres', label: 'Halteres' },
-                { value: 'barra', label: 'Barra' },
-                { value: 'cabo', label: 'Cabo / Polia' },
-                { value: 'peso corporal', label: 'Peso Corporal' },
-                { value: 'livre', label: 'Livre' },
-              ]}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Input
-              label="Equipamento"
-              placeholder="Ex: Máquina Articulada, Banco Reto..."
-              value={equipment}
-              onChange={(e) => setEquipment(e.target.value)}
-            />
-            <Select
-              label="Dificuldade"
-              value={difficulty}
-              onChange={(e) => setDifficulty(e.target.value as any)}
-              options={[
-                { value: 'iniciante', label: 'Iniciante' },
-                { value: 'intermediário', label: 'Intermediário' },
-                { value: 'avançado', label: 'Avançado' },
-              ]}
-            />
-          </div>
-
-          {/* Seletor Visual de Imagem Demonstrativa */}
-          <div className="space-y-2">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
-              Ilustração / Foto Demonstrativa do Exercício
-            </label>
-            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border flex flex-col sm:flex-row items-center gap-4">
-              <div className="w-24 h-24 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center p-2 relative overflow-hidden shrink-0 shadow-inner">
-                {imageUrl ? (
-                  <img
-                    src={getAssetUrl(imageUrl)}
-                    alt="Preview do Exercício"
-                    className="max-w-full max-h-full w-auto h-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)]"
-                  />
-                ) : (
-                  <ImageIcon className="w-8 h-8 text-slate-500" />
-                )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Select
+                  label="Categoria"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value as any)}
+                  options={[
+                    { value: 'Peito', label: 'Peito' },
+                    { value: 'Costas', label: 'Costas' },
+                    { value: 'Pernas', label: 'Pernas' },
+                    { value: 'Ombros', label: 'Ombros' },
+                    { value: 'Bíceps', label: 'Bíceps' },
+                    { value: 'Tríceps', label: 'Tríceps' },
+                    { value: 'Core', label: 'Core / Abdômen' },
+                    { value: 'Cardio', label: 'Cardio' },
+                    { value: 'Mobilidade', label: 'Mobilidade' },
+                  ]}
+                />
+                <Select
+                  label="Tipo de Execução"
+                  value={type}
+                  onChange={(e) => setType(e.target.value as any)}
+                  options={[
+                    { value: 'máquina', label: 'Máquina' },
+                    { value: 'halteres', label: 'Halteres' },
+                    { value: 'barra', label: 'Barra' },
+                    { value: 'cabo', label: 'Cabo / Polia' },
+                    { value: 'peso corporal', label: 'Peso Corporal' },
+                    { value: 'livre', label: 'Livre' },
+                  ]}
+                />
               </div>
 
-              <div className="flex-1 space-y-2 text-center sm:text-left">
-                <div className="text-xs text-slate-600 dark:text-slate-400">
-                  <span className="font-bold text-slate-800 dark:text-white block">
-                    {imageUrl ? 'Imagem vinculada ao exercício' : 'Nenhuma imagem associada'}
-                  </span>
-                  <span className="text-[11px] font-mono text-slate-400 truncate block max-w-sm">
-                    {imageUrl || 'Selecione uma imagem do computador ou da biblioteca'}
-                  </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Input
+                  label="Equipamento"
+                  placeholder="Ex: Máquina Articulada, Banco Reto..."
+                  value={equipment}
+                  onChange={(e) => setEquipment(e.target.value)}
+                />
+                <Select
+                  label="Dificuldade"
+                  value={difficulty}
+                  onChange={(e) => setDifficulty(e.target.value as any)}
+                  options={[
+                    { value: 'iniciante', label: 'Iniciante' },
+                    { value: 'intermediário', label: 'Intermediário' },
+                    { value: 'avançado', label: 'Avançado' },
+                  ]}
+                />
+              </div>
+
+              <Input
+                label="Grupos Musculares (separados por vírgula)"
+                placeholder="Ex: Peitoral Maior, Tríceps, Deltoide Anterior"
+                value={muscleGroupsStr}
+                onChange={(e) => setMuscleGroupsStr(e.target.value)}
+              />
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  Instruções de Execução Técnica & Postura
+                </label>
+                <textarea
+                  rows={4}
+                  placeholder="Descreva postura, posicionamento das escápulas, pegada, respiração e cadência..."
+                  value={instructions}
+                  onChange={(e) => setInstructions(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-dark-cardElevated/80 border border-slate-200 dark:border-dark-border rounded-xl p-3 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 leading-relaxed"
+                />
+              </div>
+            </div>
+
+            {/* Right Column: Media Preview & Authorized Alternatives */}
+            <div className="lg:col-span-5 space-y-4 flex flex-col">
+              {/* Media Card */}
+              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border space-y-2.5">
+                <label className="text-xs font-bold text-slate-800 dark:text-white block">
+                  Ilustração / Foto Demonstrativa
+                </label>
+
+                <div className="w-full h-36 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center p-2 relative overflow-hidden shadow-inner">
+                  {imageUrl ? (
+                    <img
+                      src={getAssetUrl(imageUrl)}
+                      alt="Preview do Exercício"
+                      className="max-w-full max-h-full w-auto h-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)]"
+                    />
+                  ) : (
+                    <div className="text-center text-slate-500 space-y-1">
+                      <ImageIcon className="w-8 h-8 mx-auto opacity-50" />
+                      <span className="text-[11px] block">Sem imagem associada</span>
+                    </div>
+                  )}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
+                <div className="flex flex-wrap items-center gap-2">
                   <Button
                     type="button"
                     variant="primary"
@@ -933,10 +968,10 @@ export const ExercisesPage: React.FC = () => {
                       setMediaTargetExercise(editingExercise);
                       setIsMediaModalOpen(true);
                     }}
-                    leftIcon={<UploadCloud className="w-4 h-4" />}
-                    className="text-xs"
+                    leftIcon={<UploadCloud className="w-3.5 h-3.5" />}
+                    className="text-xs flex-1"
                   >
-                    Subir do Computador / Escolher na Central
+                    Subir ou Escolher
                   </Button>
                   <Button
                     type="button"
@@ -946,85 +981,93 @@ export const ExercisesPage: React.FC = () => {
                     leftIcon={<Link2 className="w-3.5 h-3.5" />}
                     className="text-xs"
                   >
-                    {showManualUrlInput ? 'Ocultar Campo URL' : 'Editar URL Manual'}
+                    {showManualUrlInput ? 'Ocultar URL' : 'URL Manual'}
                   </Button>
+                </div>
+
+                {showManualUrlInput && (
+                  <Input
+                    label="URL Direta da Imagem"
+                    placeholder="/exercises/... ou https://..."
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                    className="text-xs font-mono"
+                  />
+                )}
+              </div>
+
+              {/* Alternatives Picker with Fast Filter */}
+              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border space-y-2 flex-1 flex flex-col">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-slate-800 dark:text-white">
+                    Alternativas Autorizadas
+                  </label>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+                    {selectedAlternatives.length} selecionada{selectedAlternatives.length !== 1 ? 's' : ''}
+                  </span>
+                </div>
+
+                <div className="relative">
+                  <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Filtrar alternativas..."
+                    value={alternativeSearch}
+                    onChange={(e) => setAlternativeSearch(e.target.value)}
+                    className="w-full pl-8 pr-3 py-1.5 rounded-lg text-xs bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-900 dark:text-white focus:outline-hidden focus:ring-1 focus:ring-emerald-500"
+                  />
+                </div>
+
+                <div className="max-h-44 overflow-y-auto space-y-1 pr-1 flex-1">
+                  {allExercises
+                    .filter((ex) => !editingExercise || ex.id !== editingExercise.id)
+                    .filter((ex) => {
+                      if (!alternativeSearch.trim()) return true;
+                      const q = normalizeText(alternativeSearch);
+                      return normalizeText(ex.name).includes(q) || normalizeText(ex.category).includes(q);
+                    })
+                    .map((ex) => {
+                      const isChecked = selectedAlternatives.includes(ex.id);
+                      return (
+                        <div
+                          key={ex.id}
+                          onClick={() => toggleAlternative(ex.id)}
+                          className={`flex items-center justify-between p-2 rounded-lg cursor-pointer text-xs transition-colors ${
+                            isChecked
+                              ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold'
+                              : 'hover:bg-slate-200/60 dark:hover:bg-dark-card text-slate-700 dark:text-slate-300'
+                          }`}
+                        >
+                          <span className="truncate pr-2">
+                            {ex.name} <span className="opacity-60 text-[10px]">({ex.category})</span>
+                          </span>
+                          {isChecked && <Check className="w-3.5 h-3.5 text-emerald-500 shrink-0" />}
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
             </div>
-
-            {showManualUrlInput && (
-              <Input
-                label="URL Direta da Imagem"
-                placeholder="/exercises/frames/bench-press/frame-1.png ou https://..."
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                helperText="Você pode usar caminhos internos (/exercises/...) ou URLs públicas da internet."
-                className="text-xs font-mono"
-              />
-            )}
           </div>
 
-          <Input
-            label="Grupos Musculares (separados por vírgula)"
-            placeholder="Ex: Peitoral Maior, Tríceps, Deltoide Anterior"
-            value={muscleGroupsStr}
-            onChange={(e) => setMuscleGroupsStr(e.target.value)}
-          />
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Instruções de Execução Técnica
-            </label>
-            <textarea
-              rows={3}
-              placeholder="Descreva postura, posicionamento das escápulas, pegada e cadência..."
-              value={instructions}
-              onChange={(e) => setInstructions(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-dark-cardElevated/80 border border-slate-200 dark:border-dark-border rounded-xl p-3 text-sm focus:outline-none focus:border-emerald-500"
-            />
-          </div>
-
-          {/* Alternatives picker */}
-          <div className="pt-2">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-2">
-              Exercícios Alternativos Autorizados
-            </label>
-            <div className="max-h-40 overflow-y-auto border border-slate-200 dark:border-dark-border rounded-xl p-2 space-y-1">
-              {allExercises
-                .filter((ex) => !editingExercise || ex.id !== editingExercise.id)
-                .map((ex) => {
-                  const isChecked = selectedAlternatives.includes(ex.id);
-                  return (
-                    <div
-                      key={ex.id}
-                      onClick={() => toggleAlternative(ex.id)}
-                      className={`flex items-center justify-between p-2 rounded-lg cursor-pointer text-xs transition-colors ${
-                        isChecked
-                          ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold'
-                          : 'hover:bg-slate-100 dark:hover:bg-dark-cardElevated text-slate-700 dark:text-slate-300'
-                      }`}
-                    >
-                      <span>
-                        {ex.name} ({ex.category})
-                      </span>
-                      {isChecked && <Check className="w-3.5 h-3.5 text-emerald-500" />}
-                    </div>
-                  );
-                })}
+          {/* Sticky Actions Bar */}
+          <div className="pt-3 mt-3 border-t border-slate-200 dark:border-dark-border/60 flex items-center justify-between gap-3 shrink-0">
+            <span className="text-[11px] text-slate-400 hidden sm:inline">
+              * Campos obrigatórios para salvar o exercício.
+            </span>
+            <div className="flex items-center gap-2.5 ml-auto">
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancelar
+              </Button>
+              <Button type="submit" variant="primary" size="sm" leftIcon={<Check className="w-4 h-4" />}>
+                Salvar Exercício
+              </Button>
             </div>
-          </div>
-
-          <div className="flex justify-end gap-3 pt-3">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => setIsModalOpen(false)}
-            >
-              Cancelar
-            </Button>
-            <Button type="submit" variant="primary">
-              Salvar Exercício
-            </Button>
           </div>
         </form>
       </Modal>

@@ -58,19 +58,19 @@ export const Modal: React.FC<ModalProps> = ({
     md: 'max-w-xl sm:max-w-2xl w-full',
     lg: 'max-w-3xl sm:max-w-4xl w-full',
     xl: 'max-w-5xl sm:max-w-6xl w-full',
-    '2xl': 'max-w-7xl w-[94vw]',
-    full: 'w-[96vw] max-w-[1550px] h-[93vh] max-h-[93vh]',
-    fullscreen: 'w-full sm:w-[98vw] max-w-[1780px] h-full sm:h-[96vh] max-h-[96vh] sm:rounded-3xl',
+    '2xl': 'max-w-7xl w-full',
+    full: 'w-full max-w-[1550px] h-[calc(100vh-1rem)] sm:h-[calc(100vh-2rem)] md:h-[calc(100vh-2.5rem)]',
+    fullscreen: 'w-full max-w-[1780px] h-[calc(100vh-1rem)] sm:h-[calc(100vh-2rem)] md:h-[calc(100vh-2.5rem)]',
   };
 
   const isActuallyFullscreen = isMaximized || size === 'fullscreen';
 
   const containerClasses = isActuallyFullscreen
-    ? 'w-full sm:w-[98vw] max-w-[1800px] h-full sm:h-[96vh] max-h-[96vh] sm:rounded-3xl'
-    : `${sizeClasses[size] || sizeClasses.md} max-h-[92vh] rounded-t-3xl sm:rounded-2xl`;
+    ? 'w-full max-w-[1780px] h-[calc(100vh-1rem)] sm:h-[calc(100vh-2rem)] md:h-[calc(100vh-2.5rem)] rounded-2xl sm:rounded-3xl'
+    : `${sizeClasses[size] || sizeClasses.md} max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] md:max-h-[calc(100vh-2.5rem)] rounded-2xl sm:rounded-3xl`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-3 overflow-y-auto no-scrollbar">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-5 overflow-hidden">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-slate-950/75 backdrop-blur-sm transition-opacity animate-fade-in"
@@ -79,17 +79,12 @@ export const Modal: React.FC<ModalProps> = ({
 
       {/* Modal Container */}
       <div
-        className={`relative ${containerClasses} bg-white dark:bg-dark-card border-t sm:border border-slate-200 dark:border-dark-border shadow-2xl z-10 flex flex-col transition-all duration-200 overflow-hidden animate-slide-up sm:animate-scale-in`}
+        className={`relative ${containerClasses} bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border shadow-2xl z-10 flex flex-col transition-all duration-200 overflow-hidden animate-scale-in`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Mobile handle indicator */}
-        <div className="sm:hidden flex justify-center pt-3 pb-1">
-          <div className="w-12 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full" />
-        </div>
-
         {/* Header */}
         {(title || showCloseButton || canToggleFullscreen) && (
-          <div className="flex items-start justify-between px-6 py-4 sm:py-5 border-b border-slate-100 dark:border-dark-border/60 shrink-0 bg-white/50 dark:bg-dark-card/50 backdrop-blur-xs">
+          <div className="flex items-start justify-between px-5 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 dark:border-dark-border/60 shrink-0 bg-white/70 dark:bg-dark-card/70 backdrop-blur-md">
             <div className="pr-4">
               {title && (
                 <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-snug">
@@ -97,7 +92,7 @@ export const Modal: React.FC<ModalProps> = ({
                 </h3>
               )}
               {description && (
-                <p className="text-xs sm:text-sm text-slate-500 dark:text-dark-muted mt-1">
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-dark-muted mt-0.5">
                   {description}
                 </p>
               )}
@@ -108,7 +103,7 @@ export const Modal: React.FC<ModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsMaximized(!isMaximized)}
-                  className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                   title={isActuallyFullscreen ? 'Restaurar tamanho' : 'Modo tela cheia'}
                   aria-label={isActuallyFullscreen ? 'Restaurar tamanho' : 'Modo tela cheia'}
                 >
@@ -124,7 +119,7 @@ export const Modal: React.FC<ModalProps> = ({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                   aria-label="Fechar"
                 >
                   <X className="w-5 h-5" />
@@ -135,7 +130,7 @@ export const Modal: React.FC<ModalProps> = ({
         )}
 
         {/* Body */}
-        <div className="p-5 sm:p-6 overflow-y-auto no-scrollbar flex-1 flex flex-col">{children}</div>
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1 flex flex-col min-h-0">{children}</div>
       </div>
     </div>
   );
