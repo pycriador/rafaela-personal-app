@@ -27,9 +27,32 @@ export const StudentsListPage: React.FC = () => {
   const [allStudents, setAllStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Screen-responsive default page size:
+  // - default: 6 items (fits 1, 2, and 3 columns perfectly)
+  // - on ultra-wide screens (>= 1536px / 2xl with 4 columns): 8 items (2 rows of 4)
+  const getResponsiveDefaultLimit = () => {
+    if (typeof window === 'undefined') return 6;
+    const width = window.innerWidth;
+    if (width >= 1536) return 8;
+    return 6;
+  };
+
+  const [screenLimit, setScreenLimit] = useState<number>(getResponsiveDefaultLimit);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenLimit(getResponsiveDefaultLimit());
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Read URL query params
   const currentPage = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
-  const limitPerPage = Math.max(1, parseInt(searchParams.get('limit') || '4', 10));
+  const rawLimitParam = searchParams.get('limit');
+  const limitPerPage = rawLimitParam && rawLimitParam !== 'auto'
+    ? Math.max(1, parseInt(rawLimitParam, 10))
+    : screenLimit;
 
   const currentSearch = searchParams.get('search') || '';
   const currentGoal = searchParams.get('goal') || 'all';
@@ -125,7 +148,11 @@ export const StudentsListPage: React.FC = () => {
 
   const handleClearFilters = () => {
     setSearchInput('');
-    setSearchParams(new URLSearchParams({ page: '1', limit: String(limitPerPage) }));
+    const next = new URLSearchParams({ page: '1' });
+    if (rawLimitParam && rawLimitParam !== 'auto') {
+      next.set('limit', rawLimitParam);
+    }
+    setSearchParams(next);
   };
 
   return (
@@ -260,7 +287,7 @@ export const StudentsListPage: React.FC = () => {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
             {paginatedStudents.map((student) => (
               <div
                 key={student.id}
@@ -335,20 +362,43 @@ export const StudentsListPage: React.FC = () => {
 
         {/* URL Pagination Controls (Estilo WorkoutBuilderPage / ExercisesPage) */}
         {!loading && (
-          <div className="pt-4 border-t border-slate-100 dark:border-dark-border/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-xs text-slate-500 dark:text-dark-muted text-center sm:text-left">
-              Exibindo{' '}
-              <strong className="text-slate-900 dark:text-white">
-                {totalItems > 0 ? startIndex + 1 : 0}
-              </strong>{' '}
-              a{' '}
-              <strong className="text-slate-900 dark:text-white">
-                {endIndex}
-              </strong>{' '}
-              de <strong className="text-slate-900 dark:text-white">{totalItems}</strong> alunos
-              <span className="ml-1 text-slate-400">
-                (Página {safePage} de {totalPages})
-              </span>
+          <div className="pt-4 border-t border-slate-100 dark:border-dark-border/60 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-xs text-slate-500 dark:text-dark-muted text-center sm:text-left">
+              <div>
+                Exibindo{' '}
+                <strong className="text-slate-900 dark:text-white">
+                  {totalItems > 0 ? startIndex + 1 : 0}
+                </strong>{' '}
+                a{' '}
+                <strong className="text-slate-900 dark:text-white">
+                  {endIndex}
+                </strong>{' '}
+                de <strong className="text-slate-900 dark:text-white">{totalItems}</strong> alunos
+                <span className="ml-1 text-slate-400">
+                  (Página {safePage} de {totalPages})
+                </span>
+              </div>
+
+              {/* Items per Page Selector */}
+              <div className="flex items-center gap-1.5 justify-center sm:justify-start">
+                <span className="text-[11px] text-slate-400 font-semibold">Exibir:</span>
+                <select
+                  value={rawLimitParam || 'auto'}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    updateParams({ limit: val === 'auto' ? null : val, page: '1' });
+                  }}
+                  className="text-xs font-bold bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border rounded-xl px-2.5 py-1 text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                >
+                  <option value="auto">Tela ({screenLimit} por página)</option>
+                  <option value="6">6 por página (Padrão)</option>
+                  <option value="8">8 por página</option>
+                  <option value="9">9 por página</option>
+                  <option value="12">12 por página</option>
+                  <option value="18">18 por página</option>
+                  <option value="24">24 por página</option>
+                </select>
+              </div>
             </div>
 
             <div className="flex items-center gap-1.5">
