@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Layers,
   Search,
@@ -13,6 +14,10 @@ import {
   XCircle,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   ArrowUp,
   ArrowDown,
   Sliders,
@@ -33,17 +38,69 @@ import { getAssetUrl } from '../../utils/assets';
 
 export const WorkoutTemplatesPage: React.FC = () => {
   const { success, error: toastError, info } = useToast();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [templates, setTemplates] = useState<WorkoutTemplate[]>([]);
   const [allExercises, setAllExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Filters state
-  const [search, setSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [selectedLevel, setSelectedLevel] = useState<string>('all');
-  const [selectedStatus, setSelectedStatus] = useState<'all' | 'active' | 'inactive'>('all');
-  const [sortBy, setSortBy] = useState<'name' | 'recent' | 'exercises'>('recent');
+  // Screen limit detector for dynamic responsive pagination
+  const [screenLimit, setScreenLimit] = useState(6);
+  useEffect(() => {
+    const updateLimit = () => {
+      if (window.innerWidth >= 1280) {
+        setScreenLimit(8);
+      } else {
+        setScreenLimit(6);
+      }
+    };
+    updateLimit();
+    window.addEventListener('resize', updateLimit);
+    return () => window.removeEventListener('resize', updateLimit);
+  }, []);
+
+  // URL parameters for pagination, filters and sorting
+  const pageParam = parseInt(searchParams.get('page') || '1', 10);
+  const currentPage = isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
+
+  const rawLimitParam = searchParams.get('limit');
+  const limitPerPage = rawLimitParam && rawLimitParam !== 'auto'
+    ? parseInt(rawLimitParam, 10) || 6
+    : screenLimit;
+
+  const currentSearch = searchParams.get('search') || '';
+  const currentCategory = searchParams.get('category') || 'all';
+  const currentLevel = searchParams.get('level') || 'all';
+  const currentStatus = (searchParams.get('status') as 'all' | 'active' | 'inactive') || 'all';
+  const currentSort = (searchParams.get('sort') as 'recent' | 'name' | 'exercises') || 'recent';
+
+  const [searchInput, setSearchInput] = useState(currentSearch);
+
+  useEffect(() => {
+    setSearchInput(currentSearch);
+  }, [currentSearch]);
+
+  const updateParams = (updates: Record<string, string | null>) => {
+    const next = new URLSearchParams(searchParams);
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null || value === '' || value === 'all') {
+        next.delete(key);
+      } else {
+        next.set(key, value);
+      }
+    });
+    setSearchParams(next);
+  };
+
+  // Debounce search input to URL
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchInput !== currentSearch) {
+        updateParams({ search: searchInput.trim() ? searchInput.trim() : null, page: '1' });
+      }
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   // Expanded cards tracker
   const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
@@ -110,9 +167,9 @@ export const WorkoutTemplatesPage: React.FC = () => {
     return map;
   }, [allExercises]);
 
-  // Filtered and sorted templates
+  // Filtered and sorted templates based on URL parameters
   const filteredTemplates = useMemo(() => {
-    const q = search.toLowerCase().trim();
+    const q = currentSearch.toLowerCase().trim();
     return templates
       .filter((t) => {
         const matchesSearch =
@@ -125,22 +182,46 @@ export const WorkoutTemplatesPage: React.FC = () => {
             return ex && ex.name.toLowerCase().includes(q);
           });
 
-        const matchesCat = selectedCategory === 'all' || t.category === selectedCategory;
-        const matchesLvl = selectedLevel === 'all' || t.level === selectedLevel;
+        const matchesCat = currentCategory === 'all' || t.category === currentCategory;
+        const matchesLvl = currentLevel === 'all' || t.level === currentLevel;
         const matchesStat =
-          selectedStatus === 'all' ||
-          (selectedStatus === 'active' && t.isActive !== false) ||
-          (selectedStatus === 'inactive' && t.isActive === false);
+          currentStatus === 'all' ||
+          (currentStatus === 'active' && t.isActive !== false) ||
+          (currentStatus === 'inactive' && t.isActive === false);
 
         return matchesSearch && matchesCat && matchesLvl && matchesStat;
       })
       .sort((a, b) => {
-        if (sortBy === 'name') return a.name.localeCompare(b.name);
-        if (sortBy === 'exercises') return b.exercises.length - a.exercises.length;
+        if (currentSort === 'name') return a.name.localeCompare(b.name);
+        if (currentSort === 'exercises') return b.exercises.length - a.exercises.length;
         // Default: recent
         return (b.updatedAt || '').localeCompare(a.updatedAt || '');
       });
-  }, [templates, search, selectedCategory, selectedLevel, selectedStatus, sortBy, exercisesMap]);
+  }, [templates, currentSearch, currentCategory, currentLevel, currentStatus, currentSort, exercisesMap]);
+
+  // Pagination calculation
+  const totalItems = filteredTemplates.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / limitPerPage));
+  const safePage = Math.min(currentPage, totalPages);
+  const startIndex = (safePage - 1) * limitPerPage;
+  const endIndex = Math.min(startIndex + limitPerPage, totalItems);
+  const paginatedTemplates = filteredTemplates.slice(startIndex, endIndex);
+
+  const hasActiveFilters = Boolean(
+    currentSearch ||
+    (currentCategory && currentCategory !== 'all') ||
+    (currentLevel && currentLevel !== 'all') ||
+    (currentStatus && currentStatus !== 'all')
+  );
+
+  const handleClearFilters = () => {
+    setSearchInput('');
+    const next = new URLSearchParams({ page: '1' });
+    if (rawLimitParam && rawLimitParam !== 'auto') {
+      next.set('limit', rawLimitParam);
+    }
+    setSearchParams(next);
+  };
 
   // Statistics
   const stats = useMemo(() => {
@@ -474,8 +555,8 @@ export const WorkoutTemplatesPage: React.FC = () => {
             <div className="sm:col-span-4">
               <Input
                 placeholder="Buscar por nome, foco ou exercício..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
                 leftIcon={<Search className="w-4 h-4 text-slate-400" />}
                 className="text-xs"
               />
@@ -484,8 +565,8 @@ export const WorkoutTemplatesPage: React.FC = () => {
             {/* Category Filter */}
             <div className="sm:col-span-3">
               <Select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                value={currentCategory}
+                onChange={(e) => updateParams({ category: e.target.value, page: '1' })}
                 options={[
                   { value: 'all', label: 'Todas as Categorias' },
                   { value: 'Push', label: 'Push (Empurrar)' },
@@ -501,8 +582,8 @@ export const WorkoutTemplatesPage: React.FC = () => {
             {/* Level Filter */}
             <div className="sm:col-span-2">
               <Select
-                value={selectedLevel}
-                onChange={(e) => setSelectedLevel(e.target.value)}
+                value={currentLevel}
+                onChange={(e) => updateParams({ level: e.target.value, page: '1' })}
                 options={[
                   { value: 'all', label: 'Todos Níveis' },
                   { value: 'iniciante', label: 'Iniciante' },
@@ -516,8 +597,8 @@ export const WorkoutTemplatesPage: React.FC = () => {
             {/* Status Filter */}
             <div className="sm:col-span-3">
               <Select
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value as any)}
+                value={currentStatus}
+                onChange={(e) => updateParams({ status: e.target.value, page: '1' })}
                 options={[
                   { value: 'all', label: 'Todos os Status' },
                   { value: 'active', label: 'Apenas Ativas' },
@@ -528,17 +609,28 @@ export const WorkoutTemplatesPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-dark-border/60 text-xs text-slate-500">
-            <span>
-              Exibindo <strong>{filteredTemplates.length}</strong> de {templates.length} séries cadastradas
-            </span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-dark-border/60 text-xs text-slate-500">
+            <div className="flex items-center gap-2">
+              <span>
+                Total de <strong>{filteredTemplates.length}</strong> séries encontradas
+              </span>
+              {hasActiveFilters && (
+                <button
+                  type="button"
+                  onClick={handleClearFilters}
+                  className="text-emerald-500 hover:text-emerald-600 font-semibold cursor-pointer underline text-[11px]"
+                >
+                  Limpar filtros
+                </button>
+              )}
+            </div>
 
             <div className="flex items-center gap-2">
               <span className="font-semibold text-slate-400">Ordenar por:</span>
               <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-dark-card border border-slate-200 dark:border-dark-border text-xs text-slate-700 dark:text-slate-300 focus:outline-hidden"
+                value={currentSort}
+                onChange={(e) => updateParams({ sort: e.target.value, page: '1' })}
+                className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-dark-card border border-slate-200 dark:border-dark-border text-xs text-slate-700 dark:text-slate-300 focus:outline-hidden cursor-pointer"
               >
                 <option value="recent">Mais Recentes</option>
                 <option value="name">Nome (A - Z)</option>
@@ -580,176 +672,294 @@ export const WorkoutTemplatesPage: React.FC = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {filteredTemplates.map((template) => {
-            const isExpanded = !!expandedCards[template.id];
-            const isActive = template.isActive !== false;
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {paginatedTemplates.map((template) => {
+              const isExpanded = !!expandedCards[template.id];
+              const isActive = template.isActive !== false;
 
-            return (
-              <div
-                key={template.id}
-                className={`p-5 rounded-3xl border transition-all flex flex-col justify-between gap-4 text-left relative ${
-                  isActive
-                    ? 'bg-white dark:bg-dark-card border-slate-200 dark:border-dark-border hover:border-emerald-500/40 hover:shadow-lg'
-                    : 'bg-slate-50/80 dark:bg-dark-card/50 border-dashed border-slate-300 dark:border-slate-800 opacity-80'
-                }`}
-              >
-                <div>
-                  {/* Card Header Badges */}
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="brand" size="sm">
-                        {template.category}
-                      </Badge>
-                      <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[10px] uppercase font-mono font-bold text-slate-600 dark:text-slate-300">
-                        {template.level}
-                      </span>
-                      <span className="px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 text-[10px] font-mono font-bold flex items-center gap-1">
-                        <GitFork className="w-3 h-3" />
-                        {template.versionTag || `v${template.version || 1}.0`}
-                      </span>
-                    </div>
-
-                    {/* Status Toggle Button */}
-                    <button
-                      type="button"
-                      onClick={() => handleToggleStatus(template)}
-                      title={isActive ? 'Clique para desativar esta série' : 'Clique para ativar esta série'}
-                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
-                        isActive
-                          ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/25 border border-emerald-500/20'
-                          : 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-300'
-                      }`}
-                    >
-                      <Power className="w-3 h-3" />
-                      <span>{isActive ? 'Ativa' : 'Inativa'}</span>
-                    </button>
-                  </div>
-
-                  {/* Title & Description */}
-                  <div className="mt-3">
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white leading-snug">
-                      {template.name}
-                    </h3>
-                    <p className="text-xs text-slate-500 dark:text-dark-muted mt-1 leading-relaxed line-clamp-2">
-                      {template.description}
-                    </p>
-                  </div>
-
-                  {/* Muscle focus and duration */}
-                  <div className="flex flex-wrap items-center gap-4 mt-3 pt-3 border-t border-slate-100 dark:border-dark-border/60 text-xs">
-                    <span className="flex items-center gap-1.5 font-bold text-slate-700 dark:text-slate-300">
-                      <Dumbbell className="w-4 h-4 text-emerald-500" />
-                      {template.exercises.length} exercícios
-                    </span>
-                    <span className="flex items-center gap-1.5 text-slate-500">
-                      <Clock className="w-4 h-4 text-cyan-500" />
-                      ~{template.estimatedMinutes} min
-                    </span>
-                    <span className="text-slate-400 font-mono text-[11px] truncate max-w-xs">
-                      Foco: {template.muscleFocus}
-                    </span>
-                  </div>
-
-                  {/* Prescribed Exercises Preview (Collapsible) */}
-                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-dark-border/60">
-                    <div
-                      onClick={() => toggleCard(template.id)}
-                      className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer hover:text-emerald-500 transition-colors select-none"
-                    >
-                      <span>
-                        Exercícios Prescritos ({template.exercises.length})
-                      </span>
-                      <div className="flex items-center gap-1 text-slate-400 text-[11px]">
-                        <span>{isExpanded ? 'Ocultar detalhes' : 'Ver todos'}</span>
-                        {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              return (
+                <div
+                  key={template.id}
+                  className={`p-5 rounded-3xl border transition-all flex flex-col justify-between gap-4 text-left relative ${
+                    isActive
+                      ? 'bg-white dark:bg-dark-card border-slate-200 dark:border-dark-border hover:border-emerald-500/40 hover:shadow-lg'
+                      : 'bg-slate-50/80 dark:bg-dark-card/50 border-dashed border-slate-300 dark:border-slate-800 opacity-80'
+                  }`}
+                >
+                  <div>
+                    {/* Card Header Badges */}
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge variant="brand" size="sm">
+                          {template.category}
+                        </Badge>
+                        <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[10px] uppercase font-mono font-bold text-slate-600 dark:text-slate-300">
+                          {template.level}
+                        </span>
+                        <span className="px-2 py-0.5 rounded-md bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 text-[10px] font-mono font-bold flex items-center gap-1">
+                          <GitFork className="w-3 h-3" />
+                          {template.versionTag || `v${template.version || 1}.0`}
+                        </span>
                       </div>
+
+                      {/* Status Toggle Button */}
+                      <button
+                        type="button"
+                        onClick={() => handleToggleStatus(template)}
+                        title={isActive ? 'Clique para desativar esta série' : 'Clique para ativar esta série'}
+                        className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer ${
+                          isActive
+                            ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/25 border border-emerald-500/20'
+                            : 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-300'
+                        }`}
+                      >
+                        <Power className="w-3 h-3" />
+                        <span>{isActive ? 'Ativa' : 'Inativa'}</span>
+                      </button>
                     </div>
 
-                    <div className="mt-2.5 space-y-2">
-                      {(isExpanded ? template.exercises : template.exercises.slice(0, 3)).map((item, idx) => {
-                        const ex = exercisesMap[item.exerciseId];
-                        return (
-                          <div
-                            key={idx}
-                            className="p-2.5 rounded-xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/70 dark:border-dark-border flex items-center justify-between gap-3 text-xs"
-                          >
-                            <div className="flex items-center gap-2.5 min-w-0">
-                              <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-800 text-[10px] font-mono font-bold flex items-center justify-center shrink-0">
-                                {idx + 1}
-                              </span>
-                              <div className="truncate">
-                                <span className="font-bold text-slate-800 dark:text-white block truncate">
-                                  {ex ? ex.name : item.exerciseId}
+                    {/* Title & Description */}
+                    <div className="mt-3">
+                      <h3 className="text-base font-bold text-slate-900 dark:text-white leading-snug">
+                        {template.name}
+                      </h3>
+                      <p className="text-xs text-slate-500 dark:text-dark-muted mt-1 leading-relaxed line-clamp-2">
+                        {template.description}
+                      </p>
+                    </div>
+
+                    {/* Muscle focus and duration */}
+                    <div className="flex flex-wrap items-center gap-4 mt-3 pt-3 border-t border-slate-100 dark:border-dark-border/60 text-xs">
+                      <span className="flex items-center gap-1.5 font-bold text-slate-700 dark:text-slate-300">
+                        <Dumbbell className="w-4 h-4 text-emerald-500" />
+                        {template.exercises.length} exercícios
+                      </span>
+                      <span className="flex items-center gap-1.5 text-slate-500">
+                        <Clock className="w-4 h-4 text-cyan-500" />
+                        ~{template.estimatedMinutes} min
+                      </span>
+                      <span className="text-slate-400 font-mono text-[11px] truncate max-w-xs">
+                        Foco: {template.muscleFocus}
+                      </span>
+                    </div>
+
+                    {/* Prescribed Exercises Preview (Collapsible) */}
+                    <div className="mt-4 pt-3 border-t border-slate-100 dark:border-dark-border/60">
+                      <div
+                        onClick={() => toggleCard(template.id)}
+                        className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer hover:text-emerald-500 transition-colors select-none"
+                      >
+                        <span>
+                          Exercícios Prescritos ({template.exercises.length})
+                        </span>
+                        <div className="flex items-center gap-1 text-slate-400 text-[11px]">
+                          <span>{isExpanded ? 'Ocultar detalhes' : 'Ver todos'}</span>
+                          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                        </div>
+                      </div>
+
+                      <div className="mt-2.5 space-y-2">
+                        {(isExpanded ? template.exercises : template.exercises.slice(0, 3)).map((item, idx) => {
+                          const ex = exercisesMap[item.exerciseId];
+                          return (
+                            <div
+                              key={idx}
+                              className="p-2.5 rounded-xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/70 dark:border-dark-border flex items-center justify-between gap-3 text-xs"
+                            >
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <span className="w-5 h-5 rounded-full bg-slate-200 dark:bg-slate-800 text-[10px] font-mono font-bold flex items-center justify-center shrink-0">
+                                  {idx + 1}
                                 </span>
-                                {item.notes && (
-                                  <span className="text-[10px] text-slate-400 block truncate">
-                                    {item.notes}
+                                <div className="truncate">
+                                  <span className="font-bold text-slate-800 dark:text-white block truncate">
+                                    {ex ? ex.name : item.exerciseId}
                                   </span>
-                                )}
+                                  {item.notes && (
+                                    <span className="text-[10px] text-slate-400 block truncate">
+                                      {item.notes}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div className="text-right shrink-0">
+                                <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 block">
+                                  {item.sets}×{item.reps} @ {item.weight}kg
+                                </span>
+                                <span className="text-[10px] text-slate-400 block">
+                                  {item.restSeconds}s descanso
+                                </span>
                               </div>
                             </div>
+                          );
+                        })}
 
-                            <div className="text-right shrink-0">
-                              <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 block">
-                                {item.sets}×{item.reps} @ {item.weight}kg
-                              </span>
-                              <span className="text-[10px] text-slate-400 block">
-                                {item.restSeconds}s descanso
-                              </span>
-                            </div>
+                        {!isExpanded && template.exercises.length > 3 && (
+                          <div
+                            onClick={() => toggleCard(template.id)}
+                            className="text-center py-1 text-[11px] text-emerald-500 font-semibold cursor-pointer hover:underline"
+                          >
+                            + {template.exercises.length - 3} outros exercícios na série...
                           </div>
-                        );
-                      })}
-
-                      {!isExpanded && template.exercises.length > 3 && (
-                        <div
-                          onClick={() => toggleCard(template.id)}
-                          className="text-center py-1 text-[11px] text-emerald-500 font-semibold cursor-pointer hover:underline"
-                        >
-                          + {template.exercises.length - 3} outros exercícios na série...
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Card Actions Footer */}
-                <div className="pt-3 border-t border-slate-100 dark:border-dark-border/60 flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1.5">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => handleOpenEditModal(template)}
-                      leftIcon={<Edit3 className="w-3.5 h-3.5" />}
-                      className="text-xs"
-                    >
-                      Editar Série
-                    </Button>
+                  {/* Card Actions Footer */}
+                  <div className="pt-3 border-t border-slate-100 dark:border-dark-border/60 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleOpenEditModal(template)}
+                        leftIcon={<Edit3 className="w-3.5 h-3.5" />}
+                        className="text-xs"
+                      >
+                        Editar Série
+                      </Button>
 
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => handleOpenVersionModal(template)}
-                      leftIcon={<GitFork className="w-3.5 h-3.5 text-cyan-500" />}
-                      className="text-xs"
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleOpenVersionModal(template)}
+                        leftIcon={<GitFork className="w-3.5 h-3.5 text-cyan-500" />}
+                        className="text-xs"
+                      >
+                        Nova Versão
+                      </Button>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setTemplateToDelete(template)}
+                      className="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                      title="Excluir série"
                     >
-                      Nova Versão
-                    </Button>
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
+                </div>
+              );
+            })}
+          </div>
 
-                  <button
-                    type="button"
-                    onClick={() => setTemplateToDelete(template)}
-                    className="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
-                    title="Excluir série"
+          {/* Pagination Controls */}
+          {totalItems > 0 && (
+            <div className="p-4 rounded-2xl bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs shadow-xs">
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                <span className="text-slate-500 dark:text-dark-muted font-medium">
+                  Exibindo <strong>{totalItems === 0 ? 0 : startIndex + 1}</strong> a <strong>{endIndex}</strong> de <strong>{totalItems}</strong> séries
+                </span>
+
+                {/* Items per Page Selector */}
+                <div className="flex items-center gap-1.5 justify-center sm:justify-start">
+                  <span className="text-[11px] text-slate-400 font-semibold">Exibir:</span>
+                  <select
+                    value={rawLimitParam || 'auto'}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      updateParams({ limit: val === 'auto' ? null : val, page: '1' });
+                    }}
+                    className="text-xs font-bold bg-slate-50 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border rounded-xl px-2.5 py-1 text-slate-700 dark:text-slate-300 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                   >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                    <option value="auto">Tela ({screenLimit} por página)</option>
+                    <option value="6">6 por página (Padrão)</option>
+                    <option value="8">8 por página</option>
+                    <option value="12">12 por página</option>
+                    <option value="18">18 por página</option>
+                    <option value="24">24 por página</option>
+                  </select>
                 </div>
               </div>
-            );
-          })}
+
+              <div className="flex items-center gap-1.5">
+                {/* First Page */}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => updateParams({ page: '1' })}
+                  disabled={safePage <= 1}
+                  className="px-2"
+                  title="Primeira Página"
+                >
+                  <ChevronsLeft className="w-4 h-4" />
+                </Button>
+
+                {/* Previous Page */}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => updateParams({ page: String(safePage - 1) })}
+                  disabled={safePage <= 1}
+                  leftIcon={<ChevronLeft className="w-4 h-4" />}
+                >
+                  Anterior
+                </Button>
+
+                {/* Direct Page Numbers */}
+                <div className="flex items-center gap-1 px-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
+                    if (totalPages > 7) {
+                      if (
+                        p !== 1 &&
+                        p !== totalPages &&
+                        Math.abs(p - safePage) > 1
+                      ) {
+                        if (p === 2 || p === totalPages - 1) {
+                          return (
+                            <span key={p} className="text-xs text-slate-400 px-1">
+                              ...
+                            </span>
+                          );
+                        }
+                        return null;
+                      }
+                    }
+
+                    return (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => updateParams({ page: String(p) })}
+                        className={`w-8 h-8 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          safePage === p
+                            ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/25 ring-2 ring-emerald-500/30'
+                            : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Next Page */}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => updateParams({ page: String(safePage + 1) })}
+                  disabled={safePage >= totalPages}
+                  rightIcon={<ChevronRight className="w-4 h-4" />}
+                >
+                  Próxima
+                </Button>
+
+                {/* Last Page */}
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => updateParams({ page: String(totalPages) })}
+                  disabled={safePage >= totalPages}
+                  className="px-2"
+                  title="Última Página"
+                >
+                  <ChevronsRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
