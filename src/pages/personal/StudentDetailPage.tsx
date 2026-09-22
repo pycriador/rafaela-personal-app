@@ -32,6 +32,7 @@ import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
 import { ExerciseFramePlayer } from '../../components/ui/ExerciseFramePlayer';
 import { useToast } from '../../context/ToastContext';
+import { getAssetUrl } from '../../utils/assets';
 import { studentRepository } from '../../repositories/studentRepository';
 import { workoutRepository } from '../../repositories/workoutRepository';
 import { nutritionRepository } from '../../repositories/nutritionRepository';
@@ -631,7 +632,7 @@ export const StudentDetailPage: React.FC = () => {
                                 title="Ver animação da execução"
                               >
                                 <img
-                                  src={exercise.imageUrl}
+                                  src={getAssetUrl(exercise.imageUrl)}
                                   alt={exercise.name}
                                   className="w-full h-full object-contain"
                                 />

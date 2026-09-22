@@ -12,8 +12,9 @@ import {
   ChevronsRight,
   X,
 } from 'lucide-react';
-import { Card } from '../../components/ui/Card';
+import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Badge } from '../../components/ui/Badge';
 import { studentRepository } from '../../repositories/studentRepository';
@@ -148,19 +149,37 @@ export const StudentsListPage: React.FC = () => {
         </Button>
       </div>
 
-      {/* Filters Bar (Section 7) */}
-      <Card className="p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-center">
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              placeholder="Buscar por nome, e-mail..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            />
-          </div>
+      {/* Main Unified Container (Estilo WorkoutBuilderPage) */}
+      <Card className="p-6 space-y-4">
+        <CardHeader className="p-0">
+          <CardTitle>Alunos Matriculados & Frequência</CardTitle>
+          <p className="text-xs text-slate-500">
+            Filtre por objetivo, status ou frequência semanal para acessar prontuários e gerenciar planos.
+          </p>
+        </CardHeader>
+
+        {/* Filters Bar */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+          <Input
+            placeholder="Buscar por nome, e-mail..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            leftIcon={<Search className="w-4 h-4" />}
+            rightIcon={
+              searchInput ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchInput('');
+                    updateParams({ search: null, page: '1' });
+                  }}
+                  className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              ) : undefined
+            }
+          />
 
           <Select
             value={currentGoal}
@@ -198,245 +217,227 @@ export const StudentsListPage: React.FC = () => {
               { value: '5', label: '5 dias por semana' },
             ]}
           />
-
-          <div className="flex items-center justify-between sm:justify-end gap-2">
-            {hasActiveFilters && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleClearFilters}
-                className="text-xs text-rose-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20"
-                leftIcon={<X className="w-3.5 h-3.5" />}
-              >
-                Limpar
-              </Button>
-            )}
-            <span className="text-xs text-slate-400 font-mono">
-              {totalItems} {totalItems === 1 ? 'aluno' : 'alunos'}
-            </span>
-          </div>
         </div>
-      </Card>
 
-      {/* Students Grid */}
-      {loading ? (
-        <div className="py-12 flex justify-center">
-          <div className="w-8 h-8 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
-        </div>
-      ) : paginatedStudents.length === 0 ? (
-        <Card className="py-12 text-center">
-          <Users className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
-          <p className="text-sm font-bold text-slate-900 dark:text-white">Nenhum aluno encontrado</p>
-          <p className="text-xs text-slate-500 mt-1 mb-4">Tente ajustar os filtros ou buscar por outro termo.</p>
+        {/* Counter and Clear Filters */}
+        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-dark-muted pt-1">
+          <span>
+            Encontrados <strong className="text-slate-900 dark:text-white">{totalItems}</strong> de {allStudents.length} alunos
+          </span>
           {hasActiveFilters && (
-            <Button variant="secondary" size="sm" onClick={handleClearFilters}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClearFilters}
+              className="text-xs text-rose-500 hover:text-rose-600 h-7 px-2"
+              leftIcon={<X className="w-3.5 h-3.5" />}
+            >
               Limpar Filtros
             </Button>
           )}
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {paginatedStudents.map((student) => (
-            <Card
-              key={student.id}
-              className="hover:border-emerald-500/50 hover:shadow-lg transition-all duration-200 cursor-pointer p-5 flex flex-col justify-between group"
-              onClick={() => navigate(`/personal/students/${student.id}`)}
-            >
-              <div>
-                {/* Header card with avatar and status */}
-                <div className="flex items-start justify-between gap-3 mb-4">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <img
-                      src={student.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
-                      alt={student.name}
-                      className="w-12 h-12 rounded-2xl object-cover ring-2 ring-slate-200 dark:ring-dark-border group-hover:ring-emerald-500 transition-all shrink-0"
-                    />
-                    <div className="min-w-0">
-                      <h3 className="text-sm font-bold text-slate-900 dark:text-white truncate">
-                        {student.name}
-                      </h3>
-                      <p className="text-xs text-slate-500 dark:text-dark-muted truncate">
-                        {student.email}
-                      </p>
-                    </div>
-                  </div>
-                  <Badge
-                    variant={
-                      student.status === 'Ativo'
-                        ? 'success'
-                        : student.status === 'Pausado'
-                        ? 'warning'
-                        : student.status === 'Atenção'
-                        ? 'danger'
-                        : 'neutral'
-                    }
-                    size="sm"
-                  >
-                    {student.status}
-                  </Badge>
-                </div>
-
-                {/* Goals badges */}
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {student.goals.map((g) => (
-                    <span
-                      key={g}
-                      className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                    >
-                      {g}
-                    </span>
-                  ))}
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400">
-                    {student.level}
-                  </span>
-                </div>
-
-                {/* Details info */}
-                <div className="space-y-2 text-xs text-slate-600 dark:text-dark-muted bg-slate-50 dark:bg-dark-cardElevated/50 p-3 rounded-xl">
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                      Frequência:
-                    </span>
-                    <strong className="text-slate-900 dark:text-white">
-                      {student.availableDays.length}x ({student.availableDays.join(', ')})
-                    </strong>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="flex items-center gap-1.5">
-                      <Activity className="w-3.5 h-3.5 text-slate-400" />
-                      Última atividade:
-                    </span>
-                    <span className="font-semibold text-slate-800 dark:text-slate-200">
-                      {student.lastActive}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card Footer */}
-              <div className="mt-4 pt-3 border-t border-slate-100 dark:border-dark-border/60 flex items-center justify-between">
-                <div>
-                  <span className="text-xs font-black text-emerald-500 font-mono">
-                    {student.adherencePercentage}%
-                  </span>
-                  <span className="text-[10px] text-slate-400 ml-1">adesão</span>
-                </div>
-                <span className="text-xs font-bold text-slate-600 dark:text-slate-300 group-hover:text-emerald-500 flex items-center gap-1 transition-colors">
-                  Ver Perfil
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </span>
-              </div>
-            </Card>
-          ))}
         </div>
-      )}
 
-      {/* URL-Synchronized Pagination Controls (Estilo ExercisesPage) */}
-      {!loading && (
-        <Card className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-xs text-slate-500 dark:text-dark-muted text-center sm:text-left">
-            Exibindo{' '}
-            <strong className="text-slate-900 dark:text-white">
-              {totalItems > 0 ? startIndex + 1 : 0}
-            </strong>{' '}
-            a{' '}
-            <strong className="text-slate-900 dark:text-white">
-              {endIndex}
-            </strong>{' '}
-            de <strong className="text-slate-900 dark:text-white">{totalItems}</strong> alunos
-            <span className="ml-1 text-slate-400">
-              (Página {safePage} de {totalPages})
-            </span>
+        {/* Students Grid */}
+        {loading ? (
+          <div className="py-12 flex justify-center">
+            <div className="w-8 h-8 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
           </div>
+        ) : paginatedStudents.length === 0 ? (
+          <div className="py-12 text-center space-y-3">
+            <Users className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto" />
+            <div>
+              <p className="text-base font-bold text-slate-800 dark:text-slate-200">
+                Nenhum aluno encontrado
+              </p>
+              <p className="text-xs text-slate-500 dark:text-dark-muted mt-1 max-w-md mx-auto">
+                Tente ajustar os filtros de busca, objetivo ou frequência.
+              </p>
+            </div>
+            {hasActiveFilters && (
+              <Button variant="secondary" size="sm" onClick={handleClearFilters} className="mt-2">
+                Limpar Filtros
+              </Button>
+            )}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+            {paginatedStudents.map((student) => (
+              <div
+                key={student.id}
+                onClick={() => navigate(`/personal/students/${student.id}`)}
+                className="p-4 rounded-2xl border border-slate-200 dark:border-dark-border bg-white dark:bg-dark-card hover:border-emerald-500/50 hover:bg-slate-50/50 dark:hover:bg-dark-cardElevated/50 hover:shadow-md cursor-pointer transition-all flex flex-col justify-between gap-3 group"
+              >
+                <div className="flex items-start gap-3">
+                  <img
+                    src={student.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
+                    alt={student.name}
+                    className="w-12 h-12 rounded-xl object-cover ring-1 ring-slate-200 dark:ring-dark-border group-hover:ring-emerald-500 transition-all shrink-0"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-1">
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                        {student.name}
+                      </h4>
+                      <Badge
+                        variant={
+                          student.status === 'Ativo'
+                            ? 'success'
+                            : student.status === 'Pausado'
+                            ? 'warning'
+                            : student.status === 'Atenção'
+                            ? 'danger'
+                            : 'neutral'
+                        }
+                        size="sm"
+                      >
+                        {student.status}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-slate-500 dark:text-dark-muted truncate mt-0.5">
+                      {student.email}
+                    </p>
+                    <p className="text-[11px] text-slate-400 font-medium truncate mt-0.5">
+                      {student.level} • {student.goals.join(', ')}
+                    </p>
+                  </div>
+                </div>
 
-          <div className="flex items-center gap-1.5">
-            {/* First Page */}
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => updateParams({ page: '1' })}
-              disabled={safePage <= 1}
-              className="px-2"
-              title="Primeira Página"
-            >
-              <ChevronsLeft className="w-4 h-4" />
-            </Button>
+                {/* Registered training days & activity box */}
+                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-dark-cardElevated/60 border border-slate-100 dark:border-dark-border/40 text-xs space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold">
+                      <Calendar className="w-3.5 h-3.5 shrink-0" />
+                      <span>Dias Cadastrados ({student.availableDays.length}):</span>
+                    </div>
+                    <span className="font-mono font-bold text-emerald-500 text-xs">
+                      {student.adherencePercentage}% adesão
+                    </span>
+                  </div>
+                  <span className="text-slate-700 dark:text-slate-300 font-semibold block truncate">
+                    {student.availableDays.length > 0 ? student.availableDays.join(', ') : 'Nenhum dia cadastrado'}
+                  </span>
+                </div>
 
-            {/* Previous Page */}
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => updateParams({ page: String(safePage - 1) })}
-              disabled={safePage <= 1}
-              leftIcon={<ChevronLeft className="w-4 h-4" />}
-            >
-              Anterior
-            </Button>
+                {/* Card Footer */}
+                <div className="pt-2 border-t border-slate-100 dark:border-dark-border/40 flex items-center justify-between text-xs">
+                  <span className="text-[11px] text-slate-400">
+                    Atividade: <strong className="text-slate-600 dark:text-slate-300 font-medium">{student.lastActive}</strong>
+                  </span>
+                  <span className="text-xs font-bold text-slate-600 dark:text-slate-300 group-hover:text-emerald-500 flex items-center gap-1 transition-colors">
+                    Ver Perfil
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
-            {/* Direct Page Numbers */}
-            <div className="flex items-center gap-1 px-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-                if (totalPages > 7) {
-                  if (
-                    p !== 1 &&
-                    p !== totalPages &&
-                    Math.abs(p - safePage) > 1
-                  ) {
-                    if (p === 2 || p === totalPages - 1) {
-                      return (
-                        <span key={p} className="text-xs text-slate-400 px-1">
-                          ...
-                        </span>
-                      );
-                    }
-                    return null;
-                  }
-                }
-
-                return (
-                  <button
-                    key={p}
-                    type="button"
-                    onClick={() => updateParams({ page: String(p) })}
-                    className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
-                      safePage === p
-                        ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/25 ring-2 ring-emerald-500/30'
-                        : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
-                    }`}
-                  >
-                    {p}
-                  </button>
-                );
-              })}
+        {/* URL Pagination Controls (Estilo WorkoutBuilderPage / ExercisesPage) */}
+        {!loading && (
+          <div className="pt-4 border-t border-slate-100 dark:border-dark-border/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-xs text-slate-500 dark:text-dark-muted text-center sm:text-left">
+              Exibindo{' '}
+              <strong className="text-slate-900 dark:text-white">
+                {totalItems > 0 ? startIndex + 1 : 0}
+              </strong>{' '}
+              a{' '}
+              <strong className="text-slate-900 dark:text-white">
+                {endIndex}
+              </strong>{' '}
+              de <strong className="text-slate-900 dark:text-white">{totalItems}</strong> alunos
+              <span className="ml-1 text-slate-400">
+                (Página {safePage} de {totalPages})
+              </span>
             </div>
 
-            {/* Next Page */}
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => updateParams({ page: String(safePage + 1) })}
-              disabled={safePage >= totalPages}
-              rightIcon={<ChevronRight className="w-4 h-4" />}
-            >
-              Próxima
-            </Button>
+            <div className="flex items-center gap-1.5">
+              {/* First Page */}
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => updateParams({ page: '1' })}
+                disabled={safePage <= 1}
+                className="px-2"
+                title="Primeira Página"
+              >
+                <ChevronsLeft className="w-4 h-4" />
+              </Button>
 
-            {/* Last Page */}
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => updateParams({ page: String(totalPages) })}
-              disabled={safePage >= totalPages}
-              className="px-2"
-              title="Última Página"
-            >
-              <ChevronsRight className="w-4 h-4" />
-            </Button>
+              {/* Previous Page */}
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => updateParams({ page: String(safePage - 1) })}
+                disabled={safePage <= 1}
+                leftIcon={<ChevronLeft className="w-4 h-4" />}
+              >
+                Anterior
+              </Button>
+
+              {/* Direct Page Numbers */}
+              <div className="flex items-center gap-1 px-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
+                  if (totalPages > 7) {
+                    if (
+                      p !== 1 &&
+                      p !== totalPages &&
+                      Math.abs(p - safePage) > 1
+                    ) {
+                      if (p === 2 || p === totalPages - 1) {
+                        return (
+                          <span key={p} className="text-xs text-slate-400 px-1">
+                            ...
+                          </span>
+                        );
+                      }
+                      return null;
+                    }
+                  }
+
+                  return (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => updateParams({ page: String(p) })}
+                      className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
+                        safePage === p
+                          ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/25 ring-2 ring-emerald-500/30'
+                          : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Next Page */}
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => updateParams({ page: String(safePage + 1) })}
+                disabled={safePage >= totalPages}
+                rightIcon={<ChevronRight className="w-4 h-4" />}
+              >
+                Próxima
+              </Button>
+
+              {/* Last Page */}
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => updateParams({ page: String(totalPages) })}
+                disabled={safePage >= totalPages}
+                className="px-2"
+                title="Última Página"
+              >
+                <ChevronsRight className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
-        </Card>
-      )}
-
+        )}
+      </Card>
     </div>
   );
 };

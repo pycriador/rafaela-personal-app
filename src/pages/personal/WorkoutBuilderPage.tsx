@@ -25,6 +25,7 @@ import { exerciseRepository } from '../../repositories/exerciseRepository';
 import { workoutRepository } from '../../repositories/workoutRepository';
 import { activityRepository } from '../../repositories/activityRepository';
 import { useToast } from '../../context/ToastContext';
+import { getAssetUrl } from '../../utils/assets';
 import {
   Student,
   Exercise,
@@ -765,7 +766,7 @@ export const WorkoutBuilderPage: React.FC = () => {
                         {exDetails?.imageUrl && (
                           <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 p-1 flex items-center justify-center shrink-0 overflow-hidden">
                             <img
-                              src={exDetails.imageUrl}
+                              src={getAssetUrl(exDetails.imageUrl)}
                               alt={exDetails.name}
                               className="w-full h-full object-contain"
                             />
@@ -893,7 +894,7 @@ export const WorkoutBuilderPage: React.FC = () => {
                   {/* Exercise Cartoon Illustration Preview Thumbnail */}
                   <div className="w-14 h-14 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center p-1 overflow-hidden shrink-0">
                     <img
-                      src={ex.imageUrl || '/exercises/exercise-peito-01.png'}
+                      src={getAssetUrl(ex.imageUrl || '/exercises/exercise-peito-01.png')}
                       alt={ex.name}
                       className="max-h-full max-w-full object-contain filter drop-shadow-xs group-hover:scale-110 transition-transform duration-200"
                     />

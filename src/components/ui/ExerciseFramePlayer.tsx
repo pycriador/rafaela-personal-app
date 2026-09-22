@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, Film, Gauge } from 'lucide-react';
+import { getAssetUrl } from '../../utils/assets';
 
 export interface ExerciseFramePlayerProps {
   frames?: string[];
@@ -32,18 +33,19 @@ export const ExerciseFramePlayer: React.FC<ExerciseFramePlayerProps> = ({
   const [speed, setSpeed] = useState<'slow' | 'normal' | 'fast'>(defaultSpeed);
   const intervalRef = useRef<number | null>(null);
 
-  const validFrames = frames && frames.length > 0 ? frames : [fallbackImage];
+  const rawFrames = frames && frames.length > 0 ? frames : [fallbackImage];
+  const validFrames = rawFrames.map((f) => getAssetUrl(f));
   const hasMultipleFrames = validFrames.length > 1;
 
   // Preload frames in memory for smooth, flicker-free playback
   useEffect(() => {
-    if (frames && frames.length > 1) {
-      frames.forEach((src) => {
+    if (validFrames && validFrames.length > 1) {
+      validFrames.forEach((src) => {
         const img = new Image();
         img.src = src;
       });
     }
-  }, [frames]);
+  }, [validFrames]);
 
   // Frame animation loop
   useEffect(() => {
@@ -101,7 +103,7 @@ export const ExerciseFramePlayer: React.FC<ExerciseFramePlayerProps> = ({
     setDirection(1);
   };
 
-  const activeSrc = validFrames[currentFrameIdx] || fallbackImage;
+  const activeSrc = validFrames[currentFrameIdx] || getAssetUrl(fallbackImage);
 
   if (compact) {
     return (

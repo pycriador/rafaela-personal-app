@@ -20,7 +20,7 @@ import {
   Info,
   Film,
 } from 'lucide-react';
-import { Card } from '../../components/ui/Card';
+import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
@@ -384,8 +384,15 @@ export const ExercisesPage: React.FC = () => {
         </a>
       </div>
 
-      {/* Main Filters Bar (Synced with URL) */}
-      <Card className="p-4 space-y-3">
+      {/* Main Unified Container (Estilo WorkoutBuilderPage) */}
+      <Card className="p-6 space-y-4">
+        <CardHeader className="p-0">
+          <CardTitle>Catálogo de Exercícios & Mini Vídeos</CardTitle>
+          <p className="text-xs text-slate-500">
+            Mais de 300 movimentos catalogados com execução animada, instruções biomecânicas e alternativas autorizadas.
+          </p>
+        </CardHeader>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Search Input with Instant Responsiveness & Accent Agnostic Search */}
           <div className="relative">
@@ -524,29 +531,28 @@ export const ExercisesPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </Card>
 
-      {/* Exercises Grid */}
-      {loading ? (
-        <div className="py-12 flex justify-center">
-          <div className="w-8 h-8 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
-        </div>
-      ) : paginatedExercises.length === 0 ? (
-        <Card className="py-12 text-center space-y-3">
-          <Dumbbell className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto" />
-          <div>
-            <p className="text-base font-bold text-slate-800 dark:text-slate-200">
-              Nenhum exercício encontrado
-            </p>
-            <p className="text-xs text-slate-500 dark:text-dark-muted mt-1 max-w-md mx-auto">
-              Nenhum resultado corresponde aos filtros selecionados na URL. Experimente buscar sem acentos ou limpar os filtros.
-            </p>
+        {/* Exercises Grid */}
+        {loading ? (
+          <div className="py-12 flex justify-center">
+            <div className="w-8 h-8 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
           </div>
-          <Button variant="secondary" size="sm" onClick={handleClearFilters} className="mt-2">
-            Limpar Filtros e Ver Todos ({allExercises.length})
-          </Button>
-        </Card>
-      ) : (
+        ) : paginatedExercises.length === 0 ? (
+          <div className="py-12 text-center space-y-3">
+            <Dumbbell className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto" />
+            <div>
+              <p className="text-base font-bold text-slate-800 dark:text-slate-200">
+                Nenhum exercício encontrado
+              </p>
+              <p className="text-xs text-slate-500 dark:text-dark-muted mt-1 max-w-md mx-auto">
+                Nenhum resultado corresponde aos filtros selecionados na URL. Experimente buscar sem acentos ou limpar os filtros.
+              </p>
+            </div>
+            <Button variant="secondary" size="sm" onClick={handleClearFilters} className="mt-2">
+              Limpar Filtros e Ver Todos ({allExercises.length})
+            </Button>
+          </div>
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {paginatedExercises.map((ex) => (
             <Card
@@ -637,110 +643,108 @@ export const ExercisesPage: React.FC = () => {
         </div>
       )}
 
-      {/* URL-based Pagination Controls (Section: Paginação na URL) */}
-      <Card className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="text-xs text-slate-500 dark:text-dark-muted text-center sm:text-left">
-          Exibindo{' '}
-          <strong className="text-slate-900 dark:text-white">
-            {totalItems > 0 ? (validCurrentPage - 1) * currentLimit + 1 : 0}
-          </strong>{' '}
-          a{' '}
-          <strong className="text-slate-900 dark:text-white">
-            {Math.min(validCurrentPage * currentLimit, totalItems)}
-          </strong>{' '}
-          de <strong className="text-slate-900 dark:text-white">{totalItems}</strong> exercícios
-          {totalPages > 1 && (
-            <span className="ml-1 text-slate-400">
-              (Página {validCurrentPage} de {totalPages})
-            </span>
-          )}
-        </div>
-
-        {totalPages > 1 && (
-          <div className="flex items-center gap-1.5">
-            {/* First Page */}
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => handlePageChange(1)}
-              disabled={validCurrentPage <= 1}
-              className="px-2"
-              title="Primeira Página"
-            >
-              <ChevronsLeft className="w-4 h-4" />
-            </Button>
-
-            {/* Previous Page */}
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => handlePageChange(validCurrentPage - 1)}
-              disabled={validCurrentPage <= 1}
-              leftIcon={<ChevronLeft className="w-4 h-4" />}
-            >
-              Anterior
-            </Button>
-
-            {/* Direct Page Numbers */}
-            <div className="flex items-center gap-1 px-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-                // Show at most 5 page buttons around current page
-                if (totalPages > 7) {
-                  if (
-                    p !== 1 &&
-                    p !== totalPages &&
-                    Math.abs(p - validCurrentPage) > 1
-                  ) {
-                    if (p === 2 || p === totalPages - 1) {
-                      return (
-                        <span key={p} className="text-xs text-slate-400 px-1">
-                          ...
-                        </span>
-                      );
-                    }
-                    return null;
-                  }
-                }
-
-                return (
-                  <button
-                    key={p}
-                    type="button"
-                    onClick={() => handlePageChange(p)}
-                    className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
-                      validCurrentPage === p
-                        ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/25 ring-2 ring-emerald-500/30'
-                        : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
-                    }`}
-                  >
-                    {p}
-                  </button>
-                );
-              })}
+        {/* URL-based Pagination Controls (Section: Paginação na URL) */}
+        {!loading && (
+          <div className="pt-4 border-t border-slate-100 dark:border-dark-border/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-xs text-slate-500 dark:text-dark-muted text-center sm:text-left">
+              Exibindo{' '}
+              <strong className="text-slate-900 dark:text-white">
+                {totalItems > 0 ? (validCurrentPage - 1) * currentLimit + 1 : 0}
+              </strong>{' '}
+              a{' '}
+              <strong className="text-slate-900 dark:text-white">
+                {Math.min(validCurrentPage * currentLimit, totalItems)}
+              </strong>{' '}
+              de <strong className="text-slate-900 dark:text-white">{totalItems}</strong> exercícios
+              <span className="ml-1 text-slate-400">
+                (Página {validCurrentPage} de {totalPages})
+              </span>
             </div>
 
-            {/* Next Page */}
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => handlePageChange(validCurrentPage + 1)}
-              disabled={validCurrentPage >= totalPages}
-              rightIcon={<ChevronRight className="w-4 h-4" />}
-            >
-              Próxima
-            </Button>
+            <div className="flex items-center gap-1.5">
+              {/* First Page */}
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => handlePageChange(1)}
+                disabled={validCurrentPage <= 1}
+                className="px-2"
+                title="Primeira Página"
+              >
+                <ChevronsLeft className="w-4 h-4" />
+              </Button>
 
-            {/* Last Page */}
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => handlePageChange(totalPages)}
-              disabled={validCurrentPage >= totalPages}
-              className="px-2"
-              title="Última Página"
-            >
-              <ChevronsRight className="w-4 h-4" />
-            </Button>
+              {/* Previous Page */}
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => handlePageChange(validCurrentPage - 1)}
+                disabled={validCurrentPage <= 1}
+                leftIcon={<ChevronLeft className="w-4 h-4" />}
+              >
+                Anterior
+              </Button>
+
+              {/* Direct Page Numbers */}
+              <div className="flex items-center gap-1 px-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
+                  if (totalPages > 7) {
+                    if (
+                      p !== 1 &&
+                      p !== totalPages &&
+                      Math.abs(p - validCurrentPage) > 1
+                    ) {
+                      if (p === 2 || p === totalPages - 1) {
+                        return (
+                          <span key={p} className="text-xs text-slate-400 px-1">
+                            ...
+                          </span>
+                        );
+                      }
+                      return null;
+                    }
+                  }
+
+                  return (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => handlePageChange(p)}
+                      className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
+                        validCurrentPage === p
+                          ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/25 ring-2 ring-emerald-500/30'
+                          : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Next Page */}
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => handlePageChange(validCurrentPage + 1)}
+                disabled={validCurrentPage >= totalPages}
+                rightIcon={<ChevronRight className="w-4 h-4" />}
+              >
+                Próxima
+              </Button>
+
+              {/* Last Page */}
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => handlePageChange(totalPages)}
+                disabled={validCurrentPage >= totalPages}
+                className="px-2"
+                title="Última Página"
+              >
+                <ChevronsRight className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         )}
       </Card>
