@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
-import { workoutRepository } from '../../repositories/workoutRepository';
+import { workoutRepository, sortWorkoutDays } from '../../repositories/workoutRepository';
 import { exerciseRepository } from '../../repositories/exerciseRepository';
 import { WorkoutPlan, Exercise } from '../../types';
 import { Dumbbell, Play, Clock, Sparkles } from 'lucide-react';
@@ -63,7 +63,7 @@ export const StudentWorkoutsListPage: React.FC = () => {
       </div>
 
       <div className="space-y-4">
-        {plan.days.map((day) => (
+        {sortWorkoutDays(plan.days).map((day) => (
           <Card key={day.id} className="overflow-hidden p-5 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">

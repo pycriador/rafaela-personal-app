@@ -1,7 +1,26 @@
-import { WorkoutPlan, WorkoutSession, WorkoutModification } from '../types';
+import { WorkoutPlan, WorkoutSession, WorkoutModification, DayOfWeek } from '../types';
 import { getItem, setItem, STORAGE_KEYS, isSimulationModeActive } from './storage';
 import { initialWorkoutPlans, initialSessions, initialModifications } from '../data/workouts';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+
+export const DAY_ORDER: Record<DayOfWeek, number> = {
+  Segunda: 1,
+  Terça: 2,
+  Quarta: 3,
+  Quinta: 4,
+  Sexta: 5,
+  Sábado: 6,
+  Domingo: 7,
+};
+
+export function sortWorkoutDays<T extends { dayOfWeek: DayOfWeek | string }>(days: T[]): T[] {
+  if (!Array.isArray(days)) return [];
+  return [...days].sort((a, b) => {
+    const orderA = DAY_ORDER[a.dayOfWeek as DayOfWeek] ?? 99;
+    const orderB = DAY_ORDER[b.dayOfWeek as DayOfWeek] ?? 99;
+    return orderA - orderB;
+  });
+}
 
 export interface IWorkoutRepository {
   getPlans(): Promise<WorkoutPlan[]>;
@@ -28,6 +47,7 @@ export interface IWorkoutRepository {
 }
 
 function mapPlanFromDb(row: any): WorkoutPlan {
+  const rawDays = Array.isArray(row.days) ? row.days : JSON.parse(row.days || '[]');
   return {
     id: row.id,
     studentId: row.student_id || row.studentId,
@@ -39,7 +59,7 @@ function mapPlanFromDb(row: any): WorkoutPlan {
     validFrom: row.valid_from || row.validFrom,
     validUntil: row.valid_until || row.validUntil,
     notes: row.notes,
-    days: Array.isArray(row.days) ? row.days : JSON.parse(row.days || '[]'),
+    days: sortWorkoutDays(rawDays),
     createdAt: row.created_at || row.createdAt,
     updatedAt: row.updated_at || row.updatedAt,
   };
@@ -57,7 +77,7 @@ function mapPlanToDb(plan: WorkoutPlan): any {
     valid_from: plan.validFrom,
     valid_until: plan.validUntil,
     notes: plan.notes,
-    days: plan.days,
+    days: sortWorkoutDays(plan.days || []),
     updated_at: new Date().toISOString(),
   };
 }
@@ -172,7 +192,11 @@ export class SupabaseWorkoutRepository implements IWorkoutRepository {
         // fallback
       }
     }
-    return getItem<WorkoutPlan[]>(STORAGE_KEYS.WORKOUT_PLANS, initialWorkoutPlans);
+    const plans = getItem<WorkoutPlan[]>(STORAGE_KEYS.WORKOUT_PLANS, initialWorkoutPlans);
+    return plans.map((p) => ({
+      ...p,
+      days: sortWorkoutDays(p.days || []),
+    }));
   }
 
   async getPlanById(id: string): Promise<WorkoutPlan | null> {
@@ -204,23 +228,28 @@ export class SupabaseWorkoutRepository implements IWorkoutRepository {
   }
 
   async savePlan(plan: WorkoutPlan): Promise<WorkoutPlan> {
+    const planWithSortedDays: WorkoutPlan = {
+      ...plan,
+      days: sortWorkoutDays(plan.days || []),
+    };
+
     if (isSupabaseConfigured) {
       try {
-        await supabase.from('workout_plans').upsert(mapPlanToDb(plan));
+        await supabase.from('workout_plans').upsert(mapPlanToDb(planWithSortedDays));
       } catch (err) {
         console.error('Supabase save plan error:', err);
       }
     }
 
     const plans = await this.getPlans();
-    const index = plans.findIndex((p) => p.id === plan.id);
+    const index = plans.findIndex((p) => p.id === planWithSortedDays.id);
     if (index === -1) {
-      plans.unshift(plan);
+      plans.unshift(planWithSortedDays);
     } else {
-      plans[index] = { ...plan, updatedAt: new Date().toISOString().split('T')[0] };
+      plans[index] = { ...planWithSortedDays, updatedAt: new Date().toISOString().split('T')[0] };
     }
     setItem(STORAGE_KEYS.WORKOUT_PLANS, plans);
-    return plan;
+    return planWithSortedDays;
   }
 
   async deletePlan(id: string): Promise<boolean> {

@@ -42,7 +42,7 @@ import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
 import { getAssetUrl } from '../../utils/assets';
 import { studentRepository } from '../../repositories/studentRepository';
-import { workoutRepository } from '../../repositories/workoutRepository';
+import { workoutRepository, DAY_ORDER, sortWorkoutDays } from '../../repositories/workoutRepository';
 import { nutritionRepository } from '../../repositories/nutritionRepository';
 import { exerciseRepository } from '../../repositories/exerciseRepository';
 import { activityRepository } from '../../repositories/activityRepository';
@@ -70,16 +70,6 @@ const ALL_DAYS_OF_WEEK: DayOfWeek[] = [
   'Sábado',
   'Domingo',
 ];
-
-const DAY_ORDER: Record<DayOfWeek, number> = {
-  Segunda: 1,
-  Terça: 2,
-  Quarta: 3,
-  Quinta: 4,
-  Sexta: 5,
-  Sábado: 6,
-  Domingo: 7,
-};
 
 export const StudentDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -226,13 +216,19 @@ export const StudentDetailPage: React.FC = () => {
         cycleName: newCycleName.trim(),
         active: true,
         validFrom: new Date().toISOString().split('T')[0],
-        days: cloneCurrentCycle && currentActive ? JSON.parse(JSON.stringify(currentActive.days)) : student.availableDays.map((d, i) => ({
-          id: `day-${Date.now()}-${i}`,
-          name: `Treino ${String.fromCharCode(65 + i)}`,
-          dayOfWeek: d,
-          muscleFocus: i === 0 ? 'Peito e Tríceps' : i === 1 ? 'Costas e Bíceps' : 'Pernas e Ombros',
-          exercises: [],
-        })),
+        days: sortWorkoutDays(
+          cloneCurrentCycle && currentActive
+            ? JSON.parse(JSON.stringify(currentActive.days))
+            : [...student.availableDays]
+                .sort((a, b) => (DAY_ORDER[a] || 99) - (DAY_ORDER[b] || 99))
+                .map((d, i) => ({
+                  id: `day-${Date.now()}-${i}`,
+                  name: `Treino ${String.fromCharCode(65 + i)}`,
+                  dayOfWeek: d,
+                  muscleFocus: i === 0 ? 'Peito e Tríceps' : i === 1 ? 'Costas e Bíceps' : 'Pernas e Ombros',
+                  exercises: [],
+                }))
+        ),
         createdAt: new Date().toISOString().split('T')[0],
         updatedAt: new Date().toISOString().split('T')[0],
       };
@@ -377,7 +373,7 @@ export const StudentDetailPage: React.FC = () => {
       }
 
       // Sort days of the week chronologically
-      updatedDays.sort((a, b) => (DAY_ORDER[a.dayOfWeek] || 99) - (DAY_ORDER[b.dayOfWeek] || 99));
+      updatedDays = sortWorkoutDays(updatedDays);
 
       const updatedPlan: WorkoutPlan = {
         ...basePlan,
@@ -1064,7 +1060,7 @@ export const StudentDetailPage: React.FC = () => {
               </Card>
             ) : (
               <div className="space-y-6">
-                {displayedPlan.days.map((day) => (
+                {sortWorkoutDays(displayedPlan.days).map((day) => (
                 <Card key={day.id} className="overflow-hidden">
                   <div className="bg-slate-100 dark:bg-dark-cardElevated p-4 flex items-center justify-between border-b border-slate-200/60 dark:border-dark-border">
                     <div className="flex items-center gap-3">
@@ -2200,7 +2196,7 @@ export const StudentDetailPage: React.FC = () => {
                 </label>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                  {(allStudentPlans.find((p) => p.id === selectedPlanId) || workoutPlan)?.days.map((day) => {
+                  {sortWorkoutDays((allStudentPlans.find((p) => p.id === selectedPlanId) || workoutPlan)?.days || []).map((day) => {
                     const isSelected = selectedExistingDayId === day.id;
                     return (
                       <div

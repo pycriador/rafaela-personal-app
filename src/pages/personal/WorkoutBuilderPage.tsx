@@ -25,7 +25,7 @@ import { Badge } from '../../components/ui/Badge';
 import { WorkoutTemplatesModal } from '../../components/workouts/WorkoutTemplatesModal';
 import { studentRepository } from '../../repositories/studentRepository';
 import { exerciseRepository } from '../../repositories/exerciseRepository';
-import { workoutRepository } from '../../repositories/workoutRepository';
+import { workoutRepository, DAY_ORDER, sortWorkoutDays } from '../../repositories/workoutRepository';
 import { activityRepository } from '../../repositories/activityRepository';
 import { useToast } from '../../context/ToastContext';
 import { getAssetUrl } from '../../utils/assets';
@@ -121,17 +121,19 @@ export const WorkoutBuilderPage: React.FC = () => {
         const student = sts.find((s) => s.id === preselectedStudentId);
         if (student) {
           setSelectedStudentId(student.id);
-          setSelectedDays(student.availableDays);
+          const sortedAvail = [...student.availableDays].sort((a, b) => (DAY_ORDER[a] || 99) - (DAY_ORDER[b] || 99));
+          setSelectedDays(sortedAvail);
           setPlanName(`Treino Personalizado - ${student.name}`);
 
           // Load existing plan if available
           const existingPlan = await workoutRepository.getPlanByStudentId(student.id);
           if (existingPlan && existingPlan.days.length > 0) {
-            setWorkoutDays(existingPlan.days);
-            setSelectedDays(existingPlan.days.map((d) => d.dayOfWeek));
+            const sortedExisting = sortWorkoutDays(existingPlan.days);
+            setWorkoutDays(sortedExisting);
+            setSelectedDays(sortedExisting.map((d) => d.dayOfWeek));
           } else {
             // Initialize empty days based on student's available days
-            const initDays: WorkoutDay[] = student.availableDays.map((d, i) => ({
+            const initDays: WorkoutDay[] = sortedAvail.map((d, i) => ({
               id: `day-${Date.now()}-${i}`,
               name: `Treino ${String.fromCharCode(65 + i)}`,
               dayOfWeek: d,
@@ -191,15 +193,17 @@ export const WorkoutBuilderPage: React.FC = () => {
     setSelectedStudentId(stId);
     const st = students.find((s) => s.id === stId);
     if (st) {
-      setSelectedDays(st.availableDays);
+      const sortedAvail = [...st.availableDays].sort((a, b) => (DAY_ORDER[a] || 99) - (DAY_ORDER[b] || 99));
+      setSelectedDays(sortedAvail);
       setPlanName(`Treino Personalizado - ${st.name}`);
 
       const existingPlan = await workoutRepository.getPlanByStudentId(st.id);
       if (existingPlan && existingPlan.days.length > 0) {
-        setWorkoutDays(existingPlan.days);
-        setSelectedDays(existingPlan.days.map((d) => d.dayOfWeek));
+        const sortedExisting = sortWorkoutDays(existingPlan.days);
+        setWorkoutDays(sortedExisting);
+        setSelectedDays(sortedExisting.map((d) => d.dayOfWeek));
       } else {
-        const initDays: WorkoutDay[] = st.availableDays.map((d, i) => ({
+        const initDays: WorkoutDay[] = sortedAvail.map((d, i) => ({
           id: `day-${Date.now()}-${i}`,
           name: `Treino ${String.fromCharCode(65 + i)}`,
           dayOfWeek: d,
@@ -223,11 +227,12 @@ export const WorkoutBuilderPage: React.FC = () => {
     } else {
       updated = [...selectedDays, day];
     }
-    setSelectedDays(updated);
+    const sortedUpdated = [...updated].sort((a, b) => (DAY_ORDER[a] || 99) - (DAY_ORDER[b] || 99));
+    setSelectedDays(sortedUpdated);
 
     // Sync workout days
     const currentDays = [...workoutDays];
-    const newDays: WorkoutDay[] = updated.map((d, i) => {
+    const newDays: WorkoutDay[] = sortedUpdated.map((d, i) => {
       const existing = currentDays.find((cd) => cd.dayOfWeek === d);
       if (existing) return existing;
       return {
@@ -238,7 +243,7 @@ export const WorkoutBuilderPage: React.FC = () => {
         exercises: [],
       };
     });
-    setWorkoutDays(newDays);
+    setWorkoutDays(sortWorkoutDays(newDays));
   };
 
   const handleAddExerciseToCurrentDay = (ex: Exercise) => {
@@ -350,7 +355,7 @@ export const WorkoutBuilderPage: React.FC = () => {
         version: versionNum,
         cycleName: planName,
         active: true,
-        days: workoutDays,
+        days: sortWorkoutDays(workoutDays),
         createdAt: new Date().toISOString().split('T')[0],
         updatedAt: new Date().toISOString().split('T')[0],
       };
