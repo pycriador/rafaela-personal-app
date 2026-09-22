@@ -28,11 +28,13 @@ Camada de acesso híbrido a dados que abstrai a fonte: Supabase (PostgreSQL REST
 
 | Responsabilidade | Evidência | Classification |
 | --- | --- | --- |
-| CRUD + leituras filtradas para todos os domínios | `src/repositories/*.ts` (8 repositórios) | Confirmed |
+| CRUD + leituras filtradas para todos os domínios | `src/repositories/*.ts` (10 repositórios) | Confirmed |
 | Fallback do Supabase para localStorage em erro/não configurado | `src/lib/supabase.ts` (`isSupabaseConfigured`) | Confirmed |
 | Mapeamento snake_case ↔ camelCase | `mapFromDb`/`mapToDb` nos repositórios | Confirmed |
 | Aplicação de filtros em memória após fetch (busca/status/etc.) | Implementações de `getAll` nos repositórios | Confirmed |
 | Seed de localStorage com dados iniciais | `src/repositories/storage.ts` (`initStorage`) | Confirmed |
+| Gravação em sandbox na simulação (escreve em `sim_sandbox_*`) | Helpers em `storage.ts` + `isSimulationModeActive` | Confirmed |
+| Domínios novos (mensagens de chat, modelos de treino) | `messageRepository`, `workoutTemplateRepository` | Confirmed |
 
 ## Inventário de repositórios
 
@@ -45,7 +47,11 @@ Camada de acesso híbrido a dados que abstrai a fonte: Supabase (PostgreSQL REST
 | `nutritionRepository` | `nutrition_plans` | `rafaela_app_nutrition_v1` |
 | `activityRepository` | `activity_logs` | `rafaela_app_activities_v1` |
 | `notificationRepository` | `notifications` | `rafaela_app_notifications_v1` |
-| `storage.ts` | — | seeds + helpers `getItem`/`setItem` |
+| `messageRepository` | `student_messages` (best-effort; **não na migration SQL**) | `rafaela_app_student_messages_v1` |
+| `workoutTemplateRepository` | `workout_templates` (best-effort; **não na migration SQL**) | `rafaela_app_workout_templates_v1` |
+| `storage.ts` | — | seeds + helpers `getItem`/`setItem` + sandbox de simulação |
+
+> As tabelas `student_messages` e `workout_templates` **não estão** em `supabase/migrations/20260922_init_schema.sql`; em projeto Supabase limpo as queries falham e os repositórios caem para o localStorage.
 
 ## Comportamento
 
@@ -55,6 +61,7 @@ Camada de acesso híbrido a dados que abstrai a fonte: Supabase (PostgreSQL REST
 | Consulta com erro ou sem resultados | Cai para a lista em localStorage | Confirmed |
 | `isSupabaseConfigured` false | Somente localStorage | Confirmed |
 | Escritas | Gravadas no Supabase (best-effort) E no localStorage | Confirmed |
+| Em simulação | Escritas vão somente para `sim_sandbox_*` (sessionStorage); Supabase nunca é escrito | Confirmed |
 
 ## Tecnologia
 

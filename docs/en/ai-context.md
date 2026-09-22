@@ -63,7 +63,9 @@ Question → Scope → Context → Knowledge → Evidence → Constraints → An
 
 - Do not invent accounts, tables, endpoints, metrics, or capabilities not evidenced in this repository.
 - Distinguish Confirmed (evidence in code/config) from Inferred/Proposed.
-- The repository uses mock auth: the password is **ignored**; login is an email lookup (`src/context/AuthContext.tsx`).
+- The repository uses mock auth: the password is **ignored**; login is an email lookup (`src/context/AuthContext.tsx`). Password-reset UI generates credentials but does not change login behavior.
+- "Test as student" simulation writes go to a `sessionStorage` sandbox (`sim_sandbox_*`); Supabase writes are skipped while simulating (see [contracts/local-storage.md](contracts/local-storage.md)).
+- `student_messages` and `workout_templates` are referenced by repositories but are **not in the migration SQL** — treat their Supabase paths as Proposed (localStorage is the working source).
 - Data access is hybrid: Supabase when configured, otherwise localStorage (see [contracts/supabase-rest.md](contracts/supabase-rest.md) and [contracts/local-storage.md](contracts/local-storage.md)).
 - Never document secret values. Reference `.env` variables by name only.
 

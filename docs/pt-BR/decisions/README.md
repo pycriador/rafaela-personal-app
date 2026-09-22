@@ -22,6 +22,7 @@ Registrar *por que* o sistema tem a forma atual. ADRs explicam decisões; docume
 | [adr-002-mock-auth.md](adr-002-mock-auth.md) | Autenticação mock | Accepted | Busca por e-mail, senha ignorada; JWT como próximo passo |
 | [adr-003-github-pages-spa.md](adr-003-github-pages-spa.md) | Deploy SPA no GitHub Pages | Accepted | SPA estática + redirect fallback 404 |
 | [adr-004-local-video-frames.md](adr-004-local-video-frames.md) | Frames locais de exercício | Accepted | Frames vetoriais locais em vez de streaming |
+| [adr-005-simulation-sandbox.md](adr-005-simulation-sandbox.md) | Sandbox de simulação local | Accepted | "Testar como aluno" com escritas sombra em sessionStorage |
 
 ## Orientação
 

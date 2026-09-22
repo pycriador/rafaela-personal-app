@@ -37,6 +37,12 @@ Uma personal trainer precisa prescrever treinos estruturados, permitir que os al
 | Modificações auditáveis de treino | Trilha de auditoria de cargas/séries/reps/pulos/substituições | Confirmed |
 | Backup e exportação | Backup JSON completo com senhas com hash + exportações CSV por tabela | Confirmed |
 | Autenticação mock | Busca por e-mail sem validação real de senha | Confirmed |
+| Modelos/gabaritos de treino | Séries prontas por categoria + versionamento | Confirmed |
+| Chat treinadora↔aluno categorizado | Conversa com metadados (mudança de exercício, peso) | Confirmed |
+| Feedback em sessão + versionamento de planos | Avaliação da treinadora e ativação de versões | Confirmed |
+| Simulação "testar como aluno" | Sandbox sessionStorage sem escrita real | Confirmed |
+| Mídia custom por exercício | Galeria local `rafaela_app_custom_media_v1` com Data URLs | Confirmed |
+| Fotos de aluno via Supabase Storage | Bucket `student-avatars` com fallback Data URL | Confirmed |
 
 ## Não-objetivos
 
@@ -77,6 +83,8 @@ Uma personal trainer precisa prescrever treinos estruturados, permitir que os al
 | exercise-catalog | Catálogo de 302 exercícios e frames | [application/exercise-catalog.md](application/exercise-catalog.md) |
 | auth | Auth mock + proteção de rotas por papel | [application/auth.md](application/auth.md) |
 | exercise-frame-player | Frames locais animados de exercício + timer de descanso | [application/exercise-frame-player.md](application/exercise-frame-player.md) |
+| workout-templates | Séries prontas + versionamento | [application/workout-templates.md](application/workout-templates.md) |
+| student-chat | Bate-papo categorizado treinadora↔aluno | [application/student-chat.md](application/student-chat.md) |
 
 ## Segurança / Ops / Lacunas
 

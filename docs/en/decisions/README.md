@@ -22,6 +22,7 @@ Record *why* the system is shaped as it is. ADRs explain decisions; architecture
 | [adr-002-mock-auth.md](adr-002-mock-auth.md) | Mock authentication | Accepted | Email lookup, password ignored; JWT next step |
 | [adr-003-github-pages-spa.md](adr-003-github-pages-spa.md) | GitHub Pages SPA deployment | Accepted | Static SPA + 404 redirect fallback |
 | [adr-004-local-video-frames.md](adr-004-local-video-frames.md) | Local exercise video frames | Accepted | Local vector frames instead of streaming |
+| [adr-005-simulation-sandbox.md](adr-005-simulation-sandbox.md) | Local simulation sandbox | Accepted | "Test as student" with sessionStorage shadow writes |
 
 ## Guidance
 

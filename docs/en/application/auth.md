@@ -46,6 +46,8 @@ Client-side session management with **mock authentication**: login is an email l
 | Login requires a known email in `users` | `getByEmail` | Confirmed |
 | Session stored client-side | localStorage, readable by JS | Confirmed |
 | No server-issued token | Supabase Auth not used | Confirmed |
+| Password reset is cosmetic | `StudentManagerSection` generates/shows a password but `userRepository.update` stores name only | Confirmed |
+| Simulation session in sessionStorage | `rafaela_sim_user`, `rafaela_simulation_*` | Confirmed |
 
 > See [../security/overview.md](../security/overview.md) for implications.
 
@@ -55,10 +57,12 @@ Client-side session management with **mock authentication**: login is an email l
 | --- | --- | --- |
 | State | React Context | Confirmed |
 | Persistence | localStorage (`rafaela_app_current_user_v1`) | Confirmed |
+| Simulation | sessionStorage (`rafaela_simulation_*`, `rafaela_sim_user`, `rafaela_original_trainer_id`) | Confirmed |
 | Routing guard | react-router-dom `<ProtectedRoute>` | Confirmed |
 
 ## Related
 
 - [../security/overview.md](../security/overview.md)
 - [../decisions/adr-002-mock-auth.md](../decisions/adr-002-mock-auth.md)
+- [../decisions/adr-005-simulation-sandbox.md](../decisions/adr-005-simulation-sandbox.md)
 - [../application/repositories.md](repositories.md)

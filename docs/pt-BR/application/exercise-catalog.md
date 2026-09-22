@@ -34,6 +34,8 @@ Catálogo de exercícios usado na montagem de treinos e na execução do aluno: 
 | Detectar automaticamente frames locais SVG vs PNG | detecção de frames no script de sync | Confirmed |
 | Assets locais de frames em `public/exercises/frames/` | 1.002 arquivos (frame-1..3) | Confirmed |
 | Mapas de tradução de categoria/músculo/equipamento | traduções no script de sync | Confirmed |
+| Mídia custom por exercício (galeria local + modal) | `ExerciseMediaModal.tsx`, chave `rafaela_app_custom_media_v1` (Data URLs) | Confirmed |
+| Paginação do catálogo via URL | 6 exercícios/página (`ExercisesPage.tsx` + search params) | Confirmed |
 
 ## Fonte de dados
 

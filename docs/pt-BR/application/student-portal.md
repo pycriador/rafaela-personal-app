@@ -35,11 +35,21 @@ Experiência do lado do aluno no Rafaela Personal App: ver treinos prescritos, e
 | Gráficos de evolução do aluno | `StudentEvolutionPage.tsx` | Confirmed |
 | Plano nutricional com substituições + aviso demonstrativo | `StudentNutritionPage.tsx` | Confirmed |
 | Perfil (tema, logout, trocar para personal) | `StudentProfilePage.tsx` | Confirmed |
+| Trocar de aluno durante a simulação | `StudentLayout.tsx` (dropdown de troca quando `isSimulationMode`) | Confirmed |
+
+## Modo simulação
+
+| Responsabilidade | Evidência | Classification |
+| --- | --- | --- |
+| Banner "Modo Simulação" + "Encerrar Teste" | `StudentLayout.tsx` | Confirmed |
+| `exitStudentSimulation()` no perfil | `StudentProfilePage.tsx` | Confirmed |
+| Escritas isoladas em `sessionStorage` (`sim_sandbox_*`) | `storage.ts` (nunca escreve localStorage/Supabase) | Confirmed |
 
 ## Não-responsabilidades
 
 - Não é responsável por prescrever ou auditar (lado da treinadora).
 - Não escreve planos nutricionais diretamente (a treinadora faz).
+- Não expõe composer de chat ao aluno hoje (mensagens são parte da UI da treinadora).
 
 ## Rotas
 

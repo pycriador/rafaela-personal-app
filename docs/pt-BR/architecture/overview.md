@@ -60,6 +60,8 @@ Plataforma web mobile-first para uma personal trainer e seus alunos. Modelo de o
 | exercise-catalog | Catálogo de exercícios + frames | [../application/exercise-catalog.md](../application/exercise-catalog.md) |
 | auth | Auth mock + guards de rota | [../application/auth.md](../application/auth.md) |
 | exercise-frame-player | Frames animados + timer de descanso | [../application/exercise-frame-player.md](../application/exercise-frame-player.md) |
+| workout-templates | Séries prontas + versionamento | [../application/workout-templates.md](../application/workout-templates.md) |
+| student-chat | Bate-papo treinadora↔aluno | [../application/student-chat.md](../application/student-chat.md) |
 
 ## Principais fluxos de dados
 
@@ -68,9 +70,13 @@ UI da Personal / Aluno
         │
         ▼
 repositories (híbrido)
-   ├── Supabase (REST) ──────────► Projeto Supabase (PostgreSQL)
-   └── localStorage (fallback / cache)
+   ├── Supabase (REST) ──────────► Projeto Supabase (PostgreSQL + Storage student-avatars)
+   └── localStorage ── cache/fallback
+        ▲
+   sessionStorage ── sim sandbox (rafaela_sandbox_*)
 ```
+
+> Em modo simulação as leituras checam `sim_sandbox_*` primeiro; escritas vão só para o sessionStorage.
 
 ## Diagrama
 
@@ -81,25 +87,30 @@ flowchart LR
   Auth[Mock auth - localStorage]
   Repos[repositories - híbrido]
   SB[(Supabase - PostgreSQL/REST)]
+  ST[(Supabase Storage - student-avatars)]
   LS[(localStorage)]
+  SS[(sessionStorage - sim sandbox)]
   Frames[Assets locais de frames]
   Browser --> FE
   FE --> Auth
   FE --> Repos
   Repos --> SB
   Repos --> LS
+  Repos --> SS
   FE --> Frames
+  FE --> ST
 ```
 
 ## Principais dependências
 
 | Dependência | Tipo | Propósito | Classification |
 | --- | --- | --- | --- |
-| Projeto Supabase | runtime | Persistência (10 tabelas) | Confirmed |
+| Projeto Supabase | runtime | Persistência (10 tabelas + bucket `student-avatars` + 2 tabelas Proposed) | Confirmed |
 | GitHub Pages | runtime | Hospedagem estática | Confirmed |
 | @bryllim/workout-guide | build/runtime | Catálogo de exercícios + frames | Confirmed |
 | Free Exercise DB (yuhonas) | dados | Imagens de referência (The Unlicense) | Confirmed |
 | Build Vite (base `GITHUB_PAGES=true`) | build | Bundle estático | Confirmed |
+| sessionStorage | runtime | Sandbox da simulação (sem escrita permanente) | Confirmed |
 
 ## Fronteiras de segurança
 
@@ -117,6 +128,8 @@ flowchart LR
 | --- | --- | --- |
 | Supabase inacessível | Leituras falham | repositories caem para localStorage |
 | Supabase não configurado | Sem REST configurado | repositories usam somente localStorage |
+| Bucket `student-avatars` ausente/upload falhando | Foto não persiste no storage | Fallback para Data URL local (`console.warn`) |
+| Tabelas `student_messages`/`workout_templates` não migradas | Queries com erro em projeto limpo | repositories caem para localStorage |
 | GitHub Pages fora | App inacessível | Nenhum (hospedagem estática) |
 | localStorage indisponível | Leituras/escritas falham silencioso | Repository retorna dados de fallback |
 

@@ -34,6 +34,9 @@ Exercise catalog used by workout building and student execution: 302 exercises, 
 | Auto-detect SVG vs PNG local frames | sync script frame detection | Confirmed |
 | Local frame assets under `public/exercises/frames/` | 1,002 files (frame-1..3) | Confirmed |
 | Category/muscle/equipment translation maps | sync script translations | Confirmed |
+| Per-exercise media assignment (image/upload/URL) | `ExerciseMediaModal.tsx` (library, upload, custom, url) | Confirmed |
+| Custom media gallery persisted locally | `rafaela_app_custom_media_v1` (Data URLs) | Confirmed |
+| URL-paginated exercise grid (6/page) | `ExercisesPage.tsx` (URL search params) | Confirmed |
 
 ## Data source
 

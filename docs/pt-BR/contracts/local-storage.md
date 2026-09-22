@@ -46,6 +46,19 @@ Contrato de storage do navegador usado como fallback, cache, sessão e persistê
 | `rafaela_app_notifications_v1` | notifications | v1 |
 | `rafaela_app_current_user_v1` | session user atual | v1 |
 | `rafaela_app_theme_v1` | preferência de tema | v1 |
+| `rafaela_app_custom_media_v1` | mídia custom de exercício (Data URLs) | v1 |
+| `rafaela_app_student_messages_v1` | mensagens de chat por aluno | v1 |
+| `rafaela_app_workout_templates_v1` | conjuntos de modelos de treino | v1 |
+
+## Chaves de escopo de sessão (sandbox de simulação)
+
+| Chave | Finalidade | Classification |
+| --- | --- | --- |
+| `rafaela_simulation_mode` | `'true'` durante a simulação | Confirmed |
+| `rafaela_simulation_student_id` | id do aluno simulado | Confirmed |
+| `rafaela_sim_user` | objeto de usuário simulado | Confirmed |
+| `rafaela_original_trainer_id` | treinadora a restaurar na saída | Confirmed |
+| `sim_sandbox_<storageKey>` | valor sombra para qualquer chave de storage durante a simulação | Confirmed |
 
 ## Serialização
 
@@ -62,12 +75,16 @@ Contrato de storage do navegador usado como fallback, cache, sessão e persistê
 | Chave ausente | `getItem` retorna fallback fornecido | Confirmed |
 | JSON corrompido | `getItem` loga erro, retorna fallback | Confirmed |
 | Falha de escrita (quota/private mode) | `setItem` loga erro, continua | Confirmed |
+| Simulação ativa, chave tem valor sandbox | `getItem` retorna o valor sandbox primeiro | Confirmed |
+| Simulação ativa, escrita | `setItem` grava `sim_sandbox_<key>` no sessionStorage apenas — localStorage nunca é mutado | Confirmed |
+| Saída da simulação | Chaves sandbox (`sim_sandbox_*`, `rafaela_sim_user`, flags de simulação) removidas | Confirmed |
 
 ## Não-responsabilidades
 
 - Não é fonte de verdade quando o Supabase está configurado (apenas cache/fallback).
-- Não é adequado para binários grandes (quota do localStorage).
+- Não é adequado para binários grandes (quota do localStorage; mídia custom como Data URLs compartilha essa restrição).
 - Sem compartilhamento entre origens.
+- Escritas no sandbox não persistem após a sessão (por design).
 
 ## Relacionados
 

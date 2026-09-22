@@ -29,6 +29,8 @@ Descrever o que é observável no Rafaela Personal App hoje, com honestidade —
 | Falhas de escrita no Supabase | `console.error('Supabase ... error:', err)` nos repositórios | Texto de erro + exceção | Confirmed |
 | Status de config do Supabase | `src/lib/supabase.ts` (boolean) + presença de `.env` | Supabase está ligado? | Confirmed |
 | Falhas de leitura/escrita em localStorage | `console.error` em `storage.ts` | Chave + erro | Confirmed |
+| Fallback de upload no Supabase Storage | `console.warn('Supabase storage fallback...')` em `StudentManagerSection` | Texto do aviso | Confirmed |
+| Estado do modo simulação | flag de sessionStorage (`rafaela_simulation_mode`) | On/off + aluno id | Confirmed |
 | Erros de load de dashboard/relatórios | `console.error` em páginas personal/student | Texto de erro | Confirmed |
 | Progresso do script de seed | stdout/stderr de `scripts/seed-supabase.cjs` | Contagens, por tabela | Confirmed |
 | CI build+deploy | GitHub Actions logs | Saída de cada passo | Confirmed |

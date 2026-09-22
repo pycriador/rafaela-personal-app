@@ -30,6 +30,11 @@ version: "1.0"
 | Semântica de sync em tempo real | Partial | Feed de auditoria realtime; caminho de escrita não documentado exaustivamente |
 | Drift na contagem de exercícios | Inferred | README diz 32/96 enquanto o catálogo entrega 302/1.002 — a documentação deve preferir o estado atual acima |
 | Casos de borda da experiência do aluno | Partial | Comportamentos da UI de treino ativo apenas parcialmente documentados |
+| Tabelas `student_messages` / `workout_templates` | Fora da migration | Queries com erro em Supabase limpo → fallback localStorage; lacuna de paridade |
+| Colunas de versão/feedback em `workout_plans`/`workout_sessions` | Fora da migration | Mapeadas apenas em código; risco de drift de schema |
+| Provisionamento do bucket `student-avatars` | Não automatizado | Supabase novo precisa criar o bucket manualmente |
+| Semântica do reset de senha | Cosmético confirmado | Gera uma senha, mas `login` a ignora (mock) |
+| Superfície de chat no lado do aluno | Unknown | UI de chat existe no detalhe da treinadora; consumo pelo aluno não está claramente conectado |
 
 ## Explicitamente não aplicável
 

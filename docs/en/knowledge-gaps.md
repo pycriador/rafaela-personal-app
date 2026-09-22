@@ -30,6 +30,11 @@ version: "1.0"
 | Real-time sync semantics | Partial | Realtime audit feed; write path details not exhaustively documented |
 | Exercise count drift | Inferred | README states 32/96 while catalog ships 302/1,002 — docs should prefer current state above |
 | Student experience edge-cases | Partial | Active workout UI behaviors partially documented only |
+| `student_messages` / `workout_templates` tables | Not in migration | Queries error in a fresh Supabase → localStorage fallback; parity gap |
+| Version/feedback columns on `workout_plans`/`workout_sessions` | Not in migration | Mapped in code only; schema drift risk |
+| `student-avatars` bucket provisioning | Not automated | Fresh Supabase needs manual bucket creation |
+| Password reset semantics | Confirmed cosmetic | Generates a password but `login` ignores it (mock) |
+| Student-side chat surface | Unknown | Chat UI exists in trainer detail; student consumption not clearly wired |
 
 ## Explicitly Not Applicable
 

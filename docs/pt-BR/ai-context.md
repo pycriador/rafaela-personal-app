@@ -63,7 +63,9 @@ Pergunta → Escopo → Contexto → Conhecimento → Evidência → Restriçõe
 
 - Não invente contas, tabelas, endpoints, métricas ou capacidades sem evidência neste repositório.
 - Diferencie Confirmed (evidência em código/config) de Inferred/Proposed.
-- O repositório usa auth mock: a senha é **ignorada**; o login é uma busca por e-mail (`src/context/AuthContext.tsx`).
+- O repositório usa auth mock: a senha é **ignorada**; o login é uma busca por e-mail (`src/context/AuthContext.tsx`). A UI de reset de senha gera credenciais, mas não muda o comportamento do login.
+- Escritas da simulação "testar como aluno" vão para um sandbox de `sessionStorage` (`sim_sandbox_*`); escritas no Supabase são puladas durante a simulação (ver [contracts/local-storage.md](contracts/local-storage.md)).
+- `student_messages` e `workout_templates` são referenciadas por repositórios mas **não estão na migration SQL** — trate os caminhos Supabase como Proposed (o localStorage é a fonte que funciona).
 - O acesso a dados é híbrido: Supabase quando configurado, senão localStorage (ver [contracts/supabase-rest.md](contracts/supabase-rest.md) e [contracts/local-storage.md](contracts/local-storage.md)).
 - Nunca documente valores de segredos. Referencie variáveis de `.env` apenas pelo nome.
 

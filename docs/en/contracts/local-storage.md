@@ -46,6 +46,19 @@ Browser storage contract used as fallback, cache, session, and theme persistence
 | `rafaela_app_notifications_v1` | notifications | v1 |
 | `rafaela_app_current_user_v1` | current session user | v1 |
 | `rafaela_app_theme_v1` | theme preference | v1 |
+| `rafaela_app_custom_media_v1` | custom exercise media (Data URLs) | v1 |
+| `rafaela_app_student_messages_v1` | chat messages per student | v1 |
+| `rafaela_app_workout_templates_v1` | template sets | v1 |
+
+## Session-scoped keys (simulation sandbox)
+
+| Key | Purpose | Classification |
+| --- | --- | --- |
+| `rafaela_simulation_mode` | `'true'` while simulating | Confirmed |
+| `rafaela_simulation_student_id` | simulated student id | Confirmed |
+| `rafaela_sim_user` | simulated user object | Confirmed |
+| `rafaela_original_trainer_id` | trainer to restore on exit | Confirmed |
+| `sim_sandbox_<storageKey>` | shadow value for any storage key while simulating | Confirmed |
 
 ## Serialization
 
@@ -62,12 +75,16 @@ Browser storage contract used as fallback, cache, session, and theme persistence
 | Key absent | `getItem` returns provided fallback | Confirmed |
 | Corrupt JSON | `getItem` logs error, returns fallback | Confirmed |
 | Write failure (quota/private mode) | `setItem` logs error, continues | Confirmed |
+| Simulation active, key has sandbox value | `getItem` returns sandbox value first | Confirmed |
+| Simulation active, write | `setItem` writes `sim_sandbox_<key>` in sessionStorage only — localStorage never mutated | Confirmed |
+| Simulation exit | Sandbox keys (`sim_sandbox_*`, `rafaela_sim_user`, simulation flags) removed | Confirmed |
 
 ## Non-Responsibilities
 
 - Not a source of truth when Supabase is configured (cache/fallback only).
-- Not suitable for large binaries (localStorage quota).
+- Not suitable for large binaries (localStorage quota; custom media as Data URLs shares this constraint).
 - No cross-origin sharing.
+- Sandbox writes do not persist past the session (by design).
 
 ## Related
 

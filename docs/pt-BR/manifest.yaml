@@ -101,6 +101,22 @@ documents:
     owner: rafaela-app
     updated: 2026-09-22
     authority: Authoritative
+  - id: CMP-007
+    path: application/workout-templates.md
+    title: Componente — workout-templates
+    type: Component
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: CMP-008
+    path: application/student-chat.md
+    title: Componente — student-chat
+    type: Component
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
   - id: CTR-001
     path: contracts/supabase-rest.md
     title: Contrato — acesso a dados via Supabase REST
@@ -144,6 +160,14 @@ documents:
   - id: ADR-004
     path: decisions/adr-004-local-video-frames.md
     title: ADR-004 — Frames locais de exercício
+    type: Decision
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: ADR-005
+    path: decisions/adr-005-simulation-sandbox.md
+    title: ADR-005 — Sandbox de simulação local
     type: Decision
     status: REVIEW
     owner: rafaela-app

@@ -36,7 +36,9 @@ Retrato honesto da postura de segurança do MVP do Rafaela Personal App: o que i
 | Fronteira | Descrição | Classification |
 | --- | --- | --- |
 | Sessão no navegador (localStorage) | A sessão é um id de usuário salvo; editável pelo usuário | Confirmed |
+| Sandbox de simulação no navegador (sessionStorage) | Escritas sombra durante "Testar como aluno"; somem ao fechar a aba | Confirmed |
 | Supabase REST (anon) | Políticas RLS abertas (`USING (true)` / `WITH CHECK (true)`) | Confirmed |
+| Supabase Storage `student-avatars` | URLs públicas de bucket para fotos de aluno; fallback Data URL local | Confirmed |
 | Imagens de referência externas | URLs remotas carregadas pelo cliente em runtime | Confirmed |
 
 ## Lacunas conhecidas e perfil
@@ -50,6 +52,9 @@ Retrato honesto da postura de segurança do MVP do Rafaela Personal App: o que i
 | Políticas Supabase abertas | Anon key lê/grava todas as linhas | Confirmed |
 | Inserts sem restrição | Cliente pode gravar linhas arbitrárias como anon | Confirmed |
 | URLs de imagem de referência | Remotas, sem allowlist | Confirmed |
+| Mídia custom como Data URLs | Armazenadas em localStorage; imagens de exercício podem embutir binário | Confirmed |
+| Bucket de avatar público | URLs do `student-avatars` adivinháveis se os nomes forem previsíveis | Inferred |
+| Reset de senha é cosmético | Gera/mostra uma senha; o login nunca a valida (ver [auth](../application/auth.md)) | Confirmed |
 
 ## Tratamento de chaves do Supabase
 
@@ -69,6 +74,7 @@ Retrato honesto da postura de segurança do MVP do Rafaela Personal App: o que i
 | RLS restritivo por papel | Planejado | Proposed |
 | Validação no servidor | Planejado | Proposed |
 | Allowlist/CDN para imagens de referência | Considerado | Proposed |
+| URLs privadas/assinadas para o bucket de avatar | Considerado | Proposed |
 
 ## Relacionados
 

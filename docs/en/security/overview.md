@@ -36,7 +36,9 @@ Honest snapshot of the security posture of the Rafaela Personal App MVP: what it
 | Boundary | Description | Classification |
 | --- | --- | --- |
 | Browser session (localStorage) | Session id is a saved user id; editable by the user | Confirmed |
+| Browser simulation sandbox (sessionStorage) | Shadow writes during "Test as student"; gone on tab close | Confirmed |
 | Supabase REST (anon) | Open RLS policies (`USING (true)` / `WITH CHECK (true)`) | Confirmed |
+| Supabase Storage `student-avatars` | Public bucket URLs for student photos; Data-URL local fallback | Confirmed |
 | External reference images | Remote URLs loaded by the client at runtime | Confirmed |
 
 ## Known gaps and profile
@@ -50,6 +52,9 @@ Honest snapshot of the security posture of the Rafaela Personal App MVP: what it
 | Open Supabase policies | Anon key reads/writes all rows | Confirmed |
 | Unrestricted inserts | Client can write arbitrary rows as anon | Confirmed |
 | Reference-image URLs | Remote, no allowlist | Confirmed |
+| Custom media Data URLs | Stored in localStorage; exercise images may embed binary data | Confirmed |
+| Public avatar bucket | `student-avatars` URLs guessable if filenames predictable | Inferred |
+| Password reset is cosmetic | Generates/shows a password; login never validates it (see [auth](../application/auth.md)) | Confirmed |
 
 ## Supabase keys handling
 
@@ -69,6 +74,7 @@ Honest snapshot of the security posture of the Rafaela Personal App MVP: what it
 | Restrictive RLS per role | Planned | Proposed |
 | Server-side validation | Planned | Proposed |
 | Allowlist/CDN for reference images | Considered | Proposed |
+| Private/signed URLs for avatar bucket | Considered | Proposed |
 
 ## Related
 

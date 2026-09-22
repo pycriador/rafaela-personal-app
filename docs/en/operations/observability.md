@@ -29,6 +29,8 @@ Describe what is observable about the Rafaela Personal App today, honestly — i
 | Supabase write failures | `console.error('Supabase ... error:', err)` in repositories | Error text + exception | Confirmed |
 | Supabase config status | `src/lib/supabase.ts` (boolean) + `.env` presence | Is Supabase on? | Confirmed |
 | localStorage read/write failures | `console.error` in `storage.ts` | Key + error | Confirmed |
+| Supabase Storage upload fallback | `console.warn('Supabase storage fallback...')` in `StudentManagerSection` | Warning text | Confirmed |
+| Simulation mode state | sessionStorage flag (`rafaela_simulation_mode`) | On/off + student id | Confirmed |
 | Dashboard/report data load errors | `console.error` in personal/student pages | Error text | Confirmed |
 | Seed script progress | `scripts/seed-supabase.cjs` stdout/stderr | Counts, per-table | Confirmed |
 | CI build+deploy | GitHub Actions logs | Step output | Confirmed |
