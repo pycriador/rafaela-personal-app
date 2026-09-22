@@ -19,6 +19,9 @@ import {
   Image as ImageIcon,
   Info,
   Film,
+  UploadCloud,
+  Link2,
+  Sparkles,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -27,9 +30,11 @@ import { Select } from '../../components/ui/Select';
 import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import { ExerciseFramePlayer } from '../../components/ui/ExerciseFramePlayer';
+import { ExerciseMediaModal } from '../../components/exercises/ExerciseMediaModal';
 import { exerciseRepository } from '../../repositories/exerciseRepository';
 import { useToast } from '../../context/ToastContext';
 import { Exercise, ExerciseCategory, ExerciseType } from '../../types';
+import { getAssetUrl } from '../../utils/assets';
 
 // Accent-agnostic normalization helper
 const normalizeText = (text: string): string => {
@@ -65,6 +70,11 @@ export const ExercisesPage: React.FC = () => {
   // Modal View Image Detail
   const [viewImageModal, setViewImageModal] = useState<Exercise | null>(null);
 
+  // Media Center Modal
+  const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
+  const [mediaTargetExercise, setMediaTargetExercise] = useState<Exercise | null>(null);
+  const [showManualUrlInput, setShowManualUrlInput] = useState(false);
+
   // Form states
   const [name, setName] = useState('');
   const [category, setCategory] = useState<ExerciseCategory>('Peito');
@@ -75,6 +85,22 @@ export const ExercisesPage: React.FC = () => {
   const [instructions, setInstructions] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [selectedAlternatives, setSelectedAlternatives] = useState<string[]>([]);
+
+  const handleApplyMediaImage = async (newUrl: string, exerciseId?: string) => {
+    setImageUrl(newUrl);
+    const targetId = exerciseId || mediaTargetExercise?.id;
+    if (targetId) {
+      try {
+        await exerciseRepository.update(targetId, {
+          imageUrl: newUrl,
+          videoFrames: [newUrl, newUrl, newUrl],
+        });
+        await loadExercises();
+      } catch (err) {
+        console.error('Failed to auto-update exercise image:', err);
+      }
+    }
+  };
 
   // Load all exercises once
   const loadExercises = async () => {
@@ -353,7 +379,17 @@ export const ExercisesPage: React.FC = () => {
             {allExercises.length} exercícios com fotos cartoon padronizadas e domínio público
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setMediaTargetExercise(null);
+              setIsMediaModalOpen(true);
+            }}
+            leftIcon={<UploadCloud className="w-4 h-4 text-emerald-500" />}
+          >
+            Central de Imagens
+          </Button>
           <Button
             variant="primary"
             onClick={handleOpenCreate}
@@ -621,6 +657,19 @@ export const ExercisesPage: React.FC = () => {
                   <Button
                     variant="ghost"
                     size="sm"
+                    onClick={() => {
+                      setMediaTargetExercise(ex);
+                      setIsMediaModalOpen(true);
+                    }}
+                    leftIcon={<UploadCloud className="w-3.5 h-3.5 text-blue-500" />}
+                    className="text-xs text-slate-600 dark:text-slate-300 hover:text-blue-500"
+                    title="Substituir foto ou ilustração do exercício"
+                  >
+                    Trocar Foto
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={() => setViewImageModal(ex)}
                     leftIcon={<Film className="w-3.5 h-3.5 text-emerald-500" />}
                     className="text-xs text-emerald-600 dark:text-emerald-400"
@@ -847,13 +896,73 @@ export const ExercisesPage: React.FC = () => {
             />
           </div>
 
-          <Input
-            label="URL da Imagem Demonstrativa (Public Domain / Unsplash)"
-            placeholder="https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/.../0.jpg"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            helperText="Dica: Utilize o catálogo https://yuhonas.github.io/free-exercise-db/ para encontrar novas fotos padronizadas."
-          />
+          {/* Seletor Visual de Imagem Demonstrativa */}
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block">
+              Ilustração / Foto Demonstrativa do Exercício
+            </label>
+            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border flex flex-col sm:flex-row items-center gap-4">
+              <div className="w-24 h-24 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center p-2 relative overflow-hidden shrink-0 shadow-inner">
+                {imageUrl ? (
+                  <img
+                    src={getAssetUrl(imageUrl)}
+                    alt="Preview do Exercício"
+                    className="max-w-full max-h-full w-auto h-auto object-contain drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)]"
+                  />
+                ) : (
+                  <ImageIcon className="w-8 h-8 text-slate-500" />
+                )}
+              </div>
+
+              <div className="flex-1 space-y-2 text-center sm:text-left">
+                <div className="text-xs text-slate-600 dark:text-slate-400">
+                  <span className="font-bold text-slate-800 dark:text-white block">
+                    {imageUrl ? 'Imagem vinculada ao exercício' : 'Nenhuma imagem associada'}
+                  </span>
+                  <span className="text-[11px] font-mono text-slate-400 truncate block max-w-sm">
+                    {imageUrl || 'Selecione uma imagem do computador ou da biblioteca'}
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
+                  <Button
+                    type="button"
+                    variant="primary"
+                    size="sm"
+                    onClick={() => {
+                      setMediaTargetExercise(editingExercise);
+                      setIsMediaModalOpen(true);
+                    }}
+                    leftIcon={<UploadCloud className="w-4 h-4" />}
+                    className="text-xs"
+                  >
+                    Subir do Computador / Escolher na Central
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setShowManualUrlInput((prev) => !prev)}
+                    leftIcon={<Link2 className="w-3.5 h-3.5" />}
+                    className="text-xs"
+                  >
+                    {showManualUrlInput ? 'Ocultar Campo URL' : 'Editar URL Manual'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {showManualUrlInput && (
+              <Input
+                label="URL Direta da Imagem"
+                placeholder="/exercises/frames/bench-press/frame-1.png ou https://..."
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                helperText="Você pode usar caminhos internos (/exercises/...) ou URLs públicas da internet."
+                className="text-xs font-mono"
+              />
+            )}
+          </div>
 
           <Input
             label="Grupos Musculares (separados por vírgula)"
@@ -919,6 +1028,18 @@ export const ExercisesPage: React.FC = () => {
           </div>
         </form>
       </Modal>
+
+      {/* Modal: Central de Mídia & Upload de Imagens */}
+      <ExerciseMediaModal
+        isOpen={isMediaModalOpen}
+        onClose={() => {
+          setIsMediaModalOpen(false);
+          setMediaTargetExercise(null);
+        }}
+        targetExercise={mediaTargetExercise}
+        allExercises={allExercises}
+        onSelectImage={handleApplyMediaImage}
+      />
     </div>
   );
 };

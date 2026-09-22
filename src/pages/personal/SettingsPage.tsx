@@ -418,280 +418,382 @@ export const SettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 w-full pb-8">
       {/* Page Header */}
-      <div>
-        <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
-          <Database className="w-7 h-7 text-emerald-500" />
-          Configurações & Backup do Banco de Dados
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-dark-muted mt-0.5">
-          Preferências de tema, exportação integral das tabelas e segurança de dados cadastrais
-        </p>
-      </div>
-
-      {/* Tema Visual */}
-      <Card className="p-6">
-        <CardTitle className="mb-1">Aparência & Tema Visual</CardTitle>
-        <p className="text-xs text-slate-500 mb-4">
-          Escolha entre o modo escuro premium fitness ou o modo claro
-        </p>
-        <div className="flex items-center gap-3">
-          <Button
-            variant={theme === 'dark' ? 'primary' : 'secondary'}
-            onClick={() => theme !== 'dark' && toggleTheme()}
-            leftIcon={<Moon className="w-4 h-4" />}
-          >
-            Modo Escuro (Dark)
-          </Button>
-          <Button
-            variant={theme === 'light' ? 'primary' : 'secondary'}
-            onClick={() => theme !== 'light' && toggleTheme()}
-            leftIcon={<Sun className="w-4 h-4" />}
-          >
-            Modo Claro (Light)
-          </Button>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
+            <Database className="w-7 h-7 text-emerald-500" />
+            Configurações & Governança de Dados
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-dark-muted mt-0.5">
+            Preferências de tema, exportação integral das tabelas, auditoria e conformidade LGPD
+          </p>
         </div>
-      </Card>
 
-      {/* Backup & Exportação de Todas as Tabelas (Substituindo o antigo "Ambiente de Dados Local") */}
-      <Card className="p-6 space-y-6 border-emerald-500/20 shadow-md">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-dark-border/60">
-          <div>
-            <div className="flex items-center gap-2">
-              <CardTitle>Download Completo do Banco de Dados</CardTitle>
-              <Badge variant={isSupabaseConfigured ? 'success' : 'info'} size="sm">
-                {isSupabaseConfigured ? 'Supabase PostgreSQL Conectado' : 'Repositório Ativo'}
-              </Badge>
-            </div>
-            <p className="text-xs text-slate-500 dark:text-dark-muted mt-1 leading-relaxed">
-              Exporte todas as informações cadastradas: alunos, prescrições de treinos, histórico de sessões, auditoria, dietas e usuários.
-            </p>
-          </div>
+        <div className="flex items-center gap-2">
           <Button
-            variant="ghost"
+            variant="secondary"
             size="sm"
             onClick={loadAllData}
             leftIcon={<RefreshCw className={`w-3.5 h-3.5 ${loadingStats ? 'animate-spin' : ''}`} />}
-            className="text-xs shrink-0"
+            className="text-xs"
           >
             Atualizar Contadores
           </Button>
-        </div>
-
-        {/* Database Tables Summary Grid */}
-        <div>
-          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-dark-muted mb-3 flex items-center gap-1.5">
-            <Layers className="w-4 h-4 text-emerald-500" />
-            Tabelas e Registros Disponíveis para Extração
-          </h4>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
-              <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                <Users className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Alunos</span>
-              </div>
-              <span className="text-lg font-black text-slate-900 dark:text-white font-mono">
-                {loadingStats ? '...' : students.length}
-              </span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">cadastrados</span>
-            </div>
-
-            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
-              <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                <Dumbbell className="w-3.5 h-3.5 text-blue-500" />
-                <span>Treinos</span>
-              </div>
-              <span className="text-lg font-black text-slate-900 dark:text-white font-mono">
-                {loadingStats ? '...' : plans.length}
-              </span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">planos ativos</span>
-            </div>
-
-            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
-              <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                <Clock className="w-3.5 h-3.5 text-cyan-500" />
-                <span>Sessões</span>
-              </div>
-              <span className="text-lg font-black text-slate-900 dark:text-white font-mono">
-                {loadingStats ? '...' : sessions.length}
-              </span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">execuções salvas</span>
-            </div>
-
-            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
-              <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-amber-500" />
-                <span>Auditoria</span>
-              </div>
-              <span className="text-lg font-black text-slate-900 dark:text-white font-mono">
-                {loadingStats ? '...' : modifications.length}
-              </span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">alterações de carga</span>
-            </div>
-
-            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
-              <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                <Apple className="w-3.5 h-3.5 text-rose-500" />
-                <span>Nutrição</span>
-              </div>
-              <span className="text-lg font-black text-slate-900 dark:text-white font-mono">
-                {loadingStats ? '...' : nutritionPlans.length}
-              </span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">dietas montadas</span>
-            </div>
-
-            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
-              <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                <FileText className="w-3.5 h-3.5 text-purple-500" />
-                <span>Exercícios</span>
-              </div>
-              <span className="text-lg font-black text-slate-900 dark:text-white font-mono">
-                {loadingStats ? '...' : exercises.length}
-              </span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">biblioteca ativa</span>
-            </div>
-
-            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
-              <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                <Lock className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Usuários</span>
-              </div>
-              <span className="text-lg font-black text-slate-900 dark:text-white font-mono">
-                {loadingStats ? '...' : users.length}
-              </span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">contas de acesso</span>
-            </div>
-
-            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
-              <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                <Layers className="w-3.5 h-3.5 text-teal-500" />
-                <span>Eventos</span>
-              </div>
-              <span className="text-lg font-black text-slate-900 dark:text-white font-mono">
-                {loadingStats ? '...' : activities.length}
-              </span>
-              <span className="text-[10px] text-slate-400 block mt-0.5">logs de atividade</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Security & Password Encryption Notice */}
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 flex items-start gap-3 text-xs">
-          <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <h5 className="font-bold text-emerald-900 dark:text-emerald-300">
-              Segurança & Conformidade LGPD (Senhas Estritamente Criptografadas)
-            </h5>
-            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-              Em total conformidade com padrões de cibersegurança e sigilo de dados, nenhuma senha é armazenada ou exportada em texto puro. Todas as credenciais de autenticação são processadas com <strong>hash criptográfico irreversível SHA-256 com Salt dinâmico</strong> (<code className="font-mono text-[11px] bg-white/40 dark:bg-black/40 px-1 py-0.5 rounded">$sha256$...</code>).
-            </p>
-          </div>
-        </div>
-
-        {/* Action 1: Master Full JSON Backup */}
-        <div className="p-5 rounded-2xl bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <h4 className="text-sm font-bold flex items-center gap-2 text-white">
-              <Database className="w-4 h-4 text-emerald-400" />
-              Backup Integral do Banco de Dados (.JSON)
-            </h4>
-            <p className="text-xs text-slate-400">
-              Gera um único arquivo estruturado contendo todas as 8 tabelas consolidadas, dados cadastrais e metadados.
-            </p>
-          </div>
           <Button
             variant="primary"
-            size="md"
+            size="sm"
             onClick={handleDownloadFullBackup}
             disabled={loadingStats || isExporting}
             isLoading={isExporting}
-            leftIcon={<Download className="w-4 h-4" />}
-            className="shrink-0"
+            leftIcon={<Download className="w-3.5 h-3.5" />}
+            className="text-xs"
           >
-            Baixar Backup Completo (JSON)
+            Backup Geral (.JSON)
           </Button>
         </div>
+      </div>
 
-        {/* Action 2: Individual CSV Tables Downloads */}
-        <div className="space-y-3 pt-2">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-dark-muted flex items-center gap-1.5">
-            <FileSpreadsheet className="w-4 h-4 text-emerald-500" />
-            Download Individual por Tabela (Formato CSV para Excel / BI)
-          </h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleExportStudentsCsv}
-              leftIcon={<Download className="w-3.5 h-3.5" />}
-              className="justify-start text-xs py-2 h-auto"
-            >
-              <span>Alunos ({students.length})</span>
-            </Button>
+      {/* Main Grid: 2 Columns on Desktop */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left / Main Column (lg:col-span-8) */}
+        <div className="lg:col-span-8 space-y-6">
+          {/* Card: Master Backup & Overview */}
+          <Card className="p-6 space-y-6 border-emerald-500/20 shadow-md">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-dark-border/60">
+              <div>
+                <div className="flex items-center gap-2">
+                  <CardTitle>Download Completo do Banco de Dados</CardTitle>
+                  <Badge variant={isSupabaseConfigured ? 'success' : 'info'} size="sm">
+                    {isSupabaseConfigured ? 'Supabase PostgreSQL Conectado' : 'Repositório Local Ativo'}
+                  </Badge>
+                </div>
+                <p className="text-xs text-slate-500 dark:text-dark-muted mt-1 leading-relaxed">
+                  Exporte todas as informações cadastradas: alunos, prescrições de treinos, histórico de sessões, auditoria, dietas e usuários.
+                </p>
+              </div>
+            </div>
 
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleExportWorkoutPlansCsv}
-              leftIcon={<Download className="w-3.5 h-3.5" />}
-              className="justify-start text-xs py-2 h-auto"
-            >
-              <span>Treinos Prescritos ({plans.length})</span>
-            </Button>
+            {/* Master JSON Backup Banner */}
+            <div className="p-5 rounded-2xl bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-slate-800 shadow-xl">
+              <div className="space-y-1">
+                <h4 className="text-sm font-bold flex items-center gap-2 text-white">
+                  <Database className="w-4 h-4 text-emerald-400" />
+                  Backup Integral Consolidado (.JSON)
+                </h4>
+                <p className="text-xs text-slate-400 max-w-lg">
+                  Gera um arquivo JSON único contendo todas as 8 tabelas consolidadas, dados cadastrais e metadados de execução para restauração ou auditoria.
+                </p>
+              </div>
+              <Button
+                variant="primary"
+                size="md"
+                onClick={handleDownloadFullBackup}
+                disabled={loadingStats || isExporting}
+                isLoading={isExporting}
+                leftIcon={<Download className="w-4 h-4" />}
+                className="shrink-0"
+              >
+                Baixar Backup (JSON)
+              </Button>
+            </div>
 
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleExportSessionsCsv}
-              leftIcon={<Download className="w-3.5 h-3.5" />}
-              className="justify-start text-xs py-2 h-auto"
-            >
-              <span>Sessões Concluídas ({sessions.length})</span>
-            </Button>
+            {/* Database Tables Summary Grid */}
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-dark-muted mb-3 flex items-center gap-1.5">
+                <Layers className="w-4 h-4 text-emerald-500" />
+                Registros Atuais por Tabela
+              </h4>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
+                  <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
+                    <Users className="w-3.5 h-3.5 text-emerald-500" />
+                    <span>Alunos</span>
+                  </div>
+                  <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
+                    {loadingStats ? '...' : students.length}
+                  </span>
+                  <span className="text-[10px] text-slate-400 block mt-0.5">cadastrados</span>
+                </div>
 
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleExportModificationsCsv}
-              leftIcon={<Download className="w-3.5 h-3.5" />}
-              className="justify-start text-xs py-2 h-auto"
-            >
-              <span>Auditoria de Cargas ({modifications.length})</span>
-            </Button>
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
+                  <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
+                    <Dumbbell className="w-3.5 h-3.5 text-blue-500" />
+                    <span>Treinos</span>
+                  </div>
+                  <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
+                    {loadingStats ? '...' : plans.length}
+                  </span>
+                  <span className="text-[10px] text-slate-400 block mt-0.5">planos ativos</span>
+                </div>
 
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleExportNutritionCsv}
-              leftIcon={<Download className="w-3.5 h-3.5" />}
-              className="justify-start text-xs py-2 h-auto"
-            >
-              <span>Planos Nutricionais ({nutritionPlans.length})</span>
-            </Button>
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
+                  <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
+                    <Clock className="w-3.5 h-3.5 text-cyan-500" />
+                    <span>Sessões</span>
+                  </div>
+                  <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
+                    {loadingStats ? '...' : sessions.length}
+                  </span>
+                  <span className="text-[10px] text-slate-400 block mt-0.5">execuções salvas</span>
+                </div>
 
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleExportExercisesCsv}
-              leftIcon={<Download className="w-3.5 h-3.5" />}
-              className="justify-start text-xs py-2 h-auto"
-            >
-              <span>Biblioteca de Exercícios ({exercises.length})</span>
-            </Button>
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
+                  <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
+                    <ShieldCheck className="w-3.5 h-3.5 text-amber-500" />
+                    <span>Auditoria</span>
+                  </div>
+                  <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
+                    {loadingStats ? '...' : modifications.length}
+                  </span>
+                  <span className="text-[10px] text-slate-400 block mt-0.5">alterações de carga</span>
+                </div>
 
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleExportUsersCsv}
-              leftIcon={<Lock className="w-3.5 h-3.5 text-emerald-500" />}
-              className="justify-start text-xs py-2 h-auto col-span-1 sm:col-span-2 lg:col-span-3"
-            >
-              <span>Contas de Usuários com Senhas Criptografadas SHA-256 ({users.length})</span>
-            </Button>
-          </div>
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
+                  <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
+                    <Apple className="w-3.5 h-3.5 text-rose-500" />
+                    <span>Nutrição</span>
+                  </div>
+                  <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
+                    {loadingStats ? '...' : nutritionPlans.length}
+                  </span>
+                  <span className="text-[10px] text-slate-400 block mt-0.5">dietas montadas</span>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
+                  <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
+                    <FileText className="w-3.5 h-3.5 text-purple-500" />
+                    <span>Exercícios</span>
+                  </div>
+                  <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
+                    {loadingStats ? '...' : exercises.length}
+                  </span>
+                  <span className="text-[10px] text-slate-400 block mt-0.5">biblioteca ativa</span>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
+                  <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
+                    <Lock className="w-3.5 h-3.5 text-emerald-500" />
+                    <span>Usuários</span>
+                  </div>
+                  <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
+                    {loadingStats ? '...' : users.length}
+                  </span>
+                  <span className="text-[10px] text-slate-400 block mt-0.5">contas de acesso</span>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
+                  <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
+                    <Layers className="w-3.5 h-3.5 text-teal-500" />
+                    <span>Eventos</span>
+                  </div>
+                  <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
+                    {loadingStats ? '...' : activities.length}
+                  </span>
+                  <span className="text-[10px] text-slate-400 block mt-0.5">logs de atividade</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Individual CSV Tables Downloads */}
+            <div className="space-y-3 pt-2">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-dark-muted flex items-center gap-1.5">
+                <FileSpreadsheet className="w-4 h-4 text-emerald-500" />
+                Download Individual por Tabela (CSV / Excel / BI)
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleExportStudentsCsv}
+                  leftIcon={<Download className="w-3.5 h-3.5" />}
+                  className="justify-start text-xs py-2.5 h-auto"
+                >
+                  <span>Alunos ({students.length})</span>
+                </Button>
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleExportWorkoutPlansCsv}
+                  leftIcon={<Download className="w-3.5 h-3.5" />}
+                  className="justify-start text-xs py-2.5 h-auto"
+                >
+                  <span>Treinos Prescritos ({plans.length})</span>
+                </Button>
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleExportSessionsCsv}
+                  leftIcon={<Download className="w-3.5 h-3.5" />}
+                  className="justify-start text-xs py-2.5 h-auto"
+                >
+                  <span>Sessões Concluídas ({sessions.length})</span>
+                </Button>
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleExportModificationsCsv}
+                  leftIcon={<Download className="w-3.5 h-3.5" />}
+                  className="justify-start text-xs py-2.5 h-auto"
+                >
+                  <span>Auditoria de Cargas ({modifications.length})</span>
+                </Button>
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleExportNutritionCsv}
+                  leftIcon={<Download className="w-3.5 h-3.5" />}
+                  className="justify-start text-xs py-2.5 h-auto"
+                >
+                  <span>Planos Nutricionais ({nutritionPlans.length})</span>
+                </Button>
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleExportExercisesCsv}
+                  leftIcon={<Download className="w-3.5 h-3.5" />}
+                  className="justify-start text-xs py-2.5 h-auto"
+                >
+                  <span>Biblioteca de Exercícios ({exercises.length})</span>
+                </Button>
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleExportUsersCsv}
+                  leftIcon={<Lock className="w-3.5 h-3.5 text-emerald-500" />}
+                  className="justify-start text-xs py-2.5 h-auto col-span-1 sm:col-span-2 lg:col-span-3"
+                >
+                  <span>Contas de Usuários com Senhas Criptografadas SHA-256 ({users.length})</span>
+                </Button>
+              </div>
+            </div>
+
+            {/* Security & Password Encryption Notice */}
+            <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 flex items-start gap-3 text-xs">
+              <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <h5 className="font-bold text-emerald-900 dark:text-emerald-300">
+                  Segurança & Conformidade LGPD (Senhas Estritamente Criptografadas)
+                </h5>
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Em total conformidade com padrões de cibersegurança e sigilo de dados, nenhuma senha é armazenada ou exportada em texto puro. Todas as credenciais de autenticação são processadas com <strong>hash criptográfico irreversível SHA-256 com Salt dinâmico</strong> (<code className="font-mono text-[11px] bg-white/40 dark:bg-black/40 px-1 py-0.5 rounded">$sha256$...</code>).
+                </p>
+              </div>
+            </div>
+          </Card>
         </div>
-      </Card>
+
+        {/* Right / Side Column (lg:col-span-4) */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* Card: Tema Visual */}
+          <Card className="p-6 space-y-4">
+            <div>
+              <CardTitle className="mb-1">Aparência & Tema Visual</CardTitle>
+              <p className="text-xs text-slate-500 dark:text-dark-muted">
+                Escolha o modo visual para toda a interface do aplicativo
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => theme !== 'dark' && toggleTheme()}
+                className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between min-h-[110px] cursor-pointer ${
+                  theme === 'dark'
+                    ? 'border-emerald-500 bg-slate-900 text-white shadow-lg shadow-emerald-500/10 ring-2 ring-emerald-500/20'
+                    : 'border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:border-emerald-500/40'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400">
+                    <Moon className="w-4 h-4" />
+                  </div>
+                  {theme === 'dark' && (
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-xs" />
+                  )}
+                </div>
+                <div>
+                  <span className="text-xs font-bold block">Modo Escuro</span>
+                  <span className="text-[10px] text-slate-400">Visual Fitness Dark</span>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => theme !== 'light' && toggleTheme()}
+                className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between min-h-[110px] cursor-pointer ${
+                  theme === 'light'
+                    ? 'border-emerald-500 bg-white text-slate-900 shadow-lg shadow-emerald-500/10 ring-2 ring-emerald-500/20'
+                    : 'border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:border-emerald-500/40'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-500">
+                    <Sun className="w-4 h-4" />
+                  </div>
+                  {theme === 'light' && (
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-xs" />
+                  )}
+                </div>
+                <div>
+                  <span className="text-xs font-bold block">Modo Claro</span>
+                  <span className="text-[10px] text-slate-500">Visual Clean Light</span>
+                </div>
+              </button>
+            </div>
+          </Card>
+
+          {/* Card: Infraestrutura & Armazenamento */}
+          <Card className="p-6 space-y-4">
+            <div>
+              <CardTitle className="mb-1 flex items-center gap-2">
+                <Database className="w-4 h-4 text-emerald-500" />
+                Infraestrutura do Sistema
+              </CardTitle>
+              <p className="text-xs text-slate-500 dark:text-dark-muted">
+                Status dos canais de persistência e segurança
+              </p>
+            </div>
+
+            <div className="space-y-2.5 text-xs">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40 flex items-center justify-between">
+                <span className="text-slate-500 dark:text-slate-400">Banco de Dados:</span>
+                <Badge variant={isSupabaseConfigured ? 'success' : 'info'} size="sm">
+                  {isSupabaseConfigured ? 'Supabase PostgreSQL' : 'Armazenamento Local'}
+                </Badge>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40 flex items-center justify-between">
+                <span className="text-slate-500 dark:text-slate-400">Criptografia de Senhas:</span>
+                <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 text-[11px]">
+                  SHA-256 + Salt
+                </span>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40 flex items-center justify-between">
+                <span className="text-slate-500 dark:text-slate-400">Total de Registros:</span>
+                <span className="font-mono font-bold text-slate-900 dark:text-white">
+                  {students.length + plans.length + sessions.length + modifications.length + nutritionPlans.length + exercises.length + users.length}
+                </span>
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40 flex items-center justify-between">
+                <span className="text-slate-500 dark:text-slate-400">Hospedagem:</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200">
+                  GitHub Pages
+                </span>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };
