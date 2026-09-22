@@ -23,8 +23,69 @@ const STORAGE_KEYS = {
   WORKOUT_TEMPLATES: 'rafaela_app_workout_templates_v1',
 };
 
+/**
+ * Verifica se a aplicação está em modo simulação ("Testar como Aluno")
+ */
+export function isSimulationModeActive(): boolean {
+  try {
+    return (
+      typeof sessionStorage !== 'undefined' &&
+      sessionStorage.getItem('rafaela_simulation_mode') === 'true'
+    );
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Retorna o ID do aluno atualmente simulado
+ */
+export function getSimulatingStudentId(): string | null {
+  try {
+    return typeof sessionStorage !== 'undefined'
+      ? sessionStorage.getItem('rafaela_simulation_student_id')
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Ativa ou encerra o modo de simulação, limpando o sandbox temporário ao desativar
+ */
+export function setSimulationMode(active: boolean, studentId?: string): void {
+  try {
+    if (typeof sessionStorage === 'undefined') return;
+
+    if (active) {
+      sessionStorage.setItem('rafaela_simulation_mode', 'true');
+      if (studentId) {
+        sessionStorage.setItem('rafaela_simulation_student_id', studentId);
+      }
+    } else {
+      sessionStorage.removeItem('rafaela_simulation_mode');
+      sessionStorage.removeItem('rafaela_simulation_student_id');
+      sessionStorage.removeItem('rafaela_sim_user');
+
+      // Limpa todas as chaves do sandbox de simulação
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const k = sessionStorage.key(i);
+        if (k && k.startsWith('sim_sandbox_')) {
+          keysToRemove.push(k);
+        }
+      }
+      keysToRemove.forEach((k) => sessionStorage.removeItem(k));
+    }
+  } catch (err) {
+    console.error('Erro ao alternar modo de simulação:', err);
+  }
+}
+
 // Seed storage if empty
 export function initStorage() {
+  if (typeof localStorage === 'undefined') return;
+
   if (!localStorage.getItem(STORAGE_KEYS.USERS)) {
     localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(initialUsers));
   }
@@ -56,6 +117,15 @@ export function initStorage() {
 
 export function getItem<T>(key: string, fallback: T): T {
   try {
+    // Se o modo simulação estiver ativo, verifica primeiro se há alteração no sandbox temporário
+    if (isSimulationModeActive() && typeof sessionStorage !== 'undefined') {
+      const sandboxed = sessionStorage.getItem(`sim_sandbox_${key}`);
+      if (sandboxed !== null) {
+        return JSON.parse(sandboxed);
+      }
+    }
+
+    if (typeof localStorage === 'undefined') return fallback;
     const raw = localStorage.getItem(key);
     if (!raw) return fallback;
     return JSON.parse(raw);
@@ -67,6 +137,14 @@ export function getItem<T>(key: string, fallback: T): T {
 
 export function setItem<T>(key: string, value: T): void {
   try {
+    // Se estiver em modo de simulação, grava SOMENTE no sandbox temporário de sessão!
+    // O localStorage permanente do aluno NUNCA é mutado.
+    if (isSimulationModeActive() && typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem(`sim_sandbox_${key}`, JSON.stringify(value));
+      return;
+    }
+
+    if (typeof localStorage === 'undefined') return;
     localStorage.setItem(key, JSON.stringify(value));
   } catch (err) {
     console.error(`Error writing ${key} to storage:`, err);

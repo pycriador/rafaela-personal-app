@@ -17,24 +17,42 @@ import {
   X,
   UserCheck,
   ChevronRight,
+  FlaskConical,
+  ChevronDown,
+  Play,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useToast } from '../context/ToastContext';
 import { notificationRepository } from '../repositories/notificationRepository';
+import { studentRepository } from '../repositories/studentRepository';
+import { Student } from '../types';
 import { NotificationDrawer } from '../components/NotificationDrawer';
 
 export const PersonalLayout: React.FC = () => {
-  const { user, logout, quickLogin } = useAuth();
+  const { user, logout, quickLogin, enterStudentSimulation } = useAuth();
+  const { success, error: toastError } = useToast();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
+  // Dynamic Students for Simulation Mode
+  const [students, setStudents] = useState<Student[]>([]);
+  const [selectedStudentId, setSelectedStudentId] = useState<string>('');
+  const [isSimulatingLoading, setIsSimulatingLoading] = useState(false);
+
   useEffect(() => {
     if (user) {
       notificationRepository.getUnreadCount(user.id).then(setUnreadCount);
     }
+    studentRepository.getAll().then((list) => {
+      setStudents(list);
+      if (list.length > 0) {
+        setSelectedStudentId(list[0].id);
+      }
+    });
   }, [user, isNotifOpen]);
 
   const navItems = [
@@ -53,10 +71,26 @@ export const PersonalLayout: React.FC = () => {
     navigate('/login');
   };
 
-  const handleSwitchToStudent = async (studentUserId: string) => {
-    await quickLogin(studentUserId);
-    setMobileMenuOpen(false);
-    navigate('/student/dashboard');
+  const handleStartSimulation = async (studentIdToUse?: string) => {
+    const targetId = studentIdToUse || selectedStudentId;
+    if (!targetId) return;
+
+    setIsSimulatingLoading(true);
+    try {
+      const ok = await enterStudentSimulation(targetId);
+      if (ok) {
+        setMobileMenuOpen(false);
+        const targetStudent = students.find((s) => s.id === targetId);
+        success(`Modo simulação iniciado para ${targetStudent?.name || 'aluno'} (sem gravação no banco).`);
+        navigate('/student/dashboard');
+      } else {
+        toastError('Não foi possível iniciar a simulação para este aluno.');
+      }
+    } catch {
+      toastError('Erro ao iniciar simulação.');
+    } finally {
+      setIsSimulatingLoading(false);
+    }
   };
 
   return (
@@ -155,26 +189,52 @@ export const PersonalLayout: React.FC = () => {
             })}
           </nav>
 
-          {/* Quick Mock Role Switcher (Facilitator for Section 72 Testing) */}
+          {/* Dynamic "Testar como Aluno" with Dropdown & Local Sandbox */}
           <div className="p-3 mx-3 mb-2 bg-slate-50 dark:bg-dark-cardElevated/60 rounded-2xl border border-slate-200/60 dark:border-dark-border text-left">
-            <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-              <UserCheck className="w-3.5 h-3.5 text-emerald-500" />
-              Testar como Aluno
+            <div className="flex items-center justify-between gap-1 mb-1.5">
+              <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                <FlaskConical className="w-3.5 h-3.5 text-emerald-500" />
+                <span>Testar como Aluno</span>
+              </div>
+              <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
+                Sandbox
+              </span>
             </div>
-            <div className="space-y-1">
+
+            <p className="text-[10px] text-slate-500 dark:text-dark-muted mb-2.5 leading-tight">
+              Selecione qualquer aluno para validar o app sem gravar alterações no histórico.
+            </p>
+
+            <div className="space-y-2">
+              <div className="relative">
+                <select
+                  value={selectedStudentId}
+                  onChange={(e) => setSelectedStudentId(e.target.value)}
+                  className="w-full text-xs font-semibold bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border rounded-xl px-2.5 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 appearance-none pr-8 cursor-pointer"
+                >
+                  {students.map((st) => (
+                    <option key={st.id} value={st.id}>
+                      {st.name} ({st.goals?.[0] || st.level || 'Aluno'})
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+
               <button
-                onClick={() => handleSwitchToStudent('user-mariana')}
-                className="w-full flex items-center justify-between px-2.5 py-1.5 text-xs font-semibold rounded-lg text-slate-700 dark:text-slate-300 hover:bg-emerald-500/10 hover:text-emerald-500 transition-colors"
+                type="button"
+                onClick={() => handleStartSimulation()}
+                disabled={isSimulatingLoading || !selectedStudentId}
+                className="w-full flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-bold rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white shadow-xs transition-colors cursor-pointer disabled:opacity-50"
               >
-                <span>Mariana (Hipertrofia)</span>
-                <ChevronRight className="w-3 h-3 text-slate-400" />
-              </button>
-              <button
-                onClick={() => handleSwitchToStudent('user-joao')}
-                className="w-full flex items-center justify-between px-2.5 py-1.5 text-xs font-semibold rounded-lg text-slate-700 dark:text-slate-300 hover:bg-emerald-500/10 hover:text-emerald-500 transition-colors"
-              >
-                <span>João (Emagrecimento)</span>
-                <ChevronRight className="w-3 h-3 text-slate-400" />
+                {isSimulatingLoading ? (
+                  <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Play className="w-3 h-3 fill-white" />
+                    <span>Iniciar Simulação</span>
+                  </>
+                )}
               </button>
             </div>
           </div>

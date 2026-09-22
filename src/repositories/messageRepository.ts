@@ -1,5 +1,5 @@
-import { StudentMessage } from '../types';
-import { getItem, setItem, STORAGE_KEYS } from './storage';
+import { StudentMessage, MessageCategory } from '../types';
+import { getItem, setItem, STORAGE_KEYS, isSimulationModeActive } from './storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 export const initialStudentMessages: StudentMessage[] = [
@@ -108,7 +108,7 @@ export class SupabaseMessageRepository implements IMessageRepository {
       read: false,
     };
 
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('student_messages').insert({
           id: newMessage.id,

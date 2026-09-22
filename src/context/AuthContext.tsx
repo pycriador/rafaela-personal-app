@@ -1,6 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, Student } from '../types';
-import { getItem, setItem, STORAGE_KEYS, initStorage } from '../repositories/storage';
+import {
+  getItem,
+  setItem,
+  STORAGE_KEYS,
+  initStorage,
+  isSimulationModeActive,
+  getSimulatingStudentId,
+  setSimulationMode,
+} from '../repositories/storage';
 import { userRepository } from '../repositories/userRepository';
 import { studentRepository } from '../repositories/studentRepository';
 
@@ -13,6 +21,10 @@ interface AuthContextType {
   logout: () => void;
   isPersonal: boolean;
   isStudent: boolean;
+  isSimulationMode: boolean;
+  simulatedStudentId: string | null;
+  enterStudentSimulation: (studentId: string) => Promise<boolean>;
+  exitStudentSimulation: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,10 +33,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [studentProfile, setStudentProfile] = useState<Student | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSimulationMode, setIsSimulationMode] = useState<boolean>(false);
+  const [simulatedStudentId, setSimulatedStudentId] = useState<string | null>(null);
 
   // Initialize storage seeds and load current session
   useEffect(() => {
     initStorage();
+
+    if (isSimulationModeActive()) {
+      setIsSimulationMode(true);
+      const simStudentId = getSimulatingStudentId();
+      setSimulatedStudentId(simStudentId);
+
+      try {
+        const simUserRaw = sessionStorage.getItem('rafaela_sim_user');
+        if (simUserRaw) {
+          const simUser = JSON.parse(simUserRaw);
+          setUser(simUser);
+          if (simStudentId) {
+            studentRepository.getById(simStudentId).then((st) => {
+              setStudentProfile(st);
+              setIsLoading(false);
+            });
+            return;
+          }
+        }
+      } catch (e) {
+        console.error('Erro ao restaurar simulação:', e);
+      }
+    }
+
     const savedUser = getItem<User | null>(STORAGE_KEYS.CURRENT_USER, null);
     if (savedUser) {
       setUser(savedUser);
@@ -85,10 +123,88 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return true;
   };
 
+  const enterStudentSimulation = async (studentId: string): Promise<boolean> => {
+    setIsLoading(true);
+    try {
+      const st = await studentRepository.getById(studentId);
+      if (!st) {
+        setIsLoading(false);
+        return false;
+      }
+
+      // Salva o id do treinador original no sessionStorage para restauração ao encerrar o teste
+      if (user && user.role === 'personal') {
+        sessionStorage.setItem('rafaela_original_trainer_id', user.id);
+      }
+
+      // Localiza usuário correspondente ao perfil do aluno
+      let simUser: User | null = null;
+      if (st.userId) {
+        simUser = await userRepository.getById(st.userId);
+      }
+      if (!simUser && st.email) {
+        simUser = await userRepository.getByEmail(st.email);
+      }
+      if (!simUser) {
+        simUser = {
+          id: st.userId || `user-${st.id}`,
+          name: st.name,
+          email: st.email || `${st.id}@mock.com`,
+          role: 'student',
+          studentProfileId: st.id,
+          avatarUrl: st.avatarUrl,
+          phone: st.phone,
+        };
+      }
+
+      // Ativa o sandbox de simulação (nenhuma gravação permanente acontecerá)
+      setSimulationMode(true, studentId);
+      sessionStorage.setItem('rafaela_sim_user', JSON.stringify(simUser));
+
+      setIsSimulationMode(true);
+      setSimulatedStudentId(studentId);
+      setUser(simUser);
+      setStudentProfile(st);
+      setIsLoading(false);
+      return true;
+    } catch (err) {
+      console.error('Erro ao entrar no modo simulação:', err);
+      setIsLoading(false);
+      return false;
+    }
+  };
+
+  const exitStudentSimulation = async (): Promise<void> => {
+    setIsLoading(true);
+    const trainerId =
+      typeof sessionStorage !== 'undefined'
+        ? sessionStorage.getItem('rafaela_original_trainer_id') || 'user-rafaela'
+        : 'user-rafaela';
+
+    setSimulationMode(false);
+    setIsSimulationMode(false);
+    setSimulatedStudentId(null);
+
+    await quickLogin(trainerId);
+
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.removeItem('rafaela_original_trainer_id');
+      sessionStorage.removeItem('rafaela_sim_user');
+    }
+    setIsLoading(false);
+  };
+
   const logout = () => {
+    if (isSimulationMode) {
+      setSimulationMode(false);
+      setIsSimulationMode(false);
+      setSimulatedStudentId(null);
+    }
     setUser(null);
     setStudentProfile(null);
-    localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+    }
   };
 
   return (
@@ -102,6 +218,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         logout,
         isPersonal: user?.role === 'personal',
         isStudent: user?.role === 'student',
+        isSimulationMode,
+        simulatedStudentId,
+        enterStudentSimulation,
+        exitStudentSimulation,
       }}
     >
       {children}

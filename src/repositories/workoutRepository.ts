@@ -1,5 +1,5 @@
 import { WorkoutPlan, WorkoutSession, WorkoutModification } from '../types';
-import { getItem, setItem, STORAGE_KEYS } from './storage';
+import { getItem, setItem, STORAGE_KEYS, isSimulationModeActive } from './storage';
 import { initialWorkoutPlans, initialSessions, initialModifications } from '../data/workouts';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
@@ -238,7 +238,7 @@ export class SupabaseWorkoutRepository implements IWorkoutRepository {
   }
 
   async getSessions(studentId?: string): Promise<WorkoutSession[]> {
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         let query = supabase.from('workout_sessions').select('*').order('date', { ascending: false });
         if (studentId) {
@@ -268,7 +268,7 @@ export class SupabaseWorkoutRepository implements IWorkoutRepository {
   }
 
   async saveSession(session: WorkoutSession): Promise<WorkoutSession> {
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('workout_sessions').upsert(mapSessionToDb(session));
       } catch (err) {
@@ -288,7 +288,7 @@ export class SupabaseWorkoutRepository implements IWorkoutRepository {
   }
 
   async getModifications(studentId?: string): Promise<WorkoutModification[]> {
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         let query = supabase
           .from('workout_modifications')
@@ -324,7 +324,7 @@ export class SupabaseWorkoutRepository implements IWorkoutRepository {
       timestamp: new Date().toISOString(),
     };
 
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('workout_modifications').insert(mapModToDb(newMod));
       } catch (err) {

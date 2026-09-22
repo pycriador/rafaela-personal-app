@@ -26,6 +26,7 @@ import {
   Award,
   Star,
   Layers,
+  FlaskConical,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -38,6 +39,7 @@ import { ExerciseFramePlayer } from '../../components/ui/ExerciseFramePlayer';
 import { StudentTrainerChatSection } from '../../components/chat/StudentTrainerChatSection';
 import { WorkoutTemplatesModal } from '../../components/workouts/WorkoutTemplatesModal';
 import { useToast } from '../../context/ToastContext';
+import { useAuth } from '../../context/AuthContext';
 import { getAssetUrl } from '../../utils/assets';
 import { studentRepository } from '../../repositories/studentRepository';
 import { workoutRepository } from '../../repositories/workoutRepository';
@@ -61,6 +63,7 @@ import {
 export const StudentDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { enterStudentSimulation } = useAuth();
   const { success, error: toastError, info } = useToast();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -591,7 +594,25 @@ export const StudentDetailPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+            <Button
+              variant="outline"
+              onClick={async () => {
+                if (!student) return;
+                const ok = await enterStudentSimulation(student.id);
+                if (ok) {
+                  success(`Modo simulação iniciado para ${student.name} (sem gravação de alterações).`);
+                  navigate('/student/dashboard');
+                } else {
+                  toastError('Não foi possível iniciar o modo teste.');
+                }
+              }}
+              leftIcon={<FlaskConical className="w-4 h-4 text-emerald-400" />}
+              className="border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500 text-xs"
+              title="Testar aplicativo com a visão deste aluno em sandbox isolado"
+            >
+              Testar como Aluno
+            </Button>
             <Button
               variant="primary"
               onClick={() => navigate(`/personal/workouts/new?studentId=${student.id}`)}

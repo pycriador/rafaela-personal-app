@@ -1,5 +1,5 @@
 import { ActivityLog } from '../types';
-import { getItem, setItem, STORAGE_KEYS } from './storage';
+import { getItem, setItem, STORAGE_KEYS, isSimulationModeActive } from './storage';
 import { initialActivities } from '../data/activities';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
@@ -85,7 +85,7 @@ export class SupabaseActivityRepository implements IActivityRepository {
       timestamp: new Date().toISOString(),
     };
 
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('activity_logs').insert(mapToDb(newLog));
       } catch (err) {

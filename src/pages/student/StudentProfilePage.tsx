@@ -8,7 +8,7 @@ import { Badge } from '../../components/ui/Badge';
 import { User, Sun, Moon, LogOut, ArrowLeftRight, Calendar, Target, Shield } from 'lucide-react';
 
 export const StudentProfilePage: React.FC = () => {
-  const { user, studentProfile, logout, quickLogin } = useAuth();
+  const { user, studentProfile, logout, quickLogin, isSimulationMode, exitStudentSimulation } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
@@ -18,7 +18,11 @@ export const StudentProfilePage: React.FC = () => {
   };
 
   const handleSwitchToPersonal = async () => {
-    await quickLogin('user-rafaela');
+    if (isSimulationMode) {
+      await exitStudentSimulation();
+    } else {
+      await quickLogin('user-rafaela');
+    }
     navigate('/personal/dashboard');
   };
 
