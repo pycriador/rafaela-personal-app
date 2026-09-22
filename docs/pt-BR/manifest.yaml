@@ -1,0 +1,191 @@
+# Manifesto da documentação (caminhos relativos a docs/pt-BR/)
+# Rafaela Personal App — seguindo estrutura do Documentation Standard v1.0
+standard: "Documentation Standard v1.0"
+root: "."
+updated: "2026-09-22"
+documents:
+  - id: OVR-001
+    path: README.md
+    title: Índice da Documentação
+    type: Reference
+    status: ACCEPTED
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: PRJ-001
+    path: project-overview.md
+    title: Visão Geral do Projeto
+    type: Reference
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: AI-001
+    path: ai-context.md
+    title: Contexto para IA
+    type: Context
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+    tags: [ai-ready, entry]
+  - id: GAP-001
+    path: knowledge-gaps.md
+    title: Lacunas de Conhecimento
+    type: Reference
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Informational
+  - id: ARC-001
+    path: architecture/overview.md
+    title: Visão Geral da Arquitetura
+    type: Reference
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: ARC-002
+    path: architecture/system-context.md
+    title: Contexto do Sistema
+    type: Reference
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: CMP-001
+    path: application/personal-portal.md
+    title: Componente — portal personal
+    type: Component
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: CMP-002
+    path: application/student-portal.md
+    title: Componente — portal aluno
+    type: Component
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: CMP-003
+    path: application/repositories.md
+    title: Componente — repositories
+    type: Component
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: CMP-004
+    path: application/exercise-catalog.md
+    title: Componente — exercise-catalog
+    type: Component
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: CMP-005
+    path: application/auth.md
+    title: Componente — auth
+    type: Component
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: CMP-006
+    path: application/exercise-frame-player.md
+    title: Componente — exercise-frame-player
+    type: Component
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: CTR-001
+    path: contracts/supabase-rest.md
+    title: Contrato — acesso a dados via Supabase REST
+    type: Contract
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: CTR-002
+    path: contracts/local-storage.md
+    title: Contrato — armazenamento localStorage key-value
+    type: Contract
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: ADR-001
+    path: decisions/adr-001-hybrid-repository.md
+    title: ADR-001 — Padrão repositório híbrido
+    type: Decision
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: ADR-002
+    path: decisions/adr-002-mock-auth.md
+    title: ADR-002 — Autenticação mock
+    type: Decision
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: ADR-003
+    path: decisions/adr-003-github-pages-spa.md
+    title: ADR-003 — Deploy SPA no GitHub Pages
+    type: Decision
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: ADR-004
+    path: decisions/adr-004-local-video-frames.md
+    title: ADR-004 — Frames locais de exercício
+    type: Decision
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: SEC-001
+    path: security/overview.md
+    title: Visão Geral de Segurança
+    type: Reference
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: OPS-001
+    path: operations/service-profile.md
+    title: Perfil de Serviço
+    type: Reference
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: OPS-002
+    path: operations/observability.md
+    title: Observabilidade
+    type: Reference
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: OPS-003
+    path: operations/runbooks/rb-deploy-github-pages.md
+    title: Runbook — Deploy no GitHub Pages
+    type: Runbook
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
+  - id: OPS-004
+    path: operations/runbooks/rb-supabase-unavailable.md
+    title: Runbook — Supabase indisponível
+    type: Runbook
+    status: REVIEW
+    owner: rafaela-app
+    updated: 2026-09-22
+    authority: Authoritative
