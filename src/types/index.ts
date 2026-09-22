@@ -291,7 +291,13 @@ export interface WorkoutTemplate {
   muscleFocus: string;
   estimatedMinutes: number;
   exercises: WorkoutExercise[];
+  isActive?: boolean;
+  version?: number;
+  versionTag?: string;
+  parentId?: string;
+  notes?: string;
   createdAt: string;
   updatedAt: string;
 }
+
 

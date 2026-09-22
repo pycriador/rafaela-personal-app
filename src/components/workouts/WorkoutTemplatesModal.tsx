@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Dumbbell,
   Search,
@@ -6,6 +7,8 @@ import {
   Clock,
   ArrowRight,
   Trash2,
+  GitFork,
+  ExternalLink,
 } from 'lucide-react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
@@ -31,12 +34,14 @@ export const WorkoutTemplatesModal: React.FC<WorkoutTemplatesModalProps> = ({
   title = 'Central de Séries & Modelos Pré-Cadastrados',
   description = 'Escolha uma série pronta elaborada tecnicamente para vincular ao treino com 1 clique',
 }) => {
+  const navigate = useNavigate();
   const { success, error: toastError } = useToast();
   const [templates, setTemplates] = useState<WorkoutTemplate[]>([]);
   const [exercisesMap, setExercisesMap] = useState<Record<string, Exercise>>({});
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [showInactive, setShowInactive] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
@@ -65,13 +70,14 @@ export const WorkoutTemplatesModal: React.FC<WorkoutTemplatesModalProps> = ({
   }, [isOpen]);
 
   const filteredTemplates = templates.filter((t) => {
+    const matchesStatus = showInactive ? true : t.isActive !== false;
     const matchesSearch =
       t.name.toLowerCase().includes(search.toLowerCase()) ||
       t.description.toLowerCase().includes(search.toLowerCase()) ||
       t.muscleFocus.toLowerCase().includes(search.toLowerCase());
     const matchesCategory =
       selectedCategory === 'all' || t.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    return matchesStatus && matchesSearch && matchesCategory;
   });
 
   const handleApply = (template: WorkoutTemplate) => {
@@ -151,6 +157,15 @@ export const WorkoutTemplatesModal: React.FC<WorkoutTemplatesModalProps> = ({
                         <span className="text-[10px] text-slate-400 uppercase font-mono font-bold">
                           {template.level}
                         </span>
+                        <span className="px-1.5 py-0.5 rounded-md bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 text-[10px] font-mono font-bold flex items-center gap-1">
+                          <GitFork className="w-2.5 h-2.5" />
+                          {template.versionTag || `v${template.version || 1}.0`}
+                        </span>
+                        {template.isActive === false && (
+                          <span className="px-1.5 py-0.5 rounded-md bg-slate-200 dark:bg-slate-800 text-slate-500 text-[10px]">
+                            Inativa
+                          </span>
+                        )}
                       </div>
                       <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-500 transition-colors">
                         {template.name}
@@ -226,7 +241,20 @@ export const WorkoutTemplatesModal: React.FC<WorkoutTemplatesModalProps> = ({
           </div>
         )}
 
-        <div className="flex justify-end pt-2 border-t border-slate-100 dark:border-dark-border/60">
+        <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-dark-border/60">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => {
+              onClose();
+              navigate('/personal/templates');
+            }}
+            leftIcon={<ExternalLink className="w-3.5 h-3.5 text-emerald-500" />}
+            className="text-xs"
+          >
+            Central de Séries (Criar & Gerenciar)
+          </Button>
+
           <Button variant="ghost" onClick={onClose} size="sm">
             Fechar
           </Button>

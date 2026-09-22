@@ -257,15 +257,22 @@ export interface IWorkoutTemplateRepository {
   getById(id: string): Promise<WorkoutTemplate | null>;
   save(template: WorkoutTemplate): Promise<WorkoutTemplate>;
   delete(id: string): Promise<boolean>;
+  toggleStatus(id: string): Promise<WorkoutTemplate | null>;
+  duplicateVersion(
+    id: string,
+    options: { newName?: string; versionTag: string; archivePrevious?: boolean }
+  ): Promise<WorkoutTemplate>;
 }
 
 export class SupabaseWorkoutTemplateRepository implements IWorkoutTemplateRepository {
   async getAll(): Promise<WorkoutTemplate[]> {
+    let rawList: WorkoutTemplate[] = [];
+
     if (isSupabaseConfigured) {
       try {
         const { data, error } = await supabase.from('workout_templates').select('*');
         if (!error && data && data.length > 0) {
-          return data.map((d: any) => ({
+          rawList = data.map((d: any) => ({
             id: d.id,
             name: d.name,
             description: d.description,
@@ -274,6 +281,11 @@ export class SupabaseWorkoutTemplateRepository implements IWorkoutTemplateReposi
             muscleFocus: d.muscle_focus || d.muscleFocus,
             estimatedMinutes: d.estimated_minutes || d.estimatedMinutes,
             exercises: Array.isArray(d.exercises) ? d.exercises : JSON.parse(d.exercises || '[]'),
+            isActive: d.is_active ?? d.isActive ?? true,
+            version: d.version || 1,
+            versionTag: d.version_tag || d.versionTag || 'v1.0',
+            parentId: d.parent_id || d.parentId,
+            notes: d.notes,
             createdAt: d.created_at || d.createdAt,
             updatedAt: d.updated_at || d.updatedAt,
           }));
@@ -282,7 +294,18 @@ export class SupabaseWorkoutTemplateRepository implements IWorkoutTemplateReposi
         // fallback
       }
     }
-    return getItem<WorkoutTemplate[]>(STORAGE_KEYS.WORKOUT_TEMPLATES, initialWorkoutTemplates);
+
+    if (rawList.length === 0) {
+      rawList = getItem<WorkoutTemplate[]>(STORAGE_KEYS.WORKOUT_TEMPLATES, initialWorkoutTemplates);
+    }
+
+    // Ensure backwards compatibility with defaults
+    return rawList.map((t) => ({
+      ...t,
+      isActive: t.isActive !== false,
+      version: t.version || 1,
+      versionTag: t.versionTag || 'v1.0',
+    }));
   }
 
   async getById(id: string): Promise<WorkoutTemplate | null> {
@@ -291,17 +314,31 @@ export class SupabaseWorkoutTemplateRepository implements IWorkoutTemplateReposi
   }
 
   async save(template: WorkoutTemplate): Promise<WorkoutTemplate> {
+    const enriched: WorkoutTemplate = {
+      ...template,
+      isActive: template.isActive !== false,
+      version: template.version || 1,
+      versionTag: template.versionTag || 'v1.0',
+      updatedAt: new Date().toISOString().split('T')[0],
+      createdAt: template.createdAt || new Date().toISOString().split('T')[0],
+    };
+
     if (isSupabaseConfigured) {
       try {
         await supabase.from('workout_templates').upsert({
-          id: template.id,
-          name: template.name,
-          description: template.description,
-          category: template.category,
-          level: template.level,
-          muscle_focus: template.muscleFocus,
-          estimated_minutes: template.estimatedMinutes,
-          exercises: template.exercises,
+          id: enriched.id,
+          name: enriched.name,
+          description: enriched.description,
+          category: enriched.category,
+          level: enriched.level,
+          muscle_focus: enriched.muscleFocus,
+          estimated_minutes: enriched.estimatedMinutes,
+          exercises: enriched.exercises,
+          is_active: enriched.isActive,
+          version: enriched.version,
+          version_tag: enriched.versionTag,
+          parent_id: enriched.parentId,
+          notes: enriched.notes,
           updated_at: new Date().toISOString(),
         });
       } catch (err) {
@@ -310,14 +347,72 @@ export class SupabaseWorkoutTemplateRepository implements IWorkoutTemplateReposi
     }
 
     const list = await this.getAll();
-    const idx = list.findIndex((t) => t.id === template.id);
+    const idx = list.findIndex((t) => t.id === enriched.id);
     if (idx === -1) {
-      list.unshift(template);
+      list.unshift(enriched);
     } else {
-      list[idx] = { ...template, updatedAt: new Date().toISOString().split('T')[0] };
+      list[idx] = enriched;
     }
     setItem(STORAGE_KEYS.WORKOUT_TEMPLATES, list);
-    return template;
+    return enriched;
+  }
+
+  async toggleStatus(id: string): Promise<WorkoutTemplate | null> {
+    const list = await this.getAll();
+    const idx = list.findIndex((t) => t.id === id);
+    if (idx === -1) return null;
+
+    const current = list[idx];
+    const updated: WorkoutTemplate = {
+      ...current,
+      isActive: current.isActive === false ? true : false,
+      updatedAt: new Date().toISOString().split('T')[0],
+    };
+
+    return this.save(updated);
+  }
+
+  async duplicateVersion(
+    id: string,
+    options: { newName?: string; versionTag: string; archivePrevious?: boolean }
+  ): Promise<WorkoutTemplate> {
+    const original = await this.getById(id);
+    if (!original) {
+      throw new Error('Série modelo não encontrada para versionamento.');
+    }
+
+    // Calculate next version number
+    const currentVer = original.version || 1;
+    const nextVer = currentVer + 1;
+
+    // Archive previous version if requested
+    if (options.archivePrevious) {
+      await this.save({
+        ...original,
+        isActive: false,
+        name: original.name.includes('(v')
+          ? original.name
+          : `${original.name} (${original.versionTag || `v${currentVer}.0`}) [Arquivada]`,
+      });
+    }
+
+    const newId = `template-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+    const clonedExercises = JSON.parse(JSON.stringify(original.exercises));
+
+    const newVersionTemplate: WorkoutTemplate = {
+      ...original,
+      id: newId,
+      parentId: original.id,
+      name: options.newName?.trim() || `${original.name} (${options.versionTag || `v${nextVer}.0`})`,
+      version: nextVer,
+      versionTag: options.versionTag || `v${nextVer}.0`,
+      isActive: true,
+      exercises: clonedExercises,
+      createdAt: new Date().toISOString().split('T')[0],
+      updatedAt: new Date().toISOString().split('T')[0],
+    };
+
+    return this.save(newVersionTemplate);
   }
 
   async delete(id: string): Promise<boolean> {
@@ -336,3 +431,4 @@ export class SupabaseWorkoutTemplateRepository implements IWorkoutTemplateReposi
 }
 
 export const workoutTemplateRepository = new SupabaseWorkoutTemplateRepository();
+

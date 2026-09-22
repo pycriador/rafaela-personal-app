@@ -18,6 +18,7 @@ import { StudentsListPage } from './pages/personal/StudentsListPage';
 import { StudentCreateEditPage } from './pages/personal/StudentCreateEditPage';
 import { StudentDetailPage } from './pages/personal/StudentDetailPage';
 import { ExercisesPage } from './pages/personal/ExercisesPage';
+import { WorkoutTemplatesPage } from './pages/personal/WorkoutTemplatesPage';
 import { WorkoutBuilderPage } from './pages/personal/WorkoutBuilderPage';
 import { NutritionManagementPage } from './pages/personal/NutritionManagementPage';
 import { EvolutionOverviewPage } from './pages/personal/EvolutionOverviewPage';
@@ -81,6 +82,7 @@ export const App: React.FC = () => {
                   <Route path="students/new" element={<StudentCreateEditPage />} />
                   <Route path="students/:id" element={<StudentDetailPage />} />
                   <Route path="exercises" element={<ExercisesPage />} />
+                  <Route path="templates" element={<WorkoutTemplatesPage />} />
                   <Route path="workouts/new" element={<WorkoutBuilderPage />} />
                   <Route path="nutrition" element={<NutritionManagementPage />} />
                   <Route path="evolution" element={<EvolutionOverviewPage />} />
