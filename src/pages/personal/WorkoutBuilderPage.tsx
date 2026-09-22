@@ -44,10 +44,31 @@ export const WorkoutBuilderPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const preselectedStudentId = searchParams.get('studentId');
   const studentPage = Math.max(1, Number(searchParams.get('studentPage') || searchParams.get('page')) || 1);
+  const rawStudentLimit = searchParams.get('studentLimit') || searchParams.get('limit');
   const studentSearch = searchParams.get('studentSearch') || '';
   const studentGoal = searchParams.get('studentGoal') || 'all';
   const studentStatus = searchParams.get('studentStatus') || 'all';
   const { success, error: toastError } = useToast();
+
+  // Screen-responsive default page size:
+  // - default: 6 items (fits 1, 2, and 3 columns perfectly)
+  // - on ultra-wide screens (>= 1536px / 2xl with 4 columns): 8 items (2 rows of 4)
+  const getResponsiveDefaultLimit = () => {
+    if (typeof window === 'undefined') return 6;
+    const width = window.innerWidth;
+    if (width >= 1536) return 8;
+    return 6;
+  };
+
+  const [screenLimit, setScreenLimit] = useState<number>(getResponsiveDefaultLimit);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenLimit(getResponsiveDefaultLimit());
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const [templatesModalOpen, setTemplatesModalOpen] = useState(false);
   const [saveAsNewVersion, setSaveAsNewVersion] = useState(false);
@@ -154,7 +175,9 @@ export const WorkoutBuilderPage: React.FC = () => {
     });
   }, [students, studentSearch, studentGoal, studentStatus]);
 
-  const studentsPerPage = 4;
+  const studentsPerPage = rawStudentLimit && rawStudentLimit !== 'auto'
+    ? Math.max(1, parseInt(rawStudentLimit, 10))
+    : screenLimit;
   const totalStudentPages = Math.max(1, Math.ceil(filteredStudents.length / studentsPerPage));
   const validStudentPage = Math.min(Math.max(1, studentPage), totalStudentPages);
 
@@ -533,7 +556,7 @@ export const WorkoutBuilderPage: React.FC = () => {
               Nenhum aluno encontrado para os filtros selecionados.
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
               {paginatedStudents.map((st) => {
                 const isSelected = st.id === selectedStudentId;
                 return (
@@ -590,20 +613,43 @@ export const WorkoutBuilderPage: React.FC = () => {
           )}
 
           {/* URL Pagination Controls for Students (Estilo ExercisesPage) */}
-          <div className="pt-4 border-t border-slate-100 dark:border-dark-border/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-xs text-slate-500 dark:text-dark-muted text-center sm:text-left">
-              Exibindo{' '}
-              <strong className="text-slate-900 dark:text-white">
-                {filteredStudents.length > 0 ? (validStudentPage - 1) * studentsPerPage + 1 : 0}
-              </strong>{' '}
-              a{' '}
-              <strong className="text-slate-900 dark:text-white">
-                {Math.min(validStudentPage * studentsPerPage, filteredStudents.length)}
-              </strong>{' '}
-              de <strong className="text-slate-900 dark:text-white">{filteredStudents.length}</strong> alunos
-              <span className="ml-1 text-slate-400">
-                (Página {validStudentPage} de {totalStudentPages})
-              </span>
+          <div className="pt-4 border-t border-slate-100 dark:border-dark-border/60 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-xs text-slate-500 dark:text-dark-muted text-center sm:text-left">
+              <div>
+                Exibindo{' '}
+                <strong className="text-slate-900 dark:text-white">
+                  {filteredStudents.length > 0 ? (validStudentPage - 1) * studentsPerPage + 1 : 0}
+                </strong>{' '}
+                a{' '}
+                <strong className="text-slate-900 dark:text-white">
+                  {Math.min(validStudentPage * studentsPerPage, filteredStudents.length)}
+                </strong>{' '}
+                de <strong className="text-slate-900 dark:text-white">{filteredStudents.length}</strong> alunos
+                <span className="ml-1 text-slate-400">
+                  (Página {validStudentPage} de {totalStudentPages})
+                </span>
+              </div>
+
+              {/* Items per Page Selector */}
+              <div className="flex items-center gap-1.5 justify-center sm:justify-start">
+                <span className="text-[11px] text-slate-400 font-semibold">Exibir:</span>
+                <select
+                  value={rawStudentLimit || 'auto'}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    updateStudentParams({ studentLimit: val === 'auto' ? null : val, limit: null, studentPage: '1', page: '1' });
+                  }}
+                  className="text-xs font-bold bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border rounded-xl px-2.5 py-1 text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                >
+                  <option value="auto">Tela ({screenLimit} por página)</option>
+                  <option value="6">6 por página (Padrão)</option>
+                  <option value="8">8 por página</option>
+                  <option value="9">9 por página</option>
+                  <option value="12">12 por página</option>
+                  <option value="18">18 por página</option>
+                  <option value="24">24 por página</option>
+                </select>
+              </div>
             </div>
 
             <div className="flex items-center gap-1.5">
