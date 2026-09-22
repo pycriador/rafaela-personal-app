@@ -60,8 +60,9 @@ export const App: React.FC = () => {
     <ThemeProvider>
       <ToastProvider>
         <AuthProvider>
-          <BrowserRouter>
+          <BrowserRouter basename={import.meta.env.BASE_URL}>
             <Routes>
+
               {/* Root redirect based on auth */}
               <Route path="/" element={<RootRedirect />} />
               <Route path="/login" element={<LoginPage />} />

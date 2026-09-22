@@ -1,4 +1,4 @@
-﻿# 🏋️‍♀️ RAFAELA PERSONAL APP • Plataforma Completa de Treinamento & Acompanhamento
+# 🏋️‍♀️ RAFAELA PERSONAL APP • Plataforma Completa de Treinamento & Acompanhamento
 
 Plataforma web profissional, responsiva e mobile-first para a personal trainer **Rafaela** gerenciar seus alunos, prescrever treinos com flexibilidade controlada, orientar planos nutricionais, acompanhar a evolução física e auditar em tempo real a execução prática de cada série.
 
@@ -192,7 +192,39 @@ O app conta com perfis pré-cadastrados para teste rápido:
 
 ---
 
+## 🌐 Deploy no GitHub Pages com Supabase
+
+O projeto está 100% configurado com pipeline automatizado de CI/CD via **GitHub Actions** (`.github/workflows/deploy.yml`) para publicação contínua no **GitHub Pages** a cada `git push` na branch `main`.
+
+### Passo a Passo para Ativação:
+
+1. **Configurar os Secrets no Repositório GitHub**:
+   - No GitHub, acesse seu repositório > **Settings** > **Secrets and variables** > **Actions**.
+   - Clique no botão **New repository secret** e cadastre:
+     - Nome: `VITE_SUPABASE_URL` | Valor: Sua URL do Supabase (ex: `https://seu-projeto.supabase.co`)
+     - Nome: `VITE_SUPABASE_ANON_KEY` | Valor: Sua chave pública anônima do Supabase (`anon key`)
+
+2. **Ativar o GitHub Pages via Actions**:
+   - No repositório GitHub, acesse **Settings** > **Pages**.
+   - Na seção **Build and deployment** > **Source**, selecione a opção **GitHub Actions**.
+
+3. **Configurar as URLs no Painel do Supabase**:
+   - No painel do Supabase, acesse **Authentication** > **URL Configuration**.
+   - No campo **Site URL**, informe:
+     `https://pycriador.github.io/rafaela-personal-app`
+   - Em **Redirect URLs**, adicione:
+     `https://pycriador.github.io/rafaela-personal-app/**`
+
+4. **Deploy Automático**:
+   - A cada `git push origin main`, o GitHub Actions compilará automaticamente a aplicação com o caminho base correto (`/rafaela-personal-app/`) e as credenciais seguras do Supabase.
+   - O suporte a rotas diretas e F5 (SPA) está garantido através do fallback de redirecionamento em `public/404.html`.
+   - O aplicativo estará acessível publicamente em:
+     **`https://pycriador.github.io/rafaela-personal-app/`**
+
+---
+
 ## 🔒 Segurança & Privacidade
+
 
 - **Zero Credenciais Rastreadas**: Nenhuma chave privada, token ou URL de produção é mantida no código-fonte compartilhado.
 - **Hashes Criptográficos**: Na exportação de dados em `/personal/settings`, as senhas são processadas com `crypto.subtle.digest('SHA-256')` enriquecidas com salt dinâmico, garantindo irreversibilidade.
