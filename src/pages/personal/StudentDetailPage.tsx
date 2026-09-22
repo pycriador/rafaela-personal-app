@@ -152,17 +152,42 @@ export const StudentDetailPage: React.FC = () => {
   useEffect(() => {
     async function loadData() {
       if (!id) return;
-      const [st, plan, plansList, sess, mods, nut, allEx] = await Promise.all([
-        studentRepository.getById(id),
-        workoutRepository.getPlanByStudentId(id),
-        workoutRepository.getPlansByStudentId(id),
-        workoutRepository.getSessions(id),
-        workoutRepository.getModifications(id),
-        nutritionRepository.getByStudentId(id),
+      const st = await studentRepository.getById(id);
+      if (!st) {
+        setStudent(null);
+        setLoading(false);
+        return;
+      }
+
+      setStudent(st);
+      const studentId = st.id;
+      const userId = st.userId;
+
+      // Query workouts, sessions, modifications, and nutrition supporting both st.id and st.userId
+      const [plan, plansList, sess, mods, nut, allEx] = await Promise.all([
+        workoutRepository.getPlanByStudentId(studentId).then((res) => {
+          if (res) return res;
+          return userId ? workoutRepository.getPlanByStudentId(userId) : null;
+        }),
+        workoutRepository.getPlansByStudentId(studentId).then(async (res) => {
+          if (res && res.length > 0) return res;
+          return userId ? workoutRepository.getPlansByStudentId(userId) : [];
+        }),
+        workoutRepository.getSessions(studentId).then(async (res) => {
+          if (res && res.length > 0) return res;
+          return userId ? workoutRepository.getSessions(userId) : [];
+        }),
+        workoutRepository.getModifications(studentId).then(async (res) => {
+          if (res && res.length > 0) return res;
+          return userId ? workoutRepository.getModifications(userId) : [];
+        }),
+        nutritionRepository.getByStudentId(studentId).then((res) => {
+          if (res) return res;
+          return userId ? nutritionRepository.getByStudentId(userId) : null;
+        }),
         exerciseRepository.getAll(),
       ]);
 
-      setStudent(st);
       setWorkoutPlan(plan);
       setAllStudentPlans(plansList);
       setSelectedPlanId(plan ? plan.id : (plansList[0]?.id || null));
@@ -673,6 +698,140 @@ export const StudentDetailPage: React.FC = () => {
   const completedSessions = sessions.filter((s) => s.status === 'completed');
   const incompleteSessions = sessions.filter((s) => s.status === 'incomplete' || s.status === 'skipped');
 
+  // Informações do próximo treino em tempo real com base no calendário atual e plano ativo
+  const nextWorkoutInfo = React.useMemo(() => {
+    if (!student) {
+      return {
+        label: 'A definir',
+        badge: 'Sem rotina',
+        workoutName: 'Nenhum treino agendado',
+        muscleFocus: '',
+        dateStr: '',
+        isToday: false,
+      };
+    }
+
+    const today = new Date();
+    // Dias da semana canônicos no JS: 0=Domingo, 1=Segunda, 2=Terça, 3=Quarta, 4=Quinta, 5=Sexta, 6=Sábado
+    const JS_TO_DAY_OF_WEEK: DayOfWeek[] = [
+      'Domingo',
+      'Segunda',
+      'Terça',
+      'Quarta',
+      'Quinta',
+      'Sexta',
+      'Sábado',
+    ];
+
+    const todayDayName = JS_TO_DAY_OF_WEEK[today.getDay()];
+    const todayISO = today.toISOString().split('T')[0];
+
+    const activePlan = workoutPlan || allStudentPlans.find((p) => p.active) || allStudentPlans[0];
+    const planDays = activePlan?.days || [];
+
+    // Checar se o treino de hoje já foi concluído
+    const completedToday = sessions.some(
+      (s) => s.date === todayISO && s.status === 'completed'
+    );
+
+    // 1. Checar se hoje tem treino agendado e ainda não finalizado
+    const todayWorkout = planDays.find((d) => d.dayOfWeek === todayDayName);
+    const todayIsAvailable = student.availableDays.includes(todayDayName);
+
+    if ((todayWorkout || todayIsAvailable) && !completedToday) {
+      return {
+        label: `Hoje (${todayDayName})`,
+        badge: 'Treino de Hoje',
+        workoutName: todayWorkout?.name || `Treino de ${todayDayName}`,
+        muscleFocus: todayWorkout?.muscleFocus || 'Geral',
+        dateStr: today.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+        isToday: true,
+      };
+    }
+
+    // 2. Procurar nos próximos 7 dias no calendário
+    for (let offset = 1; offset <= 7; offset++) {
+      const targetDate = new Date(today);
+      targetDate.setDate(today.getDate() + offset);
+      const targetDayName = JS_TO_DAY_OF_WEEK[targetDate.getDay()];
+
+      const targetWorkout = planDays.find((d) => d.dayOfWeek === targetDayName);
+      const targetIsAvailable = student.availableDays.includes(targetDayName);
+
+      if (targetWorkout || targetIsAvailable) {
+        const isTomorrow = offset === 1;
+        const relativeLabel = isTomorrow
+          ? `Amanhã (${targetDayName})`
+          : `${targetDayName} (em ${offset} dias)`;
+
+        return {
+          label: relativeLabel,
+          badge: isTomorrow ? 'Amanhã' : `${offset} dias`,
+          workoutName: targetWorkout?.name || `Treino de ${targetDayName}`,
+          muscleFocus: targetWorkout?.muscleFocus || 'Geral',
+          dateStr: targetDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+          isToday: false,
+        };
+      }
+    }
+
+    return {
+      label: 'A definir',
+      badge: 'Sem data',
+      workoutName: 'Nenhum treino agendado',
+      muscleFocus: 'Ajuste os dias na rotina do aluno',
+      dateStr: '',
+      isToday: false,
+    };
+  }, [student, workoutPlan, allStudentPlans, sessions]);
+
+  const totalLoggedSessions = completedSessions.length + incompleteSessions.length;
+  const calculatedAdherence = totalLoggedSessions > 0
+    ? Math.round((completedSessions.length / totalLoggedSessions) * 100)
+    : student.adherencePercentage;
+
+  // Grade da semana atual sincronizada com o calendário real (Segunda a Domingo)
+  const currentWeekDays = React.useMemo(() => {
+    const today = new Date();
+    const currentDay = today.getDay(); // 0 = Domingo, 1 = Segunda...
+    const distanceToMonday = (currentDay + 6) % 7;
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - distanceToMonday);
+
+    const activePlan = workoutPlan || allStudentPlans.find((p) => p.active) || allStudentPlans[0];
+    const planDays = activePlan?.days || [];
+
+    return ALL_DAYS_OF_WEEK.map((dayName, idx) => {
+      const d = new Date(monday);
+      d.setDate(monday.getDate() + idx);
+      const dateISO = d.toISOString().split('T')[0];
+      const isToday = d.toDateString() === today.toDateString();
+
+      const workout = planDays.find((wd) => wd.dayOfWeek === dayName);
+      const isAvailable = student.availableDays.includes(dayName);
+      const session = sessions.find((s) => s.date === dateISO);
+
+      let status: 'completed' | 'today' | 'upcoming' | 'rest' = 'rest';
+      if (session?.status === 'completed') {
+        status = 'completed';
+      } else if (isToday && (workout || isAvailable)) {
+        status = 'today';
+      } else if (workout || isAvailable) {
+        status = 'upcoming';
+      }
+
+      return {
+        dayName,
+        dateFormatted: d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+        dateISO,
+        isToday,
+        workout,
+        session,
+        status,
+      };
+    });
+  }, [student, workoutPlan, allStudentPlans, sessions]);
+
   return (
     <div className="space-y-6">
       {/* Top Bar with back button */}
@@ -703,9 +862,15 @@ export const StudentDetailPage: React.FC = () => {
                   {student.status}
                 </Badge>
               </div>
-              <p className="text-xs text-slate-400 mt-1">
-                {student.email} • {student.phone}
-              </p>
+              <div className="flex flex-wrap items-center gap-2 mt-1">
+                <span className="text-xs text-slate-400">{student.email} • {student.phone}</span>
+                <span className="px-2 py-0.5 rounded-md bg-slate-800 border border-slate-700/80 font-mono text-[11px] text-emerald-400 font-bold" title="ID do Usuário no Banco de Dados">
+                  User ID: {student.userId || student.id}
+                </span>
+                <span className="px-2 py-0.5 rounded-md bg-slate-800/60 border border-slate-700/50 font-mono text-[10px] text-slate-400" title="Identificador Único do Perfil de Aluno">
+                  Ref: {student.id}
+                </span>
+              </div>
               <div className="flex flex-wrap items-center gap-2 mt-2">
                 {student.goals.map((g) => (
                   <span
@@ -775,15 +940,15 @@ export const StudentDetailPage: React.FC = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard
               title="Adesão ao Treino"
-              value={`${student.adherencePercentage}%`}
+              value={`${calculatedAdherence}%`}
               icon={<Flame className="w-6 h-6 text-emerald-500" />}
-              subtitle="Consistência nos treinos"
+              subtitle={totalLoggedSessions > 0 ? `${completedSessions.length} de ${totalLoggedSessions} sessões concluídas` : 'Consistência nos treinos'}
             />
             <StatCard
               title="Treinos Realizados"
               value={completedSessions.length}
               icon={<CheckCircle2 className="w-6 h-6 text-emerald-500" />}
-              subtitle="Sessões finalizadas"
+              subtitle="Sessões finalizadas no histórico"
             />
             <StatCard
               title="Treinos Incompletos / Pulados"
@@ -793,11 +958,97 @@ export const StudentDetailPage: React.FC = () => {
             />
             <StatCard
               title="Próximo Treino"
-              value={student.availableDays[0] || 'Hoje'}
+              value={nextWorkoutInfo.label}
               icon={<Calendar className="w-6 h-6 text-cyan-500" />}
-              subtitle="Conforme rotina"
+              subtitle={`${nextWorkoutInfo.workoutName}${nextWorkoutInfo.dateStr ? ` • ${nextWorkoutInfo.dateStr}` : ''}`}
             />
           </div>
+
+          {/* Cronograma da Semana Atual (Calendário Real) */}
+          <Card className="overflow-hidden border border-slate-200/80 dark:border-dark-border">
+            <CardHeader className="flex flex-row items-center justify-between pb-3">
+              <div>
+                <CardTitle className="text-sm font-bold flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-emerald-500" />
+                  Cronograma Semanal do Aluno (Semana Atual)
+                </CardTitle>
+                <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
+                  Sincronizado com o calendário real e o plano de treino vigente de {student.name}
+                </p>
+              </div>
+              <Badge variant="neutral" size="sm" className="font-mono text-[11px]">
+                Hoje: {new Date().toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit' })}
+              </Badge>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5">
+                {currentWeekDays.map((col) => {
+                  return (
+                    <div
+                      key={col.dayName}
+                      className={`p-3 rounded-2xl border transition-all flex flex-col justify-between min-h-[110px] ${
+                        col.isToday
+                          ? 'border-emerald-500 bg-emerald-500/10 ring-2 ring-emerald-500/20 shadow-sm'
+                          : col.status === 'completed'
+                          ? 'border-slate-200 dark:border-dark-border bg-emerald-50/40 dark:bg-emerald-950/10'
+                          : col.workout
+                          ? 'border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated/50'
+                          : 'border-slate-100 dark:border-dark-border/40 bg-slate-50/50 dark:bg-dark-card/20 opacity-70'
+                      }`}
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className={`text-[11px] font-black uppercase ${col.isToday ? 'text-emerald-700 dark:text-emerald-400 font-extrabold' : 'text-slate-700 dark:text-slate-300'}`}>
+                            {col.dayName.slice(0, 3)}
+                          </span>
+                          <span className="text-[10px] font-mono text-slate-400">
+                            {col.dateFormatted}
+                          </span>
+                        </div>
+                        {col.isToday && (
+                          <span className="inline-block px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider bg-emerald-500 text-white">
+                            Hoje
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="mt-2 pt-2 border-t border-slate-200/50 dark:border-dark-border/40">
+                        {col.workout ? (
+                          <div>
+                            <p className="text-xs font-bold text-slate-900 dark:text-white truncate" title={col.workout.name}>
+                              {col.workout.name}
+                            </p>
+                            <p className="text-[10px] text-slate-500 dark:text-dark-muted truncate mt-0.5" title={col.workout.muscleFocus}>
+                              {col.workout.muscleFocus}
+                            </p>
+                            <div className="mt-1.5 flex items-center gap-1">
+                              {col.status === 'completed' ? (
+                                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                                  <CheckCircle2 className="w-3 h-3" /> Concluído
+                                </span>
+                              ) : col.isToday ? (
+                                <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                                  <Dumbbell className="w-3 h-3" /> Treino de Hoje
+                                </span>
+                              ) : (
+                                <span className="text-[10px] text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                                  <Calendar className="w-3 h-3" /> Agendado
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="py-1 text-center">
+                            <span className="text-[11px] text-slate-400 italic">Descanso</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Últimas Alterações Feitas pelo Aluno (Section 2, 21, 22, 23, 24) */}
           <Card>

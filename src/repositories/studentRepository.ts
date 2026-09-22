@@ -136,7 +136,12 @@ export class SupabaseStudentRepository implements IStudentRepository {
   async getById(id: string): Promise<Student | null> {
     if (isSupabaseConfigured) {
       try {
-        const { data, error } = await supabase.from('students').select('*').eq('id', id).single();
+        const { data, error } = await supabase
+          .from('students')
+          .select('*')
+          .or(`id.eq.${id},user_id.eq.${id}`)
+          .limit(1)
+          .maybeSingle();
         if (!error && data) {
           return mapFromDb(data);
         }
@@ -145,7 +150,7 @@ export class SupabaseStudentRepository implements IStudentRepository {
       }
     }
     const list = await this.getAll();
-    return list.find((s) => s.id === id) || null;
+    return list.find((s) => s.id === id || s.userId === id) || null;
   }
 
   async getByUserId(userId: string): Promise<Student | null> {

@@ -323,9 +323,14 @@ export const StudentsListPage: React.FC = () => {
                     <p className="text-xs text-slate-500 dark:text-dark-muted truncate mt-0.5">
                       {student.email}
                     </p>
-                    <p className="text-[11px] text-slate-400 font-medium truncate mt-0.5">
-                      {student.level} • {student.goals.join(', ')}
-                    </p>
+                    <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold" title="ID do Usuário no Banco de Dados">
+                        UID: {student.userId || student.id}
+                      </span>
+                      <span className="text-[11px] text-slate-400 font-medium truncate">
+                        {student.level} • {student.goals.join(', ')}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
