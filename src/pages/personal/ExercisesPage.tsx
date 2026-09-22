@@ -561,15 +561,16 @@ export const ExercisesPage: React.FC = () => {
                     className="h-48 sm:h-52 w-full"
                   />
 
-                  {/* Top badges */}
-                  <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none z-10">
+                  {/* Top-right badges: Difficulty on top, Category directly below */}
+                  <div className="absolute top-2.5 right-2.5 flex flex-col items-end gap-1.5 pointer-events-none z-10">
+                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-slate-800/80 text-white backdrop-blur-md uppercase tracking-wider border border-white/10 shadow-xs">
+                      {ex.difficulty}
+                    </span>
                     <Badge variant="brand" size="sm" className="shadow-xs backdrop-blur-md">
                       {ex.category}
                     </Badge>
-                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-slate-800/80 text-white backdrop-blur-md uppercase tracking-wider border border-white/10">
-                      {ex.difficulty}
-                    </span>
                   </div>
+
                 </div>
 
                 {/* Content Details */}
