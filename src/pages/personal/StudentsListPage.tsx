@@ -8,6 +8,8 @@ import {
   Activity,
   ChevronRight,
   ChevronLeft,
+  ChevronsLeft,
+  ChevronsRight,
   X,
 } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
@@ -26,7 +28,8 @@ export const StudentsListPage: React.FC = () => {
 
   // Read URL query params
   const currentPage = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
-  const limitPerPage = Math.max(1, parseInt(searchParams.get('limit') || '6', 10));
+  const limitPerPage = Math.max(1, parseInt(searchParams.get('limit') || '4', 10));
+
   const currentSearch = searchParams.get('search') || '';
   const currentGoal = searchParams.get('goal') || 'all';
   const currentStatus = searchParams.get('status') || 'all';
@@ -329,51 +332,111 @@ export const StudentsListPage: React.FC = () => {
         </div>
       )}
 
-      {/* URL-Synchronized Pagination Controls */}
-      {!loading && totalPages > 1 && (
+      {/* URL-Synchronized Pagination Controls (Estilo ExercisesPage) */}
+      {!loading && (
         <Card className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-xs text-slate-500 dark:text-dark-muted font-mono">
-            Exibindo <strong>{startIndex + 1}</strong> a <strong>{endIndex}</strong> de{' '}
-            <strong>{totalItems}</strong> alunos
-          </span>
+          <div className="text-xs text-slate-500 dark:text-dark-muted text-center sm:text-left">
+            Exibindo{' '}
+            <strong className="text-slate-900 dark:text-white">
+              {totalItems > 0 ? startIndex + 1 : 0}
+            </strong>{' '}
+            a{' '}
+            <strong className="text-slate-900 dark:text-white">
+              {endIndex}
+            </strong>{' '}
+            de <strong className="text-slate-900 dark:text-white">{totalItems}</strong> alunos
+            <span className="ml-1 text-slate-400">
+              (Página {safePage} de {totalPages})
+            </span>
+          </div>
 
           <div className="flex items-center gap-1.5">
+            {/* First Page */}
             <Button
               variant="secondary"
               size="sm"
+              onClick={() => updateParams({ page: '1' })}
               disabled={safePage <= 1}
+              className="px-2"
+              title="Primeira Página"
+            >
+              <ChevronsLeft className="w-4 h-4" />
+            </Button>
+
+            {/* Previous Page */}
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={() => updateParams({ page: String(safePage - 1) })}
-              leftIcon={<ChevronLeft className="w-3.5 h-3.5" />}
+              disabled={safePage <= 1}
+              leftIcon={<ChevronLeft className="w-4 h-4" />}
             >
               Anterior
             </Button>
 
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <button
-                key={p}
-                onClick={() => updateParams({ page: String(p) })}
-                className={`w-8 h-8 rounded-lg text-xs font-bold font-mono transition-all ${
-                  p === safePage
-                    ? 'bg-emerald-500 text-white shadow-sm'
-                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-cardElevated'
-                }`}
-              >
-                {p}
-              </button>
-            ))}
+            {/* Direct Page Numbers */}
+            <div className="flex items-center gap-1 px-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
+                if (totalPages > 7) {
+                  if (
+                    p !== 1 &&
+                    p !== totalPages &&
+                    Math.abs(p - safePage) > 1
+                  ) {
+                    if (p === 2 || p === totalPages - 1) {
+                      return (
+                        <span key={p} className="text-xs text-slate-400 px-1">
+                          ...
+                        </span>
+                      );
+                    }
+                    return null;
+                  }
+                }
 
+                return (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => updateParams({ page: String(p) })}
+                    className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
+                      safePage === p
+                        ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/25 ring-2 ring-emerald-500/30'
+                        : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    {p}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Next Page */}
             <Button
               variant="secondary"
               size="sm"
-              disabled={safePage >= totalPages}
               onClick={() => updateParams({ page: String(safePage + 1) })}
-              rightIcon={<ChevronRight className="w-3.5 h-3.5" />}
+              disabled={safePage >= totalPages}
+              rightIcon={<ChevronRight className="w-4 h-4" />}
             >
-              Próximo
+              Próxima
+            </Button>
+
+            {/* Last Page */}
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => updateParams({ page: String(totalPages) })}
+              disabled={safePage >= totalPages}
+              className="px-2"
+              title="Última Página"
+            >
+              <ChevronsRight className="w-4 h-4" />
             </Button>
           </div>
         </Card>
       )}
+
     </div>
   );
 };

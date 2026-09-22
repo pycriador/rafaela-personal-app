@@ -10,6 +10,8 @@ import {
   Settings2,
   ChevronLeft,
   ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
   X,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
@@ -36,11 +38,12 @@ export const WorkoutBuilderPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const preselectedStudentId = searchParams.get('studentId');
-  const studentPage = Math.max(1, Number(searchParams.get('studentPage')) || 1);
+  const studentPage = Math.max(1, Number(searchParams.get('studentPage') || searchParams.get('page')) || 1);
   const studentSearch = searchParams.get('studentSearch') || '';
   const studentGoal = searchParams.get('studentGoal') || 'all';
   const studentStatus = searchParams.get('studentStatus') || 'all';
   const { success, error: toastError } = useToast();
+
 
   const [students, setStudents] = useState<Student[]>([]);
   const [allExercises, setAllExercises] = useState<Exercise[]>([]);
@@ -143,9 +146,10 @@ export const WorkoutBuilderPage: React.FC = () => {
     });
   }, [students, studentSearch, studentGoal, studentStatus]);
 
-  const studentsPerPage = 6;
+  const studentsPerPage = 4;
   const totalStudentPages = Math.max(1, Math.ceil(filteredStudents.length / studentsPerPage));
   const validStudentPage = Math.min(Math.max(1, studentPage), totalStudentPages);
+
 
   const paginatedStudents = useMemo(() => {
     const start = (validStudentPage - 1) * studentsPerPage;
@@ -542,52 +546,92 @@ export const WorkoutBuilderPage: React.FC = () => {
             </div>
           )}
 
-          {/* URL Pagination Controls for Students */}
-          {totalStudentPages > 1 && (
-            <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-dark-border/60">
-              <span className="text-xs text-slate-500">
-                Página {validStudentPage} de {totalStudentPages}
+          {/* URL Pagination Controls for Students (Estilo ExercisesPage) */}
+          <div className="pt-4 border-t border-slate-100 dark:border-dark-border/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="text-xs text-slate-500 dark:text-dark-muted text-center sm:text-left">
+              Exibindo{' '}
+              <strong className="text-slate-900 dark:text-white">
+                {filteredStudents.length > 0 ? (validStudentPage - 1) * studentsPerPage + 1 : 0}
+              </strong>{' '}
+              a{' '}
+              <strong className="text-slate-900 dark:text-white">
+                {Math.min(validStudentPage * studentsPerPage, filteredStudents.length)}
+              </strong>{' '}
+              de <strong className="text-slate-900 dark:text-white">{filteredStudents.length}</strong> alunos
+              <span className="ml-1 text-slate-400">
+                (Página {validStudentPage} de {totalStudentPages})
               </span>
-              <div className="flex items-center gap-1.5">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => updateStudentParams({ studentPage: String(validStudentPage - 1) })}
-                  disabled={validStudentPage <= 1}
-                  leftIcon={<ChevronLeft className="w-4 h-4" />}
-                >
-                  Anterior
-                </Button>
+            </div>
 
+            <div className="flex items-center gap-1.5">
+              {/* First Page */}
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => updateStudentParams({ studentPage: '1', page: '1' })}
+                disabled={validStudentPage <= 1}
+                className="px-2"
+                title="Primeira Página"
+              >
+                <ChevronsLeft className="w-4 h-4" />
+              </Button>
+
+              {/* Previous Page */}
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => updateStudentParams({ studentPage: String(validStudentPage - 1), page: String(validStudentPage - 1) })}
+                disabled={validStudentPage <= 1}
+                leftIcon={<ChevronLeft className="w-4 h-4" />}
+              >
+                Anterior
+              </Button>
+
+              {/* Direct Page Numbers */}
+              <div className="flex items-center gap-1 px-1">
                 {Array.from({ length: totalStudentPages }, (_, i) => i + 1).map((p) => (
                   <button
                     key={p}
                     type="button"
-                    onClick={() => updateStudentParams({ studentPage: String(p) })}
-                    className={`w-8 h-8 rounded-xl text-xs font-bold transition-colors ${
+                    onClick={() => updateStudentParams({ studentPage: String(p), page: String(p) })}
+                    className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
                       validStudentPage === p
-                        ? 'bg-emerald-500 text-white shadow-sm'
-                        : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:bg-slate-200'
+                        ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/25 ring-2 ring-emerald-500/30'
+                        : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                     }`}
                   >
                     {p}
                   </button>
                 ))}
-
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => updateStudentParams({ studentPage: String(validStudentPage + 1) })}
-                  disabled={validStudentPage >= totalStudentPages}
-                  rightIcon={<ChevronRight className="w-4 h-4" />}
-                >
-                  Próxima
-                </Button>
               </div>
+
+              {/* Next Page */}
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => updateStudentParams({ studentPage: String(validStudentPage + 1), page: String(validStudentPage + 1) })}
+                disabled={validStudentPage >= totalStudentPages}
+                rightIcon={<ChevronRight className="w-4 h-4" />}
+              >
+                Próxima
+              </Button>
+
+              {/* Last Page */}
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => updateStudentParams({ studentPage: String(totalStudentPages), page: String(totalStudentPages) })}
+                disabled={validStudentPage >= totalStudentPages}
+                className="px-2"
+                title="Última Página"
+              >
+                <ChevronsRight className="w-4 h-4" />
+              </Button>
             </div>
-          )}
+          </div>
         </Card>
       )}
+
 
       {/* STEP 2: Selecionar Dias */}
       {currentStep === 2 && (
