@@ -692,20 +692,8 @@ export const SettingsPage: React.FC = () => {
           </div>
         </div>
       </Card>
-
-      {/* Futura Arquitetura (Section 56 & 57) */}
-      <Card className="p-6 border-dashed">
-        <CardTitle className="mb-1 text-slate-600 dark:text-slate-300">
-          Preparação para Backend & Nuvem (Roadmap)
-        </CardTitle>
-        <div className="mt-3 space-y-2 text-xs text-slate-500 dark:text-dark-muted leading-relaxed">
-          <p>• <strong>API Engine:</strong> FastAPI / Python assíncrono com validação Pydantic</p>
-          <p>• <strong>Banco de Dados:</strong> PostgreSQL com isolamento multi-tenant (tenantId / trainerId)</p>
-          <p>• <strong>Autenticação:</strong> Supabase Auth / JWT seguro com RBAC (Personal / Aluno)</p>
-          <p>• <strong>Mobile:</strong> Compatibilidade planejada para React Native / Expo com modo offline</p>
-        </div>
-      </Card>
     </div>
   );
 };
+
 
