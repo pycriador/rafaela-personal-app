@@ -986,6 +986,7 @@ export const WorkoutTemplatesPage: React.FC = () => {
                   placeholder="Ex: Série A - Hipertrofia Peitoral & Tríceps"
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
+                  className="font-bold text-sm sm:text-base py-3 px-4 h-12 rounded-xl shadow-xs"
                   required
                 />
               </div>
@@ -1026,6 +1027,7 @@ export const WorkoutTemplatesPage: React.FC = () => {
                   placeholder="Ex: Peitoral Maior, Deltoide Anterior e Tríceps"
                   value={formMuscleFocus}
                   onChange={(e) => setFormMuscleFocus(e.target.value)}
+                  className="font-medium text-sm sm:text-base py-3 px-4 h-12 rounded-xl shadow-xs"
                 />
               </div>
 

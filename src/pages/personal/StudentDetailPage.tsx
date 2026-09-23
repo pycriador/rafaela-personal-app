@@ -119,6 +119,9 @@ export const StudentDetailPage: React.FC = () => {
   const [assignmentMuscleFocus, setAssignmentMuscleFocus] = useState<string>('');
   const [replaceOrAppend, setReplaceOrAppend] = useState<'replace' | 'append'>('replace');
 
+  // Quick edit day title & subtitle modal state
+  const [editingDayInfo, setEditingDayInfo] = useState<{ dayId: string; dayOfWeek: string; name: string; muscleFocus: string } | null>(null);
+
   // Tab and session pagination synced with URL
   const activeTab = searchParams.get('tab') || 'resumo';
   const setActiveTab = (newTab: string) => {
@@ -444,6 +447,51 @@ export const StudentDetailPage: React.FC = () => {
       setTargetTemplateDay(null);
     } catch (err) {
       toastError('Erro ao vincular série modelo ao cronograma.');
+    }
+  };
+
+  // Quick Edit Day Title & Subtitle Handler
+  const handleSaveDayInfo = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const currentPlan = allStudentPlans.find((p) => p.id === selectedPlanId) || workoutPlan;
+    if (!editingDayInfo || !currentPlan) return;
+
+    try {
+      const updatedDays = currentPlan.days.map((d) => {
+        if (d.id === editingDayInfo.dayId) {
+          return {
+            ...d,
+            name: editingDayInfo.name.trim() || d.name,
+            muscleFocus: editingDayInfo.muscleFocus.trim() || d.muscleFocus,
+          };
+        }
+        return d;
+      });
+
+      const updatedPlan = {
+        ...currentPlan,
+        days: sortWorkoutDays(updatedDays),
+        updatedAt: new Date().toISOString().split('T')[0],
+      };
+
+      await workoutRepository.savePlan(updatedPlan);
+      setWorkoutPlan(updatedPlan);
+      setAllStudentPlans((prev) => prev.map((p) => (p.id === updatedPlan.id ? updatedPlan : p)));
+      if (student) {
+        await activityRepository.log({
+          actorId: 'user-rafaela',
+          actorName: 'Rafaela Personal',
+          actorRole: 'personal',
+          action: 'Título do treino atualizado',
+          description: `Rafaela atualizou o título do treino de ${editingDayInfo.dayOfWeek} para "${editingDayInfo.name.trim()}".`,
+          studentId: student.id,
+          iconType: 'dumbbell',
+        });
+      }
+      setEditingDayInfo(null);
+      success(`Título e subtítulo do treino de ${editingDayInfo.dayOfWeek} atualizados com sucesso!`);
+    } catch (err) {
+      toastError('Erro ao atualizar informações do treino.');
     }
   };
 
@@ -1342,21 +1390,42 @@ export const StudentDetailPage: React.FC = () => {
                       </div>
                     </div>
 
-                    {isPlanActive && (
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => {
-                          setTargetTemplateDay(day.dayOfWeek);
-                          setIsTemplateModalOpen(true);
-                        }}
-                        leftIcon={<Sparkles className="w-3.5 h-3.5 text-emerald-500" />}
-                        className="text-xs"
-                        title={`Carregar uma série pronta para ${day.dayOfWeek}`}
-                      >
-                        Carregar Série Aqui
-                      </Button>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {isPlanActive && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setEditingDayInfo({
+                              dayId: day.id,
+                              dayOfWeek: day.dayOfWeek,
+                              name: day.name,
+                              muscleFocus: day.muscleFocus,
+                            });
+                          }}
+                          leftIcon={<Edit className="w-3.5 h-3.5 text-slate-500" />}
+                          className="text-xs text-slate-600 dark:text-dark-muted hover:text-slate-900 dark:hover:text-white"
+                          title={`Editar título e foco de ${day.dayOfWeek}`}
+                        >
+                          Editar Nome / Foco
+                        </Button>
+                      )}
+                      {isPlanActive && (
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => {
+                            setTargetTemplateDay(day.dayOfWeek);
+                            setIsTemplateModalOpen(true);
+                          }}
+                          leftIcon={<Sparkles className="w-3.5 h-3.5 text-emerald-500" />}
+                          className="text-xs"
+                          title={`Carregar uma série pronta para ${day.dayOfWeek}`}
+                        >
+                          Carregar Série Aqui
+                        </Button>
+                      )}
+                    </div>
                   </div>
 
                   <div className="p-4 divide-y divide-slate-100 dark:divide-dark-border/60">
@@ -2565,22 +2634,32 @@ export const StudentDetailPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                  <Input
-                    label="Nome do Treino *"
-                    placeholder="Ex: Treino D - Pernas e Glúteos"
-                    value={assignmentDayName}
-                    onChange={(e) => setAssignmentDayName(e.target.value)}
-                    required
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-dark-muted mb-1.5">
+                      Nome do Treino *
+                    </label>
+                    <Input
+                      placeholder="Ex: Treino D - Pernas e Glúteos"
+                      value={assignmentDayName}
+                      onChange={(e) => setAssignmentDayName(e.target.value)}
+                      className="font-bold text-sm sm:text-base py-3 px-4 h-12 w-full rounded-xl shadow-xs"
+                      required
+                    />
+                  </div>
 
-                  <Input
-                    label="Foco Muscular *"
-                    placeholder="Ex: Quadríceps, Glúteos e Posterior"
-                    value={assignmentMuscleFocus}
-                    onChange={(e) => setAssignmentMuscleFocus(e.target.value)}
-                    required
-                  />
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-dark-muted mb-1.5">
+                      Foco Muscular *
+                    </label>
+                    <Input
+                      placeholder="Ex: Quadríceps, Glúteos e Posterior"
+                      value={assignmentMuscleFocus}
+                      onChange={(e) => setAssignmentMuscleFocus(e.target.value)}
+                      className="font-medium text-sm sm:text-base py-3 px-4 h-12 w-full rounded-xl shadow-xs"
+                      required
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -2605,6 +2684,65 @@ export const StudentDetailPage: React.FC = () => {
                 leftIcon={<CheckCircle2 className="w-4 h-4" />}
               >
                 Confirmar e Adicionar Série
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
+      {/* MODAL: EDIÇÃO RÁPIDA DE TÍTULO E SUBTÍTULO DO TREINO */}
+      {editingDayInfo && (
+        <Modal
+          isOpen={!!editingDayInfo}
+          onClose={() => setEditingDayInfo(null)}
+          title={`Editar Título e Subtítulo (${editingDayInfo.dayOfWeek})`}
+          description="Altere o título principal do treino e o foco muscular para este dia com facilidade e visibilidade ampla"
+        >
+          <form onSubmit={handleSaveDayInfo} className="space-y-5 pt-2">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-dark-muted mb-2">
+                  Título do Treino *
+                </label>
+                <Input
+                  placeholder="Ex: Treino A - Peito, Ombros e Tríceps"
+                  value={editingDayInfo.name}
+                  onChange={(e) => setEditingDayInfo({ ...editingDayInfo, name: e.target.value })}
+                  className="font-black text-base sm:text-lg py-3 px-4 h-12 w-full rounded-xl shadow-xs"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-dark-muted mb-2">
+                  Subtítulo / Foco Muscular *
+                </label>
+                <Input
+                  placeholder="Ex: Peitoral Maior, Deltoide Anterior e Tríceps"
+                  value={editingDayInfo.muscleFocus}
+                  onChange={(e) => setEditingDayInfo({ ...editingDayInfo, muscleFocus: e.target.value })}
+                  className="font-medium text-sm sm:text-base py-3 px-4 h-12 w-full rounded-xl shadow-xs"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-100 dark:border-dark-border/60">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setEditingDayInfo(null)}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                size="sm"
+                leftIcon={<CheckCircle2 className="w-4 h-4" />}
+              >
+                Salvar Alterações
               </Button>
             </div>
           </form>

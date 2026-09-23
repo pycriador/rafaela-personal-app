@@ -777,24 +777,24 @@ export const WorkoutBuilderPage: React.FC = () => {
       {currentStep === 3 && activeDay && (
         <div className="space-y-6">
           {/* Plan Name & Versioning Options */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated/50 border border-slate-200/60 dark:border-dark-border/40">
-            <div className="flex-1 max-w-md">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated/50 border border-slate-200/60 dark:border-dark-border/40 shadow-xs">
+            <div className="flex-1 max-w-xl">
               <Input
-                label="Nome da Ficha / Ciclo de Treino"
+                label="Nome da Ficha / Ciclo de Treino *"
                 value={planName}
                 onChange={(e) => setPlanName(e.target.value)}
                 placeholder="Ex: Treino Hipertrofia ABCD, Fase 2 - Força"
-                className="text-xs"
+                className="font-bold text-sm sm:text-base py-3 px-4 h-12 rounded-xl shadow-xs"
               />
             </div>
-            <label className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 cursor-pointer pt-3 sm:pt-0">
+            <label className="flex items-center gap-2.5 text-xs text-slate-700 dark:text-slate-300 cursor-pointer pt-2 sm:pt-0 font-medium">
               <input
                 type="checkbox"
                 checked={saveAsNewVersion}
                 onChange={(e) => setSaveAsNewVersion(e.target.checked)}
-                className="w-4 h-4 accent-emerald-500 rounded"
+                className="w-4 h-4 accent-emerald-500 rounded cursor-pointer"
               />
-              <span>Salvar como <strong>Nova Versão / Novo Ciclo</strong> (preserva a rotina anterior no histórico)</span>
+              <span>Salvar como <strong>Nova Versão / Novo Ciclo</strong> (preserva rotina anterior)</span>
             </label>
           </div>
 
@@ -804,7 +804,7 @@ export const WorkoutBuilderPage: React.FC = () => {
               <button
                 key={day.id}
                 onClick={() => setActiveDayIndex(idx)}
-                className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2 ${
+                className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
                   activeDayIndex === idx
                     ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
                     : 'bg-white dark:bg-dark-card text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-dark-border'
@@ -819,34 +819,15 @@ export const WorkoutBuilderPage: React.FC = () => {
           </div>
 
           {/* Active Day Card */}
-          <Card className="p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-dark-border/60">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="px-2.5 py-1 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase">
-                    {activeDay.dayOfWeek}
-                  </span>
-                  <Input
-                    value={activeDay.name}
-                    onChange={(e) => {
-                      const updated = [...workoutDays];
-                      updated[activeDayIndex].name = e.target.value;
-                      setWorkoutDays(updated);
-                    }}
-                    className="font-bold text-base py-1 px-2.5 h-9 w-64"
-                  />
-                </div>
-                <Input
-                  label="Foco Muscular"
-                  value={activeDay.muscleFocus}
-                  onChange={(e) => {
-                    const updated = [...workoutDays];
-                    updated[activeDayIndex].muscleFocus = e.target.value;
-                    setWorkoutDays(updated);
-                  }}
-                  className="text-xs py-1 h-8"
-                  placeholder="Ex: Peitoral e Tríceps"
-                />
+          <Card className="p-6 space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-dark-border/60">
+              <div className="flex items-center gap-2">
+                <span className="px-3 py-1.5 rounded-xl bg-emerald-500 text-white font-black text-xs uppercase tracking-wider shadow-xs">
+                  {activeDay.dayOfWeek}
+                </span>
+                <span className="text-xs font-bold text-slate-500 dark:text-dark-muted">
+                  Configuração Geral deste Dia
+                </span>
               </div>
 
               <div className="flex items-center gap-2">
@@ -855,7 +836,7 @@ export const WorkoutBuilderPage: React.FC = () => {
                   size="sm"
                   onClick={() => setTemplatesModalOpen(true)}
                   leftIcon={<Sparkles className="w-3.5 h-3.5 text-emerald-500" />}
-                  className="text-xs"
+                  className="text-xs font-bold"
                 >
                   Séries Prontas
                 </Button>
@@ -867,10 +848,43 @@ export const WorkoutBuilderPage: React.FC = () => {
                     setPickerModalOpen(true);
                   }}
                   leftIcon={<Plus className="w-3.5 h-3.5" />}
-                  className="text-xs"
+                  className="text-xs font-bold"
                 >
                   Adicionar Exercício
                 </Button>
+              </div>
+            </div>
+
+            {/* Caixas de Edição Maiores para Título e Subtítulo do Treino */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 sm:p-5 rounded-2xl bg-slate-50/80 dark:bg-dark-cardElevated/40 border border-slate-200/70 dark:border-dark-border/50">
+              <div className="md:col-span-7">
+                <Input
+                  label="Título do Treino *"
+                  value={activeDay.name}
+                  onChange={(e) => {
+                    const updated = [...workoutDays];
+                    updated[activeDayIndex].name = e.target.value;
+                    setWorkoutDays(updated);
+                  }}
+                  className="font-black text-base sm:text-lg py-3 px-4 h-12 w-full rounded-xl shadow-xs"
+                  placeholder="Ex: Treino A - Peito, Tríceps e Core"
+                  required
+                />
+              </div>
+
+              <div className="md:col-span-5">
+                <Input
+                  label="Subtítulo / Foco Muscular *"
+                  value={activeDay.muscleFocus}
+                  onChange={(e) => {
+                    const updated = [...workoutDays];
+                    updated[activeDayIndex].muscleFocus = e.target.value;
+                    setWorkoutDays(updated);
+                  }}
+                  className="font-medium text-sm sm:text-base py-3 px-4 h-12 w-full rounded-xl shadow-xs"
+                  placeholder="Ex: Peitoral, Tríceps e Deltoide Anterior"
+                  required
+                />
               </div>
             </div>
 
