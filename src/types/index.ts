@@ -311,6 +311,13 @@ export interface WorkoutTemplate {
   updatedAt: string;
 }
 
+export type RankingMetricType =
+  | 'scheduled_workouts'   // Treinou todos os dias agendados / Frequência
+  | 'weight_progression'   // Subiu a carga nos aparelhos
+  | 'completed_exercises'  // Finalizou todos os exercícios previstos
+  | 'streak_days'          // Sequência contínua de treinos sem falhar
+  | 'total_tonnage';       // Volume total de peso levantado (Tonelagem em kg)
+
 export interface RankingGroup {
   id: string;
   name: string;
@@ -321,6 +328,7 @@ export interface RankingGroup {
   studentIds: string[];
   bannerUrl?: string;
   reward?: string;
+  metrics?: RankingMetricType[]; // Métricas selecionadas pela Personal
   createdAt: string;
 }
 
@@ -331,6 +339,9 @@ export interface StudentLeaderboardEntry {
   workoutsCompleted: number;
   adherencePercentage: number;
   currentStreak: number;
+  weightProgressionsCount: number;
+  completedExercisesCount: number;
+  totalTonnageKg: number;
   score: number;
   rank: number;
 }

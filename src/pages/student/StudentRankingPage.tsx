@@ -10,11 +10,13 @@ import {
   CheckCircle2,
   TrendingUp,
   Target,
+  Dumbbell,
+  Check,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import { useAuth } from '../../context/AuthContext';
-import { rankingRepository } from '../../repositories/rankingRepository';
+import { rankingRepository, RANKING_METRIC_CONFIGS } from '../../repositories/rankingRepository';
 import { RankingGroup, StudentLeaderboardEntry } from '../../types';
 
 export const StudentRankingPage: React.FC = () => {
@@ -118,42 +120,101 @@ export const StudentRankingPage: React.FC = () => {
         <>
           {/* My Current Status Highlight Card */}
           {myEntry && (
-            <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-transparent border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-500 text-slate-950 font-black text-xl flex items-center justify-center shrink-0 shadow-sm">
-                  #{myEntry.rank}
+            <div className="space-y-3">
+              <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-transparent border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500 text-slate-950 font-black text-xl flex items-center justify-center shrink-0 shadow-sm">
+                    #{myEntry.rank}
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">
+                      Sua Posição Atual
+                    </span>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                      {myEntry.rank === 1 ? '👑 Você está liderando o desafio!' : `Você está em ${myEntry.rank}º lugar`}
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
+                      {myEntry.workoutsCompleted} treinos concluídos • {myEntry.adherencePercentage}% adesão
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">
-                    Sua Posição Atual
-                  </span>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                    {myEntry.rank === 1 ? '👑 Você está liderando o desafio!' : `Você está em ${myEntry.rank}º lugar`}
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
-                    {myEntry.workoutsCompleted} treinos concluídos • {myEntry.adherencePercentage}% adesão
-                  </p>
+
+                <div className="flex items-center gap-4 text-right">
+                  <div className="p-2.5 rounded-xl bg-white/80 dark:bg-dark-card border border-slate-200/60 dark:border-white/[0.08] text-center">
+                    <span className="text-[10px] text-slate-400 block">SEQUÊNCIA</span>
+                    <span className="text-sm font-bold text-amber-500 flex items-center justify-center gap-1 font-mono">
+                      <Flame className="w-3.5 h-3.5 fill-amber-500" />
+                      {myEntry.currentStreak} dias
+                    </span>
+                  </div>
+
+                  <div className="p-2.5 rounded-xl bg-white/80 dark:bg-dark-card border border-slate-200/60 dark:border-white/[0.08] text-center">
+                    <span className="text-[10px] text-slate-400 block">PONTOS</span>
+                    <span className="text-sm font-black text-emerald-600 dark:text-emerald-400 font-mono">
+                      {myEntry.score} pts
+                    </span>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 text-right">
-                <div className="p-2.5 rounded-xl bg-white/80 dark:bg-dark-card border border-slate-200/60 dark:border-white/[0.08] text-center">
-                  <span className="text-[10px] text-slate-400 block">SEQUÊNCIA</span>
-                  <span className="text-sm font-bold text-amber-500 flex items-center justify-center gap-1 font-mono">
-                    <Flame className="w-3.5 h-3.5 fill-amber-500" />
-                    {myEntry.currentStreak} dias
-                  </span>
-                </div>
-
-                <div className="p-2.5 rounded-xl bg-white/80 dark:bg-dark-card border border-slate-200/60 dark:border-white/[0.08] text-center">
-                  <span className="text-[10px] text-slate-400 block">PONTOS</span>
-                  <span className="text-sm font-black text-emerald-600 dark:text-emerald-400 font-mono">
-                    {myEntry.score} pts
-                  </span>
-                </div>
+              {/* My Metric Breakdown */}
+              <div className="flex flex-wrap items-center gap-2 px-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  Seu Desempenho:
+                </span>
+                <span className="text-[11px] px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-medium">
+                  🏋️ {myEntry.workoutsCompleted} treinos
+                </span>
+                <span className="text-[11px] px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-medium">
+                  📈 {myEntry.weightProgressionsCount ?? 0}x subiu carga
+                </span>
+                <span className="text-[11px] px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-medium">
+                  ✅ {myEntry.completedExercisesCount ?? 0} exercícios
+                </span>
+                <span className="text-[11px] px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-medium">
+                  ⚡ {(myEntry.totalTonnageKg ?? 0).toLocaleString()} kg volume
+                </span>
               </div>
             </div>
           )}
+
+        {/* Scoring Criteria & Rules configured by Personal */}
+        <div className="p-4 rounded-2xl bg-white dark:bg-dark-card border border-slate-200/80 dark:border-white/[0.08] space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Target className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              Como Pontuar Neste Desafio (Critérios Definidos pela Rafaela)
+            </span>
+            <span className="text-[11px] text-slate-400 font-mono">
+              {(selectedGroup.metrics?.length || 5)} critérios ativos
+            </span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+            {(selectedGroup.metrics || (['scheduled_workouts', 'weight_progression', 'completed_exercises', 'streak_days', 'total_tonnage'] as const)).map((m) => {
+              const conf = RANKING_METRIC_CONFIGS[m];
+              if (!conf) return null;
+              return (
+                <div
+                  key={m}
+                  className="p-3 rounded-xl bg-slate-50/70 dark:bg-dark-cardElevated/70 border border-slate-200/60 dark:border-white/[0.06] text-xs space-y-1"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-slate-800 dark:text-slate-200 text-[11px] flex items-center gap-1.5">
+                      <Check className="w-3.5 h-3.5 text-emerald-500" />
+                      {conf.shortLabel}
+                    </span>
+                    <Badge variant="brand" size="sm" className="font-mono text-[10px]">
+                      {conf.pointsRule.split(' ')[0]} {conf.pointsRule.split(' ')[1]}
+                    </Badge>
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-dark-muted font-normal">
+                    {conf.pointsRule}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
           {/* Group Details & Reward */}
           {selectedGroup.reward && (
@@ -269,14 +330,28 @@ export const StudentRankingPage: React.FC = () => {
                           {entry.studentName}
                           {isMe && <Badge variant="brand" size="sm">Você</Badge>}
                         </p>
-                        <p className="text-[11px] text-slate-400 font-mono flex items-center gap-2">
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-slate-400 font-mono mt-0.5">
                           <span>{entry.workoutsCompleted} treinos</span>
                           <span>•</span>
                           <span className="text-amber-500 flex items-center gap-0.5">
                             <Flame className="w-3 h-3 fill-amber-500" />
                             {entry.currentStreak}d sequência
                           </span>
-                        </p>
+                          {(entry.weightProgressionsCount ?? 0) > 0 && (
+                            <>
+                              <span>•</span>
+                              <span className="text-emerald-500">
+                                +{entry.weightProgressionsCount}x carga
+                              </span>
+                            </>
+                          )}
+                          {(entry.totalTonnageKg ?? 0) > 0 && (
+                            <>
+                              <span>•</span>
+                              <span>{(entry.totalTonnageKg ?? 0).toLocaleString()} kg vol</span>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
 

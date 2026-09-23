@@ -18,16 +18,21 @@ import {
   Search,
   Eye,
   X,
+  TrendingUp,
+  CheckCircle2,
+  Dumbbell,
+  Target,
+  Settings2,
 } from 'lucide-react';
-import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
+import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
 import { useToast } from '../../context/ToastContext';
-import { rankingRepository } from '../../repositories/rankingRepository';
+import { rankingRepository, RANKING_METRIC_CONFIGS } from '../../repositories/rankingRepository';
 import { studentRepository } from '../../repositories/studentRepository';
-import { RankingGroup, StudentLeaderboardEntry, Student } from '../../types';
+import { RankingGroup, StudentLeaderboardEntry, Student, RankingMetricType } from '../../types';
 
 export const RankingManagementPage: React.FC = () => {
   const { success, warning, error: toastError } = useToast();
@@ -56,6 +61,12 @@ export const RankingManagementPage: React.FC = () => {
   );
   const [groupReward, setGroupReward] = useState('');
   const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([]);
+  const [selectedMetrics, setSelectedMetrics] = useState<RankingMetricType[]>([
+    'scheduled_workouts',
+    'weight_progression',
+    'completed_exercises',
+    'streak_days',
+  ]);
 
   // Modal Delete Confirmation
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -70,7 +81,6 @@ export const RankingManagementPage: React.FC = () => {
       setGroups(allGroups);
       setStudents(allStudents);
       if (allGroups.length > 0) {
-        // Keep current selected group if still existing, else fallback to first
         const currentId = selectedGroup?.id;
         const stillExists = currentId ? allGroups.find((g) => g.id === currentId) : null;
         const target = stillExists || allGroups[0];
@@ -170,6 +180,7 @@ export const RankingManagementPage: React.FC = () => {
     setGroupEndDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
     setGroupReward('');
     setSelectedStudentIds(students.filter((s) => s.status === 'Ativo').map((s) => s.id));
+    setSelectedMetrics(['scheduled_workouts', 'weight_progression', 'completed_exercises', 'streak_days']);
     setModalOpen(true);
   };
 
@@ -182,6 +193,11 @@ export const RankingManagementPage: React.FC = () => {
     setGroupEndDate(g.endDate);
     setGroupReward(g.reward || '');
     setSelectedStudentIds([...g.studentIds]);
+    setSelectedMetrics(
+      g.metrics && g.metrics.length > 0
+        ? [...g.metrics]
+        : ['scheduled_workouts', 'weight_progression', 'completed_exercises', 'streak_days']
+    );
     setModalOpen(true);
   };
 
@@ -193,6 +209,10 @@ export const RankingManagementPage: React.FC = () => {
     }
     if (selectedStudentIds.length === 0) {
       warning('Selecione pelo menos um aluno para o grupo.');
+      return;
+    }
+    if (selectedMetrics.length === 0) {
+      warning('Selecione pelo menos um critério de pontuação para o grupo.');
       return;
     }
 
@@ -208,6 +228,7 @@ export const RankingManagementPage: React.FC = () => {
             endDate: groupEndDate,
             reward: groupReward.trim() || undefined,
             studentIds: selectedStudentIds,
+            metrics: selectedMetrics,
           };
           await rankingRepository.updateGroup(updated);
           success('Grupo atualizado com sucesso!');
@@ -220,6 +241,7 @@ export const RankingManagementPage: React.FC = () => {
           endDate: groupEndDate,
           reward: groupReward.trim() || undefined,
           studentIds: selectedStudentIds,
+          metrics: selectedMetrics,
           active: true,
         });
         success('Grupo de desafio criado com sucesso!');
@@ -262,6 +284,12 @@ export const RankingManagementPage: React.FC = () => {
     return filteredGroups.slice(start, start + groupsPerPage);
   }, [filteredGroups, safeGroupPage, groupsPerPage]);
 
+  const activeGroupMetrics = useMemo(() => {
+    return selectedGroup?.metrics && selectedGroup.metrics.length > 0
+      ? selectedGroup.metrics
+      : (['scheduled_workouts', 'weight_progression', 'streak_days', 'completed_exercises'] as RankingMetricType[]);
+  }, [selectedGroup]);
+
   if (loading) {
     return (
       <div className="py-16 flex justify-center">
@@ -282,7 +310,7 @@ export const RankingManagementPage: React.FC = () => {
             Grupos de Desafio & Ranking
           </h1>
           <p className="text-sm text-slate-500 dark:text-dark-muted mt-1 font-normal">
-            Acompanhe o pódio e a pontuação dos alunos em tempo real. Gerencie os grupos de desafio logo abaixo.
+            Acompanhe o pódio e a pontuação dos alunos em tempo real. Configure as métricas de pontuação e gerencie os grupos abaixo.
           </p>
         </div>
 
@@ -398,6 +426,43 @@ export const RankingManagementPage: React.FC = () => {
               </div>
             </div>
 
+            {/* Scoring Criteria Pills Banner */}
+            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-white/[0.02] border border-slate-200/80 dark:border-white/[0.06] space-y-2">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                  <Target className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>Critérios de Pontuação Selecionados para este Desafio:</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={(e) => handleOpenEditModal(selectedGroup, e)}
+                  className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <Settings2 className="w-3 h-3" />
+                  <span>Alterar Regras</span>
+                </button>
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap">
+                {activeGroupMetrics.map((metricKey) => {
+                  const cfg = RANKING_METRIC_CONFIGS[metricKey];
+                  if (!cfg) return null;
+                  return (
+                    <div
+                      key={metricKey}
+                      className="px-2.5 py-1 rounded-lg bg-white dark:bg-dark-card border border-slate-200/60 dark:border-white/[0.08] text-xs font-medium flex items-center gap-1.5 shadow-2xs"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                      <strong className="text-slate-900 dark:text-white font-semibold">{cfg.shortLabel}</strong>
+                      <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono font-bold">
+                        ({cfg.pointsRule})
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
             {/* Podium Visual (Top 3) */}
             {leaderboard.length >= 3 && (
               <div className="grid grid-cols-3 gap-3 items-end pt-2 pb-3">
@@ -458,9 +523,14 @@ export const RankingManagementPage: React.FC = () => {
 
             {/* Full Leaderboard Table */}
             <div className="space-y-2">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-dark-muted">
-                Classificação Geral dos Alunos no Grupo ({leaderboard.length})
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-dark-muted">
+                  Classificação Geral dos Alunos ({leaderboard.length})
+                </h3>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  Baseado em: {activeGroupMetrics.map((m) => RANKING_METRIC_CONFIGS[m]?.shortLabel).join(', ')}
+                </span>
+              </div>
 
               {loadingLeaderboard ? (
                 <div className="py-8 flex justify-center">
@@ -471,7 +541,7 @@ export const RankingManagementPage: React.FC = () => {
                   {leaderboard.map((entry) => (
                     <div
                       key={entry.studentId}
-                      className="p-3.5 flex items-center justify-between gap-3 bg-white dark:bg-dark-card hover:bg-slate-50/80 dark:hover:bg-dark-cardElevated/40 transition-colors"
+                      className="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-dark-card hover:bg-slate-50/80 dark:hover:bg-dark-cardElevated/40 transition-colors"
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         <span
@@ -498,24 +568,48 @@ export const RankingManagementPage: React.FC = () => {
                           <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">
                             {entry.studentName}
                           </p>
-                          <p className="text-[11px] text-slate-400 font-mono flex items-center gap-2">
-                            <span>{entry.workoutsCompleted} treinos feitos</span>
-                            <span>•</span>
-                            <span>{entry.adherencePercentage}% adesão</span>
-                            <span>•</span>
-                            <span className="text-amber-500 flex items-center gap-0.5">
-                              <Flame className="w-3 h-3 fill-amber-500" />
-                              {entry.currentStreak} dias sem falhar
-                            </span>
-                          </p>
+
+                          {/* Dynamic Metrics Breakdown */}
+                          <div className="flex items-center gap-1.5 mt-1 text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-mono flex-wrap">
+                            {activeGroupMetrics.includes('scheduled_workouts') && (
+                              <span className="flex items-center gap-1 bg-slate-100 dark:bg-white/[0.04] px-1.5 py-0.5 rounded">
+                                <Calendar className="w-3 h-3 text-slate-400" />
+                                <strong>{entry.workoutsCompleted}</strong> treinos ({entry.adherencePercentage}%)
+                              </span>
+                            )}
+                            {activeGroupMetrics.includes('weight_progression') && (
+                              <span className="flex items-center gap-1 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 rounded font-semibold">
+                                <TrendingUp className="w-3 h-3" />
+                                <strong>{entry.weightProgressionsCount}x</strong> subiu carga
+                              </span>
+                            )}
+                            {activeGroupMetrics.includes('completed_exercises') && (
+                              <span className="flex items-center gap-1 bg-slate-100 dark:bg-white/[0.04] px-1.5 py-0.5 rounded">
+                                <CheckCircle2 className="w-3 h-3 text-slate-400" />
+                                <strong>{entry.completedExercisesCount}</strong> exer. feitos
+                              </span>
+                            )}
+                            {activeGroupMetrics.includes('streak_days') && (
+                              <span className="flex items-center gap-1 text-amber-500 bg-amber-50 dark:bg-amber-500/10 px-1.5 py-0.5 rounded font-semibold">
+                                <Flame className="w-3 h-3 fill-amber-500" />
+                                <strong>{entry.currentStreak}d</strong> sequência
+                              </span>
+                            )}
+                            {activeGroupMetrics.includes('total_tonnage') && (
+                              <span className="flex items-center gap-1 bg-slate-100 dark:bg-white/[0.04] px-1.5 py-0.5 rounded">
+                                <Dumbbell className="w-3 h-3 text-slate-400" />
+                                <strong>{(entry.totalTonnageKg / 1000).toFixed(1)}t</strong> tonelagem
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
 
-                      <div className="text-right shrink-0">
-                        <span className="text-sm font-black font-mono text-slate-900 dark:text-white">
+                      <div className="text-left sm:text-right shrink-0 pl-9 sm:pl-0">
+                        <span className="text-base font-black font-mono text-slate-900 dark:text-white">
                           {entry.score}
                         </span>
-                        <span className="text-[10px] text-slate-400 block">pontos</span>
+                        <span className="text-[10px] text-slate-400 block font-sans">pontos totais</span>
                       </div>
                     </div>
                   ))}
@@ -549,7 +643,6 @@ export const RankingManagementPage: React.FC = () => {
 
           {/* Quick Filters & Search */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-            {/* Search Input */}
             <div className="w-full sm:w-60">
               <Input
                 placeholder="Buscar grupo..."
@@ -577,7 +670,6 @@ export const RankingManagementPage: React.FC = () => {
               />
             </div>
 
-            {/* Status Filter Tabs */}
             <div className="flex items-center gap-1 bg-slate-100 dark:bg-white/[0.05] p-1 rounded-xl">
               <button
                 type="button"
@@ -634,6 +726,10 @@ export const RankingManagementPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {paginatedGroups.map((group) => {
               const isSelected = selectedGroup?.id === group.id;
+              const gMetrics = group.metrics && group.metrics.length > 0
+                ? group.metrics
+                : (['scheduled_workouts', 'weight_progression', 'streak_days', 'completed_exercises'] as RankingMetricType[]);
+
               return (
                 <div
                   key={group.id}
@@ -667,7 +763,6 @@ export const RankingManagementPage: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Header Badges */}
                       <div className="flex items-center gap-1 shrink-0">
                         {isSelected && (
                           <Badge variant="brand" size="sm">
@@ -683,6 +778,18 @@ export const RankingManagementPage: React.FC = () => {
                     <p className="text-xs text-slate-600 dark:text-dark-muted line-clamp-2">
                       {group.description || 'Sem descrição.'}
                     </p>
+
+                    {/* Metric Pills for this group */}
+                    <div className="flex items-center gap-1 flex-wrap pt-0.5">
+                      {gMetrics.map((mKey) => (
+                        <span
+                          key={mKey}
+                          className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/[0.05] text-slate-600 dark:text-slate-300 font-medium"
+                        >
+                          {RANKING_METRIC_CONFIGS[mKey]?.shortLabel || mKey}
+                        </span>
+                      ))}
+                    </div>
 
                     {group.reward && (
                       <div className="text-[11px] font-medium text-amber-700 dark:text-amber-400 flex items-center gap-1 bg-amber-50 dark:bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-200/60 dark:border-amber-500/20 w-fit truncate">
@@ -700,9 +807,7 @@ export const RankingManagementPage: React.FC = () => {
                       {new Date(group.endDate).toLocaleDateString()}
                     </span>
 
-                    {/* Action Buttons */}
                     <div className="flex items-center gap-1.5 self-end sm:self-auto">
-                      {/* Select in Ranking Button */}
                       {!isSelected && (
                         <button
                           type="button"
@@ -718,7 +823,6 @@ export const RankingManagementPage: React.FC = () => {
                         </button>
                       )}
 
-                      {/* Activate / Deactivate Toggle Button */}
                       <button
                         type="button"
                         onClick={(e) => handleToggleGroupActive(group, e)}
@@ -733,17 +837,15 @@ export const RankingManagementPage: React.FC = () => {
                         <span>{group.active ? 'Ativo' : 'Ativar'}</span>
                       </button>
 
-                      {/* Edit Button */}
                       <button
                         type="button"
                         onClick={(e) => handleOpenEditModal(group, e)}
                         className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/[0.06] transition-colors cursor-pointer"
-                        title="Editar grupo de desafio"
+                        title="Editar grupo de desafio e métricas"
                       >
                         <Edit className="w-3.5 h-3.5" />
                       </button>
 
-                      {/* Delete Button (Triggers Confirmation Modal) */}
                       <button
                         type="button"
                         onClick={(e) => handlePromptDelete(group, e)}
@@ -831,12 +933,12 @@ export const RankingManagementPage: React.FC = () => {
         )}
       </Card>
 
-      {/* MODAL: CRIAR / EDITAR GRUPO */}
+      {/* MODAL: CRIAR / EDITAR GRUPO COM ESCOLHA DE MÉTRICAS */}
       <Modal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title={editingGroupId ? 'Editar Grupo de Desafio' : 'Novo Grupo de Desafio & Ranking'}
-        description="Defina as regras, datas e selecione os alunos que participarão deste ranking."
+        title={editingGroupId ? 'Editar Grupo de Desafio & Métricas' : 'Novo Grupo de Desafio & Ranking'}
+        description="Defina as regras, datas, alunos participantes e selecione as métricas que valem pontos."
         size="lg"
       >
         <form onSubmit={handleSaveGroup} className="space-y-4">
@@ -862,7 +964,7 @@ export const RankingManagementPage: React.FC = () => {
               rows={2}
               value={groupDesc}
               onChange={(e) => setGroupDesc(e.target.value)}
-              placeholder="Explique o objetivo e como os alunos pontuam..."
+              placeholder="Explique o objetivo e o propósito desta competição..."
               className="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-dark-card text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
             />
           </div>
@@ -902,9 +1004,76 @@ export const RankingManagementPage: React.FC = () => {
               type="text"
               value={groupReward}
               onChange={(e) => setGroupReward(e.target.value)}
-              placeholder="Ex: 1 Mês de Consultoria Grátis + Kit de Faixas Elásticas"
+              placeholder="Ex: 1 Mês de Consultoria Grátis + Kit Biomecânico"
               className="w-full text-xs p-2.5 rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white dark:bg-dark-card text-slate-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
             />
+          </div>
+
+          {/* ESCOLHA DAS MÉTRICAS DE PONTUAÇÃO DO RANKING */}
+          <div className="space-y-2 pt-2 border-t border-slate-100 dark:border-white/[0.06]">
+            <div className="flex items-center justify-between">
+              <div>
+                <label className="text-xs font-bold text-slate-900 dark:text-white block">
+                  Critérios de Pontuação do Ranking *
+                </label>
+                <p className="text-[11px] text-slate-500 dark:text-dark-muted">
+                  Selecione as categorias que somam pontos para a classificação dos alunos:
+                </p>
+              </div>
+              <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 font-mono">
+                {selectedMetrics.length} de 5 selecionadas
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+              {(Object.keys(RANKING_METRIC_CONFIGS) as RankingMetricType[]).map((metricKey) => {
+                const cfg = RANKING_METRIC_CONFIGS[metricKey];
+                const isChecked = selectedMetrics.includes(metricKey);
+
+                return (
+                  <div
+                    key={metricKey}
+                    onClick={() => {
+                      setSelectedMetrics((prev) =>
+                        prev.includes(metricKey)
+                          ? prev.filter((m) => m !== metricKey)
+                          : [...prev, metricKey]
+                      );
+                    }}
+                    className={`p-3 rounded-xl border text-xs cursor-pointer transition-all flex flex-col justify-between gap-1.5 ${
+                      isChecked
+                        ? 'border-emerald-500 bg-emerald-500/10 text-emerald-950 dark:text-emerald-100 shadow-2xs ring-1 ring-emerald-500/30'
+                        : 'border-slate-200 dark:border-white/[0.08] hover:border-slate-300 bg-slate-50/50 dark:bg-white/[0.02] text-slate-600 dark:text-slate-400'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <strong className="text-xs font-bold text-slate-900 dark:text-white">
+                        {cfg.label}
+                      </strong>
+                      <span
+                        className={`w-4 h-4 rounded-md flex items-center justify-center border shrink-0 ${
+                          isChecked
+                            ? 'bg-emerald-600 border-emerald-600 text-white'
+                            : 'border-slate-300 dark:border-white/[0.2] bg-white dark:bg-dark-card'
+                        }`}
+                      >
+                        {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                      {cfg.description}
+                    </p>
+
+                    <div className="pt-1 mt-auto flex items-center justify-between">
+                      <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                        {cfg.pointsRule}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           {/* Selecionar Alunos Participantes */}

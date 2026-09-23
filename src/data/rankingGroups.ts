@@ -10,6 +10,7 @@ export const initialRankingGroups: RankingGroup[] = [
     active: true,
     studentIds: ['student-mariana', 'student-joao', 'student-carlos', 'student-fernanda'],
     reward: '1 Mês de Consultoria Grátis + Kit Biomecânico',
+    metrics: ['scheduled_workouts', 'streak_days', 'completed_exercises'],
     createdAt: '2026-08-30T10:00:00Z',
   },
   {
@@ -21,6 +22,7 @@ export const initialRankingGroups: RankingGroup[] = [
     active: true,
     studentIds: ['student-mariana', 'student-fernanda', 'student-carlos'],
     reward: 'Troféu Digital + Avaliação 3D Presencial',
+    metrics: ['weight_progression', 'total_tonnage', 'completed_exercises'],
     createdAt: '2026-09-08T14:30:00Z',
   },
   {
@@ -32,6 +34,7 @@ export const initialRankingGroups: RankingGroup[] = [
     active: true,
     studentIds: ['student-ana', 'student-carlos', 'student-joao'],
     reward: 'Planilha Especial de Periodização de Corrida',
+    metrics: ['scheduled_workouts', 'completed_exercises', 'streak_days'],
     createdAt: '2026-09-14T09:00:00Z',
   },
 ];
