@@ -687,14 +687,6 @@ export const StudentDetailPage: React.FC = () => {
     return Object.values(map);
   }, [sessions, exercisesMap]);
 
-  if (loading || !student) {
-    return (
-      <div className="py-12 flex justify-center">
-        <div className="w-8 h-8 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
-      </div>
-    );
-  }
-
   const completedSessions = sessions.filter((s) => s.status === 'completed');
   const incompleteSessions = sessions.filter((s) => s.status === 'incomplete' || s.status === 'skipped');
 
@@ -788,7 +780,7 @@ export const StudentDetailPage: React.FC = () => {
   const totalLoggedSessions = completedSessions.length + incompleteSessions.length;
   const calculatedAdherence = totalLoggedSessions > 0
     ? Math.round((completedSessions.length / totalLoggedSessions) * 100)
-    : student.adherencePercentage;
+    : (student?.adherencePercentage ?? 90);
 
   // Grade da semana atual sincronizada com o calendário real (Segunda a Domingo)
   const currentWeekDays = React.useMemo(() => {
@@ -808,7 +800,7 @@ export const StudentDetailPage: React.FC = () => {
       const isToday = d.toDateString() === today.toDateString();
 
       const workout = planDays.find((wd) => wd.dayOfWeek === dayName);
-      const isAvailable = student.availableDays.includes(dayName);
+      const isAvailable = student?.availableDays?.includes(dayName);
       const session = sessions.find((s) => s.date === dateISO);
 
       let status: 'completed' | 'today' | 'upcoming' | 'rest' = 'rest';
@@ -831,6 +823,14 @@ export const StudentDetailPage: React.FC = () => {
       };
     });
   }, [student, workoutPlan, allStudentPlans, sessions]);
+
+  if (loading || !student) {
+    return (
+      <div className="py-12 flex justify-center">
+        <div className="w-8 h-8 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
