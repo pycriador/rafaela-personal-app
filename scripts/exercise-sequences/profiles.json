@@ -1,0 +1,6042 @@
+{
+  "ab-wheel": {
+    "slug": "ab-wheel",
+    "name": "Ab Wheel Rollout",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "627aaf71187a6fd4da2c9dba0e005a699840a49ef0660bba7a0b58ed2c5f4abc"
+      },
+      {
+        "sha256": "b03c01d5fb82ceda8fa296a2bb6f3ea9bda975a87a7835eac8199dc483693f0f"
+      },
+      {
+        "sha256": "b28c148016757f6cd9c7e16ec19e44e8fb9d9c46ac639a0967900aed1b786fdc"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "active-hang": {
+    "slug": "active-hang",
+    "name": "Active Hang",
+    "equipment": "Pull-up Bar",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "69fe135bb4adcd10d543f66f84d3d73e80194dd69d2f643d1ce5046667cd8a7c"
+      },
+      {
+        "sha256": "5d6394f31b6a3496a4927b2426494a1210b0ed1c14536a44e6ca1766c93d8f93"
+      },
+      {
+        "sha256": "97cecf562ec45e1d6569f79fd5dc613cb0a9cc173313393d4e8a429f92fc54fd"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "archer-push-up": {
+    "slug": "archer-push-up",
+    "name": "Archer Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "4cbf9d15e1789aaef2009ba8bd61c8abd4b4b59c70560d861e1e63a7ef8a9b50"
+      },
+      {
+        "sha256": "60804c2fa29f9f6227a9c3be4ea4fd1a5d3e9ea90b972a4ca617c358c2e0b4b8"
+      },
+      {
+        "sha256": "908a63dfbc1028cb1e720bd7981eb61d8fdf152c505686ec8fae5cdf14cd8cc7"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "arm-circles": {
+    "slug": "arm-circles",
+    "name": "Arm Circles",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Shoulders",
+    "is_stretch": true,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "1f30203089470de916f474457b7b0fa39b833b199d82dab6bb27c915eab5623f"
+      },
+      {
+        "sha256": "abff545921c82d373352af8c9174a35668fb84430317724460a69db698850cd4"
+      },
+      {
+        "sha256": "66ce278bef6ca7af4758def20583bc1e1e34a7894e55a97fe11aed0903b586b6"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "arnold-press": {
+    "slug": "arnold-press",
+    "name": "Arnold Press",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9454350a990c4df616ce98d589c5bdeb65372d61ed94de78f0d48e3b7834e67c"
+      },
+      {
+        "sha256": "0a6d02e6c40447be2b06bdd1f3201a28d21fdb2b4e8831241b6cbc6a66b48455"
+      },
+      {
+        "sha256": "1ad5c30e1d9202dbd6fba63f4eb06db9db320c393dd9df029887432d504509d1"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "assault-bike": {
+    "slug": "assault-bike",
+    "name": "Assault Bike",
+    "equipment": "Cardio",
+    "primary_muscle": "Legs",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "dc1e2b5a8328c9a6504e0d9147e46232de8168c241381b6032c93bb0683869b4"
+      },
+      {
+        "sha256": "af379ae94063c4edb57948745bf88e347a148a7be661b7952548875f70b84b8f"
+      },
+      {
+        "sha256": "64f0da800147480a580e9e9f110dca68b1bed41a5607d33689f6a40232cbb5c9"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "assisted-chin-up": {
+    "slug": "assisted-chin-up",
+    "name": "Assisted Chin-up",
+    "equipment": "Machine",
+    "primary_muscle": "Biceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "bfbac0a950ec31b8db7e1ccc43a155b957a42230b3a7556e425e0eef3f3a864b"
+      },
+      {
+        "sha256": "65d625e112841e4410661678d7548398aa107c3b7e97ee85488ba10c15872454"
+      },
+      {
+        "sha256": "a9ce527277f6247bfcafb0bea475ed337c05ca6fee91982cb91230cfc4c3f57b"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "assisted-dip": {
+    "slug": "assisted-dip",
+    "name": "Assisted Dip",
+    "equipment": "Machine",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "c3d5e2766628d3f861dad5c6216d76040ed5a327b3a9a3d6ba30d689c17acc6a"
+      },
+      {
+        "sha256": "ca3bcaf831fdca7bfab9df8ca44816e4ffb8472b2cbeb981fe7cb91fd98178ff"
+      },
+      {
+        "sha256": "ef92ba342779eb804adb2c0f1e2e69c64c5646866c88939f7231e5b033819d1e"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "assisted-pistol-squat": {
+    "slug": "assisted-pistol-squat",
+    "name": "Assisted Pistol Squat",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "e4acdecdda5cc2ec21e596e66bca021378a363365ca8c88b269339dc8ffefe84"
+      },
+      {
+        "sha256": "37cbcce171bd3d901f90ab72fa7ff58640b81e2982b94573d810ce8197124760"
+      },
+      {
+        "sha256": "00532bccc36fde09fd4cff8c5b9deef898152016aaadf1ac2a04df458cd1a0d2"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "assisted-pull-up": {
+    "slug": "assisted-pull-up",
+    "name": "Assisted Pull-up",
+    "equipment": "Machine",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "e0bd86e0466c7ffd574ade50b588b3edc60e451be58ca25ae8f0c3e8ef46c928"
+      },
+      {
+        "sha256": "50c20dcf5baceea9740344027baa86090d048be1edfc5f1e831f10cc94483b07"
+      },
+      {
+        "sha256": "f9bf49addb42a7f7ea2fae7e8b661a7df9a53892bf79af24bbfe010546dba910"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "back-extension": {
+    "slug": "back-extension",
+    "name": "Back Extension",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Lower Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "632bbb15b35e5b3022bc4ac9214680b2a8ef088c713b9f5ec6fc25c38f0942fa"
+      },
+      {
+        "sha256": "21eaf19b2c8ab663c5247ae51a6b7a1ccb859b8fd1b7b73ee77a7e2b3a3421bc"
+      },
+      {
+        "sha256": "25b9f69faaaf67970a41aa14dd4ee5fdf9da072c55ef1805bdee052ba235807a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "band-pull-apart": {
+    "slug": "band-pull-apart",
+    "name": "Band Pull-Apart",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Upper Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "66695035ec30577317350403925f0f47e7e9ed40ffee85e8f173d58c19f9b6a8"
+      },
+      {
+        "sha256": "a9e2bfa08f39a2d23a310f85e87cbbb481a7a3dfbb7d5dad112c791d8761ccf4"
+      },
+      {
+        "sha256": "10f6dce3c882b2c932392742de9c5633a39c2978a5947c79f0fa41033ef7990f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-clamshell": {
+    "slug": "banded-clamshell",
+    "name": "Banded Clamshell",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "0248b9324a31842cf4eff87b4621869689a3a501d43f87ee49be54f2daa35d86"
+      },
+      {
+        "sha256": "746cfbbf63deb614c35dd94f389f2ce610aa12fa288b770b21b76a10958f631f"
+      },
+      {
+        "sha256": "aad5d72a0ddbf58c94d866740b52a90f3088e29f55690c766495cb4abf66ec09"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-dead-bug": {
+    "slug": "banded-dead-bug",
+    "name": "Banded Dead Bug",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "c7af1146b221424e0b632ec3100686f367bac3c01f2aef0db916a0d41f899e11"
+      },
+      {
+        "sha256": "291802199799c7a58099649c652eec7de86834628cdf214b8005393dbd1da26b"
+      },
+      {
+        "sha256": "ed36aeeca6b7f73b71def6c39e8ed4e874003a5132a120501cb56ed7fa6212ed"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-donkey-kick": {
+    "slug": "banded-donkey-kick",
+    "name": "Banded Donkey Kick",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "aec06622bd4b7b066502c9d60b32fd1342227b26016221982f22ff13a7085644"
+      },
+      {
+        "sha256": "2279c5cdd92e16bb17880c003188d2a6f9d2498b1a184a8542168a51b1088355"
+      },
+      {
+        "sha256": "60b92aec426d60370decdf8fe4bbdeba6917ded19383b5a47ca8c5ad229bb8a0"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-face-pull": {
+    "slug": "banded-face-pull",
+    "name": "Banded Face Pull",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Upper Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "dba096e8615a6e4525620482996665e96ac672e10bbd4b65c635431bedeb9a6f"
+      },
+      {
+        "sha256": "6f0f3732fbe0a4923e3eb88cadfd454dcc8fa6e3688e935e2481c9d29eabb3b6"
+      },
+      {
+        "sha256": "32dac0490636cca4f6a06f019a22d63aea2e32b3ade16914f8e759babd662c6a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-fire-hydrant": {
+    "slug": "banded-fire-hydrant",
+    "name": "Banded Fire Hydrant",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "41d8d072ff8a247bcfe63e923bc4f3f5bf3cd0bd79ec9cb5e730da6de501a281"
+      },
+      {
+        "sha256": "a99a7c0f73d95c58d0616e889acafd071a12aa258b8038743bb8fdfcc4e307e4"
+      },
+      {
+        "sha256": "b83d9246256882bf936a5ed86b412b2a7c531d9c3f99cc540f3a4d895fe93578"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-frog-pump": {
+    "slug": "banded-frog-pump",
+    "name": "Banded Frog Pump",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9632d682706334c4f182469c04347471eed1e6368d561a55bf1b36d1495681eb"
+      },
+      {
+        "sha256": "da7b0ba71c48f79de3438aaccbc42be336e4106d147e3369dde4eb63938468ab"
+      },
+      {
+        "sha256": "4f01575e775916bce36fd8f404a6409b7c8d4b132b36a4db9e84a4c70d2fc523"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-glute-bridge": {
+    "slug": "banded-glute-bridge",
+    "name": "Banded Glute Bridge",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9dd21a4ff4bb5778f1d69cddd45c6c60267c8e74df02fc320c63384ed9d97cc2"
+      },
+      {
+        "sha256": "08542468aff4d068222381ab142509bbc4d97dbe7057f55b45642a78c9911696"
+      },
+      {
+        "sha256": "96e0b56d49c9b14537c0aa10997f90cd279a3c26e3ef82b76daa5acc53c22b3c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-hip-thrust": {
+    "slug": "banded-hip-thrust",
+    "name": "Banded Hip Thrust",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "4af5fe6d9a5e8e4b312163055a225f641e8f35a45394cfcf8593100f98556623"
+      },
+      {
+        "sha256": "88cf822afdad7276b5b0ddb2aa82f32ba24e5ba55d1e2beacd74bd3ecab7223a"
+      },
+      {
+        "sha256": "9a6ba656906deac14195f419a51821249a77e5a03012033f34fdc32ccc85c364"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-kickback": {
+    "slug": "banded-kickback",
+    "name": "Banded Kickback",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "a20153da4e5abd941a4d841230306f5a9029f501e8ab1397cdc198104c29aa97"
+      },
+      {
+        "sha256": "ddb942d4424937745c332c36d93e6e9b00825658158bbe53606e9c991f8cd3d5"
+      },
+      {
+        "sha256": "8948ba186115deb62af8b9830548f899cc902bbfb923b7d493159576dfafb6d3"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-lat-pulldown": {
+    "slug": "banded-lat-pulldown",
+    "name": "Banded Lat Pulldown",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "0d45983f5ab55c5b80617469878e2697ef8362f6468cc580dfc124ddd4b175ca"
+      },
+      {
+        "sha256": "5ba3376f900ba37a08965cab445eb2bf5cb1b726e705968efc3e7a098140615d"
+      },
+      {
+        "sha256": "396a2ad65637f08c96ab625c64c9bae8ede62c51308b388cbf4bd97b8c41bfb9"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-lateral-walk": {
+    "slug": "banded-lateral-walk",
+    "name": "Banded Lateral Walk",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "b6ee09910f3fb5ba00aa15634f47526b9ed57cda20136612ad3e9f992ed65b97"
+      },
+      {
+        "sha256": "0cb86cf28ede79fca19589569a3c586b73b0d9d4fd2271a9aee1bdfb573eb754"
+      },
+      {
+        "sha256": "eb497af4148f123f30e612ea5cece170d11c54c1bab3e9976c7a21c9fef2785c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-monster-walk": {
+    "slug": "banded-monster-walk",
+    "name": "Banded Monster Walk",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "ef18ea08bb6ddc7b15ff85f2bf663bc3f9995eb8004e3bb6a5d3c7bd8a383e4c"
+      },
+      {
+        "sha256": "95a9f11b06e176917f8cd8f0c05f922a390d567959e32c10b37726db51480f65"
+      },
+      {
+        "sha256": "18431c9e9242db13cbac68e144656f7f1320bec9f14283503d5e5af53f8bc8b4"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-pallof-press": {
+    "slug": "banded-pallof-press",
+    "name": "Banded Pallof Press",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "715ad42fb7880180943030805365163cb752e063a3dfb4d8d1ec41b8b2e9a3fa"
+      },
+      {
+        "sha256": "f349d1045b4c7e71b1ba3fc61b03fe285470eae02679fd246e2b63b93b0b4fef"
+      },
+      {
+        "sha256": "15066b3ebcfebbbaa219438d1d285a75d5a0242488d2ba57c736d0a0f2ebded3"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-row": {
+    "slug": "banded-row",
+    "name": "Banded Row",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "2174c77e416607a94ad9173986645aefa5acb0a0aef0733e1978f16fbe53277a"
+      },
+      {
+        "sha256": "4757b294eced7a4efbc7255ac63b234ac7671fe576805a65a63485ecc8469872"
+      },
+      {
+        "sha256": "067651a59a7c594b8cf0afcd8eddabf3f05aa88c306cc8e803367b54bc8dc74a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-seated-hip-abduction": {
+    "slug": "banded-seated-hip-abduction",
+    "name": "Banded Seated Hip Abduction",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "4246ff116e387ba12c2321ba63308319d92cf53cbb488573f4c4b7a9efe437d7"
+      },
+      {
+        "sha256": "72262da1e1ffed34bbf3bb65ff1e645155117dce603dfef270be074e2d8a176d"
+      },
+      {
+        "sha256": "59cedb10759e9f307c98e1740f3c17d5b15014a99104dfd198c8f6ac6397a7f3"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-squat": {
+    "slug": "banded-squat",
+    "name": "Banded Squat",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "395c004df640130420e584302d3f5b4bf9c06f3294c55f16d89912113a6b405d"
+      },
+      {
+        "sha256": "ed364b6729efebc2b6e8702e442e4127dc871f3cf91ee4e67d1a411007770297"
+      },
+      {
+        "sha256": "76c78fa112ad5cff322f69f6509fc82eaaa13edc0cbc8589663d1e8cbd77c41d"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-standing-hip-abduction": {
+    "slug": "banded-standing-hip-abduction",
+    "name": "Banded Standing Hip Abduction",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "0684f82a0dc69bed1d4bf60d8f9d54683df4169a14cc2c059702faad066bc172"
+      },
+      {
+        "sha256": "6e4679809a5cac21c785ebda278a2484f6b992128d629074fabfeebcd6b44bbc"
+      },
+      {
+        "sha256": "b14d8a54f1e074387292500dd8d377730d09e63e727fe20199817b4a6b89dbe4"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "banded-woodchop": {
+    "slug": "banded-woodchop",
+    "name": "Banded Woodchop",
+    "equipment": "Resistance Band",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d51c6d8ae4317e04cd105d5c0f7ade3471b1809c00828f4d44bc6732f4acf4bb"
+      },
+      {
+        "sha256": "19399a59c004f7a644c8f52fab8aa0f44203968c7228619a4afcc279ddf5a9c7"
+      },
+      {
+        "sha256": "6a4b5319b41fbe54a6c1b3fbaa10baec23712fbd8285391be2cfa6cfa7c287c1"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "barbell-glute-bridge": {
+    "slug": "barbell-glute-bridge",
+    "name": "Barbell Glute Bridge",
+    "equipment": "Barbell",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "5cc98c9d1f229be9774a60015900f490578b5b1483a635a752a043db1bb1fd56"
+      },
+      {
+        "sha256": "72283ac47081961a9c186d58c4977329282e4d78dd7b7e0e3fbe00bdf46bf342"
+      },
+      {
+        "sha256": "c990c98ea46699497113f0320126ae812e075e10f5f9240e8d3cc23fa6c19a8a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "barbell-row": {
+    "slug": "barbell-row",
+    "name": "Barbell Row",
+    "equipment": "Barbell",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "5a21a0714273e100330821c4ff745dc4e6dcbeb5d50fe57bfad7c27e5e51ed1d"
+      },
+      {
+        "sha256": "4ccb9c4faaeebbf43bf49523d9d6c9e84cadd55a4d42b01be6d587f92b853b36"
+      },
+      {
+        "sha256": "534b26ccee6c084b31244c611619d2677e85b49ad932e93011776b8fee8c8794"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "battle-ropes": {
+    "slug": "battle-ropes",
+    "name": "Battle Ropes",
+    "equipment": "Cardio",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "a101516d7d623ca4a80b86b2e6bccb1ea70763f2b2e2fef83b108dce8d6e5e59"
+      },
+      {
+        "sha256": "5f05013b06675938edcac9b8a8b955779197f1dc167a1aff769d385b0e3f0488"
+      },
+      {
+        "sha256": "1a3638cb64ac2e6e577a9d954e3c85ca894344465277617172a3b10f1697e267"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "bear-crawl": {
+    "slug": "bear-crawl",
+    "name": "Bear Crawl",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "cc1dd1b6714185e1a350485cbdaf16cd194de08c8b623e2f2ed0c8ec77ce28bb"
+      },
+      {
+        "sha256": "7c864990ea98dd5c0cdf1fbe4d8c01e3a356714e5bd4ecff24bce989040daeb6"
+      },
+      {
+        "sha256": "429aa3a45b428462a272700b8bf052feba3e89d94524f4ae501123883e682fe4"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "bear-plank": {
+    "slug": "bear-plank",
+    "name": "Bear Plank",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "hold",
+    "frames": [
+      {
+        "sha256": "1dd692facba4e57d229c6ba34397d312801f2864a5a97a0cb13e5ad7744a3d3c"
+      },
+      {
+        "sha256": "33d643e0d76847ead905596fa3ad3804ebaf47a45f9b685b72e0b41539b61be9"
+      },
+      {
+        "sha256": "4e006b636e18b701a8d9fca6f3770bd45daadc6dcdd9a7442c5a42c463dda123"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "belt-squat": {
+    "slug": "belt-squat",
+    "name": "Belt Squat",
+    "equipment": "Machine",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "44669e5faedadcdd44b7427922b316ef615d147a4133cf51db1813260c057e94"
+      },
+      {
+        "sha256": "35d20c1579201b6f91664da3457aa6b4aeb959c4b29b414a388a7099f07c54f1"
+      },
+      {
+        "sha256": "c4a04c262c0d895b619c1d1155177e26a8bfb9f3b722d533980e9ab1ebcbc41b"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "bench-dip": {
+    "slug": "bench-dip",
+    "name": "Bench Dip",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "67cbcb12b7cd1e3de94189f8bd4e0b8076a40aabc0e5ba43bcbd31de1da7115c"
+      },
+      {
+        "sha256": "768d234780c5cb8a121241893e6f294b49d595dc77c58e94baea31a9e05b9229"
+      },
+      {
+        "sha256": "556492add6583d934bd9404da5c55d344a144841c8607f016451396c25f4e400"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "bench-press": {
+    "slug": "bench-press",
+    "name": "Bench Press",
+    "equipment": "Barbell",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "86c7fb6aa9c061df155bae54b07f5422e3e719c5b38cb40cdcac070610919535"
+      },
+      {
+        "sha256": "0eadae0bd5ad3877ac91b7a2ac6158683ff8551f854a01120abc069c03603522"
+      },
+      {
+        "sha256": "a0c5806e66e6a06eae523c7e4fde8e5c6602a6d98936adc6e052895d813e04c3"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "bent-over-rear-delt-raise": {
+    "slug": "bent-over-rear-delt-raise",
+    "name": "Bent-Over Rear Delt Raise",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Rear Delts",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "b0bcd2aed3f2be630b3ee7ef09819cd9d0ab859dd6c57d6d99a5ff1ce7627a85"
+      },
+      {
+        "sha256": "f3229b8594ec9ea87a20e9beb177b2502902ea41ddb6fb29890e9b2d7dad370f"
+      },
+      {
+        "sha256": "2dfc50a0f0c6642783245f3daf3af3b0d97de0be92640cede838e8438abb0248"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "bicep-curl": {
+    "slug": "bicep-curl",
+    "name": "Bicep Curl",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Biceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "c39d48b48bd08acd2bbf9b7048c79ed7fcdd2cc3ca0d50aec2d2a90051ac21b6"
+      },
+      {
+        "sha256": "e5a265b49bc84c946d2c1e0aba16a01a09d2bc9d3a872fb5343842005bf0e6fa"
+      },
+      {
+        "sha256": "0331b0325215c73cc82d379b47dd6fbeb1d1217737f2a3083988c3be00fcb594"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "bicycle-crunch": {
+    "slug": "bicycle-crunch",
+    "name": "Bicycle Crunch",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "e88ccc4d23a5531666449666df5197e5675fa8e82051e3a4e46e8fda6f460a41"
+      },
+      {
+        "sha256": "b45dafe83756e1f3d14334fc32e990b38a07d07245d7859f9e06b3394d5e4d2f"
+      },
+      {
+        "sha256": "5c8e2beb9a27a30f3ee08a76fb72c60c89395c6384c3ca5f57e6b64267020080"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "bird-dog": {
+    "slug": "bird-dog",
+    "name": "Bird Dog",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "4fb123747a24564412ec185a60586192d53fca081921b5bc894c77e774703a0c"
+      },
+      {
+        "sha256": "d2b96e1d1bc8a72b94459b3e4a50471d3c52528451537149bcf61f3db2adafed"
+      },
+      {
+        "sha256": "e8387009eec39e61f9a8a10e5c6fdb0d5484a1e7822afce910baefe96b06e51f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "bodyweight-squat": {
+    "slug": "bodyweight-squat",
+    "name": "Bodyweight Squat",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "ade29c7bebb5d528f50a7e976cba4166770569a2441bd8de925eb92bde735e55"
+      },
+      {
+        "sha256": "8727de4ddf68c3658d3a31cd3d5a54899dc0311f6da8efeba23bbeb0b2cba290"
+      },
+      {
+        "sha256": "70457ccc4e47e4019ad0b6f7c8e2028b29c88f5866346117cd1a4a90453d4b9a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "bulgarian-split-squat": {
+    "slug": "bulgarian-split-squat",
+    "name": "Bulgarian Split Squat",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "159854c27d30328af391d3db8b86f08bb7f74a93104b1c52f7925ab766ed2d0d"
+      },
+      {
+        "sha256": "b2e2b17a39e9e09af186641e5d18c173558763e789ef2b4085c1e43923fbb776"
+      },
+      {
+        "sha256": "c4b2d350fd880386dcc41d58172b14021b9a5d8422238314415b52fc182a19a9"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "burpee": {
+    "slug": "burpee",
+    "name": "Burpee",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Legs",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "b2cb30d548ef84c4f23624bd9fbcb70d11414069cbdfe2706576113885e449e3"
+      },
+      {
+        "sha256": "9064c65e4b6e7f526912cf143123b013d317986a10ad618113669b1e8c7a9f61"
+      },
+      {
+        "sha256": "6a22229d244a70a4c78b039ebaba099101548a65e858939278cc7d4c650bb512"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "butterfly-stretch": {
+    "slug": "butterfly-stretch",
+    "name": "Butterfly Stretch",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Hips",
+    "is_stretch": true,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "3860475451504921280d27e690b539dc47a68986279331905bfef387ca42b0b5"
+      },
+      {
+        "sha256": "49adbb014d5ee782b27cd8f77b7aeadbbaf7eab68fd52bc7def8c4ce32831880"
+      },
+      {
+        "sha256": "f9c4669f73ba6717dccd26ed6ea8008f052fc28c1c0ffd40bf2aaca32c6dbbac"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cable-crunch": {
+    "slug": "cable-crunch",
+    "name": "Cable Crunch",
+    "equipment": "Cable",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "bd8e3270bfea5762d8e6a56dce6e5e051df4b1b23e4706653d46a97ce1bc9303"
+      },
+      {
+        "sha256": "58320186da415699951a48457a3c366815dadb7a70decb27858d730b46edda85"
+      },
+      {
+        "sha256": "01d1934378400894d89f5e3bec898932c9030e272af9930cc9cc2059977305d2"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cable-curl": {
+    "slug": "cable-curl",
+    "name": "Cable Curl",
+    "equipment": "Cable",
+    "primary_muscle": "Biceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "e15bd6ecc61e5ba2fef914ff3d5721056f03622cdc293c950677a9911621c37e"
+      },
+      {
+        "sha256": "4af34aee08151ae69cacc03c7f6b902d8d91be74dc32ffa55d487b33721c4f70"
+      },
+      {
+        "sha256": "59a95ab7a47ba458ecdda44a09e23499d8b89805a7bc4bdf17706ccb25695dfa"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cable-fly": {
+    "slug": "cable-fly",
+    "name": "Cable Fly",
+    "equipment": "Cable",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "6664cf5e486d93908199006e7c5ba34321db3bc591a1583a771b924984beb215"
+      },
+      {
+        "sha256": "842e28d0a0eaddd91f90bf2970a2f142e0fdc601f25991afc096d2dd2a867a03"
+      },
+      {
+        "sha256": "635665cb85c8b7081f6f7276b407b21e3b10c660c90fdc1e1ca85b8c499dd589"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cable-front-raise": {
+    "slug": "cable-front-raise",
+    "name": "Cable Front Raise",
+    "equipment": "Cable",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d63bc2ebf6d3d2cc683632ad308efa1b0148938e5cbadfceca78db7a829c07b3"
+      },
+      {
+        "sha256": "91a621076391d14c70d9c29196727fd496be1033fa5df2916489c8f5a7bf8834"
+      },
+      {
+        "sha256": "904654cbb0b29c9caedac000760def303110ebf1643823789699fc58c2d6dbf7"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cable-kickback": {
+    "slug": "cable-kickback",
+    "name": "Cable Kickback",
+    "equipment": "Cable",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "36a998eca7511e12ed8d65910d7468af0222f6e60376d1286000135666c8aa5f"
+      },
+      {
+        "sha256": "4cfe0ce4a132768329dc3b22c7f86d65fb73e24bb6a0e5ced967fbd0c2f6966a"
+      },
+      {
+        "sha256": "9fc9b10b5c384cc6fb1677cbc5741d79a743516650f27b79175daff04c0088c0"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cable-lateral-raise": {
+    "slug": "cable-lateral-raise",
+    "name": "Cable Lateral Raise",
+    "equipment": "Cable",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9b149cba7c6ff02f82106be493b4a64c1f48c05af9431c104cf637982bba69bd"
+      },
+      {
+        "sha256": "cbfd49f31c6e49c0f68ce370e9bf1cb6217fb100cc053f1305585d5860726ab6"
+      },
+      {
+        "sha256": "ca72a863dcf9d849f6fca95b5d8afa6881bc4853cedb2344eaa495b2e813a840"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cable-pallof-hold": {
+    "slug": "cable-pallof-hold",
+    "name": "Cable Pallof Hold",
+    "equipment": "Cable",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "hold",
+    "frames": [
+      {
+        "sha256": "e491cc0a209b4acb616b2bfe289b884b09626ff10715f1a0e3f8bd6ac711f55e"
+      },
+      {
+        "sha256": "792ed6a377cb2ff5fde7b654e4717648c3cbd0f80402db6779a9199a329c2ef0"
+      },
+      {
+        "sha256": "adf96550d1963db573ef995b0a721a96d957f47b9e62f1309d9c0124c93f3689"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cable-pull-through": {
+    "slug": "cable-pull-through",
+    "name": "Cable Pull-Through",
+    "equipment": "Cable",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "da5e461de7d8d082f371f21e1b2f06469bdc23e05c4d7dbdad4c8ea8c288eaec"
+      },
+      {
+        "sha256": "0ec0a17940e7b91d9d9444fee9c6d933203ab40e29a777a01bee385486b4548d"
+      },
+      {
+        "sha256": "a128b079b9d9e45ec596677f04fc173d0eb52219babc66fefaa633e06561565f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cable-rear-delt-fly": {
+    "slug": "cable-rear-delt-fly",
+    "name": "Cable Rear Delt Fly",
+    "equipment": "Cable",
+    "primary_muscle": "Rear Delts",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "8e7ae09d6f7f36d6b0dd7ad188e01002fe2f76669271a7a01221c66bc652537a"
+      },
+      {
+        "sha256": "8067a997b6febe250232ec83e215ac22b0ace3a8021814af8ee91e7ab1fd1c95"
+      },
+      {
+        "sha256": "3198718d7c2a1ba2aebe37003bcf768edb2bf7e60d59ee5c87fd1dcb7109e2fd"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cable-standing-hip-abduction": {
+    "slug": "cable-standing-hip-abduction",
+    "name": "Cable Standing Hip Abduction",
+    "equipment": "Cable",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "56ee214cda8302e01449b6b7fa52009005202b93c7c9a9733d3b6a8bf99cd1ae"
+      },
+      {
+        "sha256": "fbb308f03687ae24561ac24222040b77c4130089570664c4eaf11c607282139d"
+      },
+      {
+        "sha256": "f0783e36325e3cc1b8fb9d608c82775f89a86d8326459f6cba16c1614ad78546"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cable-standing-hip-adduction": {
+    "slug": "cable-standing-hip-adduction",
+    "name": "Cable Standing Hip Adduction",
+    "equipment": "Cable",
+    "primary_muscle": "Adductors",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "08fd5b123f8afdb4ff71fea2281f514c9790d01e5478e2b4e8ab398fd1a78ed7"
+      },
+      {
+        "sha256": "38179dd518e22fc846d6f8674583c0379678b5453837716933efc10763c396dc"
+      },
+      {
+        "sha256": "fe1e84e085ead954f90807d37ded301d4323bbadb378d4960521c143ac59229c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cable-woodchop": {
+    "slug": "cable-woodchop",
+    "name": "Cable Woodchop",
+    "equipment": "Cable",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "513f4aaa16d087751a7115830fb65ed1600a8e1fdb92116eab38e9091413fb9c"
+      },
+      {
+        "sha256": "0891ae02596636fa1ab6d0e699a4107444db964260f3ec8a62617bf2e57b690d"
+      },
+      {
+        "sha256": "d83b67831e278c075584da786758fd8fd3a2bb4ea1e68e45a0765340949088a1"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "calf-raise": {
+    "slug": "calf-raise",
+    "name": "Calf Raise",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Calves",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "966151acb2581f87a6d5bc0688d1a983f0a9d642314833ff92eff30e0c343023"
+      },
+      {
+        "sha256": "ad59d5557f2e7d579858fa9615ab369230969db164b84a9252226c14c0ccdf3b"
+      },
+      {
+        "sha256": "6d7ef04d6269ac13e1c3f96111f09a0829bfd33a85a7669074a342c55c6a03cc"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "captains-chair-knee-raise": {
+    "slug": "captains-chair-knee-raise",
+    "name": "Captain's Chair Knee Raise",
+    "equipment": "Machine",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "ee00ce6061bf2c6043a828b7f84a96aceb2abd72d01cea692ed9e6236792d445"
+      },
+      {
+        "sha256": "7c60abaadb9c82755738bf26a30281c832af1de51f07031bbdf66e4440cff257"
+      },
+      {
+        "sha256": "44f95dd4bb40377f51a434d4fea21e0944f74f377607a33aafd340f273dc0b32"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cat-cow-stretch": {
+    "slug": "cat-cow-stretch",
+    "name": "Cat-Cow Stretch",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Mobility",
+    "is_stretch": true,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "07bc62ed67a9adbb5db027e5a157e259e22975c007ff476ccfe21f0381540ad7"
+      },
+      {
+        "sha256": "35c742def2746adf85e968b5096cbca2d3d0ba57b12eeb138be5faa3fc92a773"
+      },
+      {
+        "sha256": "89657fe5ae75d6a50bb4bd4377e7afc21f17af87fe372287a027a2ee067b686a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "chair-dip": {
+    "slug": "chair-dip",
+    "name": "Chair Dip",
+    "equipment": "Chair",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "approved",
+    "frames": [
+      {
+        "sha256": "5b5d7b85b9f72ce844287e72431a30cfdc4a9d55eefd9d2e4d28ea9919e93cae"
+      },
+      {
+        "sha256": "dba4099b515be22fb36d3d8e681010822818baedeed0aa0855ac388900dfca7e"
+      },
+      {
+        "sha256": "44912fe86949590ba1e6a3db29861e7e1579791a135504b46e2d20b54d8259b1"
+      }
+    ],
+    "review_status": "approved"
+  },
+  "chest-dip": {
+    "slug": "chest-dip",
+    "name": "Chest Dip",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "1c1eb1105c0d6169689f0b2142a80eebc43794220b86ab2d88266afad46565d9"
+      },
+      {
+        "sha256": "5e225b83e623fcfdf492196b36cc38cdfb83ac04851198fa5ab0eb5fc1a5ff0a"
+      },
+      {
+        "sha256": "d332698344c3c26ae4c306548ae8259e9a497918974982c99c842046a0f941f8"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "chest-supported-row": {
+    "slug": "chest-supported-row",
+    "name": "Chest Supported Row",
+    "equipment": "Machine",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "b20cca1bab4659764ece976f087c63164d25b1b5175f6e73851685d1b2df9c51"
+      },
+      {
+        "sha256": "5b980172549ae190e034212e65966c8fae99bcbb0e62a2306504dc77cc66a9de"
+      },
+      {
+        "sha256": "d6b553b29419ae9cd21dc56a2df91796d4d445449f2b94d1f27515704fcef762"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "childs-pose": {
+    "slug": "childs-pose",
+    "name": "Child's Pose",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Back",
+    "is_stretch": true,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "fcbf5a1ca36cae237a1e901583b4ee39947b043de8544640240ac1293f5b561f"
+      },
+      {
+        "sha256": "3b33759c0f88c924f99b1b85758f50030668f72d284bfd6d6fd0d8c6d469f84f"
+      },
+      {
+        "sha256": "12a3584a7465cbee2a8892cb9acb6ae3c6ef203ee007e525c018745f36125689"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "chin-up": {
+    "slug": "chin-up",
+    "name": "Chin-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Biceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "7948cb868bf981a80d50ab606148b81b82e4c2db71d1aea5da621ece7c404703"
+      },
+      {
+        "sha256": "f6b6d025ac374d2d909cac55c3e9fe81951033003137fb845a1aec1bfb78c263"
+      },
+      {
+        "sha256": "698d96fbfa56fdd7301af4daf7bc157a05e3a36e5d52a6d318368c170bd17e33"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "clamshell": {
+    "slug": "clamshell",
+    "name": "Clamshell",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "ed7ce1a3b67674a9d9073c9518df1d6e7fd16151d06a9c20ed6659f462560028"
+      },
+      {
+        "sha256": "294eb2e8827a85906329964566def8750c82090064dc50628421008258159ff4"
+      },
+      {
+        "sha256": "500525fc6434fc7bd7f0d9dcde2a52444075355e8e7108923775972a22b2d720"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "close-grip-bench-press": {
+    "slug": "close-grip-bench-press",
+    "name": "Close-Grip Bench Press",
+    "equipment": "Barbell",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "b53867b21e6db5ee0a704840d625f1af7f7b1b0e80e4cb5d824442ff93677d21"
+      },
+      {
+        "sha256": "c7970458726aa066b45795246a7db5c947f9fbc37a2252eba0bfe5bc009a9efc"
+      },
+      {
+        "sha256": "717f6edfd266311b55427fe294e324a4ceea9034547e0192c427ad49a1a501cc"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "close-grip-lat-pulldown": {
+    "slug": "close-grip-lat-pulldown",
+    "name": "Close-Grip Lat Pulldown",
+    "equipment": "Cable",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "be4c8729a08ce7d98670c15c289bd7d9c321a3d5654671bdacc217c4eca99ad8"
+      },
+      {
+        "sha256": "4c42dc32b65b75d6c670be3b3dbeebf7bd949af686660432f87b069849e40bda"
+      },
+      {
+        "sha256": "c05691152ad32623a8fe3884bcbfa5d9362438cab4d90f8539d1d0e724a7206f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "commando-pull-up": {
+    "slug": "commando-pull-up",
+    "name": "Commando Pull-up",
+    "equipment": "Pull-up Bar",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d274e5b100bd75e8e02e0af108bfb81f53cd44cdaec04a144f70ecce891ebfd5"
+      },
+      {
+        "sha256": "bc116e11557806634f1231081145553e9d47d2a77c24723c7d5f51253de125e5"
+      },
+      {
+        "sha256": "e2cfb5697b0581ccc8786b4702491698ce7596b9153b6d7867835053d036d72c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "concentration-curl": {
+    "slug": "concentration-curl",
+    "name": "Concentration Curl",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Biceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "a7d22030bfab31ea2b52ead9b2a2a11e7d678e0f7df6712ddcc197618fa71467"
+      },
+      {
+        "sha256": "0d4dc457da6fb3d18ea690aed367968d37de2a449df2bf83186284d75b714f7e"
+      },
+      {
+        "sha256": "b8e10db64251a59d1e68097cb40c17af4f50621c6efd615ea3df84e4176a71a1"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "copenhagen-plank": {
+    "slug": "copenhagen-plank",
+    "name": "Copenhagen Plank",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "hold",
+    "frames": [
+      {
+        "sha256": "226f89e1144799c6367d6aa93445649921cd9933665d4aac1a93deaf54f5d228"
+      },
+      {
+        "sha256": "7e7533d3a6f57971553168412fae816052537a3e4d30a291f3e997ed6b386054"
+      },
+      {
+        "sha256": "dcaec1b497d8cdb47397844fb14e180b2a781e1b2d25d221abbb4f549afa9ab1"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cossack-squat": {
+    "slug": "cossack-squat",
+    "name": "Cossack Squat",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "34d9d72d9a6097513a5053479f4d4f2553791dafca9d67eafe98f1c62988aa73"
+      },
+      {
+        "sha256": "4258f9bf5d215795b97fe15ff99c6cfca7df2bc13df7ee9f01cbd25aaf4757d3"
+      },
+      {
+        "sha256": "ed3edbeb998e19549ac733080efe5309f946f4fe23d8bdcc64f4fd5d38cd26c4"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "crab-walk": {
+    "slug": "crab-walk",
+    "name": "Crab Walk",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "572cbee7992dddc8b9e4f31738c9b6880c636745160f34d97a8583deb24bb58a"
+      },
+      {
+        "sha256": "f372adcb075cedd6924a1282b7767cfe7429772a83ecbdf9ddfd74c892a0d97a"
+      },
+      {
+        "sha256": "7f21efe846763dba5c8c5b63a6f5ef0fb0d3d079c1b7fa73b4473c19e00e4d73"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cross-body-shoulder-stretch": {
+    "slug": "cross-body-shoulder-stretch",
+    "name": "Cross-Body Shoulder Stretch",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Shoulders",
+    "is_stretch": true,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "258de6cb26d5f87ce3f2a343c5bc6f58ec18e52a79f185f10b912be27c53a3dc"
+      },
+      {
+        "sha256": "9e006a8a7fb4d821aaffef981095a94fb636697a8220d5c5331cfa3431d473b7"
+      },
+      {
+        "sha256": "28be7688fa64fe6500ad6b6757b7cf351e283d8ae40d8ff8ddab9105a1c837be"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "crunch": {
+    "slug": "crunch",
+    "name": "Crunch",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "deb491d11442a321c5cbabf52a40a8228e78b8931aeb74725bc1174216ff7fed"
+      },
+      {
+        "sha256": "3b0e48710a287315e0f8de8d67a3d67770b3f093f75074b149f9beefa37cfd9c"
+      },
+      {
+        "sha256": "73507479a7d83bea767e148475952e4e6c72437d35546c4aa0bb3d44dd01f11c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "curtsy-lunge": {
+    "slug": "curtsy-lunge",
+    "name": "Curtsy Lunge",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "a37445276cb77624fb86c0fe31156351843e8b3dc82baa875ee7cdc9f914b871"
+      },
+      {
+        "sha256": "d4639b16ad874737b668cc91f851e2ecbb84ad601aba5f5941cdf0fff065dc20"
+      },
+      {
+        "sha256": "512b6ffe22feb847bebfbf13e6e93d79b73216341afdcdb21d785dbba8f66cc9"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "cycling": {
+    "slug": "cycling",
+    "name": "Cycling",
+    "equipment": "Cardio",
+    "primary_muscle": "Legs",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "c9a44195e6b386ddac9bc1298452d071c962ec0de3be5804effff6f536f668b1"
+      },
+      {
+        "sha256": "f0312386234260ad7da09d0c19ffa01e27eeb932e7eea34c0756e54684ed57d3"
+      },
+      {
+        "sha256": "8f6a64316767307338d84c9a42ec109fd87d7c66f4facc8e8354fb18b48a69a8"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dead-bug": {
+    "slug": "dead-bug",
+    "name": "Dead Bug",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9b657249660ca98673cdeae49a72fb7a6822d0ca8b3b27f5da7916fc1191ebc5"
+      },
+      {
+        "sha256": "aac51b4cb3cf4829be3494faf3de91e66ef48c3580bb78066382b65537e36cae"
+      },
+      {
+        "sha256": "c399a1bb8bc4684f89b30841eca8e096684100e2dc1f9a2eee73a440198fdefa"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dead-hang": {
+    "slug": "dead-hang",
+    "name": "Dead Hang",
+    "equipment": "Pull-up Bar",
+    "primary_muscle": "Forearms",
+    "is_stretch": false,
+    "mode": "hold",
+    "frames": [
+      {
+        "sha256": "7e8401f6bb1515f168120374a61cabbe9ff13ed8c0d4505a907f9f64f45552e7"
+      },
+      {
+        "sha256": "54aea0da3c1a5c284051a5a3bc5e6087e8dc18640cafdd668337f3411c308343"
+      },
+      {
+        "sha256": "311cc9feb08cac1a3dc0725fe01d3b4437a82c43232fb6e7123fede84352e68c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "deadlift": {
+    "slug": "deadlift",
+    "name": "Deadlift",
+    "equipment": "Barbell",
+    "primary_muscle": "Posterior Chain",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "1e453143d409cee460a309ddf2c568d1d99a1007cfb92cb26681151c6b3eed24"
+      },
+      {
+        "sha256": "db43d79b21824acd6dc8c5e82547091226cc1476aefbfb2ca21d3356f3569a76"
+      },
+      {
+        "sha256": "973fc4a2e70753c9c7d4e818ede6fdf83e68a4c61d74cdbd9cd9a3e062d66c93"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "decline-bench-press": {
+    "slug": "decline-bench-press",
+    "name": "Decline Bench Press",
+    "equipment": "Barbell",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "bbcca1de9a074aeeec4aded5a216d9c9fb9855d8a6a8b92c46a4506099dfb623"
+      },
+      {
+        "sha256": "5f215da2408809855c5942612efedae4884e3938fbe49809d6825ec4d8654595"
+      },
+      {
+        "sha256": "fcd66094d06c565488d23084dfa6e9949f0c8a8ec233b301570be8c40efbec72"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "decline-dumbbell-press": {
+    "slug": "decline-dumbbell-press",
+    "name": "Decline Dumbbell Press",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d50900103b0782ee9abd2b979b3053ca0341a33a135f7e38601c9c1a2742280f"
+      },
+      {
+        "sha256": "7faa9cab49dfed249555e1407895cb9b4446899e30a7171e5f5d607e9331b072"
+      },
+      {
+        "sha256": "0bbe573096c202d83c4829da85b6643b51afc25e6f0408606fd7d23426ad712b"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "decline-push-up": {
+    "slug": "decline-push-up",
+    "name": "Decline Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "8477ee2e295da6947ec402d966e260b826a27475e32f014504cd9ac62be44e7a"
+      },
+      {
+        "sha256": "f26fe8430aff8220910a4ed2153f46b5aa30279aa8f313ba20f484cc92751ede"
+      },
+      {
+        "sha256": "2cb365cac47876b46cab3a434b711912b55417932ace869e2d00ca49572e0fe7"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "decline-sit-up": {
+    "slug": "decline-sit-up",
+    "name": "Decline Sit-Up",
+    "equipment": "Bench",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "fe107cb7a835c87b0b506a71fd4e625e5b2b43dec9ced015bf65d7f73401a7ef"
+      },
+      {
+        "sha256": "4f101cce89252b3f281f0f8e6aa739609fe3ee3143bc9b44aee5c141d068809b"
+      },
+      {
+        "sha256": "2b77fef9ac481469b04961c24f4f22efd7fbd64c65a1afe1354a04dad7f889a2"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "deficit-reverse-lunge": {
+    "slug": "deficit-reverse-lunge",
+    "name": "Deficit Reverse Lunge",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "5a115d855562537341e959a7ba023b98ba2ca8d46818e8d76fe1783942da54d6"
+      },
+      {
+        "sha256": "7c4efe4e672b0ab650678e35e0d83ed64491d1e9995d2ee490f8275d545e8a3d"
+      },
+      {
+        "sha256": "53ba3dfad9f4a6194122c2fcfb932b0f8cebe844c31d2e317f9357d1506a9b9f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "diamond-push-up": {
+    "slug": "diamond-push-up",
+    "name": "Diamond Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "cc073592977e50295f89f3667dc5f430bef752241fbdc35636daccab2cd8bd3a"
+      },
+      {
+        "sha256": "78938fb6692c613e7bdf7116ad680c8f475edbf0bb785f19cddd8c40d26a6e1b"
+      },
+      {
+        "sha256": "4952c5376f9198eef8491831c56d244fa6fece844b148f20c758f0708757b731"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dip": {
+    "slug": "dip",
+    "name": "Dip",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "7cd56a79a4c3b81534e2e4ab3fa117731f04acc34bba219f4e530e91d792cdc7"
+      },
+      {
+        "sha256": "ddf22545970d4e141d8fb73c202eb73b2b317a11c783e3ad3893f5c1186f9f18"
+      },
+      {
+        "sha256": "eeeb2c384c7397a32fc603b59dd32a093b0d5046fe7985eb2c81879f3672341d"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "donkey-calf-raise": {
+    "slug": "donkey-calf-raise",
+    "name": "Donkey Calf Raise",
+    "equipment": "Machine",
+    "primary_muscle": "Calves",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "f733114d0b35e00700e9c01e535cfd483d96f23ed18ebefd10c4c18412190fd9"
+      },
+      {
+        "sha256": "6ff4a8edc7a3c2e49f47c2f85c27178762af1d1d9ef22c1cf88fb67f3d49d391"
+      },
+      {
+        "sha256": "5738a55d7528bc5dc0febc96ceba1add41edb948b1e5a57cfdc69e8c906eb4e8"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "donkey-kick": {
+    "slug": "donkey-kick",
+    "name": "Donkey Kick",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "8f9a19f3222c0e3c2a059da7aa579b4192512237419de141c6771f7dda69cd4e"
+      },
+      {
+        "sha256": "9e7fba0195d981ec53739751d4e5b1dd00bcbce44d06c2eada898d8d2c48a644"
+      },
+      {
+        "sha256": "0e3eccda3171c304655d6f44b1f1e5aa601304eae104a63e647d91338ba44314"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "doorway-chest-stretch": {
+    "slug": "doorway-chest-stretch",
+    "name": "Doorway Chest Stretch",
+    "equipment": "Doorway",
+    "primary_muscle": "Chest",
+    "is_stretch": true,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "1f098554a0c6e2e2cb0d867f7f2840b5f8165e3beaa573e7a13f4e6fd75937af"
+      },
+      {
+        "sha256": "32edd276febdf7d369a955635f07f25636535b695d32d7e56c625cb2592bbb61"
+      },
+      {
+        "sha256": "01096d64ecdec085060e88f9ef8b95766ed28d1a1ace6f73251c6f59c809ea8f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "doorway-row": {
+    "slug": "doorway-row",
+    "name": "Doorway Row",
+    "equipment": "Doorway",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d8537faac2bdf9a60744a200c91e0da9c6d03bc48c5469926da8b3a721fc3729"
+      },
+      {
+        "sha256": "140a2cb2c809f3fb53490facd5d3ced7f7b76786521a2749279674ba18a146f5"
+      },
+      {
+        "sha256": "2c1514c69e719a02b6e2aff485cd0a45ff53aa9f482c9b25c9f6ac1dea9e2d7a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "drag-curl": {
+    "slug": "drag-curl",
+    "name": "Drag Curl",
+    "equipment": "Barbell",
+    "primary_muscle": "Biceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "3f60414263b85d1c367e6d2644d62df920b5a429eb9c2b12e451ab2bca28afd9"
+      },
+      {
+        "sha256": "d51524e3cb4ebbd0ec36e6f2d5e68a1802043e7bcf4d5adeb0aeac927ea53255"
+      },
+      {
+        "sha256": "0de9dc84d0f4e1e33e5702cba95ca3bae9b891a24029129a9594ccad28b3d9ae"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dragon-flag": {
+    "slug": "dragon-flag",
+    "name": "Dragon Flag",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "cba563e7d27a44adfd15eb276f879e46f02929c8d805b165217ec7e9f91e24b4"
+      },
+      {
+        "sha256": "1eea20b7fa91a2bcb9c8a574f51f1b7155c355c7ab3cbfa339c4f8a0ccded94d"
+      },
+      {
+        "sha256": "599a843df6c9cc6b7a2b8dea67c8ff427bb96f4d5bfd6a8fcd55b96f30c5fe74"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dumbbell-bench-press": {
+    "slug": "dumbbell-bench-press",
+    "name": "Dumbbell Bench Press",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "85ae6b2e176ba7307d82593ae6bd84c7590961792e6cdd59ae0c89557b43166a"
+      },
+      {
+        "sha256": "9fad442cc4b7a1cd4a1897bd7f4607cad2b3caa0aaace10c5a5099a19512ebb9"
+      },
+      {
+        "sha256": "f22b62806e2a5300de951b6bd1b5e08ada3cab462760915caee83924841aa682"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dumbbell-bent-over-row": {
+    "slug": "dumbbell-bent-over-row",
+    "name": "Dumbbell Bent Over Row",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "ef57a37ad8d4ff463530814cc50e8b3518ce485c36a9bbd371315cdfc30faebc"
+      },
+      {
+        "sha256": "b3ef0bc106c47ee0bccc7afe138308adea5aebd29bb19b87cdb0c14ae8a2450c"
+      },
+      {
+        "sha256": "9abb75cd881bcce255454ce00a49fd891c6d67bd957585561537808fe772bdad"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dumbbell-curtsy-lunge": {
+    "slug": "dumbbell-curtsy-lunge",
+    "name": "Dumbbell Curtsy Lunge",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "16a1fe0a5abe5e25c65ad164beae53dee461fccf7e3bac8b64dab1920c3a2765"
+      },
+      {
+        "sha256": "b20132bde3309a902ee4a8bb4eada72259f3889ba9a70b688894d17c183c8981"
+      },
+      {
+        "sha256": "58cec0ee5c2368adc76d910abcbce075e3a7f4a9a6a67c3d37ea1f429a7001c5"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dumbbell-fly": {
+    "slug": "dumbbell-fly",
+    "name": "Dumbbell Fly",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9886226ffa8d5ae7a0193b1b12029dc8be5b251c79a18881778cd8ab7e802a15"
+      },
+      {
+        "sha256": "f65e4dc76f131f2b1dc5b904d88f8db35e18524f87522838330c5c1ec48f9aca"
+      },
+      {
+        "sha256": "632422cdabe6cd416688778cd0ba352d7cfbaddcc8556cf5e880f2c69685ac33"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dumbbell-glute-bridge": {
+    "slug": "dumbbell-glute-bridge",
+    "name": "Dumbbell Glute Bridge",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "233f435d76e1a3b654205c466d3f5555b65aba5dbb22006b54e45a0075a7bf23"
+      },
+      {
+        "sha256": "ed54e4b23a064f78e0f04511a22904bfbbe601dabc9568b61e9f485f264288f9"
+      },
+      {
+        "sha256": "44e68cfbc6c0c164dfc12d47bb88df1bd1855a474c33f914ba7fef860ba7dc9c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dumbbell-hip-thrust": {
+    "slug": "dumbbell-hip-thrust",
+    "name": "Dumbbell Hip Thrust",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "59cf349074070698f1adb60aec0f498d1e60de27d39f9ab19ebb68098d1250a5"
+      },
+      {
+        "sha256": "03c122191ae7852dc0d46fab91a4df87761f633de7b395362f6ad7ddf75318d4"
+      },
+      {
+        "sha256": "93700abd9e665a794eebda72b15e8c6296fd8acd27c332b36985183309a1b54d"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dumbbell-lateral-lunge": {
+    "slug": "dumbbell-lateral-lunge",
+    "name": "Dumbbell Lateral Lunge",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "793c6fefcbd33df0879a85fc1a7addb720ff25868ebe88c2884cb2c613fcbf18"
+      },
+      {
+        "sha256": "969b819adf9392522b8e2970b291f97f8dd30f088816bf16d1ada987ca2f43b4"
+      },
+      {
+        "sha256": "e3be46e11abf24c2494a3dd4bf975218a71de249d724d751f20d47a9d60d257c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dumbbell-overhead-tricep-extension": {
+    "slug": "dumbbell-overhead-tricep-extension",
+    "name": "Dumbbell Overhead Tricep Extension",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "e35d69d8ac9b8c0a4b8f3fac24535fccff122df4894c738b6262f1ca7c0155e3"
+      },
+      {
+        "sha256": "bd0cd46c63a521d6933cf2d9737525b3e71930a8faeebbf956165f8e75a49bd4"
+      },
+      {
+        "sha256": "684bcb4fb28b82e502966a6f7ffaea2d38200b4eaff1698e93a103f6fb2aac41"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dumbbell-romanian-deadlift": {
+    "slug": "dumbbell-romanian-deadlift",
+    "name": "Dumbbell Romanian Deadlift",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "7eccd20b168c9599f1e40c3686c82ecfeb73038d077a177c0518924239500974"
+      },
+      {
+        "sha256": "4f5de0f209cf86f98c1ffc65aaf220e5e8adb12d91f8b65a57f9903ae27ad912"
+      },
+      {
+        "sha256": "4f6bb79c89151f158d3862d2ebfc5dcb19ee00a2441c35685c4ea6cfa4c2597c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dumbbell-shrug": {
+    "slug": "dumbbell-shrug",
+    "name": "Dumbbell Shrug",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Upper Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "06be9cbc36a12f808d899cca7daacf020e2041f1c6b9a6219b6e15ddfc8957d0"
+      },
+      {
+        "sha256": "e931c4099c00c9593cc1c7a324847132dce4554cb3882ec9e8e736a9fc525341"
+      },
+      {
+        "sha256": "c81c94f12b23de7000c3fe1e13f38532fc933e04ca7b08bd43a1100abc5e418d"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dumbbell-side-bend": {
+    "slug": "dumbbell-side-bend",
+    "name": "Dumbbell Side Bend",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "8bd521dd71a3958a635955aa39f41fb4521e3db448fbc4249d1297a468febeeb"
+      },
+      {
+        "sha256": "221488950941954d5a2b63a5c8d0b3f18df2ca72a859f045e49153d17f13cc7f"
+      },
+      {
+        "sha256": "897aa72210e7ea0c6f5e4b17d1714077340f50f522cb191047cacf332dd3453b"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dumbbell-skull-crusher": {
+    "slug": "dumbbell-skull-crusher",
+    "name": "Two Dumbbell Skullcrusher",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "1b2108fa6a682df3164de89671a9af00452cdabfce365aa84aefbc6fd583a9e7"
+      },
+      {
+        "sha256": "90788baa039af8495577644885199a5b25a3936b3b30e66d4b44e987ccfaa354"
+      },
+      {
+        "sha256": "5eefc3450e14438cde118f45865babf6c7871392a53d162bcd448a6cff08c65a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dumbbell-sumo-deadlift": {
+    "slug": "dumbbell-sumo-deadlift",
+    "name": "Dumbbell Sumo Deadlift",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Posterior Chain",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "2b0d21ebf8abc88edc0a14ba41bca8b952bc61fc7557192b986a53ad1b75b513"
+      },
+      {
+        "sha256": "baa93a6b7b6afb86ddbd0aedfe7ae45e0efae5501586a860c6119854e9ee150b"
+      },
+      {
+        "sha256": "5f866d497409ab993f04693a758c77e2fd6ed80754e5c8a3d7456e54dc5f5c8e"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "dumbbell-sumo-squat": {
+    "slug": "dumbbell-sumo-squat",
+    "name": "Dumbbell Sumo Squat",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9fb1be14e862bbf56c30c5b6ef0b134a89948a6448da5f6b82c7d027819dfdd3"
+      },
+      {
+        "sha256": "3f73d8285b41277b2fa72671b53b12b02f00c0dc148fe9623f2afd1ec38f9afc"
+      },
+      {
+        "sha256": "7d4b83a38897093dc0170619d547cd397532cd9f3a20e44999cd446ba175db59"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "elliptical": {
+    "slug": "elliptical",
+    "name": "Elliptical",
+    "equipment": "Cardio",
+    "primary_muscle": "Legs",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "e7300ebf123607752d5d201f7e7160aad88a5b0769ae8e000826482897e86a9e"
+      },
+      {
+        "sha256": "f65768b00f5182b32ad317355b28d8af4127c6a22cc50bcc86af1d093c20a78f"
+      },
+      {
+        "sha256": "98e2f7c7279c8270168aa0923de74d8e62549c051d1aec7afd35a54e0f5bb45f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "explosive-push-up": {
+    "slug": "explosive-push-up",
+    "name": "Explosive Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "5a1a8a26e12a5f7e983013cd06b0977dbe01095617090e5df112451e0b4f7def"
+      },
+      {
+        "sha256": "42ff3057f9a55de62ebf1316cab57c0fa8fc361a049cb163abe302be855147e1"
+      },
+      {
+        "sha256": "94205497b1427c8e3dae44e6c52eba8f0ff85ffde2e39bfc41541a6412598075"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "ez-bar-curl": {
+    "slug": "ez-bar-curl",
+    "name": "EZ-Bar Curl",
+    "equipment": "Barbell",
+    "primary_muscle": "Biceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "67335fc161c68b7f8f754722032c27988894b3c3a98b0f29c3049ff3a91f6ff0"
+      },
+      {
+        "sha256": "e5af8723b2e7e75f1a67aa0db297eb056540054e69af8f2791c80ff7dce98d27"
+      },
+      {
+        "sha256": "0edce375fc74a51da2bd45482c01a1355cc0585c4efbebe29663fb9cbe126be0"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "face-pull": {
+    "slug": "face-pull",
+    "name": "Face Pull",
+    "equipment": "Cable",
+    "primary_muscle": "Upper Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "7187811397567523304402eefe408514d5c4bd425e4579b3fa17b54959bf42e5"
+      },
+      {
+        "sha256": "8fcd090199a86440fa60c45d246d7b39e3c5629338dd9634ca035251e9c97605"
+      },
+      {
+        "sha256": "4f9a8a77e5f0113c46a599a9f40318cb4efc4bf62227cbc7b694f331ab57f7f6"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "farmer-carry": {
+    "slug": "farmer-carry",
+    "name": "Farmer Carry",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Forearms",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "b3820c0ac0271c562c0cc64ee7f3fcd21aa18aa76f6db64a5aff5a26c557d5fe"
+      },
+      {
+        "sha256": "21f273d03af97f35d98abf92b11c9790f72c9439e3af686e19b807dd2c9d2616"
+      },
+      {
+        "sha256": "e6fcbc274ef488ba6a5b0280382c2f54fca0f994adf419ed020db9dd2d33aad1"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "fast-feet": {
+    "slug": "fast-feet",
+    "name": "Fast Feet",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Calves",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "e57bc3daffb8bb8b1c78cad9f7a8fa9088f29d056cec4c1f8d336da467701a96"
+      },
+      {
+        "sha256": "18037161d0323fe03692ec8ba780698e74db0f0919256890a48c7c765cb0b3c4"
+      },
+      {
+        "sha256": "fc9b85337acd4ff5ce914e3ed3ee107eaa9c3aaeff9a86a86ccdd8cdf36753f4"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "feet-elevated-pike-push-up": {
+    "slug": "feet-elevated-pike-push-up",
+    "name": "Feet-Elevated Pike Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "deee39f39839dc03b74a96ba25dbcd5e426bb30c23fb1b2ead3cf6f00ee0b4af"
+      },
+      {
+        "sha256": "23125f230bcaa2f1297b0deb3ca7b06cced208453c0732dd5b5196b1d34b79cc"
+      },
+      {
+        "sha256": "a34b96b943955f632cd9b45b61b53d23c60abc89ab95e078be4d28dded761f0e"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "fire-hydrant": {
+    "slug": "fire-hydrant",
+    "name": "Fire Hydrant",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "ac1884f540d30866dd8f4ab3d6863256fb1b1d064792d6a0de0ef698584403dd"
+      },
+      {
+        "sha256": "ba68f26b0f864050410a4f7d4a1d824c30cb6ca7db2872ce8531e2a456b2283d"
+      },
+      {
+        "sha256": "fbc488986eee91e680dd93498427012456f8fa9acd624314c0a765cb9c413bd7"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "flutter-kick": {
+    "slug": "flutter-kick",
+    "name": "Flutter Kick",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "11d593f27874d4d44b9697345b118946b754195b40dd7e04feff6a447e99322d"
+      },
+      {
+        "sha256": "37ed55db1312f551a2c519f1031f13a5284ea7d5e0e000eb1f9b63d4b45efca5"
+      },
+      {
+        "sha256": "9e484d8dac6333c26c38ca7536e53bcedefa6653710bfe693e387f3df6e7e436"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "forward-lunge": {
+    "slug": "forward-lunge",
+    "name": "Forward Lunge",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "199676f0f8266a8b4e9851ccc26bef0effe59f5657c99dac859593363602b4d7"
+      },
+      {
+        "sha256": "ff432e1ee3ae6d45a2aa8f69bc0730975237c153a549e53ce2dd53ef91d76d89"
+      },
+      {
+        "sha256": "12badc48db79a50dbee0a1e5ca75f28dd7bc504d3fc30036651f4681d03bad12"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "frog-pump": {
+    "slug": "frog-pump",
+    "name": "Frog Pump",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9f802abcfcbedf2ef4f97c05141a1c9aca42fc1e390976da011aee9fc217c2de"
+      },
+      {
+        "sha256": "2313f66905709e94b8c506313c296ae08c2a2ffc061e1ed828887ecf21462599"
+      },
+      {
+        "sha256": "44be3d83262adc859b8fb72ca2094340db27ac1313cf8258266a4343cc377dfd"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "front-foot-elevated-split-squat": {
+    "slug": "front-foot-elevated-split-squat",
+    "name": "Front-Foot Elevated Split Squat",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "f840ea2b678436098fa9c0c20a8350f6df271063a0fceb1ee9d636b00022c060"
+      },
+      {
+        "sha256": "6f48f5afd1bd1266b32dd1343d4ccea46c90ecfa25e58b973a5462c123722b45"
+      },
+      {
+        "sha256": "ddc944696b85fbaedc532dd36939056a84bf08a434e18069f0819848159d5372"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "front-raise": {
+    "slug": "front-raise",
+    "name": "Front Raise",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "189ae73d90cfd21e567c3fede46dd6ff2f9f039d825fc900c065eda4d3f39d4b"
+      },
+      {
+        "sha256": "5faade520994ffab00bf0cdab93b6e0c79096e12b202de28876f36b3efc4b8c2"
+      },
+      {
+        "sha256": "df24ee51c70f33a66e1a4bb077636d35aa5a85917cd094987fe573a403ca3da4"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "front-squat": {
+    "slug": "front-squat",
+    "name": "Front Squat",
+    "equipment": "Barbell",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "3c670ae77e7948aecd5f1c1944e5a2272ce200c6eaabbce43e85b950d5617f39"
+      },
+      {
+        "sha256": "3f48f7be042f52ce9ae460aa709e57eb637e30c78181127369ff45b78c2149cc"
+      },
+      {
+        "sha256": "bbd82b20b3800f75a83096e565b86d4a7f3c5a25c3a1b28cdf9a54a9a102708c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "glute-bridge": {
+    "slug": "glute-bridge",
+    "name": "Glute Bridge",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "005e4116909023227a619eaa64fd2db965d8c78aa99dfc34e752955584510d43"
+      },
+      {
+        "sha256": "bab7a828e0c3cecb4138bbea34af10cfc95892fae68ab8871a1802b0eab7be0d"
+      },
+      {
+        "sha256": "fc3f508ceb16b3e963bbdb9f630f8615c4b7ddc5e89a8d0c8c3d456959a1dd5f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "glute-bridge-march": {
+    "slug": "glute-bridge-march",
+    "name": "Glute Bridge March",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "66622307068c02e56f76f80de0f9f3ad42266908a63fc0a24f3efd4f714573d2"
+      },
+      {
+        "sha256": "136844a88b95e5a7f81e930f1fa60d246cc69780c3a8df2654c47b187319ad36"
+      },
+      {
+        "sha256": "400d670c3bf482450f2c1f2fa6dfee84310370bec3392007fc4e448bff9aad3c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "glute-focused-back-extension": {
+    "slug": "glute-focused-back-extension",
+    "name": "Glute-Focused Back Extension",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "caf8a85010aec9f5f0e9231bed9dd9f1944cb286afa1b3264c7fe5e31965b8c6"
+      },
+      {
+        "sha256": "ed5d5d8017c56b81e299b90038a0bf91f55c9dfb4f05d6340af75f274563435c"
+      },
+      {
+        "sha256": "44d2430e427e1f21806273ec3ba8f40fa74ecb111be202ed4a4471f3cacbdaff"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "goblet-squat": {
+    "slug": "goblet-squat",
+    "name": "Goblet Squat",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "248a19ac4a9ee0345b1c3f563dad3b1660754669a11e2a1cc51abafe4da2d955"
+      },
+      {
+        "sha256": "6507907bc3d4bcc79eb0c36813c7568079eadb7d1cb1571426652f4763057b24"
+      },
+      {
+        "sha256": "acac903873442657b373eacba0d7ec8cf2553916845fac1a6142d413c7e44419"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "good-morning": {
+    "slug": "good-morning",
+    "name": "Good Morning",
+    "equipment": "Barbell",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "73d91d5d50581f3d17c57a97d5bff7010f8c15fa693959358f9fc4e99b846736"
+      },
+      {
+        "sha256": "5e050b86d4ba53857abe9b9c7e76e7f4fb8f8361bf79c991c85897b01332099f"
+      },
+      {
+        "sha256": "1e2b91e767f8aec8a155eea506279e6a85feb994e29956262f4c061dc9da28af"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "hack-squat": {
+    "slug": "hack-squat",
+    "name": "Hack Squat",
+    "equipment": "Machine",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "5609dcf5066dffd952e131d860504a16a81375515929e67d26c74540abc197a5"
+      },
+      {
+        "sha256": "9c4f851907cc6e057a2a4fe6b8b99c9c96331beb5256cb0277be96b9f11d22bc"
+      },
+      {
+        "sha256": "c35aed103b11e2040498dd292608141fe5d60fe03bdca570155191b8d34f85a0"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "half-burpee": {
+    "slug": "half-burpee",
+    "name": "Half Burpee",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "e42c997f4231a449c615a2e81c8b55f373b76dcfd429901dc1d39ff3ca38c6d2"
+      },
+      {
+        "sha256": "718232ab6ab2977bd36dc5de113fd3d47910488673551da34907699f1a23b9f4"
+      },
+      {
+        "sha256": "d0b59e11a1d833b4cccdc179bf29ab7e94c2a3c8c23b1e275f58375df4e069ab"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "half-kneeling-pallof-press": {
+    "slug": "half-kneeling-pallof-press",
+    "name": "Half-Kneeling Pallof Press",
+    "equipment": "Cable",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "04a512967c4833aff151d79d6bae5dfcb21f7d3a524723710a8569f0849377aa"
+      },
+      {
+        "sha256": "8b7ca5724ae43efc9218868133328eda73d1c42af4fe018b9ffb6dd09f2353f7"
+      },
+      {
+        "sha256": "cf379829ee965a91787984f8612a87deef830ff719abebf0260c3e10ef8bc909"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "hammer-curl": {
+    "slug": "hammer-curl",
+    "name": "Hammer Curl",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Biceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "31ee9aa46bf65d5415b72a8117800238f95a664f5b60739b2b7cb66cf24eba02"
+      },
+      {
+        "sha256": "c0bf687be527e56a7ce4c28d2200782d395343e111634575e86c5fb2d2fdbd94"
+      },
+      {
+        "sha256": "57105e916dd5c42c3b9bbdf65ab69946b57069737d079af0502ce142fa37024a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "hamstring-stretch": {
+    "slug": "hamstring-stretch",
+    "name": "Hamstring Stretch",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": true,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "a4b078df588a7e65c87b9fce427d97a736f9313c4dcafc4bb5e1fe9efd71ef9f"
+      },
+      {
+        "sha256": "cdb1305badb04732b82521e2e4740afea8b2e17200378200dbec1109d21c6f89"
+      },
+      {
+        "sha256": "9bee09793631985c08282f2e30f13473ac97f61a0e1de6291cf5c24945f9708a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "handstand-push-up": {
+    "slug": "handstand-push-up",
+    "name": "Handstand Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "8ead32ba3de2e8c1e7d07c0a2d42a5d4fa77a7151965061ffa96e451a689c24d"
+      },
+      {
+        "sha256": "a2bac613b707c19eeb2e1d4bba5fabf8dc8ee56bbedc9783e83840c524073443"
+      },
+      {
+        "sha256": "43a1cee3d32ee7787d85a72a6e554e63e4faaa02553ce73a83662f0af863939b"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "hanging-knee-raise": {
+    "slug": "hanging-knee-raise",
+    "name": "Hanging Knee Raise",
+    "equipment": "Pull-up Bar",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "ad86369e86357cff899f4a6584ae42ff127b43cfa89843e0bacc30cd83de20b1"
+      },
+      {
+        "sha256": "fb83a9a8b3af3d965266bdab97e9352c2751fe4554d0cd3866efaeef891ac8c4"
+      },
+      {
+        "sha256": "0d88296b9b08f1b4cee6a0ec63744f73fe6543d5a8897379db5474f8a4f5f152"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "hanging-leg-raise": {
+    "slug": "hanging-leg-raise",
+    "name": "Hanging Leg Raise",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "c07784630d80827eb52358e50787e8ecf2e4cfa6a9c677ddd73ab3f5ed8f4b83"
+      },
+      {
+        "sha256": "e04814a90cdfd66e1bd89e84c5990916bf88cbc7cb4e5cf356bad087d58bdd71"
+      },
+      {
+        "sha256": "8f70ef0ae64d5fd6fa21319c12ad46d08cdf045f0810e3e74a4e1324d825829a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "heel-elevated-goblet-squat": {
+    "slug": "heel-elevated-goblet-squat",
+    "name": "Heel-Elevated Goblet Squat",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "922e7f8ad7a135fffb8ab789c83838d089aed5aa0e96fac88691d254397f0e35"
+      },
+      {
+        "sha256": "05b73ec39f401603d2db1849a47ad0dc805a62efd910b88e4464e40f778b313c"
+      },
+      {
+        "sha256": "49f39b3785fc3a04d76b1ec2fc7b8599ddfd2d3ffb85be2a976e9f8153550ab1"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "heel-tap": {
+    "slug": "heel-tap",
+    "name": "Heel Tap",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "99f8d075e51935f20d29349e036f109472643cad9f188df254600df0aa69c063"
+      },
+      {
+        "sha256": "3663da8d5595334d1ffdbd645285cfc473b0570c43361fa3f780d29b5cc56bdb"
+      },
+      {
+        "sha256": "01ef58aed0e7a3b9c13639e01d7a3e4b959cff51d9f624c67c1e789c1e77ce7d"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "high-knees": {
+    "slug": "high-knees",
+    "name": "High Knees",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Legs",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "607940e135df00a8addef4e852d89035c2c5cef75ac3c3c33070bad1eb662897"
+      },
+      {
+        "sha256": "5edab5f7756764cbd1eaa431fccbfe124d61dff252b486010fd065ff96e167e6"
+      },
+      {
+        "sha256": "01e88aec91566dec1950a1a819c3905de9e024b1eb5222827ea2b49cd9bd3c35"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "hiking": {
+    "slug": "hiking",
+    "name": "Hiking",
+    "equipment": "Cardio",
+    "primary_muscle": "Legs",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "f2bf0f900185354ac0abbfcbe1d9fb49461f42775c46860fb4e98cd612974b74"
+      },
+      {
+        "sha256": "f6360977cb6645753ce66f15d0c70e4d92a6a62f345160e183503ba36c8066a4"
+      },
+      {
+        "sha256": "33b02c3d2909d0bcd7504aa514c07f1905cd4a1917d225c235474f69ff5afa2a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "hindu-push-up": {
+    "slug": "hindu-push-up",
+    "name": "Hindu Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "5b879b4898642c02d0b35d48d0379fc673d1091604eddd1963d1bd95c8f7a6c9"
+      },
+      {
+        "sha256": "abf33391a2fde71d6d79ba89d94dc205ed9d1889b41748af9be9448801d02701"
+      },
+      {
+        "sha256": "4addfd7f243faf662b74a7d69d210c068832d8586a084144f40dc501ad18b83d"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "hip-abduction-machine": {
+    "slug": "hip-abduction-machine",
+    "name": "Hip Abduction Machine",
+    "equipment": "Machine",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "122de3a20a93fd04ea9f6ae7614c877852750cbd140fa2dc61f5ad1b2752b861"
+      },
+      {
+        "sha256": "fa1098c57c5eab6b4f73a8b1935a7fe9c8860bd6ec1339a271ad6e8cb62ae24b"
+      },
+      {
+        "sha256": "ef80b02720f2e7ee3512e4f647881936b0e00fd0798b9d74a6fed37562fa5233"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "hip-adduction-machine": {
+    "slug": "hip-adduction-machine",
+    "name": "Hip Adduction Machine",
+    "equipment": "Machine",
+    "primary_muscle": "Adductors",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "51dcaa32753f346ea111427423030ddeba1634e8f64df87c341cfdbb1cbe5402"
+      },
+      {
+        "sha256": "f5e512aa931c7d540b1c40f4ef76603484be4f4826d2ffea88f592f49815b6e7"
+      },
+      {
+        "sha256": "ec71546d8d58f874c311273c1b334d310135f9ff7193e4249b4e3a845e88c0ab"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "hip-airplane": {
+    "slug": "hip-airplane",
+    "name": "Hip Airplane",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "023c82b5c438dcc16d59c71556ecefa41cbe5a2bf16d4f3202d3459e290f881b"
+      },
+      {
+        "sha256": "c9bc1696fce78d0e9b4ee36c661384ba7ad2001e73c244833141e4ad39a767c5"
+      },
+      {
+        "sha256": "db27242c5d2f190328d17bd3a087658bf8159914a6fd9f52a8fcd61815928fc0"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "hip-thrust": {
+    "slug": "hip-thrust",
+    "name": "Hip Thrust",
+    "equipment": "Barbell",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "80269bd3e40e1f78ea9ea623158a37b2a31687ffd6fdfa441c8e6289de57e303"
+      },
+      {
+        "sha256": "fd35c0d555e258cf2fb864126771d297c9871dbbb214ae37630c105ac23897e3"
+      },
+      {
+        "sha256": "a345e7558a0bf9909ab7abb20ec1c3b267ce5ac99ecb86474a2f5427418a6297"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "hollow-body-hold": {
+    "slug": "hollow-body-hold",
+    "name": "Hollow Body Hold",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "hold",
+    "frames": [
+      {
+        "sha256": "a60f98c7aad351808f2a5bc4fefaed9fdf5e1ed7de4e4527888034a21011ab9a"
+      },
+      {
+        "sha256": "799745f3c3015e1d31b9f73bd182a271081163550e87ffb6a4d860bc4a389cf9"
+      },
+      {
+        "sha256": "c0bf5cb99f6b11f37ab249b4bbb5f49419ed26ba3cabe124f3be6f7aa2014ee1"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "hollow-rock": {
+    "slug": "hollow-rock",
+    "name": "Hollow Rock",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "607ecd68254625c5957da7909f52a2e87002df61760afdd72446010e572fde61"
+      },
+      {
+        "sha256": "4e9dd292f63221844ca9a15fcfc766b8e716faff34c541975deebe88fce48cd8"
+      },
+      {
+        "sha256": "d0c3a3a7f28ee51352cda3ba390cf57c4d89de0c0d7a9ef124e5600c8541e8b1"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "inchworm": {
+    "slug": "inchworm",
+    "name": "Inchworm",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "3c6d116b042c978bc1b43322ac34ae22bc6577f953c3ae9abc67a6d23cc18a48"
+      },
+      {
+        "sha256": "93ebe5080f841bf1a1f78bd09596c37e02c62d97cad63b80171c817840367fb1"
+      },
+      {
+        "sha256": "2dd45e6276c5491964ce8a02221dfe65f0f9841e13de809067dff2a9116c297f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "incline-bench-press": {
+    "slug": "incline-bench-press",
+    "name": "Incline Bench Press",
+    "equipment": "Barbell",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "055d89c7d54eef5cc98b1c11871da1da3c2c90d29a5e86b6827518961396038d"
+      },
+      {
+        "sha256": "be69a081352388b5b9ea4de28877097190da2179e26d274129bafc0a8f5709da"
+      },
+      {
+        "sha256": "2b72ee2d7889fb291153baad7a51c7faa06c8d840498f2edbed226a318f7e6a4"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "incline-cable-fly": {
+    "slug": "incline-cable-fly",
+    "name": "Incline Cable Fly",
+    "equipment": "Cable",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "778ca508122b59deb0a47c7831b48128de3e6580d2ccd6fbf3f7a0bcea790078"
+      },
+      {
+        "sha256": "3127c6b4b28d334df96959e105a047e5786c056c891f497bad2144e30ff3c47e"
+      },
+      {
+        "sha256": "c79dc5cb114517723e2041503b074a6e40abdfd6339838489d26d6e12baf6334"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "incline-dumbbell-curl": {
+    "slug": "incline-dumbbell-curl",
+    "name": "Incline Dumbbell Curl",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Biceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "b9194baa4fc04998a89489c20afeb26c62ac07b206ac2360ace53ce5fd341ffc"
+      },
+      {
+        "sha256": "26550de9fca991400da54527c42573035f5309333061f65fc6c5b2f50560e9f4"
+      },
+      {
+        "sha256": "d68467d162b381e41cd2f16f8cd8352130de28a68d7da65199382074f80009ab"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "incline-dumbbell-press": {
+    "slug": "incline-dumbbell-press",
+    "name": "Incline Dumbbell Press",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "b8acab7f1110bd7b0558e1eb7a1cc4f47d574fdab448c10acf08503c2bf6e05d"
+      },
+      {
+        "sha256": "23d1cf0068cf0c2d7f6beaebad55fd1639120f26b3474839baef1119d64e07a7"
+      },
+      {
+        "sha256": "0d56174f5e58d3aad15f269da4fb4a66bca41424349df6ae82cda68f924b6526"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "incline-push-up": {
+    "slug": "incline-push-up",
+    "name": "Incline Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "4de8d511dc082cafd59028106514db8bd10105bff54706e22db7f73f73e9463c"
+      },
+      {
+        "sha256": "b60a4a02d4ccd65fde75bd4b0dd1603fbe0e0191478b4a4355875e4c337b0433"
+      },
+      {
+        "sha256": "23d5aeb80b4609e0c6c19d40ae6cb8cb47761d7226f24a2172f5956d9d8a5015"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "inverted-row": {
+    "slug": "inverted-row",
+    "name": "Inverted Row",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "7d3fced55eb27e400a56e0ecd4c571a20d4d6c997e79bd63516cc93d13243859"
+      },
+      {
+        "sha256": "27140bb936884b937d9059abfbe88c9c000da73da81a5a1b97dd0195bd42c374"
+      },
+      {
+        "sha256": "6504d0985c27e707ab9b8f6639fa32e852a5a79abacd914ce6f62f895a3fc60d"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "jump-rope": {
+    "slug": "jump-rope",
+    "name": "Jump Rope",
+    "equipment": "Cardio",
+    "primary_muscle": "Calves",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "bf529bee2010d95f5161bfd44666cfc00336efe1eb3fb1a91034e6cec04e6006"
+      },
+      {
+        "sha256": "9678c8a63932d87631394f73f0604fac664e920c3749578defa9bd20ee6a046c"
+      },
+      {
+        "sha256": "9791f83bc5085277414151344208a3847d8c92b26a106a82a0cb7c29f192be2b"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "jump-squat": {
+    "slug": "jump-squat",
+    "name": "Jump Squat",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "8f914ecc7aacbb43e778c766a44f19516671f25fb728909dcdc3e2cca05e9be4"
+      },
+      {
+        "sha256": "83c68f827f64a4048b4e7e76cb27367ca55e2431bb84d36c19c222e03d94fdc8"
+      },
+      {
+        "sha256": "d553b1a8b64691beb685f6eef857409865e512ee440366dd03f2d930db39f9f5"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "jumping-jack": {
+    "slug": "jumping-jack",
+    "name": "Jumping Jack",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Legs",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "ea7f532807136d29df48a74fbafcb1c866a1232d76fcdc5ec4727932a996285b"
+      },
+      {
+        "sha256": "c2a4883eb4cc585acc0c11a21f2be310591467adad14b6284578250f77d655b7"
+      },
+      {
+        "sha256": "4cf54cbe9ad461810b007ddd33906541b4628677482a4c1176677505318b7dea"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "kettlebell-romanian-deadlift": {
+    "slug": "kettlebell-romanian-deadlift",
+    "name": "Kettlebell Romanian Deadlift",
+    "equipment": "Kettlebell",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "0c944f9a6cac0c1cf785af6cb1da2f3835fd52c27ebe1030145ed807cbfee677"
+      },
+      {
+        "sha256": "cc7c2dd118888e5edbca8e729c06409f53ae2e9f43e3bba811d9dfb90d466f87"
+      },
+      {
+        "sha256": "dd3300039dc4eb068ffbe48ce1995c4a04567466c36aa305c06e055afb462bf1"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "kettlebell-swing": {
+    "slug": "kettlebell-swing",
+    "name": "Kettlebell Swing",
+    "equipment": "Kettlebell",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "54b063a6294b54ca48fbb5a758cfe9e9d8318a35783f3f40bc4d22761f463ab9"
+      },
+      {
+        "sha256": "7a58e6ffea996b62eac4f9801ff4044b971abeeb3ccfde9d19604c066e8f2edf"
+      },
+      {
+        "sha256": "19744a57264dad3a577998e6ed4813e161989404c44349db339ff3c5f8f308a1"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "knee-push-up": {
+    "slug": "knee-push-up",
+    "name": "Knee Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "7c8c63d43b83ab4136b09b91a1091cdb72da907a2bd5b320f9d9bf1026b35148"
+      },
+      {
+        "sha256": "c6ed6ecf2322130b6445d052270bdec46104a14abb9af780defc36b141369fa4"
+      },
+      {
+        "sha256": "42d1a322ec96f258272338c3cc6fa1997322bb93db82b9c0aa49990e3499c2ba"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "kneeling-hip-flexor-stretch": {
+    "slug": "kneeling-hip-flexor-stretch",
+    "name": "Kneeling Hip Flexor Stretch",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Hips",
+    "is_stretch": true,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "113c24a945f15f6aa141e6a7d842f70dbb722cdad8ebd4d47107bd87b84c7c44"
+      },
+      {
+        "sha256": "871c5da784a559281c3bb4336b0d0f038aaccca5e4cf711c8959baa094ac788d"
+      },
+      {
+        "sha256": "bfa3bae8963b1b176f3b45248de312a4b431dfa1893d800f1cc85af2ffa9c05b"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "l-sit-hold": {
+    "slug": "l-sit-hold",
+    "name": "L-Sit Hold",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "hold",
+    "frames": [
+      {
+        "sha256": "d0ffc6ba308e8e45210f81fa830b1b93b294049b871999ef35e3266df1b2b62d"
+      },
+      {
+        "sha256": "b45a993f52a6c01217dd57b10dea9838a9aa27a2867e2182c2cfe670ef7210b9"
+      },
+      {
+        "sha256": "e7a6c9a922eb742e62536c478110e4e7356c4c8aff90eca9597585ffe193032b"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "l-sit-pull-up": {
+    "slug": "l-sit-pull-up",
+    "name": "L-Sit Pull-up",
+    "equipment": "Pull-up Bar",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "7b263f41d5e1cc21b66bb354eaa496c074489122600d09ab9a92c0c2ec54665c"
+      },
+      {
+        "sha256": "a491e558ae753dbc50881eb01fa1d0973e557b8066147b39f106a41e7acd04b2"
+      },
+      {
+        "sha256": "37ab0a75e35e170680e51f6885099fa4d3617c885fc5b0ca1197ec58f9a10ef3"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "landmine-press": {
+    "slug": "landmine-press",
+    "name": "Landmine Press",
+    "equipment": "Barbell",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "e6bcc21808647a94f11070677b6dfea9f31120c69ce56e89c9f3d1120932ed2a"
+      },
+      {
+        "sha256": "4cd025505cf084850cf6489d5a9d9e6748070ba35be7a51dee3f644a2ea88a07"
+      },
+      {
+        "sha256": "664bc713450ebcb4fb8b88f1a4d4f668882e76e1beda6189e9cfcc433761bd50"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "landmine-romanian-deadlift": {
+    "slug": "landmine-romanian-deadlift",
+    "name": "Landmine Romanian Deadlift",
+    "equipment": "Barbell",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "cf0b31501b8cbd0b8c2be7b39b24fc59417c1e0540ddff702b967daffc39eaad"
+      },
+      {
+        "sha256": "80842b50bd5954ac3da9ba570f37c0c4b630290fc6333f9b813c9f5de35a39c4"
+      },
+      {
+        "sha256": "afe5ac4bbd3a9daa1c235acfa629a1b31b4133dfe903417dd50842ce3570c6b9"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "landmine-squat": {
+    "slug": "landmine-squat",
+    "name": "Landmine Squat",
+    "equipment": "Barbell",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "f885bfa82c5459b629e41543700d92b318b6ecb06c6ef81a20127324fbf60472"
+      },
+      {
+        "sha256": "41e8f68628a80d2c615a911028d807f1ba13d014162cfca7b4aa1af33d218f34"
+      },
+      {
+        "sha256": "e50001fbccb5d3e810108c5a8bbd29ee6dbfe48d50a1c7ab6dfa1d1cf4b1ff83"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "lat-pulldown": {
+    "slug": "lat-pulldown",
+    "name": "Lat Pulldown",
+    "equipment": "Cable",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d650d472065fbe8befd3896faf7101aecf54019ef7c4983e6b53fcfc325094ca"
+      },
+      {
+        "sha256": "b6dd2046538215b0c77981d35e15911e586fd970785a365fcee862085323eaf0"
+      },
+      {
+        "sha256": "8ef6d91a5544ac26067b0676d538a9529f8fd94c992b2328c412cb3fb58c6933"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "lateral-lunge": {
+    "slug": "lateral-lunge",
+    "name": "Lateral Lunge",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "e153de4b82f34b61e913f743937d1db93272323645debc2c9a2f8b8d89f35cf0"
+      },
+      {
+        "sha256": "2ea0f3319c92b6991c9b953bd188608d1ff7c613010bad5117c8cd0796c60152"
+      },
+      {
+        "sha256": "06b39e5ffb3e3ab037eb349f2bc751a5734095c06bb3f7526f57e57c59d11614"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "lateral-raise": {
+    "slug": "lateral-raise",
+    "name": "Lateral Raise",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "57ec6107cdcdb23dea85fdb8b9973c450d03010eb5088057618b65747e7b4dbd"
+      },
+      {
+        "sha256": "e07f0f3af761a92a91cad24f175d33988ec59c8d374862692620609949123a2c"
+      },
+      {
+        "sha256": "28a4e92d9bc5f1c9f93c5d5a6cd6f3fd6c780b7f81c15b1da5786d88d8e0a564"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "lateral-shuffle": {
+    "slug": "lateral-shuffle",
+    "name": "Lateral Shuffle",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Legs",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "07697ab1ea27d5153184635ec2bb7eb4484e76dc17916d9710587aa49b83aa2a"
+      },
+      {
+        "sha256": "ed07e0f896911bbd255a48c6d831e381083965ea638e0204908d56c74fb48375"
+      },
+      {
+        "sha256": "753949d57f4aeb1ba16489349bc2dcff09ed8d96cd4495deb14a9cc2dbfc514f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "leg-curl": {
+    "slug": "leg-curl",
+    "name": "Leg Curl",
+    "equipment": "Machine",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "5a1503a68226f2547500fb0c3df5f29c94b514d59c1bb05499d8ef1bb2dff316"
+      },
+      {
+        "sha256": "68ba3f5afcdceee1f9a0199cc0a2cfdcec7c01657e3c65ac552f698b671124a4"
+      },
+      {
+        "sha256": "5068af0bc2d157ad06015fc746a2fbf9d31d0c818512721dfecd8adabfef61ff"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "leg-extension": {
+    "slug": "leg-extension",
+    "name": "Leg Extension",
+    "equipment": "Machine",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "approved",
+    "frames": [
+      {
+        "sha256": "b6c7dd42fb1f268ac5a37233a1b1a95a6b85e984efd6aad17118bf7d5b116cd5"
+      },
+      {
+        "sha256": "0e8542fd092f48428947c788d78dbbf91d030c810b92ec06289055f4d2756e2f"
+      },
+      {
+        "sha256": "77d455cf549ed462e2ee84efff6c96e29568fc9ded8088603965b095f9aa7306"
+      }
+    ],
+    "review_status": "approved"
+  },
+  "leg-press": {
+    "slug": "leg-press",
+    "name": "Leg Press",
+    "equipment": "Machine",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "f5120dfeede3c29a5eebde13bb961a22cc369d4d573d535964879652bca61b2f"
+      },
+      {
+        "sha256": "5a55e804984a57f0276f341187078ec2f610424bc58bfdbd22cc2121e06478fc"
+      },
+      {
+        "sha256": "615d298cfb45b9984ae898761fa0337cdbd52e50654ed29ec32d1aacbb477cad"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "leg-press-calf-raise": {
+    "slug": "leg-press-calf-raise",
+    "name": "Leg Press Calf Raise",
+    "equipment": "Machine",
+    "primary_muscle": "Calves",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "3fc97431f3c9422bee7e0e5e840929229898b6bca75845857fcf6b071f046d65"
+      },
+      {
+        "sha256": "506317a6a1a1adc8f4057b28da258e01cd1986d4e2a695489792479928bf2f9d"
+      },
+      {
+        "sha256": "94e637537de38202709d2505c3c9badfe270a7242be4ce27068bd5d9bbfbdb0f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "leg-swings-stretch": {
+    "slug": "leg-swings-stretch",
+    "name": "Leg Swings",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Mobility",
+    "is_stretch": true,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "eb9b872696198fcdda45a78b109221661eb4a472f2d703a2384d0c9322e40c03"
+      },
+      {
+        "sha256": "3f88cd392cbb165336182b2e4051688be1a9f6883118ff4ca23a34654841129c"
+      },
+      {
+        "sha256": "6dd6d3de977ea95181c1b5381096d1b64a31eaeddd846dd13897cadfad7cf64e"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "lying-hamstring-walkout": {
+    "slug": "lying-hamstring-walkout",
+    "name": "Lying Hamstring Walkout",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "3e52675d1158db7eb3a92efcdfb1d5d8d9a74c076958bbefc9f7764aafd0fb0b"
+      },
+      {
+        "sha256": "ebe0356afadcc7b070af8789535beb361a6ff497e849c30ad8b618ca4ae5f4ea"
+      },
+      {
+        "sha256": "945111f0d368f7cbf1a75e1d64fd2fedcda7777c4953edd5f39c45f0a48a1d4e"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "lying-leg-curl": {
+    "slug": "lying-leg-curl",
+    "name": "Lying Leg Curl",
+    "equipment": "Machine",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "7dfc87086998b9fcb12cb16afb033551b9ba824eb5cb375507d12c25f8138b44"
+      },
+      {
+        "sha256": "c7824c62abc7a36132797bcfcc7f5ce86c8a832b6f058e30d6da2b1d0625093c"
+      },
+      {
+        "sha256": "453fc6d883dcbfb5ed8ef7bf8245c5f528669ffd1cce8fa4e36e6eb9620c38fa"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "lying-leg-raise": {
+    "slug": "lying-leg-raise",
+    "name": "Lying Leg Raise",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "522b5f5b7771a9ff1c61af507811dcd0b64a8915ebcb7e637d38b708da6cfc12"
+      },
+      {
+        "sha256": "756d48f6f750da07abdfd4861ec2c7bf157f634418624a4374c6d6f345608579"
+      },
+      {
+        "sha256": "5e114340860b3cfc08d0c43f9780e126ffa3e366577467505554bde719df0916"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "machine-chest-press": {
+    "slug": "machine-chest-press",
+    "name": "Machine Chest Press",
+    "equipment": "Machine",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "39083ff64650f15d238128c48d085ffb210736a77feed3bd1866b84cc6f34ab5"
+      },
+      {
+        "sha256": "0c2582ce6ae49ba043cbece769579b2c2ee5f1af6c26bfae4d784ba0ff0ae2de"
+      },
+      {
+        "sha256": "c00eb73ebefdb94ad48f1abd0532ca50b244666ada355654106cf1a37405fe2b"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "machine-glute-kickback": {
+    "slug": "machine-glute-kickback",
+    "name": "Machine Glute Kickback",
+    "equipment": "Machine",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "ba3dff3a8ca689573c40a0c341b73813fcf5a1813e6b541eaee93b0a948bd283"
+      },
+      {
+        "sha256": "ee1a022d0b8f18e8998a148f12f95b9c29d43d37105042505dbef314f88f14d7"
+      },
+      {
+        "sha256": "85fc1182e605624baae3ca5ebaebe3f89dfe32acd7b4af43cc07dec2fac77855"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "machine-lateral-raise": {
+    "slug": "machine-lateral-raise",
+    "name": "Machine Lateral Raise",
+    "equipment": "Machine",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "a37bca98213e9df21478e03737a4b083a04d4b924f30472e4cda2cb4e26c610f"
+      },
+      {
+        "sha256": "af29b609d7a1730da7f81a27e412352753123c4d6c82dfef7ba5e2c795e60844"
+      },
+      {
+        "sha256": "9cad7fab1812d2723e096891da21ce35f48130f2889dd5a6a8144483815e0f1d"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "machine-row": {
+    "slug": "machine-row",
+    "name": "Machine Row",
+    "equipment": "Machine",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "b04b561f6d1c13baf6be3f3b7036012fa165de4a4b592d4ca0cd1861e411db8a"
+      },
+      {
+        "sha256": "b69784c67cc1c181cec7ab3413864e5500455ac7814858957a9c453ef1665983"
+      },
+      {
+        "sha256": "b9c4e930946d4ffef5fb18efdc319882172b1e67f91afdb0f7b0c28a34035664"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "machine-shoulder-press": {
+    "slug": "machine-shoulder-press",
+    "name": "Machine Shoulder Press",
+    "equipment": "Machine",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "dc981b3368d82a221313bde107b41553173321f25449a0a6b8722de87224143f"
+      },
+      {
+        "sha256": "62565ad8b0bd68dc7a0e03e1d5fe75bd8033d8be33bc42369eba935a8339be81"
+      },
+      {
+        "sha256": "f207df75d714b1d606c4ebbd2f394b5a96b6b31a868e72f53aa6573d1e21b3e5"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "meadows-row": {
+    "slug": "meadows-row",
+    "name": "Meadows Row",
+    "equipment": "Barbell",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "566faf10e474b771417ecbfd2c0d02f24f9fb0c52085e834eacc8308df85bda1"
+      },
+      {
+        "sha256": "a51f6ba0229ce490c62838e2304ff883e01307a1244f026613fc05cda092f452"
+      },
+      {
+        "sha256": "40503d313b6b60be7f1a33415a46b396a3a94fb0161b4611de81f2639145023b"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "mountain-climber": {
+    "slug": "mountain-climber",
+    "name": "Mountain Climber",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "856cdf9c89b46cf5202295d806b03fbf890cfcda3a1bad3567df00ceb247dbf9"
+      },
+      {
+        "sha256": "c569e0f2f4dc05d59a89d1cb9b806b5769685e93c87c5418c3d8608bc7fa3ce1"
+      },
+      {
+        "sha256": "d32c916cc126ac892b37a229b18f47d4bfc4d659b91ad88437f44c4148c3640e"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "negative-pull-up": {
+    "slug": "negative-pull-up",
+    "name": "Negative Pull-up",
+    "equipment": "Pull-up Bar",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "c1b29f82cf3b8153f423795a1248a446c479ed18de5a85b33fe45d8f9ceb2d36"
+      },
+      {
+        "sha256": "36f0ac1130695c2bb24a73fbbcc46668aa02eadcd8a0e49b7fee82f9525a9d9a"
+      },
+      {
+        "sha256": "46fbadd0a01b1dc76610c590d4bf9e1052c84b746d21d970721d9f0cdcaec734"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "neutral-grip-pull-up": {
+    "slug": "neutral-grip-pull-up",
+    "name": "Neutral-Grip Pull-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "7948cb868bf981a80d50ab606148b81b82e4c2db71d1aea5da621ece7c404703"
+      },
+      {
+        "sha256": "2950ef4c6f5a589633c5ceb577a7929ff3d43ddb8d2f60d9707d4c5bd9545cbc"
+      },
+      {
+        "sha256": "698d96fbfa56fdd7301af4daf7bc157a05e3a36e5d52a6d318368c170bd17e33"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "nordic-hamstring-curl": {
+    "slug": "nordic-hamstring-curl",
+    "name": "Nordic Hamstring Curl",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "563f6bb9861313dab210d8f5ba75c4d86bf73098e036ed7cc4aec87a1706a0fc"
+      },
+      {
+        "sha256": "36b2750b64b4156003d5517473dbf85be6b013559eb73c569db5bd7e3fcfb905"
+      },
+      {
+        "sha256": "c5d4bbf9ece95e7f7b5326adba8a4b58fce770293eada4b9555af7cf886f641f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "one-arm-dumbbell-row": {
+    "slug": "one-arm-dumbbell-row",
+    "name": "One-Arm Dumbbell Row",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "1dfd88c9bda02ed747ee90b20f540392aca6c7999bb8e056b3014cd32faad308"
+      },
+      {
+        "sha256": "7b2186b06e84fa4e87e3ee6a32dfc7fd6007e1a7554b35bc5e3b2aee79608c0a"
+      },
+      {
+        "sha256": "c0e299db3bdb1f1e3a46b7aa3c4ed7ff8685fa24af0208ecb782d438a9d9ae99"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "overhead-press": {
+    "slug": "overhead-press",
+    "name": "Overhead Press",
+    "equipment": "Barbell",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "db3b76edc81251b52f06c3bfd251857a43e64caf2a563c390770496fca3ce241"
+      },
+      {
+        "sha256": "ba62aa5d261316f162d55b094535d1e92843d2664d9135e2f0059c67c5f6bd54"
+      },
+      {
+        "sha256": "dfcab4004dd819ae2270f0eb4e8f40a2cc683c1c62692efe02a7389fe0006cd6"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "overhead-tricep-extension": {
+    "slug": "overhead-tricep-extension",
+    "name": "Overhead Tricep Extension",
+    "equipment": "Cable",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d3aa6795e78d8e75b8fcba706af33e5fdf5feeba28763ad314a3fddf04e3a342"
+      },
+      {
+        "sha256": "b38263e02fb413844c8bbbb8ceadbbef1451403e4928cd2ef115ce6f6bdee327"
+      },
+      {
+        "sha256": "4e0f07c2120463ab8b5ce732023e8667395697195e29d4acc66ff0f46ae5a3eb"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "pallof-press": {
+    "slug": "pallof-press",
+    "name": "Pallof Press",
+    "equipment": "Cable",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "86343854241e9e84e7549004236dca678549fa5c7f1c194141ce0c5565fc4b0a"
+      },
+      {
+        "sha256": "6f036b64119360c635ce83490f45815d650c9a25f3ece7a327c42a3163bd6798"
+      },
+      {
+        "sha256": "61458a620e1ab4bbdfaf8adb6abeb4f2d5bc54401450bbf2ff8eca2af689bd56"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "pec-deck": {
+    "slug": "pec-deck",
+    "name": "Pec Deck",
+    "equipment": "Machine",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "c152a7c2d08e6bb1116dea40189d411f772558ef10cb25a0cdb256bde2054611"
+      },
+      {
+        "sha256": "72adedc84fd97530b82e3fd307644bea9caa5600c64cdc0d6ce78cff3cd5233f"
+      },
+      {
+        "sha256": "82c3e5852d66e5cd5322585f5361bb05db6cf9ac1c0305d33dfacd113781a90f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "pendlay-row": {
+    "slug": "pendlay-row",
+    "name": "Pendlay Row",
+    "equipment": "Barbell",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "f1cc56a2478eb3932b07b5828b722653df8c5a38191c09d2050ac71a9ef8774b"
+      },
+      {
+        "sha256": "80eafb53d70d1dfdb6992cbadad74b19c849bd16813827f2ebdc0da19648a55b"
+      },
+      {
+        "sha256": "8e415321ddd348f13798dfa46ec86b13d6d1f2c01d71b06ec3f1533f5f3e40a9"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "pike-push-up": {
+    "slug": "pike-push-up",
+    "name": "Pike Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "334909e707b74871a203694c1f2fc1dfcc7b22061224ebe634850ea4be9d5bb0"
+      },
+      {
+        "sha256": "1f9fe1f974667e9791299dbea1b8b3a9b9db65a7758cdd983e069c79a5425b33"
+      },
+      {
+        "sha256": "122e58bab5551ed0db0419167caa13c0ca099a7368eba0814c6529fafbf8b642"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "pistol-squat": {
+    "slug": "pistol-squat",
+    "name": "Pistol Squat",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "87ac502eae2265fd808857ff5acb98364768918105c08ae1f99300809eb719e1"
+      },
+      {
+        "sha256": "7aaf82681f52b67c5523fa548b60a4753c0744f02c45ec1f3e2c753b575d1d9b"
+      },
+      {
+        "sha256": "6c3c4cde8974bf97f5f62391d298aafa04b88ff4a8287fa856e925fa358fd127"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "plank": {
+    "slug": "plank",
+    "name": "Plank",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "hold",
+    "frames": [
+      {
+        "sha256": "7186976e8b52d98397b573e3d5f28b2d395c18453cadd323ae942c2d5a448ffb"
+      },
+      {
+        "sha256": "7f8f8eb6e7d4c06ccd848177442bde0756a25a04fc79b757ec0ee73bdbb5c86e"
+      },
+      {
+        "sha256": "b65083bd2c5a9f9fe12598320a10f6a8813483ffcf8c720426f98be9bc3cce2b"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "plank-jack": {
+    "slug": "plank-jack",
+    "name": "Plank Jack",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "8e368317c95acccf04ed587d52c176121fb3b87a91e34e796f4000b2211132dc"
+      },
+      {
+        "sha256": "0a4172f54eef64109e442ee00f59cd3a8f77524cecbfe21f31788bf86da2d013"
+      },
+      {
+        "sha256": "ca71e818833aa56ca20112c575ba7109261d9d06e3e3efe04d70bf31263c1213"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "plank-shoulder-tap": {
+    "slug": "plank-shoulder-tap",
+    "name": "Plank Shoulder Tap",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d923c7a53acd0b2f9e6b8c8f7f51f055df71237626e7cadf4e97454a3cde3384"
+      },
+      {
+        "sha256": "34527d2d55fcce32beb0cf1bade87771d14347a87bccfa5214a8bc1f7b2ddd12"
+      },
+      {
+        "sha256": "b33a19070f7ccd0fb527365ef49faacb088d01a55e758f1597ab2864e1c71733"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "plate-front-raise": {
+    "slug": "plate-front-raise",
+    "name": "Plate Front Raise",
+    "equipment": "Plate",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "0d183d0aae93baa711bdc8becc38d4559918ef1a3a29bac2e1cc986ee15b295a"
+      },
+      {
+        "sha256": "1091fc66570b6c1874b30b8400e3e7cfc513bde273c6a6af2770632aa25a4a0a"
+      },
+      {
+        "sha256": "392a13b33430fc3ae5f7862162c101290481afd46a3fd87b73eb747e849edc5c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "preacher-curl": {
+    "slug": "preacher-curl",
+    "name": "Preacher Curl",
+    "equipment": "Machine",
+    "primary_muscle": "Biceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "75b08e875eb37d116554c436a9af0b5ce63b697989ff0372f0a0d041c24ca936"
+      },
+      {
+        "sha256": "d544cef630c91d7de4e79a994347b868dcc7a295cec5a27a4e0e437fac82c97e"
+      },
+      {
+        "sha256": "2b3bc41359c6752e756ed72ed94f7d939c6a8f438766ea4b88a6937afd0babc5"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "prone-t-raise": {
+    "slug": "prone-t-raise",
+    "name": "Prone T Raise",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Upper Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "3cede566b09d53b2c2f4d7ba46765abb97f9496dc26e61addc86d7e8a8b249a8"
+      },
+      {
+        "sha256": "64c22cc1222aa0c853ec731cd9c49b4cf910e3a5c25a555e0ccdb8c38da2cc49"
+      },
+      {
+        "sha256": "20b03c27442e76067b0766ed070284bd4c398e09f936c870e81c7b651365117e"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "prone-y-raise": {
+    "slug": "prone-y-raise",
+    "name": "Prone Y Raise",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Upper Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9b7f297ff034835a9d221f05c068c201d8e985c416d7a8e8d95ed5a3010a22db"
+      },
+      {
+        "sha256": "35bf0fbab6367ec7e029fc86757878e356267780e08ef7771f296745ef74b8e7"
+      },
+      {
+        "sha256": "3df23b381a36602f8235cc7253717d34b5e89555deadfd3b6b574a3552deb074"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "pull-up": {
+    "slug": "pull-up",
+    "name": "Pull-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "061d29578929cbbc858cdae8516605ba45772afe186ae1b82e24c4a046d534f4"
+      },
+      {
+        "sha256": "917b9d522777a55bcc70854c7003a359b3665bb227e68d3abbc540ce5f65c443"
+      },
+      {
+        "sha256": "d5dca6a464dd7df72fbdbe183e1c89355c8d4854c12a85b20d1d22221f494c02"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "push-press": {
+    "slug": "push-press",
+    "name": "Push Press",
+    "equipment": "Barbell",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "839251364aac6021d57e77f36a2ab2c5f93626551ec5b2aa68034f855bd95ecc"
+      },
+      {
+        "sha256": "6b19071d2967b7ec4cf20976642a3df92dd924971796b64a36a4903d433b7826"
+      },
+      {
+        "sha256": "8ab54180d9662e640fe3a06fdaacadf831629ce4abe1756e36b8564a60104e8c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "push-up": {
+    "slug": "push-up",
+    "name": "Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "dbb531713d0fe5b37b80af9ffaf62e07072f51d4610007327786101b6ec6f51c"
+      },
+      {
+        "sha256": "dc6a6f390df22e904ec5b3893a9899ae273c3012648de271041a56125c234a11"
+      },
+      {
+        "sha256": "df5abfc93a8728e469052bdce14e5e462e3949c801c2a2456a907da1f9ffe6a4"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "push-up-shoulder-tap": {
+    "slug": "push-up-shoulder-tap",
+    "name": "Push-up Shoulder Tap",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "1cf83aee917729218cf6ae267200959181942628300e0797832a8bfae2dc0485"
+      },
+      {
+        "sha256": "a8af688740a27e38585ab90ce35d8172222a2eac802e9dd8cdba30a937cc511b"
+      },
+      {
+        "sha256": "f3aedbcce25ba9b77380f3a65cc5bd6f764ef60c6af727ae8d57499f4d2416e0"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "rack-pull": {
+    "slug": "rack-pull",
+    "name": "Rack Pull",
+    "equipment": "Barbell",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "3120f8ed526dd52ea6e894c1d4b50afdaf25de4dd4fe4a58cafa1bbc15f5a7f3"
+      },
+      {
+        "sha256": "a067fa710f5438ad82487cfb8ac274c69dc9af59773399a3a96ca15ad32ef37e"
+      },
+      {
+        "sha256": "2c2f7112d696a8c6a4a7de495415b4693e4e5c0d9a90b1231cef3180e29a1087"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "rear-delt-fly": {
+    "slug": "rear-delt-fly",
+    "name": "Rear Delt Fly",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Rear Delts",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "3c12d18492adc7fd6930dd387a674fbe4a72c23c24e7a723c46dece80ddd136b"
+      },
+      {
+        "sha256": "b502f206a141b393cda26ceefd0c063c24d92c13eb95cc45c0547289f497b46f"
+      },
+      {
+        "sha256": "b0e3b48b707aadb902c29a8bab93d7c34f4bef72cb8cbdeb39866e3a6ec0f2c9"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "reverse-crunch": {
+    "slug": "reverse-crunch",
+    "name": "Reverse Crunch",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "37262db74ea48e5b194c1f4426006102b2c5b438999e776ea8c5701ec05ebc8f"
+      },
+      {
+        "sha256": "b4725e1a5f02020f79edc3dabb7300c941922c2c578ab38820fa1065d292919c"
+      },
+      {
+        "sha256": "04f47cb3380b77b89296e4b8f65474ca2ec23edd628aec28d90b3256d939118c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "reverse-curl": {
+    "slug": "reverse-curl",
+    "name": "Reverse Curl",
+    "equipment": "Barbell",
+    "primary_muscle": "Forearms",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "1d753696c4bf5ec433ba83ec5f14f10ac31084177b23107f41b80b75db74efd3"
+      },
+      {
+        "sha256": "8888e45212cef762cdcaf47b959108320207cf9e8abbbb542f580d774971c5c0"
+      },
+      {
+        "sha256": "c5f96f8dd971aaff0bf293b122170ed69f187cf99f5a6b8ac1813a4043b01d7f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "reverse-hyperextension": {
+    "slug": "reverse-hyperextension",
+    "name": "Reverse Hyperextension",
+    "equipment": "Machine",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "37c5acb3a07a2d3c3a0a6078fdab1f6aa19a860922b5ae02b46a0c470d435615"
+      },
+      {
+        "sha256": "172d70931268191b4acc82414a5bb1d05e12b30d7acae99b5c0e52ae6f9ed0d2"
+      },
+      {
+        "sha256": "2654c237ada319f028ced4dfa92ae84c88ef3f659f353c1704e3a9fda785ffbc"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "reverse-lunge": {
+    "slug": "reverse-lunge",
+    "name": "Reverse Lunge",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "27768f32272f3f9b8da6857d303865da2b96e102a5209cae482ea618da5a6a80"
+      },
+      {
+        "sha256": "e1bff3de920c710fe560879487fdb7ceea0857b8836cf83d38997198b81ca8a0"
+      },
+      {
+        "sha256": "a72d9cc9cc27fdc38fbe968be113c2fe0b59b38cea1e4ebe03379c71e5ab27d3"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "reverse-pec-deck": {
+    "slug": "reverse-pec-deck",
+    "name": "Reverse Pec Deck",
+    "equipment": "Machine",
+    "primary_muscle": "Rear Delts",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "24ce565c8137fbe45538f810a9ecdea21f62a0625eb343d10d346080262aa963"
+      },
+      {
+        "sha256": "1153740cf9d1737c1ea294ce2c9d3392d7937eee6c81afe83e7e3f560c213b9a"
+      },
+      {
+        "sha256": "8a1451ddad5c9b61b2188e436149784fa684805240a802cafc63d98dda6c58e0"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "reverse-snow-angel": {
+    "slug": "reverse-snow-angel",
+    "name": "Reverse Snow Angel",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Upper Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "245113e656f2747ac682f0dfd3b8cd9e0ca0c97b1c4a1e8e739df8d2ecd053c5"
+      },
+      {
+        "sha256": "a692a160a34a6fe4119b80349cd577dd271ab8ae348d6e404484a22cfb268feb"
+      },
+      {
+        "sha256": "d1b5ccda5e04463ad206e24cf647954456d2cfe810706923ee224576133365a0"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "romanian-deadlift": {
+    "slug": "romanian-deadlift",
+    "name": "Romanian Deadlift",
+    "equipment": "Barbell",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "81bbe7cfc565f01c48a53049f14b25a7529adc0c09ad0538cf1238263b56640e"
+      },
+      {
+        "sha256": "62d2622819b756e09b49afe04110a95c2d75f6795eabd07a44ceb8dda200d2b4"
+      },
+      {
+        "sha256": "457c9bacd8eb97ad39f61811344eb7c8b8f0a0a6edd6f7751c6ce863ebd53263"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "rope-hammer-curl": {
+    "slug": "rope-hammer-curl",
+    "name": "Rope Hammer Curl",
+    "equipment": "Cable",
+    "primary_muscle": "Biceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d8e31ed6b53e8d8d580fa3b8bb556b1b44bec08a16ceebab3c255684272baaa5"
+      },
+      {
+        "sha256": "7f7f2b52be6c087e349c5ca40357d3bc3f630cbe4a5c2790094372961749507c"
+      },
+      {
+        "sha256": "e685bb5d4292fc98e0b392633b829d3cf71711174b5082472ce11570e332689e"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "rope-tricep-pushdown": {
+    "slug": "rope-tricep-pushdown",
+    "name": "Rope Tricep Pushdown",
+    "equipment": "Cable",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "dc713253560e8dadaf9c03d0a8bb30291a6e499af9f94724d5c609d038299082"
+      },
+      {
+        "sha256": "49c7a7915404d5d242cda818ace70cd061027040ce44344cb286085e3440bcec"
+      },
+      {
+        "sha256": "04ba66540686b671b6ddae37eb2e9f42680d3156face9fc38b2ecce20f68d277"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "rowing": {
+    "slug": "rowing",
+    "name": "Rowing",
+    "equipment": "Cardio",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "5a44a545336809e67f8d428c60807720bae88beee44884b9987917e3cb4ae191"
+      },
+      {
+        "sha256": "3709a7ca8c427ea7cf9c360f7942fef3402308ee6d21cf4cfb82cd8eebe7ef32"
+      },
+      {
+        "sha256": "df5306f0831ce0af1e4c3703191ec3d3d8f94f622034dd310ca5333977ff2ba2"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "running": {
+    "slug": "running",
+    "name": "Running",
+    "equipment": "Cardio",
+    "primary_muscle": "Legs",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "20365c41d90520c3ed40a1153b1017072944706aa0c7ab2892b4dd7f6bdd158f"
+      },
+      {
+        "sha256": "5a5a12d2a064c1baffc77b139b8a61bf0524d69616a6a54e15b26b066e909231"
+      },
+      {
+        "sha256": "8f51c7ba9ff8f88b92e6d56d1241c4db6d5dac79b2d5f49ff2f717d999ef3911"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "russian-twist": {
+    "slug": "russian-twist",
+    "name": "Russian Twist",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d2faf8987961b7e6668baaa416ff67151355be3ee4e63151d1ecd1e64aa219c4"
+      },
+      {
+        "sha256": "f4df0ac615effa660279221e357d9ca0b1762ef73b3e9978a1a563d5f3d6d260"
+      },
+      {
+        "sha256": "0a30cf61dcad32314bd17802c41f91b0aafb971945966285375b288a49701c9c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "scapular-pull-up": {
+    "slug": "scapular-pull-up",
+    "name": "Scapular Pull-up",
+    "equipment": "Pull-up Bar",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "a22905893ffe816b8edf0cf50cca0a68d7fa005e31e24b518f8a17c253967ebe"
+      },
+      {
+        "sha256": "c25e4edca44c438dee16e3fbf15a7c273b8ba4ac1755baac91be52e151c99ec0"
+      },
+      {
+        "sha256": "c54112da7e65296578e97441297fee22223725a20c71067a1ba9ba7ff5f6c9d4"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "scapular-push-up": {
+    "slug": "scapular-push-up",
+    "name": "Scapular Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Upper Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "47106ddcd8d8faee2274dd37e4a9386103a67a0c3f75ee2ded5d7b5d728a42dd"
+      },
+      {
+        "sha256": "c3a20d0d2639c61086b37cc07928b75385014fcb5dbc564cdd5dd1e0a76f6907"
+      },
+      {
+        "sha256": "789cabf593419032bc42f8b48b3a6bf6b904150e5b5f533119a7948b2e509367"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "seal-jack": {
+    "slug": "seal-jack",
+    "name": "Seal Jack",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "f3f87b0018647b71915ec88190ef8a4f4bab8d58dcb8604921ef874da50f0166"
+      },
+      {
+        "sha256": "df89e5802fffd0612337dbee7a93254937dc2a767d8ceb136340f5c33d25b061"
+      },
+      {
+        "sha256": "676bbc2cc0015acd5bbcbc419a15b3b71e35bba2f59273c4e887f4e123ec3374"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "seated-calf-raise": {
+    "slug": "seated-calf-raise",
+    "name": "Seated Calf Raise",
+    "equipment": "Machine",
+    "primary_muscle": "Calves",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9973c078735739b577c8b97d352f1ea7ad69bdd97e0403b8d44735c06c9fd158"
+      },
+      {
+        "sha256": "0e0e891de053f993a70af2f4dbf8cd087821d96a24b0c9db637a72210accadbd"
+      },
+      {
+        "sha256": "75a157fa59d3696e72b6d1f5aa1e46fb39ba0b46fd03e227f650b49311f8c1c7"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "seated-dumbbell-press": {
+    "slug": "seated-dumbbell-press",
+    "name": "Dumbbell Seated Shoulder Press",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "1f78cd54a41230296ad90b950833dddf7570c46b5512727a4539d0cd0e1c390d"
+      },
+      {
+        "sha256": "e469ed3aec4cdebc3c55d35970845ae927968a0d31cd9df2e2c909230cb70ae9"
+      },
+      {
+        "sha256": "7cab8ffe9a0e313d4d51ff180390d6fb0dc138f62bc5ed832c76db442944f216"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "seated-forward-fold-stretch": {
+    "slug": "seated-forward-fold-stretch",
+    "name": "Seated Forward Fold",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": true,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "bcfb1633192837e0f6aaa45621327059f817381743eb4a272dc004c7535f9b50"
+      },
+      {
+        "sha256": "4cccffb915e42a90fc036f5e39a160ab692a6df44d71f1b17c0c2bbbff70a7a6"
+      },
+      {
+        "sha256": "9de03270cdc336cf9854b0b5c491b4b471eb5ecf4c7fa2c6a27f787660693396"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "seated-knee-tuck": {
+    "slug": "seated-knee-tuck",
+    "name": "Seated Knee Tuck",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "1fdf84d777e58690a76e317c6be365755b3c710bed7a0dac5ccc939da407e3d4"
+      },
+      {
+        "sha256": "f8adf34b2283dd29b753d8848de9082f3392f2b1c104e06b80f7911d0f62da81"
+      },
+      {
+        "sha256": "92b985afae8a53662f298d1c610a7ddb78bd04775693a4596dd62fa5f9d910c8"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "seated-leg-curl": {
+    "slug": "seated-leg-curl",
+    "name": "Seated Leg Curl",
+    "equipment": "Machine",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "396505e9aba44707cbbe500ab7839e14f58637fe893de7a66751eb6530d786e9"
+      },
+      {
+        "sha256": "1b628a842b5da2d2d36808c6742d6a3b48798fec253bdad0d69a3f41869ca0f9"
+      },
+      {
+        "sha256": "ef29e2e8108a23f788849b1e463b91ea7dcb547545744b4b1840cbf62ab94879"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "seated-row": {
+    "slug": "seated-row",
+    "name": "Seated Cable Row",
+    "equipment": "Cable",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "062622f8ebd10052bf1dc7aba7aeb9e67a8521cea855596bb9cdb9b1cbeccedb"
+      },
+      {
+        "sha256": "96421871178c49b15306b375439012ac9ac0880a76e74831ea72d04596020701"
+      },
+      {
+        "sha256": "3a6501335456e8dfc37eaa73ca572035405f145baf13c5fa5d73f78c93ee52e8"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "shrimp-squat": {
+    "slug": "shrimp-squat",
+    "name": "Shrimp Squat",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "ffcf2107a134b37a93d63c7ad6496f5f9503e70a4b91be46e85d3ac26f8de311"
+      },
+      {
+        "sha256": "6872eea158d58c2926df5748f4650dcf23291976d90e87dce9c54f17db02bab2"
+      },
+      {
+        "sha256": "0f6be2660f6eacf6db88e81a2c8fe3ff2d9ea4984459de099ad592403f9c7d2e"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "shrug": {
+    "slug": "shrug",
+    "name": "Barbell Shrug",
+    "equipment": "Barbell",
+    "primary_muscle": "Upper Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "5353b670e61aa77c88c7c6ef932c5b18ba992fa3fe4ba99e4cf159c1e6955415"
+      },
+      {
+        "sha256": "a71cddbcf9cfb5681266561635f2c318bbb99ed7c1fb67855faa6492eb2e652e"
+      },
+      {
+        "sha256": "13aa9522e72bcec7ba03c0c918f7e3a5ce682a88a69452da283d70c679a4f9b1"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "side-lying-hip-abduction": {
+    "slug": "side-lying-hip-abduction",
+    "name": "Side-Lying Hip Abduction",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d2c7336e61472f3a26065c3745503a64e44cbcd35fb25bf286ee6bba4b8972ea"
+      },
+      {
+        "sha256": "0f16c4db9671fbd93b9dd89336c755306f33c6b881bf938ed9996d100e35e1ac"
+      },
+      {
+        "sha256": "8990c35b119894bf87ebd0e181675514ea56de59607223a4de4144747fd7abf3"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "side-lying-leg-raise": {
+    "slug": "side-lying-leg-raise",
+    "name": "Side-Lying Leg Raise",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "e668430cf90dbb70993e55931706feb9189e0f4a678ebc4995f131e8ebb0aae2"
+      },
+      {
+        "sha256": "b1ace990890bf9a478558b17d275fffeec472ca828096ed828165dfa58232b47"
+      },
+      {
+        "sha256": "8d434485feb3e240abfe8664c83c86bec2f08c2109944baa2ea0022f1fc3623a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "side-plank": {
+    "slug": "side-plank",
+    "name": "Side Plank",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "hold",
+    "frames": [
+      {
+        "sha256": "2b61e6b6b233e4a91a1680f0950586b3e4a8b1a474b5bc14f83e953bea9c4f42"
+      },
+      {
+        "sha256": "1801326b7342c305ff9ca22f1dac7b705c7a2b89a702030ee28317caabe6f9c4"
+      },
+      {
+        "sha256": "1edad3e6cdc3b22d577f1e2c4ef4c2bc0e36096d40e2cf58298460ac6e643c8f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "side-plank-hip-dip": {
+    "slug": "side-plank-hip-dip",
+    "name": "Side Plank Hip Dip",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "beb8d335e3edcb7dfa7dbae82ead87e4176708563b206b8cbf2e94dad9030593"
+      },
+      {
+        "sha256": "fc77404074e55aa8ac07b8cabe0758c2a326b2d29521d4f83e99492eb4c27642"
+      },
+      {
+        "sha256": "43d60576fda8df212e7edf95b6255ed78fa12957e0a1a9079cd07a273f3af172"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "single-arm-cable-row": {
+    "slug": "single-arm-cable-row",
+    "name": "Single-Arm Cable Row",
+    "equipment": "Cable",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "7b507adb77ec58cde5a69b9989aaaa72c01d1c00bef90ed75c739394df1539ca"
+      },
+      {
+        "sha256": "7fdffc8c2f02d4262fc912156f8e3bebb35209bb2536d389c16a62fc16b518d2"
+      },
+      {
+        "sha256": "0511faf49585599c07cbe6b03369fc95068ccd70529c4caf7453ae9f87c04c8a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "single-arm-dumbbell-tricep-extension": {
+    "slug": "single-arm-dumbbell-tricep-extension",
+    "name": "Single Arm Dumbbell Tricep Extension",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "c10e7190df222c4400c832b87c659548ae5a8e0f6e8c8c5ed5f52a69f2830d8f"
+      },
+      {
+        "sha256": "9c6af190221f54e0037d2c9311548f28c690fcade689edeb5858dbf66befe844"
+      },
+      {
+        "sha256": "ab745744cacd50544e7625ad9e9f527354c2d821f424432c41f884cf31871553"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "single-dumbbell-skullcrusher": {
+    "slug": "single-dumbbell-skullcrusher",
+    "name": "Single Dumbbell Skullcrusher",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "73729ad75d6b5ed1946322bba1989ef3a2293848d39b198926769adc6d27c8e4"
+      },
+      {
+        "sha256": "ebac20b0786fac4c3626a6244b01fb16f132f45aceaa298a13ba407c50730133"
+      },
+      {
+        "sha256": "5a9afc0dd31727b0fd6484250c94eb61a6d9b29cd6f4eb78b1f7af674d95192e"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "single-leg-box-squat": {
+    "slug": "single-leg-box-squat",
+    "name": "Single-Leg Box Squat",
+    "equipment": "Box",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "b882788e3ebc8b85aee70d3e7c57d0d77d471274ce972d32d17f85fb3d91d3ac"
+      },
+      {
+        "sha256": "a9339efde387559254a0954f9511c0a55a6d217b2b6994a642006ba25c3a1582"
+      },
+      {
+        "sha256": "55039d362271e60852bfcb77af65f10a2c96c0bc346963a4de9de6e33116417c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "single-leg-calf-raise": {
+    "slug": "single-leg-calf-raise",
+    "name": "Single-Leg Calf Raise",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Calves",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "345c081526dadfb20acdb2d92fc30636166760f4a6d312b819a1c58251bdd346"
+      },
+      {
+        "sha256": "5c28647c6c5c21c6863e43cba03977b39db6e1774d2638faabc73a4f66938128"
+      },
+      {
+        "sha256": "c29db54ef6cf88c8baeff7adef222d8f2c054111463fdb23c955c3639323ce05"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "single-leg-glute-bridge": {
+    "slug": "single-leg-glute-bridge",
+    "name": "Single-Leg Glute Bridge",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "f4c6c9fc027a78aa8a25ab0049aa41e353587083617c936da9436f72406d06a8"
+      },
+      {
+        "sha256": "d2b036ff3ec6580fcf7e684ff139afdc27d5db41767ae50c01a00d7b6b1a40ee"
+      },
+      {
+        "sha256": "64030a406a5484c2a0ca22c70067d9f25ce5f6c0e91ac9363ea8590345c71b60"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "single-leg-romanian-deadlift": {
+    "slug": "single-leg-romanian-deadlift",
+    "name": "Single-Leg Romanian Deadlift",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d07544f5ebcee3ac6eddc0b9a2608e84f1517b2c3844760e5fd8cbc1f4186e54"
+      },
+      {
+        "sha256": "0929bdb1563e136c4c3170f5c6a25eba47aeb15794a8ae94c95ffc2a8527ec9e"
+      },
+      {
+        "sha256": "34ce8e0036ceea9356256921e33a0c992866dc6587c511efd4bfa040ef73bf1c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "sissy-squat": {
+    "slug": "sissy-squat",
+    "name": "Sissy Squat",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d9fc5e2cb07bdf216afaeaf128219868c9fd737066aa8d57eac6114cb1f79415"
+      },
+      {
+        "sha256": "9f558a2a8f836dbd7f864a45cfe55f7e64fa5756b31b0fea859a4791c62ca74b"
+      },
+      {
+        "sha256": "b96832b38a91a8857482437471a81c96756a1c06c6cca057c595073b7c0c3705"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "skater-hop": {
+    "slug": "skater-hop",
+    "name": "Skater Hop",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Legs",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "0e2e275d7867dd4eab6a80473345fa55ee3104829ca8e9a86e85cdcb95de92e1"
+      },
+      {
+        "sha256": "01a53261e2b5777a3324e3320559b433dbc9adecfbf052a78314e39d4f419dc0"
+      },
+      {
+        "sha256": "b18faf1848d8554735b48fbf6e912b2c3325bfd618d03dbcc739009e3565342e"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "skater-squat": {
+    "slug": "skater-squat",
+    "name": "Skater Squat",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "eb03e6a14a9e9f5e5ffdfd416b8f4f204819b57682b66cb08f752c3922346d04"
+      },
+      {
+        "sha256": "49e241c48933dc913eb8cbccbe37c856a3539b229a2f6b0ac2b9e59cc92b476e"
+      },
+      {
+        "sha256": "f882edb6976969741213919791ca705b50829728b3b1f418bb455348acd5dbda"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "skierg": {
+    "slug": "skierg",
+    "name": "SkiErg",
+    "equipment": "Cardio",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "64dde21c4f1897dfe04c5ee03d5fb6ef89cd2f28e42a30228a565bf715925e99"
+      },
+      {
+        "sha256": "5e3771f720a982cb057e1c0df0351c57c95972f2bcf5c9f278850d700241e678"
+      },
+      {
+        "sha256": "812ee597b00c5446c0539ff9a91772235338e67f96d038792e6ffff80a34fb72"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "skull-crusher": {
+    "slug": "skull-crusher",
+    "name": "Skull Crusher",
+    "equipment": "Barbell",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "11adc4aad9d057b8f6e3ae86b58207b351937884f70e38ed4068930934bfaa87"
+      },
+      {
+        "sha256": "18139bdb3bb4d94018c8ba1289789f4bfb2f9de271afcceef232ab9073984afc"
+      },
+      {
+        "sha256": "bcc2372157ffa0250e8b675de7bede1b7ad03228ee15686d79003fca3296e82a"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "smith-machine-bench-press": {
+    "slug": "smith-machine-bench-press",
+    "name": "Smith Machine Bench Press",
+    "equipment": "Machine",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "64e49f181395707fa3104306c781b69e3ad522616566d4c3b8f4cd836703f510"
+      },
+      {
+        "sha256": "5395df6d719d69269af53598cb820df29240eafc11b23d950c0689b696a2872b"
+      },
+      {
+        "sha256": "c5ccb57954ef212452720bc73294fc8eaac3cad0ceca4c227c68f32e808d606b"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "smith-machine-bulgarian-split-squat": {
+    "slug": "smith-machine-bulgarian-split-squat",
+    "name": "Smith Machine Bulgarian Split Squat",
+    "equipment": "Machine",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "a95ef875eef7348eab835107b01cf39fa617deb524dac469e7a1d79452174ac4"
+      },
+      {
+        "sha256": "2621ea8e9c5ab8c67762d80ab5eb01cc7eec849ae42ff51553fe5ad80565b1f8"
+      },
+      {
+        "sha256": "35056b91bdcd7252b701d4ed4b1496da20379f36fd377b7b4bae124b31512c95"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "smith-machine-hip-thrust": {
+    "slug": "smith-machine-hip-thrust",
+    "name": "Smith Machine Hip Thrust",
+    "equipment": "Machine",
+    "primary_muscle": "Glutes",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "48a931d079e3f4850d67a109705e26a88b0ff022b983867716150d4cad4615e5"
+      },
+      {
+        "sha256": "f23401b042dfaa3900eaa946b49d37d11fa5d050b309f550aaa64f693f004e7c"
+      },
+      {
+        "sha256": "498e121dabb1c2296c8059fc3f0c23c18d58a1923014ce6c678bb3d5404d0dd9"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "smith-machine-reverse-lunge": {
+    "slug": "smith-machine-reverse-lunge",
+    "name": "Smith Machine Reverse Lunge",
+    "equipment": "Machine",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9256b0ef2dc72d4d4a15e7bce3c45909f34b64f35dff5b306b5f4a33a5a07c85"
+      },
+      {
+        "sha256": "51b1742227a3814f3f758dcb55a9495504aafc7b296c546e3bb60602f2a67646"
+      },
+      {
+        "sha256": "2b7be752b64aaec049451be874caa120fb4083f8398689c1a106f2f21d7eb4da"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "smith-machine-romanian-deadlift": {
+    "slug": "smith-machine-romanian-deadlift",
+    "name": "Smith Machine Romanian Deadlift",
+    "equipment": "Machine",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "5ecb800b45d9754e240d4268227ad0549c2fdae8deeb9ae0677e94b6968fd407"
+      },
+      {
+        "sha256": "c515617832a8b8736651560a97863e41a9ac1876c3e8e8f0951f26abe724a44d"
+      },
+      {
+        "sha256": "fc1918832c46812a4cbecba55d1aef7e406f844ef8f6565b9babc499786ef2bd"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "smith-machine-split-squat": {
+    "slug": "smith-machine-split-squat",
+    "name": "Smith Machine Split Squat",
+    "equipment": "Machine",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "767219d66bd84360a07cfbf53b520cc6e55c9ed97217b2df126653a0bbf7e16a"
+      },
+      {
+        "sha256": "c77ece8bece96edb3ed9a849f6b1aaf8af2bb01ef61b495c19c7fea15ad9face"
+      },
+      {
+        "sha256": "c89dd11b7b8812a2851fd364b62955eaa78a0b1d410d76a3e5a6e68af542a991"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "smith-machine-squat": {
+    "slug": "smith-machine-squat",
+    "name": "Smith Machine Squat",
+    "equipment": "Machine",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "76d84a779e3eb71c43a9077619d7ef41ed71df8e31a9ba610ecc61d0843ac433"
+      },
+      {
+        "sha256": "a14d18817ec67d775528334ab3c1d3efef48519e685a332ab954fdb1d16ff9c7"
+      },
+      {
+        "sha256": "4d084f0bd2cefbf7792c170dae919702eb8d28f405ce9fc0b31c9d2805a2e4f6"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "spider-curl": {
+    "slug": "spider-curl",
+    "name": "Spider Curl",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Biceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "617a1215fc02f2db75ce77bed5900ba705a1fb468eef942732bf36f6de25e571"
+      },
+      {
+        "sha256": "b19fd440ce1aaba775fdd04f153d7467077cc36d7193ff5494eda3fb2a6cc7df"
+      },
+      {
+        "sha256": "3cb6e8eeb242a8ad3e8cedfe04d19194f4cc2aa529ee87823e3b31d2115aa760"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "split-squat": {
+    "slug": "split-squat",
+    "name": "Split Squat",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "88ef3404fe7abc3b5433f28b083120ade4df51696877cf1702c09fe8b2ccbf4f"
+      },
+      {
+        "sha256": "ce7738d63a977d4bac8b1dcef95e709490e56bacb02ae3f317275fc370937e3b"
+      },
+      {
+        "sha256": "96cdf77086c95f4270fe58ec7305f2ee546ec7c4b254e85272a72958cca534c9"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "sprawl": {
+    "slug": "sprawl",
+    "name": "Sprawl",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Legs",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "fe333ad642f32746b0acd46099dbe1a9fc2dd03728fe7b409aa4a4902595175b"
+      },
+      {
+        "sha256": "8f50206294e1599575deb24f328b9da3d02d1389041fda99bc8d6a7e58b3d76e"
+      },
+      {
+        "sha256": "127280c47b1afc86f13e5446f9dce7181e71e04149a277605e634aba51d40f44"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "squat": {
+    "slug": "squat",
+    "name": "Squat",
+    "equipment": "Barbell",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "70400ddfbb4d4cb67abcbc2a5c64c9da1f100803ca0562eea0fc809c41709614"
+      },
+      {
+        "sha256": "81db447fa52404a66b6e44f1306eade95bdcf083d8ebb20d741172ce6eec7606"
+      },
+      {
+        "sha256": "de8c88b7f75fe3c4e2700625181dad6857ed2efab552ee1787c632341f947633"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "squat-thrust": {
+    "slug": "squat-thrust",
+    "name": "Squat Thrust",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "f4653b97e33c3f77bc6509025bfafaa3b4736c513546e56f80f445927c9161ec"
+      },
+      {
+        "sha256": "a7ac1d5f03ceff76a36f4ac6f214fa01dc5b4c891b3ac81a4422e13546fad800"
+      },
+      {
+        "sha256": "db2ac180b90495bf298376beb6dfc3290e7d6a073068afd24fbcb120a2ef95f2"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "stability-ball-hamstring-curl": {
+    "slug": "stability-ball-hamstring-curl",
+    "name": "Stability Ball Hamstring Curl",
+    "equipment": "Stability Ball",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "19be0025e5ec3b4e87c458a2455c3035d122fa46409fd26188a9951674786d50"
+      },
+      {
+        "sha256": "bb0767a9ba3015065cae10728bdf8458d1904342c5c96af8665446dbf0bd3867"
+      },
+      {
+        "sha256": "1e35ad3943a4c24088103c144ea21f0fd582ab2b14e4943e3734e3a6567fe80c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "stair-climber": {
+    "slug": "stair-climber",
+    "name": "Stair Climber",
+    "equipment": "Cardio",
+    "primary_muscle": "Legs",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "6557cad950bab943065a7f00a7b896b0e38e0ff6d7dd3dec6d5c84a8b5612bc9"
+      },
+      {
+        "sha256": "7e81c75c87b22e002f0ee63db84e2b96c6a0c4ae5dd243647ddced345ca249a7"
+      },
+      {
+        "sha256": "d3d5a2c1bf646aef774082e6750bfb7714132051f0dd09983da5f6bbdf252c4e"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "standing-calf-raise": {
+    "slug": "standing-calf-raise",
+    "name": "Standing Calf Raise",
+    "equipment": "Machine",
+    "primary_muscle": "Calves",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "ed90079f5cb08d561ec6b64eac7ed48cda3687e69d594da4afb9ec3746557a2c"
+      },
+      {
+        "sha256": "b68f1d58beb6801ce4bf5cc172c43afdd7970651dd887b3bada36005d837ea9d"
+      },
+      {
+        "sha256": "98739b44c6c6bbe750192f4b2c7046481f21f222da557e6dcb2fb80fbdf31a32"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "standing-dumbbell-press": {
+    "slug": "standing-dumbbell-press",
+    "name": "Standing Dumbbell Press",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "5230265036c14488f669929cafff826fe2e8457e323ccf2f3dafea81b284e2d2"
+      },
+      {
+        "sha256": "fa0716dcb7a6ab39bef368e0f9ff34e478456a56ef40c49def2093c04c387439"
+      },
+      {
+        "sha256": "0d413898c791d2bf092250ba015e5133a8ace9504acdb6a1bedd99cb8966f505"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "standing-quad-stretch": {
+    "slug": "standing-quad-stretch",
+    "name": "Standing Quad Stretch",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Quads",
+    "is_stretch": true,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "c28e5b832f9276713014d64278f583a278d18196d8a44080b820b0aa1855548c"
+      },
+      {
+        "sha256": "a82d916ebe0fcba65a09c1128a2b4ebe5cb86ee8f1b56fdc8841a19103c6d4da"
+      },
+      {
+        "sha256": "0c069a7719ee8907f6afb9cc4724aebdf890ef91081a3ea97ce49b974c9e24b3"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "step-down": {
+    "slug": "step-down",
+    "name": "Step-Down",
+    "equipment": "Box",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9eaa5a61c1dac7d54cfe67368a0ada9e3bc42be9db5a6b7c3d79d705f9aa09c2"
+      },
+      {
+        "sha256": "1efb6d52b0913b162d83eb1fc42909322534acb4280b7385de1df8ee1baeae76"
+      },
+      {
+        "sha256": "bb24180d7e6896b1ba30e406260547947a85b3619610867bb8d4e416b47286ee"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "step-up": {
+    "slug": "step-up",
+    "name": "Step-Up",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "026105d8e9f490c3ef5f79340aec08d7959ead09c5b1f997950b6af736528035"
+      },
+      {
+        "sha256": "c8d4a9627cf418ad1e08aa0ccdcf3d6388c4db0c5489c58e9a5344f7fee91837"
+      },
+      {
+        "sha256": "1caba6ccdeaa6599c0968425d56f0a2db055f06a294ea86fa8afdf094aef93ac"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "straight-arm-pulldown": {
+    "slug": "straight-arm-pulldown",
+    "name": "Straight-Arm Pulldown",
+    "equipment": "Cable",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "286a4c1d7a6643a0a027f0d8d0a7993e8938e29f292e508d3a76ee11af951d2c"
+      },
+      {
+        "sha256": "2f55e90cb7df0dec4b1455a8165d6d0aa6eee56c14b77c224832ffe055e08a19"
+      },
+      {
+        "sha256": "256a600fce17f321dbe54b42f60b2edc40233b6496ce4f103e9ad5751ab64204"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "sumo-deadlift": {
+    "slug": "sumo-deadlift",
+    "name": "Sumo Deadlift",
+    "equipment": "Barbell",
+    "primary_muscle": "Posterior Chain",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9eda428b6016cc7c13d2beb1a387a08bd98297712a59b55a8b78875749113b04"
+      },
+      {
+        "sha256": "e548aaae77eb066ed3034e80315338c4206f7f3571344472b7d3852f36bd1128"
+      },
+      {
+        "sha256": "a2cb742d66cc7be5a9c6af74ebec52f61c589ef4cc236c3a33c81574b329f1aa"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "superman": {
+    "slug": "superman",
+    "name": "Superman",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Lower Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "97f925cfc498a5325a185ac9258a591341ab1d124820b116d1f7570b55334a5f"
+      },
+      {
+        "sha256": "901253ee0efa7a93179488d39729d7d3998cf13875cedf01e11bd2deac00e5d6"
+      },
+      {
+        "sha256": "9c50d17efbcea089ae739bf9b4a729a0a9af656c2ddd4ef8c0c511a84dcd0dca"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "superman-hold": {
+    "slug": "superman-hold",
+    "name": "Superman Hold",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Lower Back",
+    "is_stretch": false,
+    "mode": "hold",
+    "frames": [
+      {
+        "sha256": "a793dd3c0070c13f6792855c16a25f5ec9e8e94facaf56a0aa5745ec3e5260af"
+      },
+      {
+        "sha256": "c74a25082085d0af57f7a8bf739a3db4158ba1816eb8d5d0e1d26392ae85c319"
+      },
+      {
+        "sha256": "55064bfd8b4fc95d15fc75340837ecc5e11240b75448ee98f3745febe9b29328"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "swimming": {
+    "slug": "swimming",
+    "name": "Swimming",
+    "equipment": "Cardio",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "147148f2dc29518f658cfb82c817916395c7c7911b10a5d683c0d5d261eb5571"
+      },
+      {
+        "sha256": "a243c57dc9231d6a61a87228b13f7c06176d1b132bc6ecfd93920b521896b874"
+      },
+      {
+        "sha256": "680f517ea42b2d8f2f61307bd6e5c9db3b83e82c0e8bdbe18ec2749acf012640"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "t-bar-row": {
+    "slug": "t-bar-row",
+    "name": "T-Bar Row",
+    "equipment": "Machine",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "3cb11be9f7ff18956211bb3958d2637ebcd933203eef371d9759b3b7b7978602"
+      },
+      {
+        "sha256": "f4419b93cec16afab87d065cfa9b87aae4cc7c1b2bbf2ffffa219d0ef7538edb"
+      },
+      {
+        "sha256": "e24cd1b0963b23e6c43702011dbf01c8f1a1627ce67536653b7f0bdbe9a280da"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "toe-touch": {
+    "slug": "toe-touch",
+    "name": "Toe Touch",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "54c04a6b8069427722bfe5bbb4e6078710b2dbf92af479ad7621ddc373625d93"
+      },
+      {
+        "sha256": "ee3b94daffae21c97db0c25939786664562c99d18da25b40364c8c9694d8c324"
+      },
+      {
+        "sha256": "df7a69d70a4d19c131c1117bd9577471de4efab693819dcb7bf8dbd953692400"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "torso-twist-stretch": {
+    "slug": "torso-twist-stretch",
+    "name": "Torso Twists",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Mobility",
+    "is_stretch": true,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "b00b62b26beba7e869213906b5fb732261131c9d37cc5c57d53db64da33a9098"
+      },
+      {
+        "sha256": "9739bfafa294b8f2ff3c49f237bf351f2921907849307ca9b9cc0d6314014e11"
+      },
+      {
+        "sha256": "0aa5b01bd329a9cb46ab3d536c359447ae809e551f48174621acfee45eb12ad2"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "towel-hamstring-curl": {
+    "slug": "towel-hamstring-curl",
+    "name": "Towel Hamstring Curl",
+    "equipment": "Towel",
+    "primary_muscle": "Hamstrings",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "601a7ed3a980d0fa63324b3059daf4cfbf47b550d0a781662ce0fe0ae5f354c5"
+      },
+      {
+        "sha256": "8e0adc20b1dcbd939ec70aa12157dced948554af879728bbac41fb545ce3f99f"
+      },
+      {
+        "sha256": "a87e0c39660baeda14ce7c357d619df0174e1c96f6588d5d637affb9f2f059eb"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "towel-pull-up": {
+    "slug": "towel-pull-up",
+    "name": "Towel Pull-up",
+    "equipment": "Towel",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d9304edfdde05de1cb066bc1ad7b7109db7206fc934fa8021c42e032ebe1152e"
+      },
+      {
+        "sha256": "f804dd8f5f6ce55b6107a4cb17373949bb47cecc1094a58bf65d86ca75dd40d0"
+      },
+      {
+        "sha256": "2d555890e80e8f65677f58555064a46e53d4e8f7ac1662a5f323e5800f0a6bc2"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "towel-row": {
+    "slug": "towel-row",
+    "name": "Towel Row",
+    "equipment": "Towel",
+    "primary_muscle": "Back",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "a5eeac1b5fb39a3cd2ff4e4a765b97e63a59831cb1f37c8ad378e9a26703f382"
+      },
+      {
+        "sha256": "31c0b3746d8a5a46879f5cbbece540cdaf3e8df194b7165c05a698c186452cbf"
+      },
+      {
+        "sha256": "7ec1fec6e46768a17f2d22f1e68c0f8fef1acacee3c4abc9d4f88bc900a19153"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "trap-bar-deadlift": {
+    "slug": "trap-bar-deadlift",
+    "name": "Trap Bar Deadlift",
+    "equipment": "Barbell",
+    "primary_muscle": "Posterior Chain",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "da0e4b2c7bf3cb82122a30d604d6f90117fc38a7acafbf715c1c6f545ab29821"
+      },
+      {
+        "sha256": "e44f494acb230b0fe6f8cbed9ce743f4105a22eceb6c88add3faa297d4e3649d"
+      },
+      {
+        "sha256": "a1c40f1db14c87fdc21fa47bfe67ec5f09fe881554425ec26c34b8725e5810fa"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "treadmill-incline-walk": {
+    "slug": "treadmill-incline-walk",
+    "name": "Treadmill Incline Walk",
+    "equipment": "Cardio",
+    "primary_muscle": "Legs",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9e8a4b2f165551bf6d544c91a2290cb5b24f6e22eb7ac66a5dca5b91777ea0a9"
+      },
+      {
+        "sha256": "fdf3c0c68525689a9d928edbb3132a13f05be7f795b33b4dd91bed85ca8a8a27"
+      },
+      {
+        "sha256": "884991261bc36922d27a441366815ed41bc12f97a00ce39b693efdaec00336bc"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "tricep-kickback": {
+    "slug": "tricep-kickback",
+    "name": "Tricep Kickback",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d8409d61c77a73ea208fe610cc7ace9e212933d609a27f8cde7b015d28b44cc1"
+      },
+      {
+        "sha256": "1f65320918511877ba39a910dfd4c94ff647fa115be2f12b6539d7ea34053543"
+      },
+      {
+        "sha256": "33aad1970211cd8a0704e73c906d5bda49ba3d684828efc39b7df4e4e63fec6b"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "tricep-pushdown": {
+    "slug": "tricep-pushdown",
+    "name": "Tricep Pushdown",
+    "equipment": "Cable",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "cef375b1704324448342d1763ae424d5af300ea07921b2b0787734cddb18c8ad"
+      },
+      {
+        "sha256": "b6ce726c72e2a2f0905da631240d1ba94db32b5ac81afd5be3cc76213db87710"
+      },
+      {
+        "sha256": "3256f59614b53e33f36b39d9dde970399a52b2b1bc6971cfad1406503c32772f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "typewriter-push-up": {
+    "slug": "typewriter-push-up",
+    "name": "Typewriter Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "0da93c162c6d391f4664fe6415a017f3a0c43ddfea9bcfacf5b3a24db17d75a7"
+      },
+      {
+        "sha256": "0a5f38ff5b20f646548ab8fadd8349decc03a90b9d33034d866f55c424861ce2"
+      },
+      {
+        "sha256": "5e087d9b9f92ff3fe1aa611ce17adae44e5714776ce314d5a293e0bfd7534557"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "upright-row": {
+    "slug": "upright-row",
+    "name": "Upright Row",
+    "equipment": "Barbell",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "c4ea653d1f6b92dadfa3f18bb33a25ac399feff357f513d553a5823bbe1fb22f"
+      },
+      {
+        "sha256": "fbac8cb7ed699a28e98d83869e70c791e271550e9ebe9b2e9fb61c97473c0c84"
+      },
+      {
+        "sha256": "21c72d70489a499a529fae4890a8aeeb658411dd78fbb38270deac8c1d5fb126"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "v-up": {
+    "slug": "v-up",
+    "name": "V-Up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "6bb931b29291d800ad5d1c9fbdc6ea8c4f319f7e9dd318789c74734d93fcfbc8"
+      },
+      {
+        "sha256": "2de2b7ae874153815e9c75dbd4c4376c72d0ac071c55d13a5007efcd415311df"
+      },
+      {
+        "sha256": "f562f67ac85a49f896b841a9641f9e32fa7401caa3d758d268372f372478f4f1"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "walking": {
+    "slug": "walking",
+    "name": "Walking",
+    "equipment": "Cardio",
+    "primary_muscle": "Legs",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "d2bdf48f131a68d07933d692a2de37a6702c8bb1097701a39b0a32885d4538cd"
+      },
+      {
+        "sha256": "58cbc18a7db6ff3f3be6054c76ad1c67260295b3bfd031c61685783d8be6ab8b"
+      },
+      {
+        "sha256": "f154693619baff8804d73d7a86f0968a5cc2ab4040b5dcb37946ce5a70b26963"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "walking-lunge": {
+    "slug": "walking-lunge",
+    "name": "Walking Lunge",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "8c85feec5bf506ae218e311a11b1dd405aa7b4b654e1604bbd824a68a9b87745"
+      },
+      {
+        "sha256": "3ca3e9d0584d7d171e535937b4b6517ade785fcd5fc50b15a013138f81434abd"
+      },
+      {
+        "sha256": "fe0e0dd56033310fc00d136c73d8e760f9638c9aec5e46039bda93575102a012"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "wall-calf-stretch": {
+    "slug": "wall-calf-stretch",
+    "name": "Wall Calf Stretch",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Calves",
+    "is_stretch": true,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "6a3ab4c1f289710cba00014a2ffa0bbb33071f2191cc27a7f06ce44c17f21712"
+      },
+      {
+        "sha256": "205467d4d9d26a18e76019c67c7f71d7226bd5b8acf514271a90c58f290907d5"
+      },
+      {
+        "sha256": "a1beecd31379ac79248180e725b7fd07361678ae8433685988907ee081c4598c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "wall-handstand-push-up": {
+    "slug": "wall-handstand-push-up",
+    "name": "Wall Handstand Push-up",
+    "equipment": "Wall",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "a12440a24bdbccb0708d48a53e53708c367397eafaa72d576cbc1b7066a173ed"
+      },
+      {
+        "sha256": "7f1a4bfb3d3e549c9c4107d30bc19fcf822cc910d7688cc0c68c873300978d72"
+      },
+      {
+        "sha256": "d88297eee4d50cf58ef3196a05bfd5cfe00e1d72ca1bf389d8543e51ff540bb3"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "wall-push-up": {
+    "slug": "wall-push-up",
+    "name": "Wall Push-up",
+    "equipment": "Wall",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "92ba3b3cb79edc9eb21ed48854f12bb37ab433c85a1ec3a45df11a14bad6e2ab"
+      },
+      {
+        "sha256": "249aa0ff9a940c43c9796c537c27ea6d6010c0cdc907d23889aab613bef49a79"
+      },
+      {
+        "sha256": "2db34c9c4a83be1945d2fc61121ce71e6f68a48e7d1d9bf9df9ba636320de4da"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "wall-sit": {
+    "slug": "wall-sit",
+    "name": "Wall Sit",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Quads",
+    "is_stretch": false,
+    "mode": "hold",
+    "frames": [
+      {
+        "sha256": "50e90c270f36a2329caa5ff6c3c6b9a4b478bbded86c3fa4f3e068c5026f6cfb"
+      },
+      {
+        "sha256": "14dbe0d64b92186c5c8d3a285a417d3e2e1a356b1e663a317315eb23633e23f8"
+      },
+      {
+        "sha256": "44999938d918dcde835aad680597848a5fc246ac4dda1e6b06cfca5d54e674f8"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "wall-walk": {
+    "slug": "wall-walk",
+    "name": "Wall Walk",
+    "equipment": "Wall",
+    "primary_muscle": "Shoulders",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "f4f6b49438046bc6592b845f119ce67c6edcc958d3d1b2797a37caaa87666339"
+      },
+      {
+        "sha256": "dca4bebe05155c4bf65818255afdffd2b193a8673100010137ca738d4571050c"
+      },
+      {
+        "sha256": "9593512eed290a38b099c2d90e0bfda2653f31c1a5000be7a9673299883261d7"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "weighted-chin-up": {
+    "slug": "weighted-chin-up",
+    "name": "Weighted Chin-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Biceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "4ca2ce623e36dcceb0d1723868dbd3b422d32eb17805a9a4ea2f406a39d1cfb7"
+      },
+      {
+        "sha256": "8be2121f4336a1ba2022d273c6e65d37aa919ce380b38b22ab5d57cf635de4f2"
+      },
+      {
+        "sha256": "1bb9c028d13ff0bf8e69b214cb554b8406f48adf4c69965c9e5212cd6559a184"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "weighted-crunch": {
+    "slug": "weighted-crunch",
+    "name": "Weighted Crunch",
+    "equipment": "Plate",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "56d3c1c595898c80d0d24f0c2c7d8fba76c0ebf4100bc65343f9618a4948b75e"
+      },
+      {
+        "sha256": "128a7cb7896bc0797ad687736478864a814bc96106ad2dc4f1f7ac4402ec11e5"
+      },
+      {
+        "sha256": "a995d8a2a6cc3609940df56ed6dfa7456ce89a418e32566ad587ee14f9ebbea2"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "weighted-dip": {
+    "slug": "weighted-dip",
+    "name": "Weighted Dip",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Triceps",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "0166bf3fb77cb0485af8fb3916eba22536176634bc00ad5e331ca1ade197f2a3"
+      },
+      {
+        "sha256": "65d0c90fd7c0ee4f7227b6a5d6583e533f07715c7990362404f72f36c6018e49"
+      },
+      {
+        "sha256": "e4ba4ef91f68a704ec6966c85450aae4c6e366aca56c335815cd3b8f6de364ad"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "weighted-pull-up": {
+    "slug": "weighted-pull-up",
+    "name": "Weighted Pull-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "34daff705ece824dc18d7216c7ec530085fdfce4a3eaccc0b6afceccf1fd2585"
+      },
+      {
+        "sha256": "60bff5f0b0e77fa43889b177dc995c0de1990ff293d8f5061f5861ff4b79ea99"
+      },
+      {
+        "sha256": "7296827e22c934abafbae88086e6b271bc4eb52030af05c8eb1d8c4979e8bd28"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "weighted-push-up": {
+    "slug": "weighted-push-up",
+    "name": "Weighted Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "49c6a3a03c9841adc41c6ac8dd8af7b49db813b28c2ab85d20cb81ebda2d4c3d"
+      },
+      {
+        "sha256": "c2ab3291a6516c3abb4f82669bdfc984a8459a5080a2dabd128f406b5140634e"
+      },
+      {
+        "sha256": "3e153a233b0d374d5e0afb0e409047c51cd380f68cf7c124b7f84ea61b0aa9fc"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "weighted-russian-twist": {
+    "slug": "weighted-russian-twist",
+    "name": "Weighted Russian Twist",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Core",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "c2432e3504ce046352b9b5eb189a760cb9818825940b6b4bd46ab286150e5ff7"
+      },
+      {
+        "sha256": "159867b886d039a318e06c356209fe784b49990085f5e86a3849062f72c20e75"
+      },
+      {
+        "sha256": "c82eb4e3b320b333d6a62695815679dacac2334db2ab7079184a1a80c901b89c"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "wide-grip-lat-pulldown": {
+    "slug": "wide-grip-lat-pulldown",
+    "name": "Wide-Grip Lat Pulldown",
+    "equipment": "Cable",
+    "primary_muscle": "Lats",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "5e4652073949ca60fadf686364d9fd688c989d89244ee20e19988cc4fb2e82c0"
+      },
+      {
+        "sha256": "58b623103b4d71e28aa99862b481b79239abb394096c1f0377cc4c543aecf3c1"
+      },
+      {
+        "sha256": "6f91f2b5e6ecac524a2101c4257f13d88c631b38df1862dbd1c0c2f0bb47c47f"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "wide-push-up": {
+    "slug": "wide-push-up",
+    "name": "Wide Push-up",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Chest",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "45a7268f41930e3043566db46300d36756f4b9c3f5e83b6d3e203069cce131eb"
+      },
+      {
+        "sha256": "eedae06405cfaeda68aed213c68f6db23d7cb0ce5efe950c9f8a10c78cd4424c"
+      },
+      {
+        "sha256": "3a74be33f771af1934b4863d82e6130332e0e49e976caf97b055960cf8e477d7"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "worlds-greatest-stretch": {
+    "slug": "worlds-greatest-stretch",
+    "name": "World's Greatest Stretch",
+    "equipment": "Bodyweight",
+    "primary_muscle": "Mobility",
+    "is_stretch": true,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "9f4dadda9bc90ee14fb6d4a0658aee6f8244bced4a98be6bc739b98c875f9ba3"
+      },
+      {
+        "sha256": "99ca0ecf2d364aba1f5b8c00d808ce6193fea4175cc74bc4b8f1094b3bdc2514"
+      },
+      {
+        "sha256": "73f579355608436343eee2f0f11e4da5d102ffb1df707acbad65f479b77abc18"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "wrist-curl": {
+    "slug": "wrist-curl",
+    "name": "Wrist Curl",
+    "equipment": "Barbell",
+    "primary_muscle": "Forearms",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "3dececa22239567d3fadaa6af9e4ebdf2cab225e1b4b5424bd2efe0c590ee456"
+      },
+      {
+        "sha256": "dcd16ccd77732178110a04198625f55f7f6e07bb891883fed572453b906b638f"
+      },
+      {
+        "sha256": "01b8822aad5ee83fd5678c90c39c8071a96f7b4cfe6bfd89f6bba1e61943f01d"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  },
+  "wrist-extension": {
+    "slug": "wrist-extension",
+    "name": "Wrist Extension",
+    "equipment": "Dumbbell",
+    "primary_muscle": "Forearms",
+    "is_stretch": false,
+    "mode": "pending",
+    "frames": [
+      {
+        "sha256": "98bd9c76ccad52a2bac1539e52f03bc746bfeab3d83531ba7ef05f67ce3d77d0"
+      },
+      {
+        "sha256": "3f4c0c818d019ef6e7304ec1dcfa430770f9e5c1e1a91c8020692e2cd18fca9f"
+      },
+      {
+        "sha256": "4c1891fbbe749796aedeb82c3e99033071a4ec859cc905a9f80146dcc724a9f3"
+      }
+    ],
+    "review_status": "automatic-registration-only"
+  }
+}
