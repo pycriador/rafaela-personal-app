@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
-import { StatCard } from '../../components/ui/StatCard';
 import { workoutRepository } from '../../repositories/workoutRepository';
-import { WorkoutPlan, WorkoutDay, WorkoutSession, DayOfWeek } from '../../types';
+import { messageRepository } from '../../repositories/messageRepository';
+import { WorkoutPlan, WorkoutDay, WorkoutSession, DayOfWeek, StudentMessage } from '../../types';
 import {
   Play,
   Flame,
@@ -17,7 +17,24 @@ import {
   ArrowRight,
   TrendingUp,
   Award,
+  MessageSquare,
+  Sparkles,
+  HelpCircle,
+  Moon,
+  ChevronRight,
 } from 'lucide-react';
+
+const DAYS_MAP: Record<number, DayOfWeek> = {
+  0: 'Domingo',
+  1: 'Segunda',
+  2: 'Terça',
+  3: 'Quarta',
+  4: 'Quinta',
+  5: 'Sexta',
+  6: 'Sábado',
+};
+
+const DAYS_OF_WEEK_ORDER: DayOfWeek[] = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
 
 export const StudentDashboardPage: React.FC = () => {
   const { user, studentProfile } = useAuth();
@@ -25,164 +42,380 @@ export const StudentDashboardPage: React.FC = () => {
 
   const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null);
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
+  const [messages, setMessages] = useState<StudentMessage[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Determine current day of week in Portuguese
-  const daysMap: Record<number, DayOfWeek> = {
-    0: 'Domingo',
-    1: 'Segunda',
-    2: 'Terça',
-    3: 'Quarta',
-    4: 'Quinta',
-    5: 'Sexta',
-    6: 'Sábado',
-  };
-  const todayDayOfWeek = daysMap[new Date().getDay()] || 'Segunda';
+  const todayDayOfWeek = DAYS_MAP[new Date().getDay()] || 'Segunda';
 
   useEffect(() => {
     async function load() {
       if (!studentProfile) return;
-      const [plan, sess] = await Promise.all([
-        workoutRepository.getPlanByStudentId(studentProfile.id),
-        workoutRepository.getSessions(studentProfile.id),
+      const targetId = studentProfile.userId || studentProfile.id;
+      const [plan, sess, msgs] = await Promise.all([
+        workoutRepository.getPlanByStudentId(targetId),
+        workoutRepository.getSessions(targetId),
+        messageRepository.getMessagesByStudentId(targetId),
       ]);
       setWorkoutPlan(plan);
       setSessions(sess);
+      setMessages(msgs);
       setLoading(false);
     }
     load();
   }, [studentProfile]);
 
+  // Completed & Incomplete sessions
+  const completedSessions = useMemo(() => sessions.filter((s) => s.status === 'completed'), [sessions]);
+
+  // Real adherence calculation
+  const adherencePercentage = useMemo(() => {
+    if (sessions.length === 0) return 100;
+    return Math.round((completedSessions.length / sessions.length) * 100);
+  }, [sessions, completedSessions]);
+
+  // Check if today has a scheduled workout in active plan
+  const todayWorkout: WorkoutDay | undefined = useMemo(() => {
+    return workoutPlan?.days.find((d) => d.dayOfWeek === todayDayOfWeek);
+  }, [workoutPlan, todayDayOfWeek]);
+
+  // Check if today's workout has already been completed today
+  const isTodayCompleted = useMemo(() => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    return sessions.some((s) => {
+      const sDate = s.date?.split('T')[0];
+      return (sDate === todayStr || (todayWorkout && s.workoutDayName === todayWorkout.name)) && s.status === 'completed';
+    });
+  }, [sessions, todayWorkout]);
+
+  // Compute next workout if today is rest or already completed
+  const nextWorkoutInfo = useMemo(() => {
+    if (!workoutPlan || workoutPlan.days.length === 0) return null;
+    const now = new Date();
+
+    for (let i = 1; i <= 7; i++) {
+      const target = new Date(now);
+      target.setDate(now.getDate() + i);
+      const dayName = DAYS_MAP[target.getDay()];
+      const scheduled = workoutPlan.days.find((d) => d.dayOfWeek === dayName);
+      if (scheduled) {
+        const dateFormatted = target.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+        return {
+          dayName,
+          name: scheduled.name,
+          muscleFocus: scheduled.muscleFocus,
+          exerciseCount: scheduled.exercises.length,
+          dateFormatted,
+          inDays: i,
+          workoutDayId: scheduled.id,
+        };
+      }
+    }
+    return null;
+  }, [workoutPlan]);
+
+  // Current calendar week (Monday to Sunday) with real calendar dates
+  const currentWeekDays = useMemo(() => {
+    const now = new Date();
+    const currentDayIndex = (now.getDay() + 6) % 7; // Segunda = 0
+    const monday = new Date(now);
+    monday.setDate(now.getDate() - currentDayIndex);
+
+    return DAYS_OF_WEEK_ORDER.map((dayName, idx) => {
+      const curDate = new Date(monday);
+      curDate.setDate(monday.getDate() + idx);
+      const dateFormatted = curDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+      const curDateStr = curDate.toISOString().split('T')[0];
+      const isToday = dayName === todayDayOfWeek;
+      const workout = workoutPlan?.days.find((wd) => wd.dayOfWeek === dayName);
+
+      const isCompleted = sessions.some((s) => {
+        const sDate = s.date?.split('T')[0];
+        return (sDate === curDateStr || (workout && s.workoutDayName === workout.name)) && s.status === 'completed';
+      });
+
+      return {
+        dayName,
+        dateFormatted,
+        isToday,
+        workout,
+        isCompleted,
+      };
+    });
+  }, [workoutPlan, sessions, todayDayOfWeek]);
+
+  // Last message from trainer or count of unread
+  const lastTrainerMessage = useMemo(() => {
+    return [...messages].reverse().find((m) => m.senderRole === 'personal');
+  }, [messages]);
+
   if (loading || !studentProfile) {
     return (
-      <div className="py-12 flex justify-center">
-        <div className="w-8 h-8 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+      <div className="py-16 flex flex-col items-center justify-center gap-3">
+        <div className="w-9 h-9 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+        <p className="text-xs font-semibold text-slate-400">Carregando seu painel de treinos...</p>
       </div>
     );
   }
 
-  // Find today's workout or fallback to first available
-  const todayWorkout: WorkoutDay | undefined =
-    workoutPlan?.days.find((d) => d.dayOfWeek === todayDayOfWeek) ||
-    workoutPlan?.days[0];
-
-  const daysOfWeekOrder: DayOfWeek[] = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
-
   return (
     <div className="space-y-6 pb-8">
-      {/* Greeting Header (Section 27) */}
-      <div className="space-y-1">
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-            Olá, {studentProfile.name.split(' ')[0]}! 👋
-          </h1>
-          <span className="text-xl">🔥</span>
+      {/* Greeting Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+              Olá, {studentProfile.name.split(' ')[0]}! 👋
+            </h1>
+            <span className="text-xl">🔥</span>
+          </div>
+          <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
+            Meta ativa: <strong className="text-emerald-500">{studentProfile.goals.join(', ')}</strong> • Frequência:{' '}
+            <strong>{studentProfile.availableDays.length}x na semana</strong>
+          </p>
         </div>
-        <p className="text-xs text-slate-500 dark:text-dark-muted">
-          Meta ativa: <strong className="text-emerald-500">{studentProfile.goals.join(', ')}</strong>
-        </p>
+
+        <Badge variant="success" size="sm" className="self-start sm:self-auto font-mono text-[11px] py-1 px-2.5">
+          Ficha: {workoutPlan?.name || 'Rotina Personalizada'}
+        </Badge>
       </div>
 
-      {/* Hero Card: Treino de Hoje (Section 19 & 27) */}
+      {/* Hero Card: Treino de Hoje OU Dia de Descanso */}
       {todayWorkout ? (
-        <Card className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950 text-white border-emerald-500/30 p-6 shadow-xl">
-          <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="relative z-10 space-y-4">
+        isTodayCompleted ? (
+          <Card className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 text-white border-emerald-500/30 p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between">
-              <span className="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-400 font-extrabold text-xs tracking-wider uppercase border border-emerald-500/30">
-                Treino de Hoje • {todayWorkout.dayOfWeek}
+              <span className="px-3 py-1 rounded-xl bg-emerald-500/30 text-emerald-300 font-extrabold text-xs tracking-wider uppercase border border-emerald-500/40 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                Treino de Hoje Concluído! 🎉
               </span>
-              <span className="text-xs text-slate-400 font-medium">
-                {todayWorkout.exercises.length} exercícios
+              <span className="text-xs text-emerald-200/80 font-mono">
+                {todayWorkout.dayOfWeek} • {todayWorkout.name}
               </span>
             </div>
 
             <div>
-              <h2 className="text-2xl font-black tracking-tight text-white">
-                {todayWorkout.name}
-              </h2>
-              <p className="text-xs text-emerald-300 font-medium mt-1">
-                Foco muscular: {todayWorkout.muscleFocus}
+              <h2 className="text-xl font-black text-white">Parabéns pelo treino de hoje!</h2>
+              <p className="text-xs text-slate-300 mt-1">
+                Sua frequência foi registrada com sucesso. Descanse, mantenha a hidratação e acompanhe sua evolução de cargas.
               </p>
             </div>
 
-            {/* Quick overview of exercises */}
-            <div className="py-2 flex flex-wrap gap-1.5">
-              {todayWorkout.exercises.slice(0, 4).map((ex, idx) => (
-                <span
-                  key={idx}
-                  className="text-[11px] font-semibold bg-white/10 px-2.5 py-1 rounded-lg text-slate-200"
+            {nextWorkoutInfo && (
+              <div className="p-3.5 rounded-xl bg-white/10 border border-white/10 flex items-center justify-between gap-3 text-xs">
+                <div>
+                  <span className="text-[10px] text-slate-400 block font-bold uppercase">Próximo Treino Agendado</span>
+                  <span className="font-bold text-white">
+                    {nextWorkoutInfo.dayName} ({nextWorkoutInfo.dateFormatted}) • {nextWorkoutInfo.name}
+                  </span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => navigate(`/student/workouts`)}
+                  className="bg-white/15 hover:bg-white/25 text-white border-white/20 text-xs shrink-0"
                 >
-                  {idx + 1}. {ex.sets}x{ex.reps} ({ex.weight}kg)
-                </span>
-              ))}
-              {todayWorkout.exercises.length > 4 && (
-                <span className="text-[11px] text-slate-400 self-center">
-                  +{todayWorkout.exercises.length - 4} mais
-                </span>
-              )}
-            </div>
+                  Ver Ficha
+                </Button>
+              </div>
+            )}
+          </Card>
+        ) : (
+          <Card className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950 text-white border-emerald-500/30 p-6 shadow-xl space-y-4">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
-            <Button
-              variant="primary"
-              size="xl"
-              fullWidth
-              onClick={() => navigate(`/student/workout/active/${todayWorkout.id}`)}
-              leftIcon={<Play className="w-5 h-5 fill-current" />}
-              className="text-base font-extrabold shadow-lg shadow-emerald-500/30 active:scale-[0.98]"
-            >
-              Começar Treino
-            </Button>
-          </div>
-        </Card>
+            <div className="relative z-10 space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-400 font-extrabold text-xs tracking-wider uppercase border border-emerald-500/30">
+                  Treino de Hoje • {todayWorkout.dayOfWeek}
+                </span>
+                <span className="text-xs text-slate-400 font-medium font-mono">
+                  {todayWorkout.exercises.length} exercícios programados
+                </span>
+              </div>
+
+              <div>
+                <h2 className="text-2xl font-black tracking-tight text-white">{todayWorkout.name}</h2>
+                <p className="text-xs text-emerald-300 font-medium mt-1">Foco muscular: {todayWorkout.muscleFocus}</p>
+              </div>
+
+              {/* Previa dos exercicios */}
+              <div className="py-1 flex flex-wrap gap-1.5">
+                {todayWorkout.exercises.slice(0, 4).map((ex, idx) => (
+                  <span key={idx} className="text-[11px] font-semibold bg-white/10 px-2.5 py-1 rounded-lg text-slate-200">
+                    {idx + 1}. {ex.sets}x{ex.reps} ({ex.weight}kg)
+                  </span>
+                ))}
+                {todayWorkout.exercises.length > 4 && (
+                  <span className="text-[11px] text-slate-400 self-center">
+                    +{todayWorkout.exercises.length - 4} mais
+                  </span>
+                )}
+              </div>
+
+              <Button
+                variant="primary"
+                size="xl"
+                fullWidth
+                onClick={() => navigate(`/student/workout/active/${todayWorkout.id}`)}
+                leftIcon={<Play className="w-5 h-5 fill-current" />}
+                className="text-base font-extrabold shadow-lg shadow-emerald-500/30 active:scale-[0.98]"
+              >
+                Começar Treino de Hoje
+              </Button>
+            </div>
+          </Card>
+        )
       ) : (
-        <Card className="p-6 text-center text-slate-400 text-xs">
-          Nenhum treino programado para hoje. Aproveite para descansar ou revisar sua alimentação!
+        <Card className="p-6 relative overflow-hidden bg-slate-900 text-white border-slate-800 space-y-4 shadow-lg">
+          <div className="flex items-center justify-between">
+            <span className="px-3 py-1 rounded-xl bg-amber-500/20 text-amber-400 font-extrabold text-xs tracking-wider uppercase border border-amber-500/30 flex items-center gap-1.5">
+              <Moon className="w-3.5 h-3.5" />
+              Dia de Descanso & Recuperação
+            </span>
+            <span className="text-xs text-slate-400 font-mono">Hoje ({todayDayOfWeek})</span>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-black text-white">Nenhum treino programado para hoje.</h2>
+            <p className="text-xs text-slate-400 mt-1">
+              O descanso faz parte fundamental dos seus resultados de hipertrofia e queima de gordura.
+            </p>
+          </div>
+
+          {nextWorkoutInfo && (
+            <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between gap-3 text-xs">
+              <div>
+                <span className="text-[10px] text-slate-400 block font-bold uppercase">
+                  Próximo Treino ({nextWorkoutInfo.dayName} • {nextWorkoutInfo.dateFormatted})
+                </span>
+                <span className="font-bold text-white">
+                  {nextWorkoutInfo.name} ({nextWorkoutInfo.muscleFocus})
+                </span>
+              </div>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => navigate(`/student/workout/active/${nextWorkoutInfo.workoutDayId}`)}
+                className="text-xs shrink-0"
+              >
+                Antecipar Treino
+              </Button>
+            </div>
+          )}
         </Card>
       )}
 
-      {/* Calendário Semanal (Section 28) */}
-      <Card className="p-5">
-        <div className="flex items-center justify-between mb-3">
+      {/* Card de Destaque: Bate-Papo com a Treinadora Rafaela */}
+      <Card className="p-5 border-emerald-500/30 bg-gradient-to-r from-emerald-500/5 via-transparent to-cyan-500/5 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <img
+                src="https://images.unsplash.com/photo-1594381898411-846e7d193883?w=150&auto=format&fit=crop&q=80"
+                alt="Rafaela Personal"
+                className="w-11 h-11 rounded-2xl object-cover ring-2 ring-emerald-500/30 shrink-0"
+              />
+              <span className="w-3 h-3 rounded-full bg-emerald-500 absolute -bottom-0.5 -right-0.5 ring-2 ring-white dark:ring-dark-card" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-black text-slate-900 dark:text-white">Bate-Papo com a Rafaela</h3>
+                <Badge variant="success" size="sm" className="text-[9px] py-0 px-1.5">
+                  Treinadora Online
+                </Badge>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-dark-muted">
+                Tire dúvidas da sua ficha, relate trocas ou peça orientação técnica de cargas.
+              </p>
+            </div>
+          </div>
+
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={() => navigate('/student/chat')}
+            leftIcon={<MessageSquare className="w-4 h-4" />}
+            className="shrink-0 font-bold"
+          >
+            Tirar Dúvida
+          </Button>
+        </div>
+
+        {lastTrainerMessage && (
+          <div className="p-3 rounded-xl bg-slate-50 dark:bg-dark-cardElevated/70 border border-slate-200/60 dark:border-dark-border/60 text-xs flex items-center justify-between gap-3">
+            <div className="min-w-0 pr-2">
+              <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 block uppercase">
+                Última orientação da Rafaela:
+              </span>
+              <p className="text-slate-700 dark:text-slate-300 truncate mt-0.5 font-medium">
+                "{lastTrainerMessage.content}"
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/student/chat')}
+              className="text-xs font-bold text-emerald-500 hover:text-emerald-600 flex items-center gap-0.5 shrink-0 cursor-pointer"
+            >
+              <span>Ver conversa</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
+      </Card>
+
+      {/* Calendário Semanal Real (Segunda a Domingo com datas) */}
+      <Card className="p-5 space-y-3">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <CalendarIcon className="w-4 h-4 text-emerald-500" />
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-              Semana de Treinos
-            </h3>
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Semana Atual de Treinos</h3>
           </div>
-          <span className="text-xs text-slate-400">
-            Frequência: {studentProfile.availableDays.length}x/semana
+          <span className="text-xs text-slate-400 font-mono">
+            {completedSessions.length} sessões concluídas no total
           </span>
         </div>
 
         <div className="grid grid-cols-7 gap-1.5 text-center">
-          {daysOfWeekOrder.map((d) => {
-            const hasWorkout = workoutPlan?.days.some((wd) => wd.dayOfWeek === d);
-            const isToday = d === todayDayOfWeek;
+          {currentWeekDays.map((d) => {
             return (
               <div
-                key={d}
+                key={d.dayName}
                 className={`py-3 px-1 rounded-2xl flex flex-col items-center justify-between transition-all ${
-                  isToday
+                  d.isToday
                     ? 'ring-2 ring-emerald-500 bg-emerald-500/10 dark:bg-emerald-950/30'
-                    : hasWorkout
+                    : d.isCompleted
+                    ? 'bg-emerald-500/15 border border-emerald-500/30'
+                    : d.workout
                     ? 'bg-slate-100 dark:bg-dark-cardElevated/80'
                     : 'bg-slate-50 dark:bg-dark-card/30 opacity-60'
                 }`}
               >
-                <span className="text-[10px] font-bold text-slate-400 uppercase">
-                  {d.slice(0, 3)}
-                </span>
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase block">{d.dayName.slice(0, 3)}</span>
+                  <span className="text-[10px] font-mono text-slate-500 block">{d.dateFormatted}</span>
+                </div>
+
                 <div className="my-1.5">
-                  {hasWorkout ? (
-                    <Dumbbell className={`w-4 h-4 ${isToday ? 'text-emerald-500 animate-bounce' : 'text-slate-600 dark:text-slate-300'}`} />
+                  {d.isCompleted ? (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  ) : d.workout ? (
+                    <Dumbbell className={`w-4 h-4 ${d.isToday ? 'text-emerald-500 animate-bounce' : 'text-slate-600 dark:text-slate-300'}`} />
                   ) : (
                     <span className="text-[10px] text-slate-400">•</span>
                   )}
                 </div>
-                <span className={`text-[9px] font-bold ${isToday ? 'text-emerald-500' : 'text-slate-500'}`}>
-                  {hasWorkout ? 'Treino' : 'Descanso'}
+
+                <span
+                  className={`text-[9px] font-bold ${
+                    d.isCompleted
+                      ? 'text-emerald-500'
+                      : d.isToday
+                      ? 'text-emerald-500'
+                      : d.workout
+                      ? 'text-slate-700 dark:text-slate-300'
+                      : 'text-slate-400'
+                  }`}
+                >
+                  {d.isCompleted ? 'Feito ✅' : d.isToday && d.workout ? 'Hoje 🏋️' : d.workout ? 'Treino' : 'Descanso'}
                 </span>
               </div>
             );
@@ -190,16 +423,16 @@ export const StudentDashboardPage: React.FC = () => {
         </div>
       </Card>
 
-      {/* Metrics Row (Section 27) */}
+      {/* Metrics Row: Adesão Real e Frequência */}
       <div className="grid grid-cols-2 gap-3">
         <Card className="p-4 flex items-center gap-3">
           <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-500 flex items-center justify-center shrink-0">
             <Flame className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-xs text-slate-400 block font-medium">Adesão Geral</span>
+            <span className="text-xs text-slate-400 block font-medium">Adesão Real</span>
             <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
-              {studentProfile.adherencePercentage}%
+              {adherencePercentage}%
             </span>
           </div>
         </Card>
@@ -209,9 +442,9 @@ export const StudentDashboardPage: React.FC = () => {
             <Award className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-xs text-slate-400 block font-medium">Sequência Atual</span>
+            <span className="text-xs text-slate-400 block font-medium">Treinos Feitos</span>
             <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
-              4 Semanas
+              {completedSessions.length} sessões
             </span>
           </div>
         </Card>
@@ -221,19 +454,15 @@ export const StudentDashboardPage: React.FC = () => {
       <div className="space-y-2">
         <button
           onClick={() => navigate('/student/evolution')}
-          className="w-full p-4 rounded-2xl bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border flex items-center justify-between text-left hover:border-emerald-500/40 transition-colors shadow-sm"
+          className="w-full p-4 rounded-2xl bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border flex items-center justify-between text-left hover:border-emerald-500/40 transition-colors shadow-sm cursor-pointer"
         >
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-dark-cardElevated text-emerald-500">
               <TrendingUp className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                Minha Evolução de Cargas
-              </h4>
-              <p className="text-xs text-slate-500">
-                Veja o histórico do seu aumento de força
-              </p>
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white">Minha Evolução de Cargas</h4>
+              <p className="text-xs text-slate-500">Veja o histórico do seu aumento de força e cargas executadas</p>
             </div>
           </div>
           <ArrowRight className="w-4 h-4 text-slate-400" />

@@ -66,8 +66,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const savedUser = getItem<User | null>(STORAGE_KEYS.CURRENT_USER, null);
     if (savedUser) {
       setUser(savedUser);
-      if (savedUser.role === 'student' && savedUser.studentProfileId) {
-        studentRepository.getById(savedUser.studentProfileId).then((st) => {
+      if (savedUser.role === 'student') {
+        const profileLookup = savedUser.studentProfileId || savedUser.id;
+        studentRepository.getById(profileLookup).then((st) => {
           setStudentProfile(st);
           setIsLoading(false);
         });
@@ -90,8 +91,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(found);
     setItem(STORAGE_KEYS.CURRENT_USER, found);
 
-    if (found.role === 'student' && found.studentProfileId) {
-      const st = await studentRepository.getById(found.studentProfileId);
+    if (found.role === 'student') {
+      const profileLookup = found.studentProfileId || found.id;
+      const st = await studentRepository.getById(profileLookup);
       setStudentProfile(st);
     } else {
       setStudentProfile(null);
@@ -112,8 +114,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(found);
     setItem(STORAGE_KEYS.CURRENT_USER, found);
 
-    if (found.role === 'student' && found.studentProfileId) {
-      const st = await studentRepository.getById(found.studentProfileId);
+    if (found.role === 'student') {
+      const profileLookup = found.studentProfileId || found.id;
+      const st = await studentRepository.getById(profileLookup);
       setStudentProfile(st);
     } else {
       setStudentProfile(null);

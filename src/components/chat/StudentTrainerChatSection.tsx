@@ -106,7 +106,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
     try {
       const isPersonal = currentUserRole === 'personal';
       const senderName = isPersonal ? 'Rafaela Personal' : student.name;
-      const senderId = isPersonal ? 'user-rafaela' : student.id;
+      const senderId = isPersonal ? 'user-rafaela' : (student.userId || student.id);
 
       await messageRepository.sendMessage({
         studentId: student.id,
@@ -146,25 +146,34 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
     return m.category === activeFilter;
   });
 
+  const isStudentViewer = currentUserRole === 'student';
+  const trainerAvatar = 'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=150&auto=format&fit=crop&q=80';
+
   return (
     <Card className="border-emerald-500/20 shadow-lg overflow-hidden flex flex-col h-[650px]">
       <CardHeader className="py-4 px-6 border-b border-slate-100 dark:border-dark-border/60 bg-slate-50/60 dark:bg-dark-cardElevated/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="relative">
             <img
-              src={student.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
-              alt={student.name}
+              src={isStudentViewer ? trainerAvatar : (student.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150')}
+              alt={isStudentViewer ? 'Rafaela Personal' : student.name}
               className="w-10 h-10 rounded-2xl object-cover ring-2 ring-emerald-500/30"
             />
             <span className="w-3 h-3 rounded-full bg-emerald-500 absolute -bottom-0.5 -right-0.5 ring-2 ring-white dark:ring-dark-card" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <CardTitle className="text-sm font-black">Bate-Papo & Alinhamento Técnico</CardTitle>
-              <Badge variant="success" size="sm">Canal Direto</Badge>
+              <CardTitle className="text-sm font-black">
+                {isStudentViewer ? 'Bate-Papo com Rafaela Personal' : 'Bate-Papo & Alinhamento Técnico'}
+              </CardTitle>
+              <Badge variant="success" size="sm">
+                {isStudentViewer ? 'Sua Treinadora' : 'Canal Direto'}
+              </Badge>
             </div>
             <p className="text-[11px] text-slate-500 dark:text-dark-muted">
-              Comunicação entre <strong>Rafaela</strong> e <strong>{student.name}</strong> para ajuste de cargas e exercícios
+              {isStudentViewer
+                ? 'Tire dúvidas técnicas dos seus treinos, reporte alterações de carga ou peça orientações'
+                : `Comunicação entre Rafaela e ${student.name} para ajuste de cargas e exercícios`}
             </p>
           </div>
         </div>
@@ -225,42 +234,97 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
           <Sparkles className="w-3.5 h-3.5 text-amber-500" />
           Atalhos rápidos:
         </span>
-        <button
-          type="button"
-          onClick={() =>
-            handleSendQuickMessage(
-              'Parabéns pela evolução de carga no Supino! Mantivemos cadência e controle perfeito.',
-              'weight_change'
-            )
-          }
-          className="px-2.5 py-1 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-300 hover:border-emerald-500 hover:text-emerald-500 transition-all shrink-0 text-[11px] cursor-pointer"
-        >
-          💪 Parabéns pela carga (+2kg)
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            handleSendQuickMessage(
-              'A substituição que você realizou foi perfeita e manteve o mesmo grupo muscular alvo.',
-              'exercise_change'
-            )
-          }
-          className="px-2.5 py-1 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-300 hover:border-cyan-500 hover:text-cyan-500 transition-all shrink-0 text-[11px] cursor-pointer"
-        >
-          🔄 Substituição autorizada
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            handleSendQuickMessage(
-              'Atenção ao intervalo de descanso entre as séries: preserve os 60 segundos completos para recuperação.',
-              'question'
-            )
-          }
-          className="px-2.5 py-1 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-300 hover:border-amber-500 hover:text-amber-500 transition-all shrink-0 text-[11px] cursor-pointer"
-        >
-          ⏱️ Atenção ao descanso
-        </button>
+        {isStudentViewer ? (
+          <>
+            <button
+              type="button"
+              onClick={() =>
+                handleSendQuickMessage(
+                  'Oi Rafaela! Estou com uma dúvida sobre a postura e amplitude correta neste exercício.',
+                  'question'
+                )
+              }
+              className="px-2.5 py-1 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-300 hover:border-amber-500 hover:text-amber-500 transition-all shrink-0 text-[11px] cursor-pointer"
+            >
+              ❓ Dúvida de postura
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                handleSendQuickMessage(
+                  'Consegui progredir a carga hoje mantendo o controle total do movimento!',
+                  'weight_change'
+                )
+              }
+              className="px-2.5 py-1 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-300 hover:border-emerald-500 hover:text-emerald-500 transition-all shrink-0 text-[11px] cursor-pointer"
+            >
+              💪 Aumentei a carga
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                handleSendQuickMessage(
+                  'O aparelho da ficha estava ocupado na academia e precisei realizar a alternativa recomendada.',
+                  'exercise_change'
+                )
+              }
+              className="px-2.5 py-1 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-300 hover:border-cyan-500 hover:text-cyan-500 transition-all shrink-0 text-[11px] cursor-pointer"
+            >
+              🔄 Fiz exercício alternativo
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                handleSendQuickMessage(
+                  'Senti bastante cansaço e fadiga hoje. Posso ajustar o descanso para 60s ou reduzir uma série?',
+                  'question'
+                )
+              }
+              className="px-2.5 py-1 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-300 hover:border-rose-500 hover:text-rose-500 transition-all shrink-0 text-[11px] cursor-pointer"
+            >
+              ⏱️ Cansaço / Ajustar descanso
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              type="button"
+              onClick={() =>
+                handleSendQuickMessage(
+                  'Parabéns pela evolução de carga no Supino! Mantivemos cadência e controle perfeito.',
+                  'weight_change'
+                )
+              }
+              className="px-2.5 py-1 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-300 hover:border-emerald-500 hover:text-emerald-500 transition-all shrink-0 text-[11px] cursor-pointer"
+            >
+              💪 Parabéns pela carga (+2kg)
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                handleSendQuickMessage(
+                  'A substituição que você realizou foi perfeita e manteve o mesmo grupo muscular alvo.',
+                  'exercise_change'
+                )
+              }
+              className="px-2.5 py-1 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-300 hover:border-cyan-500 hover:text-cyan-500 transition-all shrink-0 text-[11px] cursor-pointer"
+            >
+              🔄 Substituição autorizada
+            </button>
+            <button
+              type="button"
+              onClick={() =>
+                handleSendQuickMessage(
+                  'Atenção ao intervalo de descanso entre as séries: preserve os 60 segundos completos para recuperação.',
+                  'question'
+                )
+              }
+              className="px-2.5 py-1 rounded-lg bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-300 hover:border-amber-500 hover:text-amber-500 transition-all shrink-0 text-[11px] cursor-pointer"
+            >
+              ⏱️ Atenção ao descanso
+            </button>
+          </>
+        )}
       </div>
 
       <div className="flex-1 p-6 overflow-y-auto space-y-4">
@@ -429,7 +493,11 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
                 handleSendMessage();
               }
             }}
-            placeholder="Digite sua orientação, feedback de carga ou mensagem para o aluno... (Enter para enviar)"
+            placeholder={
+              isStudentViewer
+                ? 'Digite sua dúvida técnica ou mensagem para a Rafaela... (Enter para enviar)'
+                : 'Digite sua orientação, feedback de carga ou mensagem para o aluno... (Enter para enviar)'
+            }
             rows={2}
             className="flex-1 resize-none rounded-xl border border-slate-200 dark:border-dark-border bg-white dark:bg-dark-card p-2.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
           />

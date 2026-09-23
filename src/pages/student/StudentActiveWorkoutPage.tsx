@@ -12,6 +12,7 @@ import { Badge } from '../../components/ui/Badge';
 import { Modal } from '../../components/ui/Modal';
 import { RestTimer } from '../../components/ui/RestTimer';
 import { ExerciseFramePlayer } from '../../components/ui/ExerciseFramePlayer';
+import { StudentTrainerChatSection } from '../../components/chat/StudentTrainerChatSection';
 import {
   WorkoutPlan,
   WorkoutDay,
@@ -34,6 +35,8 @@ import {
   ArrowRightLeft,
   Volume2,
   HeartPulse,
+  MessageSquare,
+  HelpCircle,
 } from 'lucide-react';
 
 export const StudentActiveWorkoutPage: React.FC = () => {
@@ -84,6 +87,9 @@ export const StudentActiveWorkoutPage: React.FC = () => {
   const [energyLevel, setEnergyLevel] = useState(4); // 1-5
   const [sessionNotes, setSessionNotes] = useState('');
   const [isFinishing, setIsFinishing] = useState(false);
+
+  // Modal 5: Bate-Papo & Dúvidas Técnicas do Treino
+  const [chatModalOpen, setChatModalOpen] = useState(false);
 
   // Track start time
   const [startTime] = useState<string>(new Date().toISOString());
@@ -402,14 +408,27 @@ export const StudentActiveWorkoutPage: React.FC = () => {
           </span>
         </div>
 
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => setFinishModalOpen(true)}
-          className="text-xs font-bold"
-        >
-          Finalizar
-        </Button>
+        <div className="flex items-center gap-1.5">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setChatModalOpen(true)}
+            leftIcon={<MessageSquare className="w-3.5 h-3.5 text-amber-500" />}
+            className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:bg-amber-500/10"
+            title="Tirar dúvida sobre este treino com a Rafaela"
+          >
+            Dúvida
+          </Button>
+
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setFinishModalOpen(true)}
+            className="text-xs font-bold"
+          >
+            Finalizar
+          </Button>
+        </div>
       </div>
 
       {/* Main Exercise Card (Mobile-First, Big Buttons, Section 20, 45) */}
@@ -474,7 +493,7 @@ export const StudentActiveWorkoutPage: React.FC = () => {
         </div>
 
         {/* Flexibility Actions Buttons (Section 17, 21, 23, 24) */}
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {currentWorkoutExercise.allowWeightChange && (
             <button
               type="button"
@@ -482,7 +501,7 @@ export const StudentActiveWorkoutPage: React.FC = () => {
                 setTempWeightInput(currentWeight);
                 setWeightModalOpen(true);
               }}
-              className="p-2.5 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-emerald-500 text-slate-800 dark:text-slate-200 text-xs font-bold flex flex-col items-center gap-1 transition-colors"
+              className="p-2.5 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-emerald-500 text-slate-800 dark:text-slate-200 text-xs font-bold flex flex-col items-center gap-1 transition-colors cursor-pointer"
             >
               <Dumbbell className="w-4 h-4 text-emerald-500" />
               <span>Alterar Carga</span>
@@ -500,7 +519,7 @@ export const StudentActiveWorkoutPage: React.FC = () => {
                 setSelectedAlternativeId(allowedAlternatives[0].id);
                 setSubModalOpen(true);
               }}
-              className="p-2.5 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-cyan-500 text-slate-800 dark:text-slate-200 text-xs font-bold flex flex-col items-center gap-1 transition-colors"
+              className="p-2.5 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-cyan-500 text-slate-800 dark:text-slate-200 text-xs font-bold flex flex-col items-center gap-1 transition-colors cursor-pointer"
             >
               <ArrowRightLeft className="w-4 h-4 text-cyan-500" />
               <span>Substituir</span>
@@ -511,12 +530,22 @@ export const StudentActiveWorkoutPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setSkipModalOpen(true)}
-              className="p-2.5 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-rose-500 text-slate-800 dark:text-slate-200 text-xs font-bold flex flex-col items-center gap-1 transition-colors"
+              className="p-2.5 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-rose-500 text-slate-800 dark:text-slate-200 text-xs font-bold flex flex-col items-center gap-1 transition-colors cursor-pointer"
             >
               <AlertTriangle className="w-4 h-4 text-rose-500" />
               <span>Pular</span>
             </button>
           )}
+
+          <button
+            type="button"
+            onClick={() => setChatModalOpen(true)}
+            className="p-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:border-amber-500 text-amber-700 dark:text-amber-300 text-xs font-bold flex flex-col items-center gap-1 transition-colors cursor-pointer"
+            title="Tirar dúvida técnica com a Rafaela sobre este exercício"
+          >
+            <HelpCircle className="w-4 h-4 text-amber-500" />
+            <span>Tirar Dúvida</span>
+          </button>
         </div>
 
         {/* Interactive Set Logger (Section 20: Números Grandes, Registro Rápido) */}
@@ -951,6 +980,25 @@ export const StudentActiveWorkoutPage: React.FC = () => {
               Concluir e Salvar
             </Button>
           </div>
+        </div>
+      </Modal>
+
+      {/* MODAL 5: Bate-Papo & Dúvidas Técnicas com a Treinadora */}
+      <Modal
+        isOpen={chatModalOpen}
+        onClose={() => setChatModalOpen(false)}
+        title="Tirar Dúvida com a Rafaela"
+        description={`Tire dúvidas técnicas sobre ${currentExerciseData?.name || 'este exercício'} ou sobre o treino atual`}
+        size="lg"
+      >
+        <div className="py-1">
+          {studentProfile && (
+            <StudentTrainerChatSection
+              student={studentProfile}
+              currentUserId={studentProfile.userId || studentProfile.id}
+              currentUserRole="student"
+            />
+          )}
         </div>
       </Modal>
 

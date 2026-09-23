@@ -12,6 +12,7 @@ import {
   LogOut,
   ArrowLeftRight,
   FlaskConical,
+  MessageSquare,
   ChevronDown,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -53,6 +54,7 @@ export const StudentLayout: React.FC = () => {
   const navItems = [
     { name: 'Início', path: '/student/dashboard', icon: Home },
     { name: 'Treinos', path: '/student/workouts', icon: Dumbbell },
+    { name: 'Bate-Papo', path: '/student/chat', icon: MessageSquare },
     { name: 'Evolução', path: '/student/evolution', icon: TrendingUp },
     { name: 'Alimentação', path: '/student/nutrition', icon: Apple },
     { name: 'Perfil', path: '/student/profile', icon: User },
@@ -179,17 +181,17 @@ export const StudentLayout: React.FC = () => {
 
             {/* Right header actions */}
             <div className="flex items-center gap-1.5">
-              {/* Quick toggle to Personal for testing */}
-              <button
-                onClick={handleSwitchToPersonal}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold transition-colors"
-                title={isSimulationMode ? 'Encerrar teste e voltar para a visão da Rafaela' : 'Trocar para visão da Rafaela (Personal)'}
-              >
-                <ArrowLeftRight className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">
-                  {isSimulationMode ? 'Encerrar Teste' : 'Modo Personal'}
-                </span>
-              </button>
+              {/* Only show Encerrar Teste button if actively simulating in Sandbox */}
+              {isSimulationMode && (
+                <button
+                  onClick={handleSwitchToPersonal}
+                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 text-xs font-bold transition-colors"
+                  title="Encerrar teste de simulação e voltar para a visão da Rafaela"
+                >
+                  <ArrowLeftRight className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Encerrar Teste</span>
+                </button>
+              )}
 
             <button
               onClick={toggleTheme}

@@ -99,6 +99,7 @@ export const App: React.FC = () => {
                   <Route path="workouts" element={<StudentWorkoutsListPage />} />
                   <Route path="workout/today" element={<StudentActiveWorkoutPage />} />
                   <Route path="workout/active/:dayId" element={<StudentActiveWorkoutPage />} />
+                  <Route path="chat" element={<StudentHistoryPage />} />
                   <Route path="history" element={<StudentHistoryPage />} />
                   <Route path="evolution" element={<StudentEvolutionPage />} />
                   <Route path="nutrition" element={<StudentNutritionPage />} />

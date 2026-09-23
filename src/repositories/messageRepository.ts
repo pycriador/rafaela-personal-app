@@ -55,7 +55,54 @@ export const initialStudentMessages: StudentMessage[] = [
     timestamp: new Date(Date.now() - 3600 * 1000 * 15).toISOString(),
     read: true,
   },
+  {
+    id: 'msg-joao-1',
+    studentId: 'student-joao',
+    senderId: 'user-rafaela',
+    senderName: 'Rafaela Personal',
+    senderRole: 'personal',
+    content: 'Olá João! Montei seu novo Circuito Funcional com foco em queima e fortalecimento superior. Note que deixei flexibilidade total para você ajustar as cargas caso sinta necessidade.',
+    category: 'assessment',
+    timestamp: new Date(Date.now() - 3600 * 1000 * 48).toISOString(),
+    read: true,
+  },
+  {
+    id: 'msg-joao-2',
+    studentId: 'student-joao',
+    senderId: 'student-joao',
+    senderName: 'João Pedro Santos',
+    senderRole: 'student',
+    content: 'Oi Rafaela! Executei o Treino A ontem. Consegui manter 25kg no primeiro exercício, mas no final do circuito o cansaço pesou bastante. O descanso de 45 segundos tá bem intenso!',
+    category: 'question',
+    metadata: {
+      exerciseName: 'Supino Máquina Sentado',
+      weightBefore: 25,
+      weightAfter: 25,
+    },
+    timestamp: new Date(Date.now() - 3600 * 1000 * 20).toISOString(),
+    read: true,
+  },
+  {
+    id: 'msg-joao-3',
+    studentId: 'student-joao',
+    senderId: 'user-rafaela',
+    senderName: 'Rafaela Personal',
+    senderRole: 'personal',
+    content: 'Excelente feedback, João! Isso é normal nas primeiras duas semanas desse ciclo metabólico. Se sentir muita fadiga respiratória, pode estender o descanso para até 60 segundos entre as passagens sem problemas!',
+    category: 'motivation',
+    timestamp: new Date(Date.now() - 3600 * 1000 * 12).toISOString(),
+    read: true,
+  },
 ];
+
+function normalizeStudentKey(id: string): string {
+  return id.replace(/^(student-|user-)/, '');
+}
+
+function matchesStudentId(target: string, query: string): boolean {
+  if (target === query) return true;
+  return normalizeStudentKey(target) === normalizeStudentKey(query);
+}
 
 export interface IMessageRepository {
   getMessagesByStudentId(studentId: string): Promise<StudentMessage[]>;
@@ -66,12 +113,18 @@ export interface IMessageRepository {
 
 export class SupabaseMessageRepository implements IMessageRepository {
   async getMessagesByStudentId(studentId: string): Promise<StudentMessage[]> {
+    const altId = studentId.startsWith('user-')
+      ? studentId.replace('user-', 'student-')
+      : studentId.startsWith('student-')
+      ? studentId.replace('student-', 'user-')
+      : studentId;
+
     if (isSupabaseConfigured) {
       try {
         const { data, error } = await supabase
           .from('student_messages')
           .select('*')
-          .eq('student_id', studentId)
+          .or(`student_id.eq.${studentId},student_id.eq.${altId}`)
           .order('created_at', { ascending: true });
 
         if (!error && data && data.length > 0) {
@@ -96,7 +149,7 @@ export class SupabaseMessageRepository implements IMessageRepository {
 
     const all = getItem<StudentMessage[]>(STORAGE_KEYS.STUDENT_MESSAGES, initialStudentMessages);
     return all
-      .filter((m) => m.studentId === studentId)
+      .filter((m) => matchesStudentId(m.studentId, studentId))
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   }
 
@@ -139,7 +192,7 @@ export class SupabaseMessageRepository implements IMessageRepository {
     let modified = false;
 
     all.forEach((m) => {
-      if (m.studentId === studentId && m.senderRole !== readerRole && !m.read) {
+      if (matchesStudentId(m.studentId, studentId) && m.senderRole !== readerRole && !m.read) {
         m.read = true;
         modified = true;
       }

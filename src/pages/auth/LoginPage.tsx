@@ -50,15 +50,25 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const demoUsers = [
+  const trainerUser = {
+    id: 'user-rafaela',
+    name: 'Rafaela Personal',
+    email: 'rafaela@mock.com',
+    role: 'personal' as const,
+    tag: 'Personal Trainer',
+    desc: 'Visão do Professor: gestão de alunos, fichas, biblioteca de exercícios e financeiro',
+    color: 'border-emerald-500/50 bg-emerald-500/10 hover:bg-emerald-500/20 shadow-xs',
+  };
+
+  const studentUsers = [
     {
-      id: 'user-rafaela',
-      name: 'Rafaela Personal',
-      email: 'rafaela@mock.com',
-      role: 'personal' as const,
-      tag: 'Personal Trainer',
-      desc: 'Acesso total: dashboard, alunos, treinos, exercícios, alimentação',
-      color: 'border-emerald-500/40 bg-emerald-500/5 hover:bg-emerald-500/10',
+      id: 'user-joao',
+      name: 'João Pedro Santos',
+      email: 'joao@mock.com',
+      role: 'student' as const,
+      tag: 'Aluno • Emagrecimento',
+      desc: 'Área do Aluno: ficha de treino, execução de séries e bate-papo de dúvidas',
+      color: 'border-amber-500/40 bg-amber-500/5 hover:bg-amber-500/15',
     },
     {
       id: 'user-mariana',
@@ -66,17 +76,8 @@ export const LoginPage: React.FC = () => {
       email: 'mariana@mock.com',
       role: 'student' as const,
       tag: 'Aluna • Hipertrofia',
-      desc: 'Seg/Qua/Sex • Treino A Peito e Tríceps com Supino Máquina',
-      color: 'border-cyan-500/40 bg-cyan-500/5 hover:bg-cyan-500/10',
-    },
-    {
-      id: 'user-joao',
-      name: 'João Pedro Santos',
-      email: 'joao@mock.com',
-      role: 'student' as const,
-      tag: 'Aluno • Emagrecimento',
-      desc: 'Ter/Qui • Circuito e flexibilidade de cargas',
-      color: 'border-amber-500/40 bg-amber-500/5 hover:bg-amber-500/10',
+      desc: 'Área do Aluno: ficha de musculação, progressão de carga e alimentação',
+      color: 'border-cyan-500/40 bg-cyan-500/5 hover:bg-cyan-500/15',
     },
     {
       id: 'user-carlos',
@@ -84,8 +85,8 @@ export const LoginPage: React.FC = () => {
       email: 'carlos@mock.com',
       role: 'student' as const,
       tag: 'Aluno • Condicionamento',
-      desc: 'Seg/Qua • Full Body iniciante',
-      color: 'border-purple-500/40 bg-purple-500/5 hover:bg-purple-500/10',
+      desc: 'Área do Aluno: full body iniciante e acompanhamento de métricas',
+      color: 'border-purple-500/40 bg-purple-500/5 hover:bg-purple-500/15',
     },
   ];
 
@@ -115,37 +116,71 @@ export const LoginPage: React.FC = () => {
         </div>
 
         {/* Quick Demo Login Box */}
-        <Card className="p-5 border-emerald-500/30">
-          <div className="flex items-center gap-2 mb-3 text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+        <Card className="p-5 border-emerald-500/30 space-y-4">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
             <Sparkles className="w-4 h-4" />
             Acesso Rápido com 1 Clique (Dados Mock)
           </div>
 
-          <div className="space-y-2">
-            {demoUsers.map((u) => (
-              <button
-                key={u.id}
-                type="button"
-                onClick={() => handleQuick(u.id, u.role)}
-                disabled={loading}
-                className={`w-full text-left p-3 rounded-xl border transition-all duration-150 flex items-center justify-between group ${u.color}`}
-              >
-                <div className="min-w-0 pr-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-slate-900 dark:text-white">
-                      {u.name}
-                    </span>
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10 text-slate-700 dark:text-slate-300">
-                      {u.tag}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-slate-500 dark:text-dark-muted truncate mt-0.5">
-                    {u.desc}
-                  </p>
+          {/* Section 1: Professor */}
+          <div className="space-y-1.5">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+              Entrar como Profissional (Personal Trainer)
+            </span>
+            <button
+              type="button"
+              onClick={() => handleQuick(trainerUser.id, trainerUser.role)}
+              disabled={loading}
+              className={`w-full text-left p-3.5 rounded-xl border transition-all duration-150 flex items-center justify-between group ${trainerUser.color}`}
+            >
+              <div className="min-w-0 pr-2">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-black text-slate-900 dark:text-white">
+                    {trainerUser.name}
+                  </span>
+                  <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-500 text-white shadow-xs">
+                    {trainerUser.tag}
+                  </span>
                 </div>
-                <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all shrink-0" />
-              </button>
-            ))}
+                <p className="text-[11px] text-slate-600 dark:text-slate-300 truncate mt-0.5 font-medium">
+                  {trainerUser.desc}
+                </p>
+              </div>
+              <ArrowRight className="w-4 h-4 text-emerald-500 group-hover:translate-x-1 transition-all shrink-0" />
+            </button>
+          </div>
+
+          {/* Section 2: Alunos */}
+          <div className="space-y-2 pt-1 border-t border-slate-100 dark:border-dark-border/60">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+              Entrar como Aluno (Login Único & Funcional)
+            </span>
+            <div className="space-y-1.5">
+              {studentUsers.map((u) => (
+                <button
+                  key={u.id}
+                  type="button"
+                  onClick={() => handleQuick(u.id, u.role)}
+                  disabled={loading}
+                  className={`w-full text-left p-2.5 rounded-xl border transition-all duration-150 flex items-center justify-between group ${u.color}`}
+                >
+                  <div className="min-w-0 pr-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-slate-900 dark:text-white">
+                        {u.name}
+                      </span>
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10 text-slate-700 dark:text-slate-300">
+                        {u.tag}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 dark:text-dark-muted truncate mt-0.5">
+                      {u.desc}
+                    </p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all shrink-0" />
+                </button>
+              ))}
+            </div>
           </div>
         </Card>
 

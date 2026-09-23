@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { workoutRepository } from '../../repositories/workoutRepository';
 import { WorkoutSession, WorkoutModification } from '../../types';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
-import { Calendar, Dumbbell, History, Sparkles, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { StudentTrainerChatSection } from '../../components/chat/StudentTrainerChatSection';
+import { Calendar, Dumbbell, History, Sparkles, CheckCircle2, AlertTriangle, MessageSquare } from 'lucide-react';
 
 export const StudentHistoryPage: React.FC = () => {
-  const { studentProfile } = useAuth();
+  const { user, studentProfile } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialTab = searchParams.get('subtab') === 'sessoes' ? 'sessoes' : 'chat';
+  const [activeSubTab, setActiveSubTab] = useState<'chat' | 'sessoes'>(initialTab);
+
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
   const [modifications, setModifications] = useState<WorkoutModification[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,9 +21,10 @@ export const StudentHistoryPage: React.FC = () => {
   useEffect(() => {
     async function load() {
       if (!studentProfile) return;
+      const targetId = studentProfile.userId || studentProfile.id;
       const [sess, mods] = await Promise.all([
-        workoutRepository.getSessions(studentProfile.id),
-        workoutRepository.getModifications(studentProfile.id),
+        workoutRepository.getSessions(targetId),
+        workoutRepository.getModifications(targetId),
       ]);
       setSessions(sess);
       setModifications(mods);
@@ -26,7 +33,12 @@ export const StudentHistoryPage: React.FC = () => {
     load();
   }, [studentProfile]);
 
-  if (loading) {
+  const handleTabChange = (tab: 'chat' | 'sessoes') => {
+    setActiveSubTab(tab);
+    setSearchParams({ subtab: tab });
+  };
+
+  if (loading || !studentProfile) {
     return (
       <div className="py-12 flex justify-center">
         <div className="w-8 h-8 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
@@ -36,19 +48,59 @@ export const StudentHistoryPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-          Histórico de Treinos
-        </h1>
-        <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
-          Todas as suas sessões executadas, cargas levantadas e alterações registradas
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+            Comunicação & Histórico
+          </h1>
+          <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
+            Tire dúvidas dos treinos com a Rafaela e consulte seu histórico de sessões executadas
+          </p>
+        </div>
+
+        {/* Sub-tab Switcher */}
+        <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-dark-card border border-slate-200 dark:border-dark-border rounded-2xl self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={() => handleTabChange('chat')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer ${
+              activeSubTab === 'chat'
+                ? 'bg-emerald-500 text-white shadow-xs'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>Bate-Papo & Dúvidas</span>
+            <Badge variant="success" size="sm" className="py-0 px-1 text-[9px]">Ativo</Badge>
+          </button>
+          <button
+            type="button"
+            onClick={() => handleTabChange('sessoes')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer ${
+              activeSubTab === 'sessoes'
+                ? 'bg-emerald-500 text-white shadow-xs'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <History className="w-3.5 h-3.5" />
+            <span>Sessões ({sessions.length})</span>
+          </button>
+        </div>
       </div>
 
-      {sessions.length === 0 ? (
-        <Card className="py-12 text-center text-xs text-slate-400">
-          Nenhum treino realizado até o momento. Comece seu primeiro treino hoje!
-        </Card>
+      {activeSubTab === 'chat' && (
+        <StudentTrainerChatSection
+          student={studentProfile}
+          currentUserId={user?.id || studentProfile.userId || studentProfile.id}
+          currentUserRole="student"
+        />
+      )}
+
+      {activeSubTab === 'sessoes' &&
+        (sessions.length === 0 ? (
+          <Card className="py-12 text-center text-xs text-slate-400">
+            Nenhum treino realizado até o momento. Comece seu primeiro treino hoje!
+          </Card>
       ) : (
         <div className="space-y-4">
           {sessions.map((s) => (
@@ -121,7 +173,7 @@ export const StudentHistoryPage: React.FC = () => {
             </Card>
           ))}
         </div>
-      )}
+      ))}
     </div>
   );
 };
