@@ -332,11 +332,19 @@ export class SupabaseWorkoutRepository implements IWorkoutRepository {
       }
     }
 
-    const mods = getItem<WorkoutModification[]>(STORAGE_KEYS.MODIFICATIONS, initialModifications);
-    if (studentId) {
-      return mods.filter((m) => m.studentId === studentId);
+    const storedMods = getItem<WorkoutModification[]>(STORAGE_KEYS.MODIFICATIONS, initialModifications);
+    const existingIds = new Set(storedMods.map((m) => m.id));
+    const mergedMods = [...storedMods];
+    for (const initMod of initialModifications) {
+      if (!existingIds.has(initMod.id)) {
+        mergedMods.push(initMod);
+      }
     }
-    return mods;
+    mergedMods.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    if (studentId) {
+      return mergedMods.filter((m) => m.studentId === studentId);
+    }
+    return mergedMods;
   }
 
   async saveModification(

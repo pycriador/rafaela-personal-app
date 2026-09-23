@@ -241,7 +241,7 @@ export interface ActivityLog {
   description: string;
   studentId?: string;
   timestamp: string;
-  iconType?: 'dumbbell' | 'alert' | 'check' | 'swap' | 'skip' | 'edit';
+  iconType?: 'dumbbell' | 'alert' | 'check' | 'swap' | 'skip' | 'edit' | 'form' | 'clipboard' | 'nutrition' | 'user' | 'message' | 'sparkles';
 }
 
 export interface Notification {

@@ -55,8 +55,16 @@ export class SupabaseActivityRepository implements IActivityRepository {
         // fallback
       }
     }
-    const list = getItem<ActivityLog[]>(STORAGE_KEYS.ACTIVITIES, initialActivities);
-    return list.slice(0, limit);
+    const stored = getItem<ActivityLog[]>(STORAGE_KEYS.ACTIVITIES, initialActivities);
+    const existingIds = new Set(stored.map((a) => a.id));
+    const merged = [...stored];
+    for (const initAct of initialActivities) {
+      if (!existingIds.has(initAct.id)) {
+        merged.push(initAct);
+      }
+    }
+    merged.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    return merged.slice(0, limit);
   }
 
   async getByStudentId(studentId: string): Promise<ActivityLog[]> {
