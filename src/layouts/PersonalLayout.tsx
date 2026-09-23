@@ -25,6 +25,8 @@ import {
   MessageSquare,
   History,
   Sparkles,
+  PlusCircle,
+  Send,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -46,6 +48,13 @@ const STUDENT_SUB_NAV_ITEMS = [
   { id: 'configuracoes', label: 'Configurações', icon: Settings },
 ];
 
+const ANAMNESIS_SUB_NAV_ITEMS = [
+  { id: 'visao-geral', label: 'Visão Geral', path: '/personal/anamnesis', icon: LayoutDashboard },
+  { id: 'modelos', label: 'Modelos de Fichas', path: '/personal/anamnesis/forms', icon: FileText },
+  { id: 'novo-formulario', label: 'Novo Formulário', path: '/personal/anamnesis/forms/new', icon: PlusCircle },
+  { id: 'envios', label: 'Envios & Respostas', path: '/personal/anamnesis/applications', icon: Send },
+];
+
 export const PersonalLayout: React.FC = () => {
   const { user, logout, quickLogin, enterStudentSimulation } = useAuth();
   const { success, error: toastError } = useToast();
@@ -57,6 +66,32 @@ export const PersonalLayout: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  // Local persistent state for Formulários sub-menus (open by default)
+  const [formsSubMenuOpen, setFormsSubMenuOpen] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('rafaela_nav_forms_open');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
+
+  const toggleFormsSubMenu = (e?: React.MouseEvent | React.KeyboardEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setFormsSubMenuOpen((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('rafaela_nav_forms_open', String(next));
+      } catch (err) {
+        console.warn('Erro ao salvar preferencia de menu no localStorage', err);
+      }
+      return next;
+    });
+  };
 
   // Dynamic Students for Simulation Mode & Contextual Sidebar
   const [students, setStudents] = useState<Student[]>([]);
@@ -232,6 +267,8 @@ export const PersonalLayout: React.FC = () => {
               const Icon = item.icon;
               const isStudentsItem = item.path === '/personal/students';
               const isInsideStudent = isStudentsItem && !!currentStudentParam;
+              const isAnamnesisItem = item.path === '/personal/anamnesis';
+              const isInsideAnamnesis = isAnamnesisItem && location.pathname.startsWith('/personal/anamnesis');
 
               return (
                 <div key={item.path} className="space-y-1">
@@ -240,7 +277,7 @@ export const PersonalLayout: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className={({ isActive }) =>
                       `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-150 ${
-                        isActive || isInsideStudent
+                        isActive || isInsideStudent || isInsideAnamnesis
                           ? 'bg-emerald-500 text-white font-bold shadow-md shadow-emerald-500/20'
                           : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-cardElevated hover:text-slate-900 dark:hover:text-white'
                       }`
@@ -252,6 +289,32 @@ export const PersonalLayout: React.FC = () => {
                     </div>
                     {isInsideStudent && (
                       <ChevronDown className="w-3.5 h-3.5 text-white/80" />
+                    )}
+                    {isAnamnesisItem && (
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        onClick={toggleFormsSubMenu}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleFormsSubMenu();
+                          }
+                        }}
+                        className={`p-1 -mr-1 rounded-md transition-colors cursor-pointer ${
+                          location.pathname.startsWith('/personal/anamnesis')
+                            ? 'text-white/90 hover:text-white hover:bg-emerald-600/60'
+                            : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-dark-card'
+                        }`}
+                        title={formsSubMenuOpen ? 'Ocultar sub-menus de formulários' : 'Expandir sub-menus de formulários'}
+                      >
+                        {formsSubMenuOpen ? (
+                          <ChevronDown className="w-3.5 h-3.5" />
+                        ) : (
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        )}
+                      </span>
                     )}
                   </NavLink>
 
@@ -319,6 +382,87 @@ export const PersonalLayout: React.FC = () => {
                                 <span className="truncate">{tab.label}</span>
                               </div>
                               {isTabActive && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* SUBMENU FIXO DE FORMULÁRIOS COM PERSISTÊNCIA LOCAL */}
+                  {isAnamnesisItem && formsSubMenuOpen && (
+                    <div className="my-1.5 ml-2.5 pl-2.5 border-l-2 border-emerald-500/50 space-y-1 py-1 bg-slate-50/50 dark:bg-dark-cardElevated/20 rounded-r-xl">
+                      <div className="flex items-center justify-between pr-2 py-0.5 mb-1">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <ClipboardList className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                          <span className="text-[11px] font-black text-slate-800 dark:text-slate-200 uppercase tracking-wider truncate">
+                            Opções Rápidas
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={(e) => toggleFormsSubMenu(e)}
+                          className="text-[10px] font-bold text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors cursor-pointer"
+                          title="Ocultar sub-menus de formulários"
+                        >
+                          Ocultar
+                        </button>
+                      </div>
+
+                      {/* 4 Opções Fixas de Formulários */}
+                      <div className="space-y-0.5">
+                        {ANAMNESIS_SUB_NAV_ITEMS.map((sub) => {
+                          const SubIcon = sub.icon;
+                          const isSubActive = (() => {
+                            if (sub.id === 'visao-geral') {
+                              return location.pathname === '/personal/anamnesis' || location.pathname === '/personal/anamnesis/';
+                            }
+                            if (sub.id === 'novo-formulario') {
+                              return location.pathname === '/personal/anamnesis/forms/new';
+                            }
+                            if (sub.id === 'modelos') {
+                              return (
+                                location.pathname === '/personal/anamnesis/forms' ||
+                                (location.pathname.startsWith('/personal/anamnesis/forms/') &&
+                                  location.pathname !== '/personal/anamnesis/forms/new')
+                              );
+                            }
+                            if (sub.id === 'envios') {
+                              return (
+                                location.pathname.startsWith('/personal/anamnesis/applications') ||
+                                location.pathname.startsWith('/personal/anamnesis/responses')
+                              );
+                            }
+                            return false;
+                          })();
+
+                          return (
+                            <button
+                              key={sub.id}
+                              type="button"
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                                navigate(sub.path);
+                              }}
+                              className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer text-left ${
+                                isSubActive
+                                  ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-extrabold shadow-2xs'
+                                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-cardElevated hover:text-slate-900 dark:hover:text-white font-medium'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 truncate">
+                                <SubIcon
+                                  className={`w-3.5 h-3.5 shrink-0 ${
+                                    isSubActive
+                                      ? 'text-emerald-600 dark:text-emerald-400'
+                                      : 'text-slate-400 dark:text-slate-500'
+                                  }`}
+                                />
+                                <span className="truncate">{sub.label}</span>
+                              </div>
+                              {isSubActive && (
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
                               )}
                             </button>
