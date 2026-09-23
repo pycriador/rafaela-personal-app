@@ -1041,20 +1041,21 @@ export const StudentDetailPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Top Bar with back button */}
-      <div className="flex items-center gap-3">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate('/personal/students')}
-          leftIcon={<ArrowLeft className="w-4 h-4" />}
-        >
-          Lista de Alunos
-        </Button>
-      </div>
+      {/* Profile Header Banner com Navegação Integrada */}
+      <Card className="p-5 sm:p-6 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 text-white border-none shadow-xl space-y-4">
+        {/* Botão de retorno integrado dentro da mesma caixa do aluno */}
+        <div className="flex items-center justify-between">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/personal/students')}
+            leftIcon={<ArrowLeft className="w-4 h-4 text-emerald-400" />}
+            className="text-slate-300 hover:text-white hover:bg-slate-800/80 -ml-2 text-xs"
+          >
+            Lista de Alunos
+          </Button>
+        </div>
 
-      {/* Profile Header Banner */}
-      <Card className="p-6 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 text-white border-none shadow-xl">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <img
