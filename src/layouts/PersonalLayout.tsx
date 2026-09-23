@@ -27,6 +27,7 @@ import {
   Sparkles,
   PlusCircle,
   Send,
+  Database,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -53,6 +54,13 @@ const ANAMNESIS_SUB_NAV_ITEMS = [
   { id: 'modelos', label: 'Modelos de Fichas', path: '/personal/anamnesis/forms', icon: FileText },
   { id: 'novo-formulario', label: 'Novo Formulário', path: '/personal/anamnesis/forms/new', icon: PlusCircle },
   { id: 'envios', label: 'Envios & Respostas', path: '/personal/anamnesis/applications', icon: Send },
+];
+
+const SETTINGS_SUB_NAV_ITEMS = [
+  { id: 'usuarios', label: 'Gestão de Usuários', path: '/personal/settings?tab=usuarios', icon: Users },
+  { id: 'backup', label: 'Exportação & Backups', path: '/personal/settings?tab=backup', icon: Database },
+  { id: 'sistema', label: 'Aparência & Sistema', path: '/personal/settings?tab=sistema', icon: Layers },
+  { id: 'ia', label: 'AI Copilot', path: '/personal/settings?tab=ia', icon: Sparkles },
 ];
 
 export const PersonalLayout: React.FC = () => {
@@ -86,6 +94,32 @@ export const PersonalLayout: React.FC = () => {
       const next = !prev;
       try {
         localStorage.setItem('rafaela_nav_forms_open', String(next));
+      } catch (err) {
+        console.warn('Erro ao salvar preferencia de menu no localStorage', err);
+      }
+      return next;
+    });
+  };
+
+  // Local persistent state for Configurações sub-menus (open by default)
+  const [settingsSubMenuOpen, setSettingsSubMenuOpen] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('rafaela_nav_settings_open');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
+
+  const toggleSettingsSubMenu = (e?: React.MouseEvent | React.KeyboardEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setSettingsSubMenuOpen((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('rafaela_nav_settings_open', String(next));
       } catch (err) {
         console.warn('Erro ao salvar preferencia de menu no localStorage', err);
       }
@@ -269,6 +303,8 @@ export const PersonalLayout: React.FC = () => {
               const isInsideStudent = isStudentsItem && !!currentStudentParam;
               const isAnamnesisItem = item.path === '/personal/anamnesis';
               const isInsideAnamnesis = isAnamnesisItem && location.pathname.startsWith('/personal/anamnesis');
+              const isSettingsItem = item.path === '/personal/settings';
+              const isInsideSettings = isSettingsItem && location.pathname.startsWith('/personal/settings');
 
               return (
                 <div key={item.path} className="space-y-1">
@@ -277,7 +313,7 @@ export const PersonalLayout: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className={({ isActive }) =>
                       `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-150 ${
-                        isActive || isInsideStudent || isInsideAnamnesis
+                        isActive || isInsideStudent || isInsideAnamnesis || isInsideSettings
                           ? 'bg-emerald-500 text-white font-bold shadow-md shadow-emerald-500/20'
                           : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-cardElevated hover:text-slate-900 dark:hover:text-white'
                       }`
@@ -310,6 +346,32 @@ export const PersonalLayout: React.FC = () => {
                         title={formsSubMenuOpen ? 'Ocultar sub-menus de formulários' : 'Expandir sub-menus de formulários'}
                       >
                         {formsSubMenuOpen ? (
+                          <ChevronDown className="w-3.5 h-3.5" />
+                        ) : (
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        )}
+                      </span>
+                    )}
+                    {isSettingsItem && (
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        onClick={toggleSettingsSubMenu}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleSettingsSubMenu();
+                          }
+                        }}
+                        className={`p-1 -mr-1 rounded-md transition-colors cursor-pointer ${
+                          location.pathname.startsWith('/personal/settings')
+                            ? 'text-white/90 hover:text-white hover:bg-emerald-600/60'
+                            : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-dark-card'
+                        }`}
+                        title={settingsSubMenuOpen ? 'Ocultar sub-menus de configurações' : 'Expandir sub-menus de configurações'}
+                      >
+                        {settingsSubMenuOpen ? (
                           <ChevronDown className="w-3.5 h-3.5" />
                         ) : (
                           <ChevronRight className="w-3.5 h-3.5" />
@@ -437,6 +499,70 @@ export const PersonalLayout: React.FC = () => {
                             }
                             return false;
                           })();
+
+                          return (
+                            <button
+                              key={sub.id}
+                              type="button"
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                                navigate(sub.path);
+                              }}
+                              className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer text-left ${
+                                isSubActive
+                                  ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-extrabold shadow-2xs'
+                                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-cardElevated hover:text-slate-900 dark:hover:text-white font-medium'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 truncate">
+                                <SubIcon
+                                  className={`w-3.5 h-3.5 shrink-0 ${
+                                    isSubActive
+                                      ? 'text-emerald-600 dark:text-emerald-400'
+                                      : 'text-slate-400 dark:text-slate-500'
+                                  }`}
+                                />
+                                <span className="truncate">{sub.label}</span>
+                              </div>
+                              {isSubActive && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* SUBMENU FIXO DE CONFIGURAÇÕES COM PERSISTÊNCIA LOCAL */}
+                  {isSettingsItem && settingsSubMenuOpen && (
+                    <div className="my-1.5 ml-2.5 pl-2.5 border-l-2 border-emerald-500/50 space-y-1 py-1 bg-slate-50/50 dark:bg-dark-cardElevated/20 rounded-r-xl">
+                      <div className="flex items-center justify-between pr-2 py-0.5 mb-1">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <Settings className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                          <span className="text-[11px] font-black text-slate-800 dark:text-slate-200 uppercase tracking-wider truncate">
+                            Configurações
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={(e) => toggleSettingsSubMenu(e)}
+                          className="text-[10px] font-bold text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors cursor-pointer"
+                          title="Ocultar sub-menus de configurações"
+                        >
+                          Ocultar
+                        </button>
+                      </div>
+
+                      {/* 4 Opções de Configurações */}
+                      <div className="space-y-0.5">
+                        {SETTINGS_SUB_NAV_ITEMS.map((sub) => {
+                          const SubIcon = sub.icon;
+                          const currentSettingsTab = searchParams.get('tab') || 'usuarios';
+                          const isSubActive =
+                            location.pathname === '/personal/settings' &&
+                            (currentSettingsTab === sub.id ||
+                              (sub.id === 'usuarios' && !searchParams.get('tab')));
 
                           return (
                             <button
