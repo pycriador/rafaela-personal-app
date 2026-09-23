@@ -5,11 +5,12 @@ import { formApplicationService } from '../../../services/anamnesis/formApplicat
 import { formResponseService } from '../../../services/anamnesis/formResponseService';
 import { formService } from '../../../services/anamnesis/formService';
 import { formVersionRepository } from '../../../repositories/formVersionRepository';
-import { Form, FormVersion, FormApplication, FormResponse } from '../../../types';
+import { Form, FormVersion, FormField, FormApplication, FormResponse } from '../../../types';
 import { Card } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { Badge } from '../../../components/ui/Badge';
 import { FormStatusBadge } from '../../../components/forms/FormStatusBadge';
+import { FormResponseViewer } from '../../../components/forms/FormResponseViewer';
 import {
   ClipboardList,
   CheckCircle2,
@@ -19,6 +20,9 @@ import {
   AlertTriangle,
   FileText,
   ShieldCheck,
+  ChevronDown,
+  ChevronUp,
+  ExternalLink,
 } from 'lucide-react';
 
 export const StudentAnamnesisPage: React.FC = () => {
@@ -29,29 +33,40 @@ export const StudentAnamnesisPage: React.FC = () => {
   const [responses, setResponses] = useState<FormResponse[]>([]);
   const [formsMap, setFormsMap] = useState<Record<string, Form>>({});
   const [versionsMap, setVersionsMap] = useState<Record<string, FormVersion>>({});
+  const [versionFieldsMap, setVersionFieldsMap] = useState<Record<string, FormField[]>>({});
+  const [expandedResponseIds, setExpandedResponseIds] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
+
+  const toggleExpand = (respId: string) => {
+    setExpandedResponseIds((prev) => ({
+      ...prev,
+      [respId]: !prev[respId],
+    }));
+  };
 
   useEffect(() => {
     async function loadData() {
       if (!studentProfile) return;
-      const targetId = studentProfile.userId || studentProfile.id;
 
       try {
-        const [apps, resps, allForms, allVers] = await Promise.all([
-          formApplicationService.getApplicationsByStudentId(targetId).then(async (res) => {
-            if (res && res.length > 0) return res;
-            return studentProfile.id ? formApplicationService.getApplicationsByStudentId(studentProfile.id) : [];
-          }),
-          formResponseService.getResponsesByStudentId(targetId).then(async (res) => {
-            if (res && res.length > 0) return res;
-            return studentProfile.id ? formResponseService.getResponsesByStudentId(studentProfile.id) : [];
-          }),
+        const [apps1, apps2, resps1, resps2, allForms, allVers] = await Promise.all([
+          formApplicationService.getApplicationsByStudentId(studentProfile.id),
+          studentProfile.userId && studentProfile.userId !== studentProfile.id
+            ? formApplicationService.getApplicationsByStudentId(studentProfile.userId)
+            : Promise.resolve([]),
+          formResponseService.getResponsesByStudentId(studentProfile.id),
+          studentProfile.userId && studentProfile.userId !== studentProfile.id
+            ? formResponseService.getResponsesByStudentId(studentProfile.userId)
+            : Promise.resolve([]),
           formService.getForms(),
           formVersionRepository.getAll(),
         ]);
 
-        setApplications(apps);
-        setResponses(resps);
+        const combinedApps = [...apps1, ...apps2.filter((a2) => !apps1.some((a1) => a1.id === a2.id))];
+        const combinedResps = [...resps1, ...resps2.filter((r2) => !resps1.some((r1) => r1.id === r2.id))];
+
+        setApplications(combinedApps);
+        setResponses(combinedResps);
 
         const fMap: Record<string, Form> = {};
         allForms.forEach((f: Form) => {
@@ -64,6 +79,21 @@ export const StudentAnamnesisPage: React.FC = () => {
           vMap[v.id] = v;
         });
         setVersionsMap(vMap);
+
+        // Carrega campos de cada versão para visualização das perguntas e respostas
+        const fieldsEntries = await Promise.all(
+          allVers.map(async (v: FormVersion) => {
+            const flds = await formVersionRepository.getFieldsByVersionId(v.id);
+            return [v.id, flds] as const;
+          })
+        );
+        const fldMap: Record<string, FormField[]> = Object.fromEntries(fieldsEntries);
+        setVersionFieldsMap(fldMap);
+
+        // Abre a primeira resposta expandida por padrão para o aluno já visualizar suas respostas
+        if (combinedResps.length > 0) {
+          setExpandedResponseIds({ [combinedResps[0].id]: true });
+        }
       } catch (err) {
         console.error('Erro ao carregar anamneses do aluno:', err);
       } finally {
@@ -241,61 +271,93 @@ export const StudentAnamnesisPage: React.FC = () => {
             </p>
           </Card>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {responses.map((resp) => {
               const form = formsMap[resp.formId];
               const version = versionsMap[resp.formVersionId];
+              const fields = versionFieldsMap[resp.formVersionId] || [];
+              const isExpanded = !!expandedResponseIds[resp.id];
 
               return (
                 <Card
                   key={resp.id}
-                  className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-emerald-500/40 transition-all"
+                  className="p-4 sm:p-5 transition-all space-y-4 border-slate-200/80 dark:border-dark-border hover:border-emerald-500/40"
                 >
-                  <div className="space-y-1.5">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                        {form?.name || 'Questionário'}
-                      </h3>
-                      {version && (
-                        <Badge variant="neutral" size="sm" className="font-mono text-[10px]">
-                          v{version.version}
-                        </Badge>
-                      )}
-                      <FormStatusBadge status="completed" />
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="space-y-1.5">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+                          {form?.name || 'Questionário'}
+                        </h3>
+                        {version && (
+                          <Badge variant="neutral" size="sm" className="font-mono text-[10px]">
+                            v{version.version}
+                          </Badge>
+                        )}
+                        <FormStatusBadge status="completed" />
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-dark-muted font-mono">
+                        <span>
+                          Enviado em:{' '}
+                          <strong className="text-slate-700 dark:text-slate-300">
+                            {resp.submittedAt
+                              ? new Date(resp.submittedAt).toLocaleString('pt-BR', {
+                                  dateStyle: 'short',
+                                  timeStyle: 'short',
+                                })
+                              : '—'}
+                          </strong>
+                        </span>
+                        <span>•</span>
+                        <span>{resp.answers.length} respostas registradas</span>
+                        {resp.consentRecord && (
+                          <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-semibold">
+                            <ShieldCheck className="w-3.5 h-3.5" />
+                            Termo Aceito
+                          </span>
+                        )}
+                      </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-dark-muted font-mono">
-                      <span>
-                        Enviado em:{' '}
-                        <strong className="text-slate-700 dark:text-slate-300">
-                          {resp.submittedAt
-                            ? new Date(resp.submittedAt).toLocaleString('pt-BR', {
-                                dateStyle: 'short',
-                                timeStyle: 'short',
-                              })
-                            : '—'}
-                        </strong>
-                      </span>
-                      <span>•</span>
-                      <span>{resp.answers.length} respostas registradas</span>
-                      {resp.consentRecord && (
-                        <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-semibold">
-                          <ShieldCheck className="w-3.5 h-3.5" />
-                          Termo Aceito
-                        </span>
-                      )}
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Button
+                        variant={isExpanded ? 'secondary' : 'primary'}
+                        size="sm"
+                        onClick={() => toggleExpand(resp.id)}
+                        rightIcon={isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                        className={!isExpanded ? 'bg-emerald-600 hover:bg-emerald-500 text-white font-medium border-none' : ''}
+                      >
+                        {isExpanded ? 'Ocultar Respostas' : 'Ver Respostas'}
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigate(`/student/anamnesis/responses/${resp.id}`)}
+                        title="Abrir em tela cheia"
+                        aria-label="Abrir em tela cheia"
+                        className="text-slate-500 hover:text-slate-900 dark:hover:text-white"
+                        rightIcon={<ExternalLink className="w-3.5 h-3.5" />}
+                      >
+                        Tela Cheia
+                      </Button>
                     </div>
                   </div>
 
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => navigate(`/student/anamnesis/responses/${resp.id}`)}
-                    leftIcon={<Eye className="w-4 h-4 text-emerald-500" />}
-                    className="text-xs shrink-0"
-                  >
-                    Ver Minhas Respostas
-                  </Button>
+                  {/* Visualização inline das respostas */}
+                  {isExpanded && (
+                    <div className="pt-4 border-t border-slate-100 dark:border-dark-border/60">
+                      <FormResponseViewer
+                        response={resp}
+                        form={form}
+                        version={version}
+                        fields={fields}
+                        student={studentProfile as any}
+                        hideHeader
+                      />
+                    </div>
+                  )}
                 </Card>
               );
             })}

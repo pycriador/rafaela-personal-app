@@ -41,6 +41,20 @@ export const initialFormApplications: FormApplication[] = [
     isMandatory: false,
   },
 
+  // João Santos - Anamnese Inicial v1 Concluída
+  {
+    id: 'app-joao-init-v1',
+    formId: 'form-anamnese-inicial',
+    formVersionId: 'ver-init-v1',
+    studentId: 'student-joao',
+    status: 'completed',
+    assignedBy: 'user-rafaela',
+    assignedAt: '2026-08-01T10:00:00.000Z',
+    dueAt: '2026-08-15T23:59:59.000Z',
+    message: 'João, preencha sua anamnese inicial para estruturarmos seu primeiro treino.',
+    isMandatory: true,
+  },
+
   // João Santos - Anamnese Inicial pendente
   {
     id: 'app-joao-init-v2',

@@ -47,7 +47,12 @@ export const formResponseRepository = {
         // fallback
       }
     }
-    return getItem<FormResponse[]>(STORAGE_KEYS.FORM_RESPONSES, initialFormResponses);
+    const stored = getItem<FormResponse[]>(STORAGE_KEYS.FORM_RESPONSES, initialFormResponses);
+    const missing = initialFormResponses.filter((init) => !stored.some((s) => s.id === init.id));
+    if (missing.length > 0) {
+      return [...stored, ...missing];
+    }
+    return stored;
   },
 
   async getById(id: string): Promise<FormResponse | null> {
@@ -81,13 +86,16 @@ export const formResponseRepository = {
   },
 
   async getByStudentId(studentId: string): Promise<FormResponse[]> {
+    const isJoao = studentId === 'student-joao' || studentId === 'user-joao';
     if (isSupabaseConfigured) {
       try {
-        const { data, error } = await supabase
-          .from('form_responses')
-          .select('*')
-          .eq('student_id', studentId)
-          .order('submitted_at', { ascending: false });
+        let query = supabase.from('form_responses').select('*');
+        if (isJoao) {
+          query = query.or('student_id.eq.student-joao,student_id.eq.user-joao');
+        } else {
+          query = query.eq('student_id', studentId);
+        }
+        const { data, error } = await query.order('submitted_at', { ascending: false });
         if (!error && data && data.length > 0) {
           return data.map(mapFromDb);
         }
@@ -97,7 +105,7 @@ export const formResponseRepository = {
     }
     const list = await this.getAll();
     return list
-      .filter((r) => r.studentId === studentId)
+      .filter((r) => r.studentId === studentId || (isJoao && (r.studentId === 'student-joao' || r.studentId === 'user-joao')))
       .sort((a, b) => new Date(b.submittedAt || b.startedAt || 0).getTime() - new Date(a.submittedAt || a.startedAt || 0).getTime());
   },
 

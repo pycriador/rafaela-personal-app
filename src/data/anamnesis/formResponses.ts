@@ -49,4 +49,20 @@ export const initialFormResponses: FormResponse[] = [
     submittedAt: '2026-09-12T14:10:00.000Z',
     submittedBy: 'student-ana',
   },
+
+  // João Pedro Santos - Resposta da Anamnese Inicial
+  {
+    id: 'resp-joao-init',
+    applicationId: 'app-joao-init-v1',
+    formId: 'form-anamnese-inicial',
+    formVersionId: 'ver-init-v1',
+    studentId: 'student-joao',
+    status: 'reviewed',
+    answers: initialFormAnswers.filter((a) => a.responseId === 'resp-joao-init'),
+    consentRecord: initialConsents.find((c) => c.responseId === 'resp-joao-init'),
+    startedAt: '2026-08-10T14:00:00.000Z',
+    submittedAt: '2026-08-10T14:25:00.000Z',
+    submittedBy: 'student-joao',
+    notes: 'Avaliado pela Rafaela na montagem do ciclo 1.',
+  },
 ];

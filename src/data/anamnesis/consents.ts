@@ -31,4 +31,14 @@ export const initialConsents: ConsentRecord[] = [
     formVersion: 1,
     statement: 'Confirmo a veracidade dos dados de percepção de esforço fornecidos.',
   },
+  {
+    id: 'consent-joao-init',
+    responseId: 'resp-joao-init',
+    studentId: 'student-joao',
+    accepted: true,
+    acceptedAt: '2026-08-10T14:25:00.000Z',
+    termsVersion: '1.0',
+    formVersion: 1,
+    statement: 'Declaro que as informações fornecidas nesta anamnese inicial são verdadeiras e completas.',
+  },
 ];
