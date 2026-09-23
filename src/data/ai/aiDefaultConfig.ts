@@ -2,12 +2,12 @@ import { AIConfig } from '../../types';
 
 export const initialAIConfig: AIConfig = {
   provider: 'gemini',
-  mode: 'mock', // Começa em mock conforme especificado para ambiente de desenvolvimento/testes
-  apiKeyMasked: '••••••••••98',
-  isKeyConfigured: true,
+  mode: 'gemini',
+  apiKeyMasked: '',
+  isKeyConfigured: false,
   selectedModel: 'gemini-2.0-flash',
-  temperature: 0.4,
-  maxOutputTokens: 2048,
+  temperature: 0.35,
+  maxOutputTokens: 4000,
   thinkingEnabled: true,
   language: 'pt-BR',
   tone: 'profissional',

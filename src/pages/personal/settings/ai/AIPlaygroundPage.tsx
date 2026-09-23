@@ -154,8 +154,8 @@ export const AIPlaygroundPage: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <Badge variant={config?.mode === 'gemini' ? 'success' : 'warning'} size="md">
-            Modo: {config?.mode === 'gemini' ? 'Gemini Real' : 'Mock Local'}
+          <Badge variant={config?.mode === 'gemini' ? 'success' : 'brand'} size="md">
+            Modo: {config?.mode === 'gemini' ? 'Google Gemini AI (Nuvem)' : 'Motor de Regras (Local)'}
           </Badge>
           <Badge variant="neutral" size="md">
             Modelo: {config?.selectedModel}

@@ -1,6 +1,7 @@
 import { AIProvider } from './AIProvider';
 import { MockAIProvider } from './MockAIProvider';
 import { GeminiAIProvider } from './GeminiAIProvider';
+import { secretStore } from './secretStore';
 import { aiConfigRepository } from '../../repositories/aiConfigRepository';
 import { aiRequestRepository } from '../../repositories/aiRequestRepository';
 import { aiProposalRepository } from '../../repositories/aiProposalRepository';
@@ -23,8 +24,9 @@ import {
 export const AIWorkoutService = {
   async getActiveProvider(): Promise<{ provider: AIProvider; model: string; mode: string }> {
     const config = await aiConfigRepository.getConfig();
-    const isMock = config.mode === 'mock';
-    const provider: AIProvider = isMock ? new MockAIProvider() : new GeminiAIProvider();
+    const hasKey = await secretStore.isConfigured();
+    const useLocalEngine = config.mode === 'mock' || (!hasKey && config.mode === 'gemini');
+    const provider: AIProvider = useLocalEngine ? new MockAIProvider() : new GeminiAIProvider();
     return {
       provider,
       model: config.selectedModel || 'gemini-2.0-flash',

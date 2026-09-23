@@ -105,16 +105,18 @@ export const StudentProfilePage: React.FC = () => {
           <span className="text-slate-400 capitalize">{theme === 'dark' ? 'Modo Escuro' : 'Modo Claro'}</span>
         </button>
 
-        <button
-          onClick={handleSwitchToPersonal}
-          className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-dark-cardElevated text-xs font-bold text-emerald-600 dark:text-emerald-400 transition-colors"
-        >
-          <span className="flex items-center gap-2">
-            <ArrowLeftRight className="w-4 h-4" />
-            Alternar para Painel da Rafaela (Personal)
-          </span>
-          <span className="text-[10px] bg-emerald-500/10 px-2 py-0.5 rounded">Mock Test</span>
-        </button>
+        {isSimulationMode && (
+          <button
+            onClick={handleSwitchToPersonal}
+            className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-dark-cardElevated text-xs font-bold text-emerald-600 dark:text-emerald-400 transition-colors"
+          >
+            <span className="flex items-center gap-2">
+              <ArrowLeftRight className="w-4 h-4" />
+              Sair do Modo de Teste (Voltar ao Painel da Personal)
+            </span>
+            <span className="text-[10px] bg-emerald-500/10 px-2 py-0.5 rounded">Ambiente Sandbox</span>
+          </button>
+        )}
 
         <button
           onClick={handleLogout}

@@ -6,6 +6,17 @@
 
 const SECRET_VAULT_KEY = 'rafaela_app_encrypted_vault_v1';
 
+function getEnvKey(): string {
+  try {
+    if (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GEMINI_API_KEY) {
+      return import.meta.env.VITE_GEMINI_API_KEY;
+    }
+  } catch {
+    // fallback
+  }
+  return '';
+}
+
 function maskKey(key: string): string {
   if (!key || key.length < 6) return '••••••••••••••••';
   const last4 = key.slice(-4);
@@ -20,7 +31,6 @@ export const secretStore = {
     }
 
     try {
-      // Simula armazenamento seguro (criptografia em runtime/sessão protegida)
       const encoded = btoa(encodeURIComponent(trimmed));
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem(SECRET_VAULT_KEY, encoded);
@@ -37,11 +47,16 @@ export const secretStore = {
 
   async getMaskedKey(): Promise<string | null> {
     try {
-      if (typeof localStorage === 'undefined') return null;
-      const raw = localStorage.getItem(SECRET_VAULT_KEY);
-      if (!raw) return null;
-      const decoded = decodeURIComponent(atob(raw));
-      return maskKey(decoded);
+      if (typeof localStorage !== 'undefined') {
+        const raw = localStorage.getItem(SECRET_VAULT_KEY);
+        if (raw) {
+          const decoded = decodeURIComponent(atob(raw));
+          return maskKey(decoded);
+        }
+      }
+      const envKey = getEnvKey();
+      if (envKey) return maskKey(envKey);
+      return null;
     } catch {
       return null;
     }
@@ -49,8 +64,10 @@ export const secretStore = {
 
   async isConfigured(): Promise<boolean> {
     try {
-      if (typeof localStorage === 'undefined') return false;
-      return !!localStorage.getItem(SECRET_VAULT_KEY);
+      if (typeof localStorage !== 'undefined' && localStorage.getItem(SECRET_VAULT_KEY)) {
+        return true;
+      }
+      return !!getEnvKey();
     } catch {
       return false;
     }
@@ -62,10 +79,15 @@ export const secretStore = {
    */
   async getRawKeyForProviderInternal(): Promise<string | null> {
     try {
-      if (typeof localStorage === 'undefined') return null;
-      const raw = localStorage.getItem(SECRET_VAULT_KEY);
-      if (!raw) return null;
-      return decodeURIComponent(atob(raw));
+      if (typeof localStorage !== 'undefined') {
+        const raw = localStorage.getItem(SECRET_VAULT_KEY);
+        if (raw) {
+          return decodeURIComponent(atob(raw));
+        }
+      }
+      const envKey = getEnvKey();
+      if (envKey) return envKey;
+      return null;
     } catch {
       return null;
     }

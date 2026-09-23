@@ -193,7 +193,7 @@ export const AISettingsView: React.FC = () => {
               Modo de Operação
             </CardTitle>
             <p className="text-xs text-slate-500 dark:text-dark-muted mt-1">
-              Escolha entre o Provedor Real Google Gemini ou o Mock Deterministico para testes e validação de fluxo sem custo de tokens.
+              Escolha entre a API Oficial Google Gemini ou o Motor de Regras Biomecânico Local (sem consumo de tokens).
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -206,7 +206,7 @@ export const AISettingsView: React.FC = () => {
                   : 'bg-slate-100 dark:bg-dark-border text-slate-600 dark:text-slate-400 hover:bg-slate-200'
               }`}
             >
-              Mock Local (Zero Tokens)
+              Motor de Regras Local (Offline)
             </button>
             <button
               type="button"
@@ -217,7 +217,7 @@ export const AISettingsView: React.FC = () => {
                   : 'bg-slate-100 dark:bg-dark-border text-slate-600 dark:text-slate-400 hover:bg-slate-200'
               }`}
             >
-              Google Gemini (API Real)
+              Google Gemini AI (Produção)
             </button>
           </div>
         </div>

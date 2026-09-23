@@ -53,7 +53,7 @@ export const LoginPage: React.FC = () => {
   const trainerUser = {
     id: 'user-rafaela',
     name: 'Rafaela Personal',
-    email: 'rafaela@mock.com',
+    email: 'rafaela@rafaelapersonal.com.br',
     role: 'personal' as const,
     tag: 'Personal Trainer',
     desc: 'Visão do Professor: gestão de alunos, fichas, biblioteca de exercícios e financeiro',
@@ -64,7 +64,7 @@ export const LoginPage: React.FC = () => {
     {
       id: 'user-joao',
       name: 'João Pedro Santos',
-      email: 'joao@mock.com',
+      email: 'joao.santos@email.com',
       role: 'student' as const,
       tag: 'Aluno • Emagrecimento',
       desc: 'Área do Aluno: ficha de treino, execução de séries e bate-papo de dúvidas',
@@ -73,7 +73,7 @@ export const LoginPage: React.FC = () => {
     {
       id: 'user-mariana',
       name: 'Mariana Silva',
-      email: 'mariana@mock.com',
+      email: 'mariana.silva@email.com',
       role: 'student' as const,
       tag: 'Aluna • Hipertrofia',
       desc: 'Área do Aluno: ficha de musculação, progressão de carga e alimentação',
@@ -82,7 +82,7 @@ export const LoginPage: React.FC = () => {
     {
       id: 'user-carlos',
       name: 'Carlos Eduardo Souza',
-      email: 'carlos@mock.com',
+      email: 'carlos.souza@email.com',
       role: 'student' as const,
       tag: 'Aluno • Condicionamento',
       desc: 'Área do Aluno: full body iniciante e acompanhamento de métricas',
@@ -119,7 +119,7 @@ export const LoginPage: React.FC = () => {
         <Card className="p-5 border-emerald-500/30 space-y-4">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
             <Sparkles className="w-4 h-4" />
-            Acesso Rápido com 1 Clique (Dados Mock)
+            Acesso Rápido com 1 Clique
           </div>
 
           {/* Section 1: Professor */}
@@ -193,7 +193,7 @@ export const LoginPage: React.FC = () => {
             <Input
               label="E-mail"
               type="email"
-              placeholder="ex: rafaela@mock.com ou mariana@mock.com"
+              placeholder="ex: rafaela@rafaelapersonal.com.br ou mariana.silva@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               leftIcon={<User className="w-4 h-4" />}

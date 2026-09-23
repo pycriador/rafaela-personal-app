@@ -150,7 +150,7 @@ export const StudentCreateEditPage: React.FC = () => {
             <Input
               label="E-mail *"
               type="email"
-              placeholder="ex: aluno@mock.com"
+              placeholder="ex: aluno@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required

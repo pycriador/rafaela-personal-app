@@ -293,7 +293,7 @@ export const PersonalLayout: React.FC = () => {
         <header className="hidden md:flex items-center justify-between px-8 py-4 bg-white/70 dark:bg-dark-card/70 backdrop-blur-md border-b border-slate-200/80 dark:border-dark-border sticky top-0 z-20">
           <div className="flex items-center gap-2">
             <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-              Painel do Treinador • MVP Mock
+              Painel de Gestão • Online
             </span>
           </div>
 

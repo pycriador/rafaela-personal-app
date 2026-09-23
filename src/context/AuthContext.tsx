@@ -152,7 +152,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         simUser = {
           id: st.userId || `user-${st.id}`,
           name: st.name,
-          email: st.email || `${st.id}@mock.com`,
+          email: st.email || `${st.id}@rafaelapersonal.com.br`,
           role: 'student',
           studentProfileId: st.id,
           avatarUrl: st.avatarUrl,
