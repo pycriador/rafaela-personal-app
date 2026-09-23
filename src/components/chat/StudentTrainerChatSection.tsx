@@ -99,10 +99,34 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const hasInitialScrolledRef = useRef(false);
 
   const isStudentViewer = currentUserRole === 'student';
   const trainerAvatar =
     'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=150&auto=format&fit=crop&q=80';
+
+  useEffect(() => {
+    hasInitialScrolledRef.current = false;
+  }, [student.id]);
+
+  // Scroll para o final apenas no primeiro carregamento da conversa (não a cada polling ou digitação)
+  useEffect(() => {
+    if (!loading && messages.length > 0 && !hasInitialScrolledRef.current) {
+      hasInitialScrolledRef.current = true;
+      const scrollToBottom = () => {
+        if (messagesContainerRef.current) {
+          messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+        }
+      };
+      requestAnimationFrame(scrollToBottom);
+      const t1 = setTimeout(scrollToBottom, 60);
+      const t2 = setTimeout(scrollToBottom, 180);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    }
+  }, [loading, messages.length]);
 
   const loadMessages = async (isBackground = false) => {
     try {
