@@ -128,4 +128,33 @@ Retorne um JSON com: originalExerciseId, originalExerciseName, suggestedAlternat
     return `TAREFA: Analise o histórico factual de sessões do aluno (cargas, repetições, exercícios pulados e feedbacks).
 Retorne um JSON com: summary, completionRate, totalSessionsAnalyzed, completedSessions, incompleteSessions, frequentlySkippedExercises, frequentlySubstitutedExercises, loadProgressionHighlights, questionsForTrainer, suggestedReviewAreas.`;
   },
+
+  getTemplateGeneratorPrompt(version: string = '1.0'): string {
+    return `TAREFA: Gere uma Série Modelo (Workout Template) padronizada para a biblioteca de treinos da Personal Trainer Rafaela, estritamente alinhada à descrição técnica do usuário.
+Regras fundamentais:
+- Escolha APENAS exercícios listados na biblioteca oficial fornecida no contexto (utilize seus IDs exatos).
+- Retorne EXCLUSIVAMENTE um objeto JSON válido no formato:
+{
+  "name": string,
+  "description": string,
+  "category": "Push" | "Pull" | "Legs" | "Full Body" | "Core & Cardio",
+  "level": "iniciante" | "intermediário" | "avançado",
+  "muscleFocus": string,
+  "estimatedMinutes": number,
+  "notes": string,
+  "exercises": [
+    {
+      "exerciseId": string,
+      "exerciseName": string,
+      "order": number,
+      "sets": number,
+      "reps": number,
+      "weight": number,
+      "restSeconds": number,
+      "notes": string
+    }
+  ]
+}`;
+  },
 };
+

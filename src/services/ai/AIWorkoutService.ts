@@ -8,6 +8,7 @@ import { aiProposalRepository } from '../../repositories/aiProposalRepository';
 import { aiConsentRepository } from '../../repositories/aiConsentRepository';
 import { workoutRepository } from '../../repositories/workoutRepository';
 import { activityRepository } from '../../repositories/activityRepository';
+import { exerciseRepository } from '../../repositories/exerciseRepository';
 import { AIContextBuilder } from './AIContextBuilder';
 import { AIResponseValidator } from './AIResponseValidator';
 import { AIPromptService } from './AIPromptService';
@@ -19,6 +20,7 @@ import {
   WorkoutPlan,
   WorkoutDay,
   WorkoutExercise,
+  WorkoutTemplate,
 } from '../../types';
 
 export const AIWorkoutService = {
@@ -351,5 +353,88 @@ export const AIWorkoutService = {
     });
 
     return callResult.structured;
+  },
+
+  /**
+   * 8. Gera uma Série Modelo (WorkoutTemplate) a partir de uma descrição em texto livre e parâmetros
+   */
+  async generateWorkoutTemplate(input: {
+    description: string;
+    category?: 'Push' | 'Pull' | 'Legs' | 'Full Body' | 'Core & Cardio' | 'all';
+    level?: 'iniciante' | 'intermediário' | 'avançado' | 'all';
+    targetMinutes?: number;
+  }): Promise<Omit<WorkoutTemplate, 'id' | 'createdAt' | 'updatedAt'>> {
+    const { provider, model } = await this.getActiveProvider();
+    const config = await aiConfigRepository.getConfig();
+    const allExercises = await exerciseRepository.getAll();
+
+    const context = {
+      description: input.description,
+      category: input.category,
+      level: input.level,
+      targetMinutes: input.targetMinutes || 50,
+      availableExerciseLibrary: allExercises.map((e) => ({
+        id: e.id,
+        name: e.name,
+        category: e.category,
+        type: e.type,
+        difficulty: e.difficulty,
+        equipment: e.equipment,
+      })),
+    };
+
+    const systemInstruction = config.systemPrompt || AIPromptService.getSystemInstruction();
+    const userPrompt = AIPromptService.getTemplateGeneratorPrompt('1.0');
+
+    let callResult;
+    try {
+      if (typeof provider.generateWorkoutTemplate === 'function') {
+        callResult = await provider.generateWorkoutTemplate({
+          context,
+          prompt: userPrompt,
+          model,
+          systemInstruction,
+          temperature: config.temperature,
+          maxOutputTokens: config.maxOutputTokens,
+        });
+      } else {
+        const mock = new MockAIProvider();
+        callResult = await mock.generateWorkoutTemplate({
+          context,
+          prompt: userPrompt,
+          model,
+          systemInstruction,
+        });
+      }
+    } catch (err: any) {
+      await aiRequestRepository.create({
+        trainerId: 'user-rafaela',
+        task: 'workout_generation',
+        model,
+        promptVersion: 'template-generator-v1.0',
+        latencyMs: 500,
+        status: 'error',
+        error: err.message || 'Falha ao gerar série modelo.',
+      });
+      throw err;
+    }
+
+    // Valida estritamente os exercícios retornados
+    const validation = await AIResponseValidator.validateWorkoutTemplate(callResult.structured);
+    if (!validation.valid || !validation.data) {
+      throw new Error(`A proposta da série falhou na validação biomecânica: ${validation.errors.join('; ')}`);
+    }
+
+    await aiRequestRepository.create({
+      trainerId: 'user-rafaela',
+      task: 'workout_generation',
+      model,
+      promptVersion: 'template-generator-v1.0',
+      latencyMs: callResult.latencyMs,
+      tokenUsage: callResult.tokenUsage,
+      status: 'success',
+    });
+
+    return validation.data;
   },
 };

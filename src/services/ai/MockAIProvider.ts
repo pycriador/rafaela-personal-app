@@ -299,4 +299,130 @@ export class MockAIProvider implements AIProvider {
       latencyMs: Date.now() - startTime,
     };
   }
+
+  async generateWorkoutTemplate(input: {
+    context: any;
+    prompt: string;
+    model: string;
+    systemInstruction?: string;
+  }): Promise<AIProviderCallResult> {
+    const startTime = Date.now();
+    await new Promise((resolve) => setTimeout(resolve, 550));
+
+    const allExercises = await exerciseRepository.getAll();
+    const desc = (input.context?.description || '').toLowerCase();
+
+    let category: 'Push' | 'Pull' | 'Legs' | 'Full Body' | 'Core & Cardio' = 'Push';
+    let muscleFocus = 'Peitoral, Tríceps & Deltoides';
+    let suggestedName = 'Série Modelo - Push Hipertrofia';
+
+    if (
+      desc.includes('glúteo') ||
+      desc.includes('gluteo') ||
+      desc.includes('posterior') ||
+      desc.includes('isquiotibial') ||
+      desc.includes('pélvica')
+    ) {
+      category = 'Legs';
+      muscleFocus = 'Glúteo Máximo, Médio e Isquiotibiais';
+      suggestedName = 'Série Modelo - Glúteos & Isquiotibiais (Foco Pélvico)';
+    } else if (
+      desc.includes('costas') ||
+      desc.includes('dorsal') ||
+      desc.includes('bíceps') ||
+      desc.includes('biceps') ||
+      desc.includes('pull') ||
+      desc.includes('puxar')
+    ) {
+      category = 'Pull';
+      muscleFocus = 'Dorsais, Trapézio, Romboides e Bíceps';
+      suggestedName = 'Série Modelo - Pull & Densidade Dorsal';
+    } else if (
+      desc.includes('perna') ||
+      desc.includes('quadríceps') ||
+      desc.includes('quadriceps') ||
+      desc.includes('legs')
+    ) {
+      category = 'Legs';
+      muscleFocus = 'Quadríceps, Glúteos e Panturrilhas';
+      suggestedName = 'Série Modelo - Pernas Completo (Foco Quadríceps)';
+    } else if (
+      desc.includes('full body') ||
+      desc.includes('corpo inteiro') ||
+      desc.includes('express')
+    ) {
+      category = 'Full Body';
+      muscleFocus = 'Cadeia Anterior, Posterior e Estabilizadores';
+      suggestedName = 'Série Modelo - Full Body Express';
+    } else if (
+      desc.includes('core') ||
+      desc.includes('abdômen') ||
+      desc.includes('cardio') ||
+      desc.includes('hiit')
+    ) {
+      category = 'Core & Cardio';
+      muscleFocus = 'Core, Oblíquos e Resistência Cardiovascular';
+      suggestedName = 'Série Modelo - Core & Conditioning';
+    } else if (input.context?.category && input.context.category !== 'all') {
+      category = input.context.category;
+    }
+
+    let level: 'iniciante' | 'intermediário' | 'avançado' = 'intermediário';
+    if (desc.includes('iniciante') || desc.includes('adaptação') || desc.includes('leve')) {
+      level = 'iniciante';
+    } else if (desc.includes('avançado') || desc.includes('pesado') || desc.includes('intenso') || desc.includes('força')) {
+      level = 'avançado';
+    } else if (input.context?.level && input.context.level !== 'all') {
+      level = input.context.level;
+    }
+
+    // Filtra exercícios relevantes da biblioteca com base no grupamento
+    let matching = allExercises.filter((e) => {
+      if (category === 'Push') return e.category === 'Peito' || e.category === 'Tríceps' || e.category === 'Ombros';
+      if (category === 'Pull') return e.category === 'Costas' || e.category === 'Bíceps' || e.category === 'Ombros';
+      if (category === 'Legs') return e.category === 'Pernas';
+      if (category === 'Core & Cardio') return e.category === 'Core' || e.category === 'Cardio';
+      return true;
+    });
+
+    if (matching.length < 4) {
+      matching = allExercises;
+    }
+
+    const selectedExercises = matching.slice(0, 5).map((ex, idx) => ({
+      exerciseId: ex.id,
+      exerciseName: ex.name,
+      order: idx + 1,
+      sets: level === 'iniciante' ? 3 : 4,
+      reps: level === 'avançado' ? 8 : 10,
+      weight: level === 'iniciante' ? 12 : 20,
+      restSeconds: level === 'avançado' ? 75 : 60,
+      notes: ex.instructions ? `Foco biomecânico: ${ex.instructions.slice(0, 65)}...` : 'Cadência 2-0-2.',
+    }));
+
+    const structured = {
+      name: suggestedName,
+      description: input.context?.description
+        ? `Rotina estruturada por IA com foco em: ${input.context.description.slice(0, 120)}`
+        : `Rotina padronizada de ${category} para nível ${level}.`,
+      category,
+      level,
+      muscleFocus,
+      estimatedMinutes: input.context?.targetMinutes || (category === 'Full Body' ? 40 : 50),
+      notes: 'Aquecimento articular recomendado antes das séries principais. Respeite os intervalos de descanso.',
+      exercises: selectedExercises,
+    };
+
+    return {
+      raw: JSON.stringify(structured, null, 2),
+      structured,
+      tokenUsage: {
+        promptTokens: 850,
+        completionTokens: 420,
+        totalTokens: 1270,
+      },
+      latencyMs: Date.now() - startTime,
+    };
+  }
 }
+

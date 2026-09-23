@@ -40,4 +40,12 @@ export interface AIProvider {
     model: string;
     systemInstruction?: string;
   }): Promise<AIProviderCallResult>;
+  generateWorkoutTemplate?(input: {
+    context: any;
+    prompt: string;
+    model: string;
+    systemInstruction?: string;
+    temperature?: number;
+    maxOutputTokens?: number;
+  }): Promise<AIProviderCallResult>;
 }

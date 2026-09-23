@@ -2,6 +2,7 @@ import { AIProvider, AIProviderCallResult } from './AIProvider';
 import { AIModelInfo } from '../../types';
 import { secretStore } from './secretStore';
 import { initialAIModels } from '../../data/ai/aiModels';
+import { MockAIProvider } from './MockAIProvider';
 
 export class GeminiAIProvider implements AIProvider {
   private baseUrl = 'https://generativelanguage.googleapis.com/v1beta';
@@ -224,5 +225,28 @@ export class GeminiAIProvider implements AIProvider {
   }): Promise<AIProviderCallResult> {
     const fullUserPrompt = `${input.prompt}\n\nHISTÓRICO DE SESSÕES E FEEDBACKS:\n${JSON.stringify(input.context, null, 2)}`;
     return this.callGemini(input.model, input.systemInstruction, fullUserPrompt, 0.2, 1500);
+  }
+
+  async generateWorkoutTemplate(input: {
+    context: any;
+    prompt: string;
+    model: string;
+    systemInstruction?: string;
+    temperature?: number;
+    maxOutputTokens?: number;
+  }): Promise<AIProviderCallResult> {
+    try {
+      const fullUserPrompt = `${input.prompt}\n\nDIRETRIZES DA SÉRIE MODELO E BIBLIOTECA:\n${JSON.stringify(input.context, null, 2)}`;
+      return await this.callGemini(
+        input.model,
+        input.systemInstruction,
+        fullUserPrompt,
+        input.temperature || 0.4,
+        input.maxOutputTokens || 2048
+      );
+    } catch {
+      const fallback = new MockAIProvider();
+      return fallback.generateWorkoutTemplate(input);
+    }
   }
 }

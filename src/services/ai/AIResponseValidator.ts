@@ -113,4 +113,84 @@ export const AIResponseValidator = {
         : null,
     };
   },
+
+  /**
+   * Valida a série modelo (WorkoutTemplate) gerada pela IA
+   */
+  async validateWorkoutTemplate(structured: any): Promise<ValidationResult<any>> {
+    const errors: string[] = [];
+    const warnings: string[] = [];
+
+    if (!structured || typeof structured !== 'object') {
+      return {
+        valid: false,
+        errors: ['A resposta da IA não é um objeto JSON válido.'],
+        warnings: [],
+        data: null,
+      };
+    }
+
+    const allExercises = await exerciseRepository.getAll();
+    const exMap = new Map(allExercises.map((e) => [e.id, e]));
+    const nameMap = new Map(allExercises.map((e) => [e.name.toLowerCase().trim(), e]));
+
+    const validatedExercises: any[] = [];
+    const rawExercises = Array.isArray(structured.exercises) ? structured.exercises : [];
+
+    if (rawExercises.length === 0) {
+      errors.push('A série modelo gerada não contém exercícios.');
+    }
+
+    for (const ex of rawExercises) {
+      let realEx = exMap.get(ex.exerciseId);
+      if (!realEx && ex.exerciseName) {
+        realEx = nameMap.get(ex.exerciseName.toLowerCase().trim());
+      }
+      if (!realEx) {
+        realEx = allExercises.find((e) => e.category === structured.category) || allExercises[0];
+        warnings.push(`Exercício "${ex.exerciseName || ex.exerciseId}" ajustado para "${realEx.name}".`);
+      }
+
+      const sets = Number(ex.sets);
+      const reps = Number(ex.reps);
+      const rest = Number(ex.restSeconds);
+
+      validatedExercises.push({
+        exerciseId: realEx.id,
+        order: ex.order || validatedExercises.length + 1,
+        sets: isNaN(sets) || sets < 1 || sets > 10 ? 4 : sets,
+        reps: isNaN(reps) || reps < 1 || reps > 100 ? 10 : reps,
+        weight: Number(ex.weight) || 20,
+        restSeconds: isNaN(rest) || rest < 15 || rest > 300 ? 60 : rest,
+        notes: ex.notes || realEx.instructions?.slice(0, 80) || '',
+        alternatives: realEx.alternatives || [],
+        allowWeightChange: true,
+        allowSetChange: false,
+        allowRepChange: true,
+        allowSkip: true,
+        allowSubstitution: true,
+      });
+    }
+
+    const isValid = errors.length === 0 && validatedExercises.length > 0;
+
+    const templateData = {
+      name: structured.name || 'Série Modelo Personalizada por IA',
+      description: structured.description || 'Série estruturada com inteligência artificial baseada nas diretrizes prescritas.',
+      category: structured.category || 'Push',
+      level: structured.level || 'intermediário',
+      muscleFocus: structured.muscleFocus || 'Geral',
+      estimatedMinutes: Number(structured.estimatedMinutes) || 50,
+      notes: structured.notes || 'Manter cadência controlada e realizar aquecimento articular.',
+      exercises: validatedExercises,
+    };
+
+    return {
+      valid: isValid,
+      errors,
+      warnings,
+      data: isValid ? templateData : null,
+    };
+  },
 };
+
