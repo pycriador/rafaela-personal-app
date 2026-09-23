@@ -44,6 +44,13 @@ function mapFromDb(row: any): Student {
     avatarUrl: row.avatar_url || row.avatarUrl,
     status: row.status,
     adherencePercentage: Number(row.adherence_percentage ?? row.adherencePercentage ?? 90),
+    planExpiresAt: row.plan_expires_at || row.planExpiresAt,
+    hasActivePlan: row.has_active_plan !== undefined ? row.has_active_plan : row.hasActivePlan,
+    financialPlan: row.financial_plan
+      ? typeof row.financial_plan === 'string'
+        ? JSON.parse(row.financial_plan)
+        : row.financial_plan
+      : row.financialPlan,
     createdAt: row.created_at || row.createdAt,
     lastActive: row.last_active || row.lastActive,
   };
@@ -70,6 +77,18 @@ function mapToDb(student: Partial<Student>): any {
   if (student.adherencePercentage !== undefined) {
     row.adherence_percentage = student.adherencePercentage;
     delete row.adherencePercentage;
+  }
+  if (student.planExpiresAt !== undefined) {
+    row.plan_expires_at = student.planExpiresAt;
+    delete row.planExpiresAt;
+  }
+  if (student.hasActivePlan !== undefined) {
+    row.has_active_plan = student.hasActivePlan;
+    delete row.hasActivePlan;
+  }
+  if (student.financialPlan !== undefined) {
+    row.financial_plan = student.financialPlan;
+    delete row.financialPlan;
   }
   if (student.lastActive !== undefined) {
     row.last_active = student.lastActive;

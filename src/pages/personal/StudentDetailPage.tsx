@@ -30,6 +30,10 @@ import {
   ClipboardList,
   FileText,
   Eye,
+  CreditCard,
+  MessageCircle,
+  Clock,
+  Send,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -43,6 +47,8 @@ import { ExerciseFramePlayer } from '../../components/ui/ExerciseFramePlayer';
 import { StudentTrainerChatSection } from '../../components/chat/StudentTrainerChatSection';
 import { WorkoutTemplatesModal } from '../../components/workouts/WorkoutTemplatesModal';
 import { FormStatusBadge } from '../../components/forms/FormStatusBadge';
+import { StudentProfileEditModal } from '../../components/students/StudentProfileEditModal';
+import { StudentFinancialModal } from '../../components/students/StudentFinancialModal';
 import { FormApplicationModal } from '../../components/forms/FormApplicationModal';
 import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
@@ -166,6 +172,10 @@ export const StudentDetailPage: React.FC = () => {
 
   // Quick edit day title & subtitle modal state
   const [editingDayInfo, setEditingDayInfo] = useState<{ dayId: string; dayOfWeek: string; name: string; muscleFocus: string } | null>(null);
+
+  // Student Profile Edit and Financial Plan Modals
+  const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
+  const [isFinancialModalOpen, setIsFinancialModalOpen] = useState(false);
 
   // Tab and session pagination synced with URL
   const rawTab = searchParams.get('tab') || 'resumo';
@@ -1112,6 +1122,24 @@ export const StudentDetailPage: React.FC = () => {
             <Button
               variant="secondary"
               size="sm"
+              onClick={() => setIsEditProfileModalOpen(true)}
+              leftIcon={<Edit className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />}
+              title="Editar todas as informações cadastrais e configurações do aluno"
+            >
+              Editar Cadastro
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setIsFinancialModalOpen(true)}
+              leftIcon={<CreditCard className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />}
+              title="Gerenciar plano, parcelamento e controle de mensalidades"
+            >
+              Plano & Mensalidade
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
               onClick={() => setActiveTab('conversa')}
               leftIcon={<MessageSquare className="w-4 h-4 text-slate-500 dark:text-slate-400" />}
               title="Abrir canal direto de conversa com o aluno"
@@ -1219,6 +1247,239 @@ export const StudentDetailPage: React.FC = () => {
               subtitle={`${nextWorkoutInfo.workoutName}${nextWorkoutInfo.dateStr ? ` • ${nextWorkoutInfo.dateStr}` : ''}`}
             />
           </div>
+
+          {/* Card de Gestão de Plano, Mensalidade & Controle de Pagamentos */}
+          {(() => {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const expDate = student.planExpiresAt ? new Date(student.planExpiresAt) : null;
+            if (expDate) expDate.setHours(0, 0, 0, 0);
+            const diffDays = expDate ? Math.ceil((expDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)) : null;
+
+            const paymentsList = student.financialPlan?.payments || [];
+            const overduePayments = paymentsList.filter(
+              (p) => p.status === 'vencido' || (p.status === 'pendente' && new Date(p.dueDate) < today)
+            );
+            const pendingPayments = paymentsList.filter((p) => p.status === 'pendente' && new Date(p.dueDate) >= today);
+            const paidPayments = paymentsList.filter((p) => p.status === 'pago');
+
+            // Last paid month
+            const lastPaid = paidPayments.length > 0 ? paidPayments[paidPayments.length - 1] : null;
+
+            // Most urgent pending or overdue month
+            const urgentPending = overduePayments.length > 0 ? overduePayments[0] : (pendingPayments.length > 0 ? pendingPayments[0] : null);
+
+            const isPlanExpired = diffDays !== null && diffDays < 0;
+            const isExpiringSoon = diffDays !== null && diffDays >= 0 && diffDays <= 7;
+
+            // Pre-built WhatsApp Message
+            const cleanPhone = (student.phone || '').replace(/\D/g, '');
+            const phoneWithCountry = cleanPhone.startsWith('55') ? cleanPhone : `55${cleanPhone}`;
+            let whatsappMsg = '';
+            if (isPlanExpired || overduePayments.length > 0) {
+              whatsappMsg = `Olá ${student.name.split(' ')[0]}! Tudo bem? Aqui é a Rafaela Personal. Passando para te lembrar que a sua mensalidade de ${urgentPending?.referenceMonth || 'treino'} (R$ ${urgentPending ? Number(urgentPending.amount).toFixed(2) : (student.financialPlan ? Number(student.financialPlan.price).toFixed(2) : '280,00')}) venceu no dia ${urgentPending?.dueDate ? new Date(urgentPending.dueDate).toLocaleDateString() : 'recente'}. Segue nossa chave PIX para acerto: rafaela.personal@email.com. Qualquer dúvida só me avisar! Bons treinos! 💪`;
+            } else if (isExpiringSoon || urgentPending) {
+              whatsappMsg = `Olá ${student.name.split(' ')[0]}! Tudo bem? Aqui é a Rafaela Personal. Lembrando que a sua mensalidade de ${urgentPending?.referenceMonth || 'treino'} (R$ ${urgentPending ? Number(urgentPending.amount).toFixed(2) : (student.financialPlan ? Number(student.financialPlan.price).toFixed(2) : '280,00')}) vence em ${urgentPending?.dueDate ? new Date(urgentPending.dueDate).toLocaleDateString() : 'breve'}. Qualquer dúvida estou à disposição! 💪`;
+            } else {
+              whatsappMsg = `Olá ${student.name.split(' ')[0]}! Tudo bem? Passando para confirmar que seu plano de treinos está 100% ativo e em dia. Vamos manter o foco! 💪`;
+            }
+            const whatsappLink = `https://wa.me/${phoneWithCountry}?text=${encodeURIComponent(whatsappMsg)}`;
+
+            const handleQuickPay = async (payId: string) => {
+              if (!student.financialPlan) return;
+              const todayStr = new Date().toISOString().split('T')[0];
+              const updatedPayments = student.financialPlan.payments.map((p) =>
+                p.id === payId ? { ...p, status: 'pago' as const, paidDate: todayStr } : p
+              );
+              const updatedPlan = { ...student.financialPlan, payments: updatedPayments };
+              const updated = await studentRepository.update(student.id, { financialPlan: updatedPlan });
+              if (updated) {
+                setStudent(updated);
+                success('Mensalidade marcada como Paga com sucesso!');
+              }
+            };
+
+            return (
+              <Card className="overflow-hidden border border-slate-200/80 dark:border-dark-border shadow-xs">
+                {/* Banner de Alerta Visual */}
+                <div
+                  className={`p-3.5 px-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b text-xs ${
+                    isPlanExpired || overduePayments.length > 0
+                      ? 'bg-rose-500/10 border-rose-500/30 text-rose-700 dark:text-rose-400'
+                      : isExpiringSoon
+                      ? 'bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-400'
+                      : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-700 dark:text-emerald-400'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5 font-semibold">
+                    {isPlanExpired || overduePayments.length > 0 ? (
+                      <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0" />
+                    ) : isExpiringSoon ? (
+                      <Clock className="w-4 h-4 text-amber-500 shrink-0" />
+                    ) : (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                    )}
+                    <span>
+                      {isPlanExpired
+                        ? `Alerta: Plano Vencido há ${Math.abs(diffDays || 0)} dias! Regularização necessária.`
+                        : overduePayments.length > 0
+                        ? `Alerta: Mensalidade de ${overduePayments[0].referenceMonth} em atraso!`
+                        : isExpiringSoon
+                        ? `Atenção: O plano atual deste aluno vence em ${diffDays} dias (${expDate?.toLocaleDateString()}).`
+                        : `Plano Vigente Ativo e Regularizado (Vence em ${expDate ? expDate.toLocaleDateString() : 'data indeterminada'}).`}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {urgentPending && (
+                      <Badge
+                        variant={urgentPending.status === 'vencido' || new Date(urgentPending.dueDate) < today ? 'danger' : 'warning'}
+                        size="sm"
+                      >
+                        {urgentPending.status === 'vencido' || new Date(urgentPending.dueDate) < today
+                          ? `Pendente: ${urgentPending.referenceMonth}`
+                          : `Próximo: ${urgentPending.referenceMonth}`}
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+
+                <CardContent className="p-5 sm:p-6 space-y-5">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Coluna 1: Plano & Parcelamento */}
+                    <div className="p-4 rounded-xl bg-slate-50/70 dark:bg-dark-cardElevated/70 border border-slate-200/60 dark:border-white/[0.06] space-y-1.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                        Plano Atual & Valor
+                      </span>
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                        {student.financialPlan?.planName || 'Consultoria Mensal'}
+                      </h4>
+                      <p className="text-xs text-emerald-600 dark:text-emerald-400 font-bold font-mono">
+                        R$ {Number(student.financialPlan?.price || 280).toFixed(2)}{' '}
+                        <span className="text-[11px] font-normal text-slate-500 dark:text-dark-muted">
+                          ({student.financialPlan?.totalInstallments || 1}x no{' '}
+                          {(student.financialPlan?.paymentMethod || 'pix').replace('_', ' ').toUpperCase()})
+                        </span>
+                      </p>
+                      <span className="text-[11px] text-slate-400 block">
+                        Vigência: {student.financialPlan?.startDate ? new Date(student.financialPlan.startDate).toLocaleDateString() : 'Início'} até{' '}
+                        {expDate ? expDate.toLocaleDateString() : 'Indeterminado'}
+                      </span>
+                    </div>
+
+                    {/* Coluna 2: Mês que Pagou */}
+                    <div className="p-4 rounded-xl bg-slate-50/70 dark:bg-dark-cardElevated/70 border border-slate-200/60 dark:border-white/[0.06] space-y-1.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                        Mês que Pagou (Último Registro)
+                      </span>
+                      {lastPaid ? (
+                        <>
+                          <div className="flex items-center gap-1.5">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                            <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                              {lastPaid.referenceMonth}
+                            </h4>
+                          </div>
+                          <p className="text-xs text-slate-600 dark:text-slate-300 font-mono">
+                            R$ {Number(lastPaid.amount).toFixed(2)} ({lastPaid.installments})
+                          </p>
+                          <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium block">
+                            Pago em {new Date(lastPaid.paidDate || lastPaid.dueDate).toLocaleDateString()} via{' '}
+                            {(lastPaid.paymentMethod || 'pix').toUpperCase()}
+                          </span>
+                        </>
+                      ) : (
+                        <p className="text-xs text-slate-400 py-1">Nenhum pagamento registrado ainda.</p>
+                      )}
+                    </div>
+
+                    {/* Coluna 3: Mês que está Pendente */}
+                    <div className="p-4 rounded-xl bg-slate-50/70 dark:bg-dark-cardElevated/70 border border-slate-200/60 dark:border-white/[0.06] space-y-1.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                        Mês que está Pendente
+                      </span>
+                      {urgentPending ? (
+                        <>
+                          <div className="flex items-center gap-1.5">
+                            <Clock
+                              className={`w-4 h-4 shrink-0 ${
+                                urgentPending.status === 'vencido' || new Date(urgentPending.dueDate) < today
+                                  ? 'text-rose-500'
+                                  : 'text-amber-500'
+                              }`}
+                            />
+                            <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                              {urgentPending.referenceMonth}
+                            </h4>
+                          </div>
+                          <p className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200">
+                            R$ {Number(urgentPending.amount).toFixed(2)} ({urgentPending.installments})
+                          </p>
+                          <div className="flex items-center justify-between gap-1 pt-0.5">
+                            <span
+                              className={`text-[11px] font-medium ${
+                                urgentPending.status === 'vencido' || new Date(urgentPending.dueDate) < today
+                                  ? 'text-rose-500 font-bold'
+                                  : 'text-amber-500'
+                              }`}
+                            >
+                              Vencimento: {new Date(urgentPending.dueDate).toLocaleDateString()}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleQuickPay(urgentPending.id)}
+                              className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 font-bold cursor-pointer"
+                            >
+                              Dar baixa ✓
+                            </button>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="flex items-center gap-2 py-1 text-emerald-600 dark:text-emerald-400">
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span className="text-xs font-semibold">Todas as mensalidades em dia!</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Barra de Ações Financeiras */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-white/[0.06]">
+                    <div className="text-xs text-slate-400">
+                      Total de mensalidades gerenciadas:{' '}
+                      <strong className="text-slate-700 dark:text-slate-200 font-mono">{paymentsList.length}</strong> ({paidPayments.length} pagas, {overduePayments.length + pendingPayments.length} em aberto)
+                    </div>
+
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {/* Botão WhatsApp inteligente */}
+                      <a
+                        href={whatsappLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition-colors shadow-2xs cursor-pointer"
+                        title="Enviar mensagem context-aware via WhatsApp"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5 fill-white" />
+                        <span>{isPlanExpired || overduePayments.length > 0 ? 'Cobrar no WhatsApp' : 'Lembrar no WhatsApp'}</span>
+                      </a>
+
+                      {/* Botão Mudar Plano / Gerenciar Pagamentos */}
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => setIsFinancialModalOpen(true)}
+                        leftIcon={<CreditCard className="w-3.5 h-3.5" />}
+                        className="text-xs py-1.5"
+                      >
+                        Mudar Plano & Mensalidades
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })()}
 
           {/* Cronograma da Semana Atual (Calendário Real) */}
           <Card className="overflow-hidden border border-slate-200/80 dark:border-dark-border">
@@ -1379,8 +1640,17 @@ export const StudentDetailPage: React.FC = () => {
           {/* Dados do Perfil */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between pb-3">
                 <CardTitle>Rotina & Restrições</CardTitle>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsEditProfileModalOpen(true)}
+                  leftIcon={<Edit className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />}
+                  className="text-xs -mr-2"
+                >
+                  Editar Cadastro
+                </Button>
               </CardHeader>
               <CardContent className="space-y-3 text-xs">
                 <div>
@@ -3382,6 +3652,30 @@ export const StudentDetailPage: React.FC = () => {
               info(`Alternativa "${altExName}" selecionada.`);
             }
             setSelectedExerciseForAIAlt(null);
+          }}
+        />
+      )}
+
+      {/* MODAL: Edit Student Profile (All settings matching /personal/settings?tab=usuarios) */}
+      {student && (
+        <StudentProfileEditModal
+          isOpen={isEditProfileModalOpen}
+          onClose={() => setIsEditProfileModalOpen(false)}
+          student={student}
+          onStudentUpdated={(updatedStudent) => {
+            setStudent(updatedStudent);
+          }}
+        />
+      )}
+
+      {/* MODAL: Financial Plan & Monthly Payments Management */}
+      {student && (
+        <StudentFinancialModal
+          isOpen={isFinancialModalOpen}
+          onClose={() => setIsFinancialModalOpen(false)}
+          student={student}
+          onFinancialUpdated={(updatedStudent) => {
+            setStudent(updatedStudent);
           }}
         />
       )}

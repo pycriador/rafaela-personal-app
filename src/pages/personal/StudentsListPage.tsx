@@ -80,23 +80,39 @@ export const StudentsListPage: React.FC = () => {
     load();
   }, []);
 
-  // Calculate plan status and expiration
+  // Calculate plan status, payment status, and expiration
   const getPlanStatus = (student: Student) => {
-    if (student.hasActivePlan === false) {
+    if (student.hasActivePlan === false && !student.financialPlan) {
       return { status: 'no_plan' as const, label: 'Sem Ficha Ativa' };
-    }
-    if (!student.planExpiresAt) {
-      return { status: 'active' as const, label: 'Ficha Ativa' };
     }
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const expDate = new Date(student.planExpiresAt);
+
+    // Check overdue payment in financialPlan
+    const overduePay = student.financialPlan?.payments.find(
+      (p) => p.status === 'vencido' || (p.status === 'pendente' && new Date(p.dueDate) < today)
+    );
+    if (overduePay) {
+      return {
+        status: 'expired' as const,
+        label: `Mensalidade Vencida (${overduePay.referenceMonth})`,
+        days: -1,
+        overduePayment: overduePay,
+      };
+    }
+
+    const expDateStr = student.financialPlan?.expiresAt || student.planExpiresAt;
+    if (!expDateStr) {
+      return { status: 'active' as const, label: 'Plano Ativo' };
+    }
+
+    const expDate = new Date(expDateStr);
     expDate.setHours(0, 0, 0, 0);
     const diffTime = expDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays < 0) {
-      return { status: 'expired' as const, label: `Vencido há ${Math.abs(diffDays)}d`, days: diffDays };
+      return { status: 'expired' as const, label: `Plano Vencido há ${Math.abs(diffDays)}d`, days: diffDays };
     }
     if (diffDays <= 7) {
       return { status: 'expiring_soon' as const, label: `Vence em ${diffDays}d`, days: diffDays };
@@ -139,17 +155,20 @@ export const StudentsListPage: React.FC = () => {
     setSearchParams(next);
   };
 
-  // 1-Click WhatsApp helper for plan renewal / encouragement
+  // 1-Click WhatsApp helper for plan renewal / encouragement / payment
   const openWhatsAppRenewal = (e: React.MouseEvent, student: Student, planStatus: ReturnType<typeof getPlanStatus>) => {
     e.stopPropagation();
     const cleanPhone = student.phone.replace(/\D/g, '');
-    let msg = `Olá, ${student.name}! Rafaela aqui. `;
-    if (planStatus.status === 'no_plan') {
+    let msg = `Olá, ${student.name.split(' ')[0]}! Rafaela Personal aqui. `;
+    if ((planStatus as any).overduePayment) {
+      const pay = (planStatus as any).overduePayment;
+      msg += `Passando para te lembrar que a sua mensalidade de ${pay.referenceMonth} (R$ ${Number(pay.amount).toFixed(2)}) venceu no dia ${new Date(pay.dueDate).toLocaleDateString()}. Segue nossa chave PIX para acerto: rafaela.personal@email.com. Qualquer dúvida estou à disposição! 💪`;
+    } else if (planStatus.status === 'no_plan') {
       msg += `Notei que você está sem ficha de treino ativa. Vamos montar seu novo ciclo de treinos para atingir seus objetivos? 💪`;
     } else if (planStatus.status === 'expired') {
-      msg += `Sua ficha de treino venceu. Vamos agendar a renovação e ajuste de cargas para continuar seu progresso? 🏋️`;
+      msg += `Seu plano de treino venceu (${planStatus.label}). Vamos renovar e alinhar a nova fase de treinos? 🏋️`;
     } else if (planStatus.status === 'expiring_soon') {
-      msg += `Sua ficha de treino atual está próxima do vencimento (${planStatus.label}). Que tal já alinharmos os ajustes para a nova fase? 🎯`;
+      msg += `Seu plano de treino atual está próximo do vencimento (${planStatus.label}). Que tal já alinharmos os ajustes para a nova fase? 🎯`;
     } else if (student.adherencePercentage < 80) {
       msg += `Passando para acompanhar seus treinos desta semana! Está precisando de algum ajuste na rotina? 🚀`;
     } else {

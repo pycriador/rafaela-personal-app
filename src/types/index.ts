@@ -30,6 +30,43 @@ export type DayOfWeek =
   | 'Sábado'
   | 'Domingo';
 
+export type PaymentStatus = 'pago' | 'pendente' | 'vencido';
+
+export type PlanFrequency = 'mensal' | 'trimestral' | 'semestral' | 'anual' | 'personalizado';
+
+export type PaymentMethod =
+  | 'pix'
+  | 'cartao_credito'
+  | 'cartao_debito'
+  | 'boleto'
+  | 'dinheiro'
+  | 'outro';
+
+export interface StudentPaymentRecord {
+  id: string;
+  referenceMonth: string; // e.g. "Março/2026" ou "2026-03"
+  amount: number; // valor cobrado
+  dueDate: string; // YYYY-MM-DD
+  paidDate?: string; // YYYY-MM-DD quando foi pago
+  status: PaymentStatus;
+  installments: string; // e.g. "1x à vista", "2 de 3x", "1 de 12x"
+  paymentMethod: PaymentMethod;
+  notes?: string;
+}
+
+export interface StudentFinancialPlan {
+  planName: string; // e.g. "Consultoria VIP Presencial", "Treino Online Mensal"
+  frequency: PlanFrequency;
+  price: number; // valor total do plano
+  totalInstallments: number; // 1, 2, 3, 6, 12 parcelas
+  billingDay: number; // dia do vencimento (e.g. 10)
+  startDate: string; // YYYY-MM-DD
+  expiresAt: string; // YYYY-MM-DD (vencimento do plano atual)
+  paymentMethod: PaymentMethod;
+  notes?: string;
+  payments: StudentPaymentRecord[];
+}
+
 export interface Student {
   id: string;
   userId: string;
@@ -52,6 +89,7 @@ export interface Student {
   adherencePercentage: number; // e.g. 92%
   planExpiresAt?: string; // e.g. '2026-10-15'
   hasActivePlan?: boolean;
+  financialPlan?: StudentFinancialPlan;
 }
 
 export type ExerciseCategory =
