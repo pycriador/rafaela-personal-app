@@ -25,6 +25,7 @@ import { formService } from '../../../services/anamnesis/formService';
 import { formVersionService } from '../../../services/anamnesis/formVersionService';
 import { formBuilderService } from '../../../services/anamnesis/formBuilderService';
 import { formVersionRepository } from '../../../repositories/formVersionRepository';
+import { initialFormVersions } from '../../../data/anamnesis/formVersions';
 import {
   Form,
   FormVersion,
@@ -79,6 +80,8 @@ export const FormEditorPage: React.FC = () => {
 
   // Modal para Aplicar Formulário
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  // Modal para Pré-Visualização Completa
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -105,7 +108,19 @@ export const FormEditorPage: React.FC = () => {
         setFormName(found.name);
         setFormDescription(found.description);
 
-        const version = await formVersionService.getVersionById(found.currentVersionId);
+        let version: FormVersion | null = null;
+        if (found.currentVersionId) {
+          version = await formVersionService.getVersionById(found.currentVersionId);
+        }
+        if (!version) {
+          const versions = await formVersionService.getVersionsByFormId(found.id);
+          if (versions.length > 0) {
+            version = versions[0];
+          } else {
+            const initV = initialFormVersions.find((v) => v.formId === found.id);
+            if (initV) version = initV;
+          }
+        }
         setCurrentVersion(version);
 
         if (version) {
@@ -416,6 +431,17 @@ export const FormEditorPage: React.FC = () => {
           )}
 
           <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsPreviewModalOpen(true)}
+            leftIcon={<Eye className="w-3.5 h-3.5 text-emerald-500" />}
+            className="text-xs font-bold"
+            title="Abrir pré-visualização interativa em tela cheia"
+          >
+            Pré-visualizar
+          </Button>
+
+          <Button
             variant="secondary"
             size="sm"
             onClick={() => setIsApplyModalOpen(true)}
@@ -617,18 +643,31 @@ export const FormEditorPage: React.FC = () => {
               <Eye className="w-4 h-4 text-emerald-500" />
               <span>Pré-Visualização ao Vivo</span>
             </h2>
-            <span className="text-[11px] text-slate-400">Interação idêntica ao aluno</span>
+            <button
+              type="button"
+              onClick={() => setIsPreviewModalOpen(true)}
+              className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer"
+            >
+              Expandir pré-visualização
+            </button>
           </div>
 
           <div className="rounded-2xl border border-slate-200 dark:border-dark-border bg-slate-50/40 dark:bg-dark-card/30 p-2 sm:p-3">
-            <FormRenderer
-              version={currentVersion}
-              fields={fields}
-              readonly={false}
-              onSubmit={async () => {
-                info('Pré-visualização: O formulário está pronto para ser publicado e respondido!');
-              }}
-            />
+            {currentVersion ? (
+              <FormRenderer
+                version={currentVersion}
+                fields={fields}
+                isPreview={true}
+                readonly={false}
+                onSubmit={async () => {
+                  info('Pré-visualização: O formulário está pronto para ser publicado e respondido!');
+                }}
+              />
+            ) : (
+              <div className="p-8 text-center text-slate-400 text-xs">
+                Carregando formulário para pré-visualização...
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -850,6 +889,30 @@ export const FormEditorPage: React.FC = () => {
           form={form}
           version={currentVersion}
         />
+      )}
+
+      {/* Modal para Pré-visualização Completa */}
+      {isPreviewModalOpen && currentVersion && (
+        <Modal
+          isOpen={isPreviewModalOpen}
+          onClose={() => setIsPreviewModalOpen(false)}
+          title={`Pré-visualização: ${form?.name || 'Formulário'}`}
+          description="Teste o questionário em modo interativo completo exatamente como o aluno verá."
+          size="lg"
+        >
+          <div className="py-2 max-h-[75vh] overflow-y-auto pr-1">
+            <FormRenderer
+              version={currentVersion}
+              fields={fields}
+              isPreview={true}
+              readonly={false}
+              onSubmit={async () => {
+                info('Pré-visualização: Formulário preenchido com sucesso!');
+                setIsPreviewModalOpen(false);
+              }}
+            />
+          </div>
+        </Modal>
       )}
     </div>
   );

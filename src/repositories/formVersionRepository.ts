@@ -1,16 +1,21 @@
 import { FormVersion, FormField } from '../types';
 import { initialFormVersions } from '../data/anamnesis/formVersions';
+import { initialFormSections } from '../data/anamnesis/formSections';
 import { initialFormFields } from '../data/anamnesis/formFields';
 import { STORAGE_KEYS, getItem, setItem, isSimulationModeActive } from './storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 function mapVersionFromDb(row: any): FormVersion {
+  let sections = Array.isArray(row.sections) ? row.sections : (row.sections ? JSON.parse(row.sections) : []);
+  if (!Array.isArray(sections) || sections.length === 0) {
+    sections = initialFormSections.filter((s) => s.versionId === (row.id || row.version_id));
+  }
   return {
     id: row.id,
     formId: row.form_id || row.formId,
     version: Number(row.version_number ?? row.version ?? 1),
     status: row.status,
-    sections: Array.isArray(row.sections) ? row.sections : JSON.parse(row.sections || '[]'),
+    sections,
     termsVersion: row.terms_version || '1.0',
     publishedAt: row.published_at || row.created_at || row.createdAt,
     createdAt: row.created_at || row.createdAt,
@@ -62,7 +67,9 @@ export const formVersionRepository = {
       }
     }
     const list = await this.getAll();
-    return list.find((v) => v.id === id) || null;
+    const found = list.find((v) => v.id === id);
+    if (found) return found;
+    return initialFormVersions.find((v) => v.id === id) || null;
   },
 
   async getByFormId(formId: string): Promise<FormVersion[]> {
@@ -81,7 +88,11 @@ export const formVersionRepository = {
       }
     }
     const list = await this.getAll();
-    return list.filter((v) => v.formId === formId).sort((a, b) => b.version - a.version);
+    const filtered = list.filter((v) => v.formId === formId).sort((a, b) => b.version - a.version);
+    if (filtered.length === 0) {
+      return initialFormVersions.filter((v) => v.formId === formId).sort((a, b) => b.version - a.version);
+    }
+    return filtered;
   },
 
   async save(version: FormVersion): Promise<FormVersion> {
@@ -144,7 +155,11 @@ export const formVersionRepository = {
       }
     }
     const fields = await this.getAllFields();
-    return fields.filter((f) => f.versionId === versionId && f.active).sort((a, b) => a.order - b.order);
+    const filtered = fields.filter((f) => f.versionId === versionId && f.active !== false).sort((a, b) => a.order - b.order);
+    if (filtered.length === 0) {
+      return initialFormFields.filter((f) => f.versionId === versionId && f.active !== false).sort((a, b) => a.order - b.order);
+    }
+    return filtered;
   },
 
   async saveField(field: FormField): Promise<FormField> {
