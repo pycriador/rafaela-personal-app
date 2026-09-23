@@ -137,12 +137,45 @@ export function initStorage() {
   }
   if (!localStorage.getItem(STORAGE_KEYS.FORMS)) {
     localStorage.setItem(STORAGE_KEYS.FORMS, JSON.stringify(initialForms));
+  } else {
+    try {
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.FORMS) || '[]');
+      const ids = new Set(stored.map((f: any) => f.id));
+      const missing = initialForms.filter((f) => !ids.has(f.id));
+      if (missing.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.FORMS, JSON.stringify([...stored, ...missing]));
+      }
+    } catch {
+      localStorage.setItem(STORAGE_KEYS.FORMS, JSON.stringify(initialForms));
+    }
   }
   if (!localStorage.getItem(STORAGE_KEYS.FORM_VERSIONS)) {
     localStorage.setItem(STORAGE_KEYS.FORM_VERSIONS, JSON.stringify(initialFormVersions));
+  } else {
+    try {
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.FORM_VERSIONS) || '[]');
+      const ids = new Set(stored.map((v: any) => v.id));
+      const missing = initialFormVersions.filter((v) => !ids.has(v.id));
+      if (missing.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.FORM_VERSIONS, JSON.stringify([...stored, ...missing]));
+      }
+    } catch {
+      localStorage.setItem(STORAGE_KEYS.FORM_VERSIONS, JSON.stringify(initialFormVersions));
+    }
   }
   if (!localStorage.getItem(STORAGE_KEYS.FORM_FIELDS)) {
     localStorage.setItem(STORAGE_KEYS.FORM_FIELDS, JSON.stringify(initialFormFields));
+  } else {
+    try {
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.FORM_FIELDS) || '[]');
+      const ids = new Set(stored.map((f: any) => f.id));
+      const missing = initialFormFields.filter((f) => !ids.has(f.id));
+      if (missing.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.FORM_FIELDS, JSON.stringify([...stored, ...missing]));
+      }
+    } catch {
+      localStorage.setItem(STORAGE_KEYS.FORM_FIELDS, JSON.stringify(initialFormFields));
+    }
   }
   if (!localStorage.getItem(STORAGE_KEYS.FORM_APPLICATIONS)) {
     localStorage.setItem(STORAGE_KEYS.FORM_APPLICATIONS, JSON.stringify(initialFormApplications));

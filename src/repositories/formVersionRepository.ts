@@ -46,13 +46,37 @@ export const formVersionRepository = {
       try {
         const { data, error } = await supabase.from('form_versions').select('*').order('version_number', { ascending: false });
         if (!error && data && data.length > 0) {
-          return data.map(mapVersionFromDb);
+          const loaded = data.map(mapVersionFromDb);
+          const existingIds = new Set(loaded.map((v) => v.id));
+          const missing = initialFormVersions.filter((v) => !existingIds.has(v.id));
+          if (missing.length > 0) {
+            for (const v of missing) {
+              await supabase.from('form_versions').upsert({
+                id: v.id,
+                form_id: v.formId,
+                version_number: v.version,
+                status: v.status,
+                sections: v.sections,
+                created_at: v.createdAt || new Date().toISOString(),
+              });
+            }
+            return [...loaded, ...missing];
+          }
+          return loaded;
         }
       } catch (err) {
         // fallback
       }
     }
-    return getItem<FormVersion[]>(STORAGE_KEYS.FORM_VERSIONS, initialFormVersions);
+    const list = getItem<FormVersion[]>(STORAGE_KEYS.FORM_VERSIONS, initialFormVersions);
+    const existingIds = new Set(list.map((v) => v.id));
+    const missing = initialFormVersions.filter((v) => !existingIds.has(v.id));
+    if (missing.length > 0) {
+      const merged = [...list, ...missing];
+      setItem(STORAGE_KEYS.FORM_VERSIONS, merged);
+      return merged;
+    }
+    return list;
   },
 
   async getById(id: string): Promise<FormVersion | null> {
@@ -130,13 +154,43 @@ export const formVersionRepository = {
       try {
         const { data, error } = await supabase.from('form_fields').select('*').order('order_index', { ascending: true });
         if (!error && data && data.length > 0) {
-          return data.map(mapFieldFromDb);
+          const loaded = data.map(mapFieldFromDb);
+          const existingIds = new Set(loaded.map((f) => f.id));
+          const missing = initialFormFields.filter((f) => !existingIds.has(f.id));
+          if (missing.length > 0) {
+            const rows = missing.map((f) => ({
+              id: f.id,
+              version_id: f.versionId,
+              label: f.label,
+              type: f.type,
+              required: f.required ?? false,
+              order_index: f.order,
+              options: f.options || null,
+              validation: {
+                description: f.description || null,
+                placeholder: f.placeholder || null,
+                sectionId: f.sectionId,
+                condition: f.condition || null,
+              },
+            }));
+            await supabase.from('form_fields').upsert(rows);
+            return [...loaded, ...missing];
+          }
+          return loaded;
         }
       } catch (err) {
         // fallback
       }
     }
-    return getItem<FormField[]>(STORAGE_KEYS.FORM_FIELDS, initialFormFields);
+    const list = getItem<FormField[]>(STORAGE_KEYS.FORM_FIELDS, initialFormFields);
+    const existingIds = new Set(list.map((f) => f.id));
+    const missing = initialFormFields.filter((f) => !existingIds.has(f.id));
+    if (missing.length > 0) {
+      const merged = [...list, ...missing];
+      setItem(STORAGE_KEYS.FORM_FIELDS, merged);
+      return merged;
+    }
+    return list;
   },
 
   async getFieldsByVersionId(versionId: string): Promise<FormField[]> {

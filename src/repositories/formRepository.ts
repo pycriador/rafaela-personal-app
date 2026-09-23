@@ -22,13 +22,39 @@ export const formRepository = {
       try {
         const { data, error } = await supabase.from('forms').select('*').order('created_at', { ascending: false });
         if (!error && data && data.length > 0) {
-          return data.map(mapFromDb);
+          const loaded = data.map(mapFromDb);
+          const existingIds = new Set(loaded.map((f) => f.id));
+          const missing = initialForms.filter((f) => !existingIds.has(f.id));
+          if (missing.length > 0) {
+            for (const f of missing) {
+              await supabase.from('forms').upsert({
+                id: f.id,
+                title: f.name,
+                description: f.description || null,
+                category: 'anamnese',
+                status: f.status,
+                current_version_id: f.currentVersionId || null,
+                created_at: f.createdAt,
+                updated_at: f.updatedAt,
+              });
+            }
+            return [...loaded, ...missing];
+          }
+          return loaded;
         }
       } catch (err) {
         // fallback
       }
     }
-    return getItem<Form[]>(STORAGE_KEYS.FORMS, initialForms);
+    const list = getItem<Form[]>(STORAGE_KEYS.FORMS, initialForms);
+    const existingIds = new Set(list.map((f) => f.id));
+    const missing = initialForms.filter((f) => !existingIds.has(f.id));
+    if (missing.length > 0) {
+      const merged = [...list, ...missing];
+      setItem(STORAGE_KEYS.FORMS, merged);
+      return merged;
+    }
+    return list;
   },
 
   async getById(id: string): Promise<Form | null> {
