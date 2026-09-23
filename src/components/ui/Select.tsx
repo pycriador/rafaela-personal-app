@@ -19,20 +19,22 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <div className="w-full flex flex-col gap-1.5 text-left">
         {label && (
-          <label htmlFor={selectId} className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <label htmlFor={selectId} className="text-xs font-medium text-slate-700 dark:text-slate-300">
             {label}
           </label>
         )}
         <select
           id={selectId}
           ref={ref}
-          className={`w-full bg-slate-50 dark:bg-dark-cardElevated/80 border ${
-            error ? 'border-rose-500' : 'border-slate-200 dark:border-dark-border focus:border-emerald-500'
-          } text-slate-900 dark:text-white rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all py-2.5 px-3.5 ${className}`}
+          className={`w-full bg-white dark:bg-dark-card border ${
+            error
+              ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/15'
+              : 'border-slate-200/90 dark:border-dark-border focus:border-emerald-600 dark:focus:border-emerald-400 focus:ring-emerald-500/15'
+          } text-slate-900 dark:text-slate-100 rounded-xl text-sm focus:outline-none focus:ring-2 transition-all py-2 px-3 shadow-2xs cursor-pointer ${className}`}
           {...props}
         >
           {options.map((opt) => (
-            <option key={opt.value} value={opt.value} className="bg-white dark:bg-dark-card text-slate-900 dark:text-white">
+            <option key={opt.value} value={opt.value} className="bg-white dark:bg-dark-card text-slate-900 dark:text-slate-100">
               {opt.label}
             </option>
           ))}

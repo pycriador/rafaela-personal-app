@@ -160,10 +160,10 @@ export const StudentsListPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl font-semibold text-slate-900 dark:text-white tracking-tight">
             Gestão de Alunos
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-dark-muted mt-0.5">
+          <p className="text-sm text-slate-500 dark:text-dark-muted mt-0.5 font-normal">
             Acompanhe o status, metas, rotina de treinos e frequência dos alunos
           </p>
         </div>
@@ -292,17 +292,17 @@ export const StudentsListPage: React.FC = () => {
               <div
                 key={student.id}
                 onClick={() => navigate(`/personal/students/${student.userId || student.id}`)}
-                className="p-4 rounded-2xl border border-slate-200 dark:border-dark-border bg-white dark:bg-dark-card hover:border-emerald-500/50 hover:bg-slate-50/50 dark:hover:bg-dark-cardElevated/50 hover:shadow-md cursor-pointer transition-all flex flex-col justify-between gap-3 group"
+                className="p-4 rounded-xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-dark-card hover:border-slate-300 dark:hover:border-white/[0.16] shadow-xs cursor-pointer transition-all flex flex-col justify-between gap-3 group"
               >
                 <div className="flex items-start gap-3">
                   <img
                     src={student.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
                     alt={student.name}
-                    className="w-12 h-12 rounded-xl object-cover ring-1 ring-slate-200 dark:ring-dark-border group-hover:ring-emerald-500 transition-all shrink-0"
+                    className="w-11 h-11 rounded-full object-cover ring-1 ring-slate-200/80 dark:ring-white/[0.08] shrink-0"
                   />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-1">
-                      <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                      <h4 className="text-sm font-semibold text-slate-900 dark:text-white truncate">
                         {student.name}
                       </h4>
                       <Badge
@@ -323,11 +323,11 @@ export const StudentsListPage: React.FC = () => {
                     <p className="text-xs text-slate-500 dark:text-dark-muted truncate mt-0.5">
                       {student.email}
                     </p>
-                    <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-semibold" title="ID do Usuário no Banco de Dados">
+                    <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/[0.06] text-slate-500 dark:text-slate-400 font-medium" title="ID do Usuário no Banco de Dados">
                         UID: {student.userId || student.id}
                       </span>
-                      <span className="text-[11px] text-slate-400 font-medium truncate">
+                      <span className="text-[11px] text-slate-400 dark:text-dark-muted font-normal truncate">
                         {student.level} • {student.goals.join(', ')}
                       </span>
                     </div>
@@ -335,27 +335,27 @@ export const StudentsListPage: React.FC = () => {
                 </div>
 
                 {/* Registered training days & activity box */}
-                <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-dark-cardElevated/60 border border-slate-100 dark:border-dark-border/40 text-xs space-y-1.5">
+                <div className="p-2.5 rounded-lg bg-slate-50/70 dark:bg-dark-cardElevated/40 border border-slate-200/60 dark:border-white/[0.06] text-xs space-y-1">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold">
-                      <Calendar className="w-3.5 h-3.5 shrink-0" />
+                    <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300 font-medium">
+                      <Calendar className="w-3.5 h-3.5 shrink-0 text-slate-400" />
                       <span>Dias Cadastrados ({student.availableDays.length}):</span>
                     </div>
-                    <span className="font-mono font-bold text-emerald-500 text-xs">
+                    <span className="font-mono font-medium text-emerald-600 dark:text-emerald-400 text-xs">
                       {student.adherencePercentage}% adesão
                     </span>
                   </div>
-                  <span className="text-slate-700 dark:text-slate-300 font-semibold block truncate">
+                  <span className="text-slate-700 dark:text-slate-300 font-medium block truncate">
                     {student.availableDays.length > 0 ? student.availableDays.join(', ') : 'Nenhum dia cadastrado'}
                   </span>
                 </div>
 
                 {/* Card Footer */}
-                <div className="pt-2 border-t border-slate-100 dark:border-dark-border/40 flex items-center justify-between text-xs">
-                  <span className="text-[11px] text-slate-400">
+                <div className="pt-2.5 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-xs">
+                  <span className="text-[11px] text-slate-400 dark:text-dark-muted">
                     Atividade: <strong className="text-slate-600 dark:text-slate-300 font-medium">{student.lastActive}</strong>
                   </span>
-                  <span className="text-xs font-bold text-slate-600 dark:text-slate-300 group-hover:text-emerald-500 flex items-center gap-1 transition-colors">
+                  <span className="text-xs font-medium text-slate-600 dark:text-slate-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 flex items-center gap-1 transition-colors">
                     Ver Perfil
                     <ChevronRight className="w-3.5 h-3.5" />
                   </span>
@@ -367,18 +367,18 @@ export const StudentsListPage: React.FC = () => {
 
         {/* URL Pagination Controls (Estilo WorkoutBuilderPage / ExercisesPage) */}
         {!loading && (
-          <div className="pt-4 border-t border-slate-100 dark:border-dark-border/60 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="pt-4 border-t border-slate-100 dark:border-white/[0.06] flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-xs text-slate-500 dark:text-dark-muted text-center sm:text-left">
               <div>
                 Exibindo{' '}
-                <strong className="text-slate-900 dark:text-white">
+                <strong className="text-slate-900 dark:text-white font-medium">
                   {totalItems > 0 ? startIndex + 1 : 0}
                 </strong>{' '}
                 a{' '}
-                <strong className="text-slate-900 dark:text-white">
+                <strong className="text-slate-900 dark:text-white font-medium">
                   {endIndex}
                 </strong>{' '}
-                de <strong className="text-slate-900 dark:text-white">{totalItems}</strong> alunos
+                de <strong className="text-slate-900 dark:text-white font-medium">{totalItems}</strong> alunos
                 <span className="ml-1 text-slate-400">
                   (Página {safePage} de {totalPages})
                 </span>
@@ -386,14 +386,14 @@ export const StudentsListPage: React.FC = () => {
 
               {/* Items per Page Selector */}
               <div className="flex items-center gap-1.5 justify-center sm:justify-start">
-                <span className="text-[11px] text-slate-400 font-semibold">Exibir:</span>
+                <span className="text-[11px] text-slate-400 font-medium">Exibir:</span>
                 <select
                   value={rawLimitParam || 'auto'}
                   onChange={(e) => {
                     const val = e.target.value;
                     updateParams({ limit: val === 'auto' ? null : val, page: '1' });
                   }}
-                  className="text-xs font-bold bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border rounded-xl px-2.5 py-1 text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                  className="text-xs font-medium bg-white dark:bg-dark-card border border-slate-200 dark:border-white/[0.1] rounded-lg px-2.5 py-1 text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 cursor-pointer shadow-2xs"
                 >
                   <option value="auto">Tela ({screenLimit} por página)</option>
                   <option value="6">6 por página (Padrão)</option>
@@ -425,7 +425,7 @@ export const StudentsListPage: React.FC = () => {
                 size="sm"
                 onClick={() => updateParams({ page: String(safePage - 1) })}
                 disabled={safePage <= 1}
-                leftIcon={<ChevronLeft className="w-4 h-4" />}
+                leftIcon={<ChevronLeft className="w-3.5 h-3.5" />}
               >
                 Anterior
               </Button>
@@ -455,10 +455,10 @@ export const StudentsListPage: React.FC = () => {
                       key={p}
                       type="button"
                       onClick={() => updateParams({ page: String(p) })}
-                      className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
+                      className={`w-8 h-8 rounded-lg text-xs font-semibold font-mono transition-all ${
                         safePage === p
-                          ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/25 ring-2 ring-emerald-500/30'
-                          : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                          ? 'bg-slate-900 text-white dark:bg-emerald-500 dark:text-slate-950 shadow-2xs'
+                          : 'bg-slate-100/80 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 hover:bg-slate-200/70 dark:hover:bg-white/[0.1]'
                       }`}
                     >
                       {p}
@@ -473,7 +473,7 @@ export const StudentsListPage: React.FC = () => {
                 size="sm"
                 onClick={() => updateParams({ page: String(safePage + 1) })}
                 disabled={safePage >= totalPages}
-                rightIcon={<ChevronRight className="w-4 h-4" />}
+                rightIcon={<ChevronRight className="w-3.5 h-3.5" />}
               >
                 Próxima
               </Button>

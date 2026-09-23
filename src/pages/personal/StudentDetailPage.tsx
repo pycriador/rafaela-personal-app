@@ -1052,15 +1052,15 @@ export const StudentDetailPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Profile Header Banner com Navegação Integrada */}
-      <Card className="p-5 sm:p-6 bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 text-white border-none shadow-xl space-y-4">
+      <Card className="p-5 sm:p-6 bg-white dark:bg-dark-card border border-slate-200/80 dark:border-white/[0.08] shadow-xs rounded-2xl space-y-4">
         {/* Botão de retorno integrado dentro da mesma caixa do aluno */}
         <div className="flex items-center justify-between">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate('/personal/students')}
-            leftIcon={<ArrowLeft className="w-4 h-4 text-emerald-400" />}
-            className="text-slate-300 hover:text-white hover:bg-slate-800/80 -ml-2 text-xs"
+            leftIcon={<ArrowLeft className="w-4 h-4 text-slate-500 dark:text-slate-400" />}
+            className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white -ml-2 text-xs"
           >
             Lista de Alunos
           </Button>
@@ -1071,37 +1071,37 @@ export const StudentDetailPage: React.FC = () => {
             <img
               src={student.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
               alt={student.name}
-              className="w-20 h-20 rounded-3xl object-cover ring-4 ring-emerald-500/40 shadow-lg shadow-emerald-500/20 shrink-0"
+              className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover ring-1 ring-slate-200/80 dark:ring-white/[0.1] shrink-0"
             />
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-black tracking-tight">{student.name}</h1>
+                <h1 className="text-2xl font-semibold text-slate-900 dark:text-white tracking-tight">{student.name}</h1>
                 <Badge variant={student.status === 'Ativo' ? 'success' : 'warning'} size="sm">
                   {student.status}
                 </Badge>
               </div>
               <div className="flex flex-wrap items-center gap-2 mt-1">
-                <span className="text-xs text-slate-400">{student.email} • {student.phone}</span>
-                <span className="px-2 py-0.5 rounded-md bg-slate-800 border border-slate-700/80 font-mono text-[11px] text-emerald-400 font-bold" title="ID do Usuário no Banco de Dados">
+                <span className="text-xs text-slate-500 dark:text-dark-muted">{student.email} • {student.phone}</span>
+                <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/[0.06] border border-slate-200/60 dark:border-white/[0.08] font-mono text-[11px] text-slate-700 dark:text-slate-300 font-medium" title="ID do Usuário no Banco de Dados">
                   User ID: {student.userId || student.id}
                 </span>
-                <span className="px-2 py-0.5 rounded-md bg-slate-800/60 border border-slate-700/50 font-mono text-[10px] text-slate-400" title="Identificador Único do Perfil de Aluno">
+                <span className="px-2 py-0.5 rounded-md bg-slate-100/60 dark:bg-white/[0.04] border border-slate-200/40 dark:border-white/[0.06] font-mono text-[10px] text-slate-500 dark:text-slate-400" title="Identificador Único do Perfil de Aluno">
                   Ref: {student.id}
                 </span>
               </div>
-              <div className="flex flex-wrap items-center gap-2 mt-2">
+              <div className="flex flex-wrap items-center gap-2 mt-2.5">
                 {student.goals.map((g) => (
                   <span
                     key={g}
-                    className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-400"
+                    className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-500/20"
                   >
                     {g}
                   </span>
                 ))}
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-slate-800 text-slate-300">
+                <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-white/[0.08]">
                   Nível {student.level}
                 </span>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-slate-800 text-slate-300">
+                <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-white/[0.08]">
                   {student.availableDays.length}x/semana
                 </span>
               </div>
@@ -1110,16 +1110,17 @@ export const StudentDetailPage: React.FC = () => {
 
           <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
             <Button
-              variant="outline"
+              variant="secondary"
+              size="sm"
               onClick={() => setActiveTab('conversa')}
-              leftIcon={<MessageSquare className="w-4 h-4 text-emerald-400" />}
-              className="border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500 text-xs"
+              leftIcon={<MessageSquare className="w-4 h-4 text-slate-500 dark:text-slate-400" />}
               title="Abrir canal direto de conversa com o aluno"
             >
               Conversar
             </Button>
             <Button
-              variant="outline"
+              variant="secondary"
+              size="sm"
               onClick={async () => {
                 if (!student) return;
                 const ok = await enterStudentSimulation(student.id);
@@ -1130,23 +1131,23 @@ export const StudentDetailPage: React.FC = () => {
                   toastError('Não foi possível iniciar o modo teste.');
                 }
               }}
-              leftIcon={<FlaskConical className="w-4 h-4 text-emerald-400" />}
-              className="border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500 text-xs"
+              leftIcon={<FlaskConical className="w-4 h-4 text-slate-500 dark:text-slate-400" />}
               title="Testar aplicativo com a visão deste aluno em sandbox isolado"
             >
               Testar como Aluno
             </Button>
             <Button
               variant="secondary"
+              size="sm"
               onClick={() => setIsAICopilotOpen(true)}
-              leftIcon={<Sparkles className="w-4 h-4 text-amber-400" />}
-              className="border-amber-500/40 text-amber-400 hover:bg-amber-500/10 hover:border-amber-500 text-xs"
+              leftIcon={<Sparkles className="w-4 h-4 text-amber-500" />}
               title="Abrir o Copilot de IA para gerar propostas ou analisar o treino"
             >
               AI Copilot
             </Button>
             <Button
               variant="primary"
+              size="sm"
               onClick={() => navigate(`/personal/workouts/new?studentId=${student.id}`)}
               leftIcon={<Dumbbell className="w-4 h-4" />}
             >
@@ -1157,14 +1158,14 @@ export const StudentDetailPage: React.FC = () => {
       </Card>
 
       {/* Indicador de Módulo Ativo & Seletor Rápido Mobile (as 9 abas principais ficam dinâmicas no menu lateral) */}
-      <div className="flex items-center justify-between gap-3 py-2 px-1 border-b border-slate-200/80 dark:border-dark-border/60">
+      <div className="flex items-center justify-between gap-3 py-2 px-1 border-b border-slate-200/80 dark:border-white/[0.06]">
         <div className="flex items-center gap-2 text-xs">
-          <span className="font-bold text-slate-400">Módulo Ativo:</span>
-          <span className="font-black px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+          <span className="font-medium text-slate-500 dark:text-dark-muted">Módulo Ativo:</span>
+          <span className="font-semibold px-2.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-300">
             {STUDENT_TAB_LABELS[activeTab] || 'Resumo'}
           </span>
-          <span className="text-slate-300 dark:text-slate-600 hidden sm:inline">•</span>
-          <span className="text-slate-500 dark:text-slate-400 text-[11px] hidden sm:inline">
+          <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">•</span>
+          <span className="text-slate-400 dark:text-dark-muted text-[11px] hidden sm:inline">
             Navegue pelos módulos usando o menu lateral dinâmico à esquerda
           </span>
         </div>
@@ -1174,7 +1175,7 @@ export const StudentDetailPage: React.FC = () => {
           <select
             value={activeTab}
             onChange={(e) => setActiveTab(e.target.value)}
-            className="text-xs font-bold bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border rounded-xl px-2.5 py-1 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+            className="text-xs font-medium bg-white dark:bg-dark-card border border-slate-200 dark:border-white/[0.1] rounded-lg px-2.5 py-1 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 cursor-pointer shadow-2xs"
           >
             <option value="resumo">Resumo & Métricas</option>
             <option value="treinos">Treinos ({workoutPlan?.days?.length || 0}d)</option>

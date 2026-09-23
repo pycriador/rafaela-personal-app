@@ -19,16 +19,16 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   className = '',
 }) => {
   return (
-    <div className={`flex flex-col items-center justify-center p-8 text-center rounded-2xl border-2 border-dashed border-slate-200 dark:border-dark-border bg-slate-50/50 dark:bg-dark-card/30 ${className}`}>
-      <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-dark-cardElevated flex items-center justify-center text-slate-400 dark:text-slate-500 mb-4">
+    <div className={`flex flex-col items-center justify-center p-8 sm:p-10 text-center rounded-2xl border border-slate-200/80 dark:border-white/[0.08] bg-slate-50/40 dark:bg-dark-card/20 ${className}`}>
+      <div className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-dark-cardElevated flex items-center justify-center text-slate-500 dark:text-slate-400 border border-slate-200/60 dark:border-white/[0.06] mb-3 shrink-0">
         {icon}
       </div>
-      <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1">{title}</h4>
-      <p className="text-xs text-slate-500 dark:text-dark-muted max-w-sm mb-5 leading-relaxed">
+      <h4 className="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 mb-1 tracking-tight">{title}</h4>
+      <p className="text-xs sm:text-sm text-slate-500 dark:text-dark-muted max-w-sm mb-5 leading-relaxed">
         {description}
       </p>
       {actionText && onAction && (
-        <Button variant="primary" size="sm" onClick={onAction}>
+        <Button variant="secondary" size="sm" onClick={onAction}>
           {actionText}
         </Button>
       )}

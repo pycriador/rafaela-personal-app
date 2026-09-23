@@ -15,28 +15,30 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full flex flex-col gap-1.5 text-left">
         {label && (
-          <label htmlFor={inputId} className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <label htmlFor={inputId} className="text-xs font-medium text-slate-700 dark:text-slate-300">
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           {leftIcon && (
-            <div className="absolute left-3.5 text-slate-400 dark:text-slate-500 pointer-events-none">
+            <div className="absolute left-3 text-slate-400 dark:text-slate-500 pointer-events-none flex items-center">
               {leftIcon}
             </div>
           )}
           <input
             id={inputId}
             ref={ref}
-            className={`w-full bg-slate-50 dark:bg-dark-cardElevated/80 border ${
-              error ? 'border-rose-500 focus:ring-rose-500' : 'border-slate-200 dark:border-dark-border focus:border-emerald-500 focus:ring-emerald-500'
-            } text-slate-900 dark:text-white rounded-xl text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-opacity-20 transition-all py-2.5 ${
-              leftIcon ? 'pl-10' : 'pl-3.5'
-            } ${rightIcon ? 'pr-10' : 'pr-3.5'} ${className}`}
+            className={`w-full bg-white dark:bg-dark-card border ${
+              error
+                ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/15'
+                : 'border-slate-200/90 dark:border-dark-border focus:border-emerald-600 dark:focus:border-emerald-400 focus:ring-emerald-500/15'
+            } text-slate-900 dark:text-slate-100 rounded-xl text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 transition-all py-2 shadow-2xs ${
+              leftIcon ? 'pl-9' : 'pl-3'
+            } ${rightIcon ? 'pr-9' : 'pr-3'} ${className}`}
             {...props}
           />
           {rightIcon && (
-            <div className="absolute right-3.5 flex items-center text-slate-400 dark:text-slate-500">
+            <div className="absolute right-3 flex items-center text-slate-400 dark:text-slate-500">
               {rightIcon}
             </div>
           )}

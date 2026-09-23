@@ -116,16 +116,16 @@ export const DashboardPage: React.FC = () => {
   return (
     <div className="space-y-8">
       {/* Welcome Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gradient-to-r from-emerald-500/15 via-emerald-500/5 to-transparent p-6 rounded-3xl border border-emerald-500/20">
+      <div className="bg-white dark:bg-dark-card border border-slate-200/80 dark:border-white/[0.08] shadow-xs rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-            Olá, Rafaela! 👋
+          <h1 className="text-2xl sm:text-3xl font-semibold text-slate-900 dark:text-white tracking-tight">
+            Olá, Rafaela
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
+          <p className="text-sm text-slate-500 dark:text-dark-muted mt-1 font-normal">
             Aqui está o resumo dos seus alunos, execuções e alterações em tempo real.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <Button
             variant="primary"
             size="md"
@@ -176,22 +176,22 @@ export const DashboardPage: React.FC = () => {
       </div>
 
       {/* Widget / Banner Anamnese & Saúde */}
-      <Card className="p-4 bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-cyan-500/10 border-emerald-500/30">
+      <Card className="p-4 sm:p-5 border-slate-200/80 dark:border-white/[0.08] shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">
-              <ClipboardList className="w-6 h-6" />
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200/60 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+              <ClipboardList className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                Anamnese, Saúde & Formulários Personalizados
+              <h4 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                Anamnese, Saúde & Formulários
                 {pendingAnamnesisCount > 0 && (
                   <Badge variant="warning" size="sm">
                     {pendingAnamnesisCount} pendentes
                   </Badge>
                 )}
               </h4>
-              <p className="text-xs text-slate-600 dark:text-dark-muted mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
                 {recentResponsesCount} respostas registradas • Acompanhe histórico clínico e aplique formulários aos alunos
               </p>
             </div>
@@ -212,12 +212,12 @@ export const DashboardPage: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" />
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+            <span className="w-2 h-2 rounded-full bg-amber-500" />
+            <h2 className="text-base font-semibold text-slate-900 dark:text-white tracking-tight">
               Precisa da sua atenção
             </h2>
           </div>
-          <span className="text-xs text-slate-500 dark:text-dark-muted font-medium">
+          <span className="text-xs text-slate-400 dark:text-dark-muted font-normal">
             Alertas em tempo real
           </span>
         </div>
@@ -227,63 +227,63 @@ export const DashboardPage: React.FC = () => {
             {attentionItems.map((mod) => (
               <Card
                 key={mod.id}
-              className="border-l-4 border-l-amber-500 dark:border-l-amber-500 hover:shadow-md transition-all cursor-pointer p-4"
-              onClick={() => navigate(`/personal/students/${mod.studentId}`)}
-            >
-              <div className="flex items-start justify-between gap-2">
-                <Badge
-                  variant={
-                    mod.action === 'EXERCISE_SKIPPED'
-                      ? 'danger'
-                      : mod.action === 'EXERCISE_SUBSTITUTED'
-                      ? 'info'
-                      : 'warning'
-                  }
-                  size="sm"
-                >
-                  {mod.action === 'WEIGHT_CHANGED' && 'Carga Alterada'}
-                  {mod.action === 'EXERCISE_SKIPPED' && 'Exercício Pulado'}
-                  {mod.action === 'EXERCISE_SUBSTITUTED' && 'Substituição'}
-                  {mod.action === 'DIFFICULTY_REPORTED' && 'Dificuldade'}
-                </Badge>
-                <span className="text-[10px] text-slate-400 font-mono">
-                  {new Date(mod.timestamp).toLocaleDateString()}
-                </span>
-              </div>
-
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white mt-2">
-                {mod.studentName}
-              </h4>
-              <p className="text-xs text-slate-600 dark:text-dark-muted mt-1">
-                Exercício: <strong className="text-slate-900 dark:text-white">{mod.exerciseName}</strong>
-              </p>
-
-              {mod.action === 'WEIGHT_CHANGED' && (
-                <div className="mt-2 text-xs bg-slate-100 dark:bg-dark-cardElevated p-2 rounded-lg font-mono flex items-center justify-between">
-                  <span className="text-slate-500">Prescrito: {mod.before}kg</span>
-                  <span className="text-emerald-500 font-bold">→ Fez: {mod.after}kg ({mod.difference})</span>
+                className="border border-slate-200/80 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-white/[0.16] shadow-xs transition-colors cursor-pointer p-4"
+                onClick={() => navigate(`/personal/students/${mod.studentId}`)}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <Badge
+                    variant={
+                      mod.action === 'EXERCISE_SKIPPED'
+                        ? 'danger'
+                        : mod.action === 'EXERCISE_SUBSTITUTED'
+                        ? 'info'
+                        : 'warning'
+                    }
+                    size="sm"
+                  >
+                    {mod.action === 'WEIGHT_CHANGED' && 'Carga Alterada'}
+                    {mod.action === 'EXERCISE_SKIPPED' && 'Exercício Pulado'}
+                    {mod.action === 'EXERCISE_SUBSTITUTED' && 'Substituição'}
+                    {mod.action === 'DIFFICULTY_REPORTED' && 'Dificuldade'}
+                  </Badge>
+                  <span className="text-[11px] text-slate-400 font-mono">
+                    {new Date(mod.timestamp).toLocaleDateString()}
+                  </span>
                 </div>
-              )}
 
-              {mod.reason && (
-                <p className="mt-2 text-xs text-amber-600 dark:text-amber-400 italic">
-                  &ldquo;{mod.reason}&rdquo;
+                <h4 className="text-sm font-semibold text-slate-900 dark:text-white mt-2.5">
+                  {mod.studentName}
+                </h4>
+                <p className="text-xs text-slate-600 dark:text-dark-muted mt-0.5">
+                  Exercício: <strong className="text-slate-800 dark:text-slate-200 font-medium">{mod.exerciseName}</strong>
                 </p>
-              )}
 
-              <div className="mt-3 pt-2 border-t border-slate-100 dark:border-dark-border/60 flex items-center justify-between text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                <span>Ver perfil do aluno</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </div>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <Card className="p-6 text-center text-xs text-slate-400">
-          <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
-          Nenhum alerta crítico no momento. Todos os alunos estão cumprindo os treinos normalmente.
-        </Card>
-      )}
+                {mod.action === 'WEIGHT_CHANGED' && (
+                  <div className="mt-2.5 text-xs bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-white/[0.06] p-2 rounded-lg font-mono flex items-center justify-between">
+                    <span className="text-slate-500">Prescrito: {mod.before}kg</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-medium">→ Fez: {mod.after}kg ({mod.difference})</span>
+                  </div>
+                )}
+
+                {mod.reason && (
+                  <p className="mt-2 text-xs text-amber-600 dark:text-amber-400/90 italic">
+                    &ldquo;{mod.reason}&rdquo;
+                  </p>
+                )}
+
+                <div className="mt-3.5 pt-2.5 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+                  <span>Ver perfil do aluno</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Card className="p-6 text-center text-xs text-slate-400">
+            <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2 opacity-80" />
+            Nenhum alerta crítico no momento. Todos os alunos estão cumprindo os treinos normalmente.
+          </Card>
+        )}
     </div>
 
       {/* Grid: Atividade Recente (Timeline) & Alunos Overview */}
@@ -336,7 +336,7 @@ export const DashboardPage: React.FC = () => {
 
               {/* URL Pagination Footer */}
               {totalPages > 1 && (
-                <div className="pt-3 border-t border-slate-100 dark:border-dark-border/60 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="pt-3 border-t border-slate-100 dark:border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3">
                   <span className="text-xs text-slate-500 dark:text-dark-muted font-mono">
                     Exibindo <strong>{totalActivities > 0 ? startIndex + 1 : 0}</strong> a{' '}
                     <strong>{Math.min(startIndex + pageSize, totalActivities)}</strong> de{' '}
@@ -356,10 +356,10 @@ export const DashboardPage: React.FC = () => {
                       <button
                         key={p}
                         onClick={() => handlePageChange(p)}
-                        className={`w-7 h-7 rounded-lg text-xs font-bold font-mono transition-all ${
+                        className={`w-7 h-7 rounded-lg text-xs font-semibold font-mono transition-all ${
                           p === validCurrentPage
-                            ? 'bg-emerald-500 text-white shadow-sm'
-                            : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-cardElevated'
+                            ? 'bg-slate-900 text-white dark:bg-emerald-500 dark:text-slate-950 shadow-2xs'
+                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-cardElevated'
                         }`}
                       >
                         {p}
@@ -400,16 +400,16 @@ export const DashboardPage: React.FC = () => {
                 <div
                   key={st.id}
                   onClick={() => navigate(`/personal/students/${st.id}`)}
-                  className="p-3 rounded-xl bg-slate-50 dark:bg-dark-cardElevated/50 hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-all cursor-pointer flex items-center justify-between"
+                  className="p-3 rounded-xl bg-slate-50/70 dark:bg-dark-cardElevated/40 hover:bg-slate-100/90 dark:hover:bg-dark-cardElevated transition-all cursor-pointer flex items-center justify-between border border-transparent hover:border-slate-200/60 dark:hover:border-white/[0.06]"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <img
                       src={st.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
                       alt={st.name}
-                      className="w-9 h-9 rounded-xl object-cover ring-1 ring-slate-200 dark:ring-dark-border"
+                      className="w-9 h-9 rounded-full object-cover ring-1 ring-slate-200/80 dark:ring-white/[0.08]"
                     />
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                      <p className="text-xs font-semibold text-slate-900 dark:text-white truncate">
                         {st.name}
                       </p>
                       <p className="text-[11px] text-slate-500 dark:text-dark-muted truncate">
@@ -418,10 +418,10 @@ export const DashboardPage: React.FC = () => {
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="text-xs font-bold text-emerald-500 font-mono">
+                    <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 font-mono">
                       {st.adherencePercentage}%
                     </span>
-                    <span className="text-[10px] text-slate-400 block">adesão</span>
+                    <span className="text-[10px] text-slate-400 dark:text-dark-muted block">adesão</span>
                   </div>
                 </div>
               ))}

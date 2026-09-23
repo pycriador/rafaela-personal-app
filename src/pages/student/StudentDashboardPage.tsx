@@ -178,34 +178,31 @@ export const StudentDashboardPage: React.FC = () => {
       {/* Greeting Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-              Olá, {studentProfile.name.split(' ')[0]}! 👋
-            </h1>
-            <span className="text-xl">🔥</span>
-          </div>
-          <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
-            Meta ativa: <strong className="text-emerald-500">{studentProfile.goals.join(', ')}</strong> • Frequência:{' '}
-            <strong>{studentProfile.availableDays.length}x na semana</strong>
+          <h1 className="text-2xl font-semibold text-slate-900 dark:text-white tracking-tight">
+            Olá, {studentProfile.name.split(' ')[0]}
+          </h1>
+          <p className="text-sm text-slate-500 dark:text-dark-muted font-normal mt-0.5">
+            Meta ativa: <strong className="text-slate-700 dark:text-slate-300 font-medium">{studentProfile.goals.join(', ')}</strong> • Frequência:{' '}
+            <strong className="text-slate-700 dark:text-slate-300 font-medium">{studentProfile.availableDays.length}x na semana</strong>
           </p>
         </div>
 
-        <Badge variant="success" size="sm" className="self-start sm:self-auto font-mono text-[11px] py-1 px-2.5">
+        <Badge variant="outline" size="sm" className="self-start sm:self-auto font-mono text-[11px] py-1 px-2.5">
           Ficha: {workoutPlan?.name || 'Rotina Personalizada'}
         </Badge>
       </div>
 
       {/* Alerta de Formulário / Anamnese Pendente (Section 7, 72) */}
       {pendingApps.length > 0 && (
-        <Card className="p-4 bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-orange-500/15 border-amber-500/40 shadow-sm">
+        <Card className="p-4 sm:p-5 border-amber-500/30 dark:border-amber-500/20 bg-amber-50/50 dark:bg-amber-950/15 shadow-xs">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-start sm:items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 shrink-0">
-                <ClipboardList className="w-6 h-6" />
+            <div className="flex items-start sm:items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-amber-100/80 dark:bg-amber-500/15 text-amber-700 dark:text-amber-400 flex items-center justify-center shrink-0">
+                <ClipboardList className="w-5 h-5" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                  <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
                     {pendingApps.length === 1
                       ? 'Formulário de Saúde Pendente'
                       : `${pendingApps.length} Formulários Pendentes`}
@@ -224,7 +221,7 @@ export const StudentDashboardPage: React.FC = () => {
               size="sm"
               onClick={() => navigate(`/student/anamnesis/fill/${pendingApps[0].id}`)}
               rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
-              className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold border-none shrink-0"
+              className="shrink-0"
             >
               Responder Agora
             </Button>
@@ -239,37 +236,37 @@ export const StudentDashboardPage: React.FC = () => {
           {/* Hero Card: Treino de Hoje OU Dia de Descanso */}
           {todayWorkout ? (
             isTodayCompleted ? (
-              <Card className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 text-white border-emerald-500/30 p-6 shadow-xl space-y-4">
+              <Card className="relative overflow-hidden bg-slate-900 text-white border border-slate-800 shadow-md p-6 sm:p-7 rounded-2xl space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="px-3 py-1 rounded-xl bg-emerald-500/30 text-emerald-300 font-extrabold text-xs tracking-wider uppercase border border-emerald-500/40 flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    Treino de Hoje Concluído! 🎉
+                  <span className="px-2.5 py-1 rounded-md bg-emerald-500/15 text-emerald-400 font-medium text-xs border border-emerald-500/30 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    Treino de Hoje Concluído
                   </span>
-                  <span className="text-xs text-emerald-200/80 font-mono">
+                  <span className="text-xs text-slate-400 font-mono">
                     {todayWorkout.dayOfWeek} • {todayWorkout.name}
                   </span>
                 </div>
 
                 <div>
-                  <h2 className="text-xl font-black text-white">Parabéns pelo treino de hoje!</h2>
-                  <p className="text-xs text-slate-300 mt-1">
+                  <h2 className="text-xl font-semibold text-white">Parabéns pelo treino de hoje!</h2>
+                  <p className="text-xs text-slate-400 mt-1">
                     Sua frequência foi registrada com sucesso. Descanse, mantenha a hidratação e acompanhe sua evolução de cargas.
                   </p>
                 </div>
 
                 {nextWorkoutInfo && (
-                  <div className="p-3.5 rounded-xl bg-white/10 border border-white/10 flex items-center justify-between gap-3 text-xs">
+                  <div className="p-3.5 rounded-xl bg-white/[0.06] border border-white/[0.08] flex items-center justify-between gap-3 text-xs">
                     <div>
-                      <span className="text-[10px] text-slate-400 block font-bold uppercase">Próximo Treino Agendado</span>
-                      <span className="font-bold text-white">
+                      <span className="text-[10px] text-slate-400 block font-medium uppercase">Próximo Treino Agendado</span>
+                      <span className="font-medium text-white">
                         {nextWorkoutInfo.dayName} ({nextWorkoutInfo.dateFormatted}) • {nextWorkoutInfo.name}
                       </span>
                     </div>
                     <Button
-                      variant="outline"
+                      variant="secondary"
                       size="sm"
                       onClick={() => navigate(`/student/workouts`)}
-                      className="bg-white/15 hover:bg-white/25 text-white border-white/20 text-xs shrink-0 cursor-pointer"
+                      className="text-xs shrink-0 cursor-pointer"
                     >
                       Ver Ficha
                     </Button>
@@ -277,12 +274,10 @@ export const StudentDashboardPage: React.FC = () => {
                 )}
               </Card>
             ) : (
-              <Card className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950 text-white border-emerald-500/30 p-6 shadow-xl space-y-5">
-                <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-
+              <Card className="relative overflow-hidden bg-slate-900 text-white border border-slate-800 shadow-md p-6 sm:p-7 rounded-2xl space-y-5">
                 <div className="relative z-10 space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="px-3 py-1 rounded-xl bg-emerald-500/20 text-emerald-400 font-extrabold text-xs tracking-wider uppercase border border-emerald-500/30">
+                    <span className="px-2.5 py-1 rounded-md bg-emerald-500/15 text-emerald-400 font-medium text-xs border border-emerald-500/30">
                       Treino de Hoje • {todayWorkout.dayOfWeek}
                     </span>
                     <span className="text-xs text-slate-400 font-medium font-mono">
@@ -291,14 +286,14 @@ export const StudentDashboardPage: React.FC = () => {
                   </div>
 
                   <div>
-                    <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">{todayWorkout.name}</h2>
-                    <p className="text-xs sm:text-sm text-emerald-300 font-medium mt-1">Foco muscular: {todayWorkout.muscleFocus}</p>
+                    <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">{todayWorkout.name}</h2>
+                    <p className="text-sm text-slate-300 font-normal mt-1">Foco muscular: {todayWorkout.muscleFocus}</p>
                   </div>
 
                   {/* Previa dos exercicios */}
                   <div className="py-1 flex flex-wrap gap-1.5">
                     {todayWorkout.exercises.slice(0, 5).map((ex, idx) => (
-                      <span key={idx} className="text-xs font-semibold bg-white/10 px-3 py-1.5 rounded-lg text-slate-200">
+                      <span key={idx} className="text-xs font-mono font-medium bg-white/[0.08] px-2.5 py-1 rounded-md text-slate-200 border border-white/[0.06]">
                         {idx + 1}. {ex.sets}x{ex.reps} ({ex.weight}kg)
                       </span>
                     ))}
@@ -311,11 +306,11 @@ export const StudentDashboardPage: React.FC = () => {
 
                   <Button
                     variant="primary"
-                    size="xl"
+                    size="lg"
                     fullWidth
                     onClick={() => navigate(`/student/workout/active/${todayWorkout.id}`)}
-                    leftIcon={<Play className="w-5 h-5 fill-current" />}
-                    className="text-base font-extrabold shadow-lg shadow-emerald-500/30 active:scale-[0.98] cursor-pointer"
+                    leftIcon={<Play className="w-4 h-4 fill-current" />}
+                    className="font-semibold shadow-xs cursor-pointer"
                   >
                     Começar Treino de Hoje
                   </Button>
@@ -323,9 +318,9 @@ export const StudentDashboardPage: React.FC = () => {
               </Card>
             )
           ) : (
-            <Card className="p-6 relative overflow-hidden bg-slate-900 text-white border-slate-800 space-y-4 shadow-lg">
+            <Card className="p-6 relative overflow-hidden bg-slate-900 text-white border border-slate-800 space-y-4 shadow-md rounded-2xl">
               <div className="flex items-center justify-between">
-                <span className="px-3 py-1 rounded-xl bg-amber-500/20 text-amber-400 font-extrabold text-xs tracking-wider uppercase border border-amber-500/30 flex items-center gap-1.5">
+                <span className="px-2.5 py-1 rounded-md bg-amber-500/15 text-amber-400 font-medium text-xs border border-amber-500/30 flex items-center gap-1.5">
                   <Moon className="w-3.5 h-3.5" />
                   Dia de Descanso & Recuperação
                 </span>
@@ -333,19 +328,19 @@ export const StudentDashboardPage: React.FC = () => {
               </div>
 
               <div>
-                <h2 className="text-lg font-black text-white">Nenhum treino programado para hoje.</h2>
+                <h2 className="text-lg font-semibold text-white">Nenhum treino programado para hoje.</h2>
                 <p className="text-xs text-slate-400 mt-1">
                   O descanso faz parte fundamental dos seus resultados de hipertrofia e queima de gordura.
                 </p>
               </div>
 
               {nextWorkoutInfo && (
-                <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between gap-3 text-xs">
+                <div className="p-3.5 rounded-xl bg-white/[0.06] border border-white/[0.08] flex items-center justify-between gap-3 text-xs">
                   <div>
-                    <span className="text-[10px] text-slate-400 block font-bold uppercase">
+                    <span className="text-[10px] text-slate-400 block font-medium uppercase">
                       Próximo Treino ({nextWorkoutInfo.dayName} • {nextWorkoutInfo.dateFormatted})
                     </span>
-                    <span className="font-bold text-white">
+                    <span className="font-medium text-white">
                       {nextWorkoutInfo.name} ({nextWorkoutInfo.muscleFocus})
                     </span>
                   </div>
@@ -363,11 +358,11 @@ export const StudentDashboardPage: React.FC = () => {
           )}
 
           {/* Calendário Semanal Real (Segunda a Domingo com datas) */}
-          <Card className="p-5 space-y-3">
+          <Card className="p-5 space-y-3 shadow-xs border-slate-200/80 dark:border-white/[0.08]">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <CalendarIcon className="w-4 h-4 text-emerald-500" />
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">Semana Atual de Treinos</h3>
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Semana Atual de Treinos</h3>
               </div>
               <span className="text-xs text-slate-400 font-mono">
                 {completedSessions.length} sessões concluídas no total
@@ -379,18 +374,18 @@ export const StudentDashboardPage: React.FC = () => {
                 return (
                   <div
                     key={d.dayName}
-                    className={`py-3 px-1 sm:px-2 rounded-2xl flex flex-col items-center justify-between transition-all ${
+                    className={`py-2.5 px-1 sm:px-2 rounded-xl flex flex-col items-center justify-between transition-all ${
                       d.isToday
-                        ? 'ring-2 ring-emerald-500 bg-emerald-500/10 dark:bg-emerald-950/30'
+                        ? 'ring-1 ring-emerald-500 bg-emerald-500/10 dark:bg-emerald-500/15'
                         : d.isCompleted
-                        ? 'bg-emerald-500/15 border border-emerald-500/30'
+                        ? 'bg-emerald-500/10 border border-emerald-500/20'
                         : d.workout
-                        ? 'bg-slate-100 dark:bg-dark-cardElevated/80'
-                        : 'bg-slate-50 dark:bg-dark-card/30 opacity-60'
+                        ? 'bg-slate-100/70 dark:bg-dark-cardElevated/70'
+                        : 'bg-slate-50/50 dark:bg-white/[0.02] opacity-60'
                     }`}
                   >
                     <div>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase block">{d.dayName.slice(0, 3)}</span>
+                      <span className="text-[10px] font-medium text-slate-400 uppercase block">{d.dayName.slice(0, 3)}</span>
                       <span className="text-[10px] sm:text-xs font-mono text-slate-500 block">{d.dateFormatted}</span>
                     </div>
 
@@ -398,24 +393,24 @@ export const StudentDashboardPage: React.FC = () => {
                       {d.isCompleted ? (
                         <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
                       ) : d.workout ? (
-                        <Dumbbell className={`w-4 h-4 sm:w-5 sm:h-5 ${d.isToday ? 'text-emerald-500 animate-bounce' : 'text-slate-600 dark:text-slate-300'}`} />
+                        <Dumbbell className={`w-4 h-4 sm:w-5 sm:h-5 ${d.isToday ? 'text-emerald-500' : 'text-slate-500 dark:text-slate-400'}`} />
                       ) : (
                         <span className="text-xs text-slate-400">•</span>
                       )}
                     </div>
 
                     <span
-                      className={`text-[9px] sm:text-[10px] font-bold ${
+                      className={`text-[10px] font-medium ${
                         d.isCompleted
-                          ? 'text-emerald-500'
+                          ? 'text-emerald-600 dark:text-emerald-400'
                           : d.isToday
-                          ? 'text-emerald-500'
+                          ? 'text-emerald-600 dark:text-emerald-400'
                           : d.workout
                           ? 'text-slate-700 dark:text-slate-300'
                           : 'text-slate-400'
                       }`}
                     >
-                      {d.isCompleted ? 'Feito ✅' : d.isToday && d.workout ? 'Hoje 🏋️' : d.workout ? 'Treino' : 'Descanso'}
+                      {d.isCompleted ? 'Feito' : d.isToday && d.workout ? 'Hoje' : d.workout ? 'Treino' : 'Descanso'}
                     </span>
                   </div>
                 );
@@ -427,21 +422,21 @@ export const StudentDashboardPage: React.FC = () => {
         {/* Right / Side Column: Chat com a Treinadora + Métricas + Links Rápidos */}
         <div className="lg:col-span-5 xl:col-span-4 space-y-6">
           {/* Card de Destaque: Bate-Papo com a Treinadora Rafaela */}
-          <Card className="p-5 border-emerald-500/30 bg-gradient-to-br from-emerald-500/5 via-transparent to-cyan-500/5 space-y-3">
+          <Card className="p-5 border-slate-200/80 dark:border-white/[0.08] shadow-xs space-y-3.5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <img
                     src="https://images.unsplash.com/photo-1594381898411-846e7d193883?w=150&auto=format&fit=crop&q=80"
                     alt="Rafaela Personal"
-                    className="w-12 h-12 rounded-2xl object-cover ring-2 ring-emerald-500/30 shrink-0"
+                    className="w-11 h-11 rounded-full object-cover ring-1 ring-slate-200/80 dark:ring-white/[0.1] shrink-0"
                   />
-                  <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 absolute -bottom-0.5 -right-0.5 ring-2 ring-white dark:ring-dark-card" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-2 ring-white dark:ring-dark-card" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-sm font-black text-slate-900 dark:text-white">Bate-Papo com a Rafaela</h3>
-                    <Badge variant="success" size="sm" className="text-[9px] py-0 px-1.5">
+                    <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Bate-Papo com a Rafaela</h3>
+                    <Badge variant="success" size="sm" className="text-[10px] py-0 px-1.5 font-medium">
                       Online
                     </Badge>
                   </div>
@@ -456,16 +451,16 @@ export const StudentDashboardPage: React.FC = () => {
                 size="sm"
                 onClick={() => navigate('/student/chat')}
                 leftIcon={<MessageSquare className="w-4 h-4" />}
-                className="shrink-0 font-bold cursor-pointer"
+                className="shrink-0 cursor-pointer"
               >
                 Conversar
               </Button>
             </div>
 
             {lastTrainerMessage && (
-              <div className="p-3 rounded-xl bg-slate-50 dark:bg-dark-cardElevated/70 border border-slate-200/60 dark:border-dark-border/60 text-xs flex items-center justify-between gap-3">
+              <div className="p-3 rounded-lg bg-slate-50/70 dark:bg-dark-cardElevated/40 border border-slate-200/60 dark:border-white/[0.06] text-xs flex items-center justify-between gap-3">
                 <div className="min-w-0 pr-2">
-                  <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 block uppercase">
+                  <span className="text-[10px] font-medium text-slate-400 block uppercase">
                     Última orientação da Rafaela:
                   </span>
                   <p className="text-slate-700 dark:text-slate-300 truncate mt-0.5 font-medium">
@@ -474,7 +469,7 @@ export const StudentDashboardPage: React.FC = () => {
                 </div>
                 <button
                   onClick={() => navigate('/student/chat')}
-                  className="text-xs font-bold text-emerald-500 hover:text-emerald-600 flex items-center gap-0.5 shrink-0 cursor-pointer"
+                  className="text-xs font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 flex items-center gap-0.5 shrink-0 cursor-pointer"
                 >
                   <span>Ver conversa</span>
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -485,25 +480,25 @@ export const StudentDashboardPage: React.FC = () => {
 
           {/* Metrics Row: Adesão Real e Frequência */}
           <div className="grid grid-cols-2 gap-3">
-            <Card className="p-4 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-500 flex items-center justify-center shrink-0">
-                <Flame className="w-6 h-6" />
+            <Card className="p-4 flex items-center gap-3 border-slate-200/80 dark:border-white/[0.08] shadow-xs">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200/60 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                <Flame className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-xs text-slate-400 block font-medium">Adesão Real</span>
-                <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
+                <span className="text-xs text-slate-400 dark:text-dark-muted block font-normal">Adesão Real</span>
+                <span className="text-xl font-semibold text-slate-900 dark:text-white font-mono">
                   {adherencePercentage}%
                 </span>
               </div>
             </Card>
 
-            <Card className="p-4 flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-cyan-500/15 text-cyan-500 flex items-center justify-center shrink-0">
-                <Award className="w-6 h-6" />
+            <Card className="p-4 flex items-center gap-3 border-slate-200/80 dark:border-white/[0.08] shadow-xs">
+              <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-200/60 dark:border-cyan-500/20 text-cyan-600 dark:text-cyan-400 flex items-center justify-center shrink-0">
+                <Award className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-xs text-slate-400 block font-medium">Treinos Feitos</span>
-                <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
+                <span className="text-xs text-slate-400 dark:text-dark-muted block font-normal">Treinos Feitos</span>
+                <span className="text-xl font-semibold text-slate-900 dark:text-white font-mono">
                   {completedSessions.length} sessões
                 </span>
               </div>
@@ -511,37 +506,37 @@ export const StudentDashboardPage: React.FC = () => {
           </div>
 
           {/* Quick Navigation Cards */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <button
               onClick={() => navigate('/student/evolution')}
-              className="w-full p-4 rounded-2xl bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border flex items-center justify-between text-left hover:border-emerald-500/40 transition-colors shadow-xs cursor-pointer group"
+              className="w-full p-3.5 rounded-xl bg-white dark:bg-dark-card border border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between text-left hover:border-slate-300 dark:hover:border-white/[0.16] transition-colors shadow-2xs cursor-pointer group"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-dark-cardElevated text-emerald-500 group-hover:bg-emerald-500/15 transition-colors">
-                  <TrendingUp className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-lg bg-slate-100/80 dark:bg-white/[0.06] text-slate-600 dark:text-slate-300 flex items-center justify-center">
+                  <TrendingUp className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Minha Evolução de Cargas</h4>
+                  <h4 className="text-sm font-semibold text-slate-900 dark:text-white">Minha Evolução de Cargas</h4>
                   <p className="text-xs text-slate-500 dark:text-dark-muted">Acompanhe seu ganho progressivo de força</p>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 transition-colors" />
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-colors" />
             </button>
 
             <button
               onClick={() => navigate('/student/nutrition')}
-              className="w-full p-4 rounded-2xl bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border flex items-center justify-between text-left hover:border-emerald-500/40 transition-colors shadow-xs cursor-pointer group"
+              className="w-full p-3.5 rounded-xl bg-white dark:bg-dark-card border border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between text-left hover:border-slate-300 dark:hover:border-white/[0.16] transition-colors shadow-2xs cursor-pointer group"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-dark-cardElevated text-cyan-500 group-hover:bg-cyan-500/15 transition-colors">
-                  <Sparkles className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-lg bg-slate-100/80 dark:bg-white/[0.06] text-slate-600 dark:text-slate-300 flex items-center justify-center">
+                  <Sparkles className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">Minha Alimentação</h4>
+                  <h4 className="text-sm font-semibold text-slate-900 dark:text-white">Minha Alimentação</h4>
                   <p className="text-xs text-slate-500 dark:text-dark-muted">Consulte seu plano alimentar e opções de trocas</p>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-cyan-500 transition-colors" />
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-colors" />
             </button>
           </div>
         </div>
