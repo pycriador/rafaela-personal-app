@@ -63,7 +63,7 @@ export const aiProposalRepository = {
           .from('ai_proposals')
           .select('*')
           .eq('id', id)
-          .single();
+          .maybeSingle();
 
         if (!error && data) {
           return mapRowToProposal(data);

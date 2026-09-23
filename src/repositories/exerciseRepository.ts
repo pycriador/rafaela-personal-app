@@ -148,7 +148,7 @@ export class SupabaseExerciseRepository implements IExerciseRepository {
   async getById(id: string): Promise<Exercise | null> {
     if (isSupabaseConfigured) {
       try {
-        const { data, error } = await supabase.from('exercises').select('*').eq('id', id).single();
+        const { data, error } = await supabase.from('exercises').select('*').eq('id', id).maybeSingle();
         if (!error && data) {
           return mapFromDb(data);
         }
@@ -197,7 +197,7 @@ export class SupabaseExerciseRepository implements IExerciseRepository {
           .update(mapToDb(updates))
           .eq('id', id)
           .select()
-          .single();
+          .maybeSingle();
         if (!error && data) {
           updatedExercise = mapFromDb(data);
         }

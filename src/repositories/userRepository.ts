@@ -58,7 +58,7 @@ export class SupabaseUserRepository implements IUserRepository {
   async getById(id: string): Promise<User | null> {
     if (isSupabaseConfigured) {
       try {
-        const { data, error } = await supabase.from('users').select('*').eq('id', id).single();
+        const { data, error } = await supabase.from('users').select('*').eq('id', id).maybeSingle();
         if (!error && data) {
           return mapFromDb(data);
         }
@@ -77,7 +77,7 @@ export class SupabaseUserRepository implements IUserRepository {
           .from('users')
           .select('*')
           .ilike('email', email.trim())
-          .single();
+          .maybeSingle();
         if (!error && data) {
           return mapFromDb(data);
         }
@@ -114,7 +114,7 @@ export class SupabaseUserRepository implements IUserRepository {
           .update(mapToDb(updates))
           .eq('id', id)
           .select()
-          .single();
+          .maybeSingle();
         if (!error && data) {
           updatedUser = mapFromDb(data);
         }

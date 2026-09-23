@@ -53,7 +53,7 @@ export const aiRequestRepository = {
           .from('ai_requests')
           .select('*')
           .eq('id', id)
-          .single();
+          .maybeSingle();
 
         if (!error && data) {
           return mapRowToRequest(data);

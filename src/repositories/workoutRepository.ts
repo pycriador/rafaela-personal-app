@@ -69,14 +69,9 @@ function mapPlanToDb(plan: WorkoutPlan): any {
   return {
     id: plan.id,
     student_id: plan.studentId,
-    trainer_id: plan.trainerId,
+    trainer_id: plan.trainerId || 'user-rafaela',
     name: plan.name,
-    version: plan.version ?? 1,
-    cycle_name: plan.cycleName,
-    active: plan.active,
-    valid_from: plan.validFrom,
-    valid_until: plan.validUntil,
-    notes: plan.notes,
+    active: plan.active ?? true,
     days: sortWorkoutDays(plan.days || []),
     updated_at: new Date().toISOString(),
   };
@@ -233,7 +228,7 @@ export class SupabaseWorkoutRepository implements IWorkoutRepository {
       days: sortWorkoutDays(plan.days || []),
     };
 
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('workout_plans').upsert(mapPlanToDb(planWithSortedDays));
       } catch (err) {
@@ -253,7 +248,7 @@ export class SupabaseWorkoutRepository implements IWorkoutRepository {
   }
 
   async deletePlan(id: string): Promise<boolean> {
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('workout_plans').delete().eq('id', id);
       } catch (err) {

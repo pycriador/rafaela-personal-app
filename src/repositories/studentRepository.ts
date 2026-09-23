@@ -156,7 +156,7 @@ export class SupabaseStudentRepository implements IStudentRepository {
   async getByUserId(userId: string): Promise<Student | null> {
     if (isSupabaseConfigured) {
       try {
-        const { data, error } = await supabase.from('students').select('*').eq('user_id', userId).single();
+        const { data, error } = await supabase.from('students').select('*').eq('user_id', userId).maybeSingle();
         if (!error && data) {
           return mapFromDb(data);
         }
@@ -204,7 +204,7 @@ export class SupabaseStudentRepository implements IStudentRepository {
           .update(rowUpdates)
           .eq('id', id)
           .select()
-          .single();
+          .maybeSingle();
         if (!error && data) {
           updatedStudent = mapFromDb(data);
         }

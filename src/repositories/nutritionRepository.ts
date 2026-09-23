@@ -63,7 +63,7 @@ export class SupabaseNutritionRepository implements INutritionRepository {
           .from('nutrition_plans')
           .select('*')
           .eq('student_id', studentId)
-          .single();
+          .maybeSingle();
         if (!error && data) {
           return mapFromDb(data);
         }

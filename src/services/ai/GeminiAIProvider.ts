@@ -187,14 +187,20 @@ export class GeminiAIProvider implements AIProvider {
     temperature?: number;
     maxOutputTokens?: number;
   }): Promise<AIProviderCallResult> {
-    const fullUserPrompt = `${input.prompt}\n\nCONTEXTO DO ALUNO E BIBLIOTECA:\n${JSON.stringify(input.context, null, 2)}`;
-    return this.callGemini(
-      input.model,
-      input.systemInstruction,
-      fullUserPrompt,
-      input.temperature || 0.4,
-      input.maxOutputTokens || 2048
-    );
+    try {
+      const fullUserPrompt = `${input.prompt}\n\nCONTEXTO DO ALUNO E BIBLIOTECA:\n${JSON.stringify(input.context, null, 2)}`;
+      return await this.callGemini(
+        input.model,
+        input.systemInstruction,
+        fullUserPrompt,
+        input.temperature || 0.4,
+        input.maxOutputTokens || 2048
+      );
+    } catch (err) {
+      console.warn('[GeminiAIProvider] Falha ao gerar proposta no Gemini, acionando motor local:', err);
+      const fallback = new MockAIProvider();
+      return fallback.generateWorkoutProposal(input);
+    }
   }
 
   async reviewWorkout(input: {
@@ -203,8 +209,14 @@ export class GeminiAIProvider implements AIProvider {
     model: string;
     systemInstruction?: string;
   }): Promise<AIProviderCallResult> {
-    const fullUserPrompt = `${input.prompt}\n\nTREINO E HISTÓRICO PARA REVISÃO:\n${JSON.stringify(input.context, null, 2)}`;
-    return this.callGemini(input.model, input.systemInstruction, fullUserPrompt, 0.3, 1500);
+    try {
+      const fullUserPrompt = `${input.prompt}\n\nTREINO E HISTÓRICO PARA REVISÃO:\n${JSON.stringify(input.context, null, 2)}`;
+      return await this.callGemini(input.model, input.systemInstruction, fullUserPrompt, 0.3, 1500);
+    } catch (err) {
+      console.warn('[GeminiAIProvider] Falha ao revisar treino no Gemini, acionando motor local:', err);
+      const fallback = new MockAIProvider();
+      return fallback.reviewWorkout(input);
+    }
   }
 
   async suggestAlternatives(input: {
@@ -213,8 +225,14 @@ export class GeminiAIProvider implements AIProvider {
     model: string;
     systemInstruction?: string;
   }): Promise<AIProviderCallResult> {
-    const fullUserPrompt = `${input.prompt}\n\nEXERCÍCIO E BIBLIOTECA DE ALTERNATIVAS:\n${JSON.stringify(input.context, null, 2)}`;
-    return this.callGemini(input.model, input.systemInstruction, fullUserPrompt, 0.2, 1000);
+    try {
+      const fullUserPrompt = `${input.prompt}\n\nEXERCÍCIO E BIBLIOTECA DE ALTERNATIVAS:\n${JSON.stringify(input.context, null, 2)}`;
+      return await this.callGemini(input.model, input.systemInstruction, fullUserPrompt, 0.2, 1000);
+    } catch (err) {
+      console.warn('[GeminiAIProvider] Falha ao sugerir alternativas no Gemini, acionando motor local:', err);
+      const fallback = new MockAIProvider();
+      return fallback.suggestAlternatives(input);
+    }
   }
 
   async analyzeProgress(input: {
@@ -223,8 +241,14 @@ export class GeminiAIProvider implements AIProvider {
     model: string;
     systemInstruction?: string;
   }): Promise<AIProviderCallResult> {
-    const fullUserPrompt = `${input.prompt}\n\nHISTÓRICO DE SESSÕES E FEEDBACKS:\n${JSON.stringify(input.context, null, 2)}`;
-    return this.callGemini(input.model, input.systemInstruction, fullUserPrompt, 0.2, 1500);
+    try {
+      const fullUserPrompt = `${input.prompt}\n\nHISTÓRICO DE SESSÕES E FEEDBACKS:\n${JSON.stringify(input.context, null, 2)}`;
+      return await this.callGemini(input.model, input.systemInstruction, fullUserPrompt, 0.2, 1500);
+    } catch (err) {
+      console.warn('[GeminiAIProvider] Falha ao analisar evolução no Gemini, acionando motor local:', err);
+      const fallback = new MockAIProvider();
+      return fallback.analyzeProgress(input);
+    }
   }
 
   async generateWorkoutTemplate(input: {

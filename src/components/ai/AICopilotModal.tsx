@@ -413,6 +413,21 @@ export const AICopilotModal: React.FC<AICopilotModalProps> = ({
                 </div>
               ) : reviewResult ? (
                 <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-slate-700 dark:text-slate-300 text-xs">
+                      Revisão Biomecânica do Treino Ativo
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleRunReview}
+                      leftIcon={<RefreshCw className="w-3 h-3" />}
+                      className="text-xs"
+                    >
+                      Reanalisar
+                    </Button>
+                  </div>
+
                   <div className="p-4 rounded-xl bg-slate-50 dark:bg-dark-card border border-slate-200/60 dark:border-dark-border space-y-2">
                     <h4 className="font-bold text-slate-900 dark:text-white text-sm">
                       Diagnóstico Geral da Estrutura
@@ -438,8 +453,19 @@ export const AICopilotModal: React.FC<AICopilotModalProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="py-8 text-center text-slate-400">
-                  Clique para iniciar a revisão técnica do treino.
+                <div className="py-8 text-center space-y-3">
+                  <Search className="w-8 h-8 text-emerald-500 mx-auto opacity-70" />
+                  <p className="text-slate-500 max-w-sm mx-auto">
+                    Avalie a coerência biomecânica, equilíbrio agonista/antagonista e volume semanal do treino ativo com a IA.
+                  </p>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handleRunReview}
+                    leftIcon={<Search className="w-4 h-4" />}
+                  >
+                    Revisar Treino Ativo com IA
+                  </Button>
                 </div>
               )}
             </div>
@@ -455,6 +481,21 @@ export const AICopilotModal: React.FC<AICopilotModalProps> = ({
                 </div>
               ) : progressResult ? (
                 <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-slate-700 dark:text-slate-300 text-xs">
+                      Relatório de Adesão e Cargas
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleRunProgressAnalysis}
+                      leftIcon={<RefreshCw className="w-3 h-3" />}
+                      className="text-xs"
+                    >
+                      Reanalisar
+                    </Button>
+                  </div>
+
                   <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-2">
                     <div className="flex items-center justify-between">
                       <h4 className="font-bold text-slate-900 dark:text-white text-sm">
@@ -496,8 +537,19 @@ export const AICopilotModal: React.FC<AICopilotModalProps> = ({
                   )}
                 </div>
               ) : (
-                <div className="py-8 text-center text-slate-400">
-                  Clique para compilar a análise factual de adesão.
+                <div className="py-8 text-center space-y-3">
+                  <TrendingUp className="w-8 h-8 text-emerald-500 mx-auto opacity-70" />
+                  <p className="text-slate-500 max-w-sm mx-auto">
+                    Compile o histórico real de treinos concluídos, progressão de cargas e exercícios pulados/substituídos.
+                  </p>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={handleRunProgressAnalysis}
+                    leftIcon={<TrendingUp className="w-4 h-4" />}
+                  >
+                    Analisar Adesão & Cargas
+                  </Button>
                 </div>
               )}
             </div>

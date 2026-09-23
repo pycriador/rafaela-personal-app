@@ -39,7 +39,7 @@ export const aiConsentRepository = {
           .from('ai_student_consents')
           .select('*')
           .eq('student_id', studentId)
-          .single();
+          .maybeSingle();
 
         if (!error && data) {
           return mapRowToConsent(data);
