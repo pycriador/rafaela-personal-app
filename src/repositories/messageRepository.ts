@@ -101,18 +101,30 @@ export class SupabaseMessageRepository implements IMessageRepository {
           .order('created_at', { ascending: true });
 
         if (!error && data && data.length > 0) {
-          const mapped: StudentMessage[] = data.map((d: any) => ({
-            id: d.id,
-            studentId: d.student_id,
-            senderId: d.sender_id,
-            senderName: d.sender_name,
-            senderRole: d.sender_role,
-            content: d.content,
-            category: d.category,
-            metadata: d.metadata,
-            timestamp: d.created_at || d.timestamp,
-            read: d.read ?? true,
-          }));
+          const mapped: StudentMessage[] = data.map((d: any) => {
+            const meta = typeof d.metadata === 'object' && d.metadata !== null ? d.metadata : {};
+            const replyTo = meta.replyToId
+              ? {
+                  messageId: meta.replyToId,
+                  senderName: meta.replyToSender || 'Mensagem',
+                  content: meta.replyToContent || '',
+                }
+              : d.replyTo || undefined;
+
+            return {
+              id: d.id,
+              studentId: d.student_id,
+              senderId: d.sender_id,
+              senderName: d.sender_name,
+              senderRole: d.sender_role,
+              content: d.content,
+              category: d.category,
+              metadata: meta,
+              replyTo,
+              timestamp: d.created_at || d.timestamp,
+              read: d.read ?? true,
+            };
+          });
           return mapped;
         }
       } catch (err) {
@@ -144,8 +156,20 @@ export class SupabaseMessageRepository implements IMessageRepository {
       // fallback
     }
 
+    const metadata = {
+      ...(msgData.metadata || {}),
+      ...(msgData.replyTo
+        ? {
+            replyToId: msgData.replyTo.messageId,
+            replyToSender: msgData.replyTo.senderName,
+            replyToContent: msgData.replyTo.content,
+          }
+        : {}),
+    };
+
     const newMessage: StudentMessage = {
       ...msgData,
+      metadata,
       studentId: canonicalStudentId,
       id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       timestamp: new Date().toISOString(),

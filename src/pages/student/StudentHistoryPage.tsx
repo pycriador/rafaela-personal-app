@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { workoutRepository } from '../../repositories/workoutRepository';
 import { WorkoutSession, WorkoutModification } from '../../types';
@@ -11,7 +11,10 @@ import { Calendar, Dumbbell, History, Sparkles, CheckCircle2, AlertTriangle, Mes
 export const StudentHistoryPage: React.FC = () => {
   const { user, studentProfile } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialTab = searchParams.get('subtab') === 'sessoes' ? 'sessoes' : 'chat';
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isDedicatedChat = location.pathname.includes('/chat');
+  const initialTab = isDedicatedChat ? 'chat' : (searchParams.get('subtab') === 'sessoes' ? 'sessoes' : 'chat');
   const [activeSubTab, setActiveSubTab] = useState<'chat' | 'sessoes'>(initialTab);
 
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
@@ -35,17 +38,27 @@ export const StudentHistoryPage: React.FC = () => {
 
   const handleTabChange = (tab: 'chat' | 'sessoes') => {
     setActiveSubTab(tab);
-    setSearchParams({ subtab: tab }, { replace: true });
+    if (tab === 'chat' && !location.pathname.includes('/chat')) {
+      navigate('/student/chat', { replace: true });
+    } else if (tab === 'sessoes' && location.pathname.includes('/chat')) {
+      navigate('/student/history?subtab=sessoes', { replace: true });
+    } else {
+      setSearchParams({ subtab: tab }, { replace: true });
+    }
   };
 
   useEffect(() => {
-    const sub = searchParams.get('subtab');
-    if (sub === 'sessoes' && activeSubTab !== 'sessoes') {
-      setActiveSubTab('sessoes');
-    } else if (sub === 'chat' && activeSubTab !== 'chat') {
+    if (location.pathname.includes('/chat')) {
       setActiveSubTab('chat');
+    } else {
+      const sub = searchParams.get('subtab');
+      if (sub === 'sessoes') {
+        setActiveSubTab('sessoes');
+      } else {
+        setActiveSubTab('chat');
+      }
     }
-  }, [searchParams]);
+  }, [location.pathname, searchParams]);
 
   if (loading || !studentProfile) {
     return (
@@ -56,14 +69,16 @@ export const StudentHistoryPage: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-            Comunicação & Histórico
+          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+            {isDedicatedChat ? 'Bate-Papo com a Rafaela' : 'Comunicação & Histórico'}
           </h1>
           <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
-            Tire dúvidas dos treinos com a Rafaela e consulte seu histórico de sessões executadas
+            {isDedicatedChat
+              ? 'Tire dúvidas dos treinos, reporte aumentos de carga e converse em tempo real estilo WhatsApp'
+              : 'Consulte seu histórico de sessões executadas e converse com sua treinadora'}
           </p>
         </div>
 

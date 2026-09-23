@@ -272,11 +272,19 @@ export interface StudentMessage {
   senderRole: 'personal' | 'student';
   content: string;
   category?: MessageCategory;
+  replyTo?: {
+    messageId: string;
+    senderName: string;
+    content: string;
+  };
   metadata?: {
     exerciseName?: string;
     weightBefore?: number;
     weightAfter?: number;
     sessionId?: string;
+    replyToId?: string;
+    replyToSender?: string;
+    replyToContent?: string;
   };
   timestamp: string;
   read: boolean;

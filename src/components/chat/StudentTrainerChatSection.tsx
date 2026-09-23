@@ -12,9 +12,12 @@ import {
   Trash2,
   ChevronDown,
   RotateCw,
+  Reply,
+  X,
+  Smile,
+  ShieldCheck,
 } from 'lucide-react';
-import { Card, CardHeader, CardTitle } from '../ui/Card';
-import { Button } from '../ui/Button';
+import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Student, StudentMessage, MessageCategory } from '../../types';
 import { messageRepository } from '../../repositories/messageRepository';
@@ -28,59 +31,79 @@ interface StudentTrainerChatSectionProps {
 
 const CATEGORY_CONFIG: Record<
   MessageCategory,
-  { label: string; icon: any; badgeClass: string; bgBubble: string }
+  { label: string; icon: any; badgeClass: string; bgLight: string }
 > = {
   general: {
     label: 'Geral',
     icon: MessageSquare,
-    badgeClass: 'bg-slate-500/15 text-slate-600 dark:text-slate-300',
-    bgBubble: 'bg-slate-100 dark:bg-dark-cardElevated',
-  },
-  weight_change: {
-    label: 'Aumento de Carga',
-    icon: TrendingUp,
-    badgeClass: 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold',
-    bgBubble: 'bg-emerald-500/10 border border-emerald-500/30',
-  },
-  exercise_change: {
-    label: 'Troca de Exercício',
-    icon: RotateCcw,
-    badgeClass: 'bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 font-bold',
-    bgBubble: 'bg-cyan-500/10 border border-cyan-500/30',
+    badgeClass: 'bg-slate-500/15 text-slate-700 dark:text-slate-300',
+    bgLight: 'bg-slate-100 dark:bg-dark-cardElevated',
   },
   question: {
     label: 'Dúvida Técnica',
     icon: HelpCircle,
-    badgeClass: 'bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold',
-    bgBubble: 'bg-amber-500/10 border border-amber-500/30',
+    badgeClass: 'bg-amber-500/20 text-amber-700 dark:text-amber-400 font-bold',
+    bgLight: 'bg-amber-500/10 dark:bg-amber-950/20',
+  },
+  weight_change: {
+    label: 'Aumento de Carga',
+    icon: TrendingUp,
+    badgeClass: 'bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-bold',
+    bgLight: 'bg-emerald-500/10 dark:bg-emerald-950/20',
+  },
+  exercise_change: {
+    label: 'Troca de Exercício',
+    icon: RotateCcw,
+    badgeClass: 'bg-cyan-500/20 text-cyan-700 dark:text-cyan-400 font-bold',
+    bgLight: 'bg-cyan-500/10 dark:bg-cyan-950/20',
   },
   assessment: {
     label: 'Avaliação da Treinadora',
     icon: Award,
-    badgeClass: 'bg-purple-500/20 text-purple-600 dark:text-purple-400 font-bold',
-    bgBubble: 'bg-purple-500/10 border border-purple-500/30',
+    badgeClass: 'bg-purple-500/20 text-purple-700 dark:text-purple-400 font-bold',
+    bgLight: 'bg-purple-500/10 dark:bg-purple-950/20',
   },
   motivation: {
     label: 'Motivação & Feedback',
     icon: Sparkles,
-    badgeClass: 'bg-rose-500/20 text-rose-600 dark:text-rose-400 font-bold',
-    bgBubble: 'bg-rose-500/10 border border-rose-500/30',
+    badgeClass: 'bg-rose-500/20 text-rose-700 dark:text-rose-400 font-bold',
+    bgLight: 'bg-rose-500/10 dark:bg-rose-950/20',
   },
 };
+
+function formatMessageDateGroup(dateStr: string): string {
+  const d = new Date(dateStr);
+  const now = new Date();
+  const isToday = d.toDateString() === now.toDateString();
+  const yesterday = new Date();
+  yesterday.setDate(now.getDate() - 1);
+  const isYesterday = d.toDateString() === yesterday.toDateString();
+
+  if (isToday) return 'Hoje';
+  if (isYesterday) return 'Ontem';
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+}
 
 export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps> = ({
   student,
   currentUserId = 'user-rafaela',
   currentUserRole = 'personal',
 }) => {
-  const { success, error: toastError } = useToast();
+  const { error: toastError } = useToast();
   const [messages, setMessages] = useState<StudentMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [inputContent, setInputContent] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<MessageCategory>('general');
   const [activeFilter, setActiveFilter] = useState<'all' | MessageCategory>('all');
+  const [replyingToMessage, setReplyingToMessage] = useState<StudentMessage | null>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const isStudentViewer = currentUserRole === 'student';
+  const trainerAvatar =
+    'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=150&auto=format&fit=crop&q=80';
 
   const loadMessages = async (isBackground = false) => {
     try {
@@ -99,12 +122,12 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
   useEffect(() => {
     loadMessages();
 
-    // 1. Polling contínuo em background para chat responsivo em tempo real
+    // Polling contínuo em background para chat responsivo em tempo real
     const interval = setInterval(() => {
       loadMessages(true);
     }, 2500);
 
-    // 2. Ouvinte de evento cross-tab / cross-window (storage change)
+    // Ouvinte cross-tab (storage change)
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'rafaela_app_student_messages_v1') {
         loadMessages(true);
@@ -112,7 +135,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
     };
     window.addEventListener('storage', handleStorageChange);
 
-    // 3. Ouvinte de evento local disparado ao enviar ou marcar mensagens
+    // Ouvinte de evento local customizado
     const handleChatMessageEvent = () => {
       loadMessages(true);
     };
@@ -131,6 +154,13 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Foca no campo de texto ao ativar resposta
+  useEffect(() => {
+    if (replyingToMessage) {
+      textareaRef.current?.focus();
+    }
+  }, [replyingToMessage]);
+
   const handleSendMessage = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!inputContent.trim()) return;
@@ -140,6 +170,14 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
       const senderName = isPersonal ? 'Rafaela Personal' : student.name;
       const senderId = isPersonal ? 'user-rafaela' : (student.userId || student.id);
 
+      const replyToData = replyingToMessage
+        ? {
+            messageId: replyingToMessage.id,
+            senderName: replyingToMessage.senderName,
+            content: replyingToMessage.content,
+          }
+        : undefined;
+
       await messageRepository.sendMessage({
         studentId: student.id,
         senderId,
@@ -147,12 +185,14 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
         senderRole: currentUserRole,
         content: inputContent.trim(),
         category: selectedCategory,
+        replyTo: replyToData,
       });
 
       setInputContent('');
+      setReplyingToMessage(null);
       setSelectedCategory('general');
-      await loadMessages();
-      success('Mensagem enviada com sucesso!');
+      await loadMessages(true);
+      // Notificação de envio removida conforme solicitado pelo usuário
     } catch (err) {
       toastError('Erro ao enviar mensagem.');
     }
@@ -161,15 +201,26 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
   const handleSendQuickMessage = (content: string, category: MessageCategory) => {
     setInputContent(content);
     setSelectedCategory(category);
+    textareaRef.current?.focus();
   };
 
   const handleDeleteMessage = async (msgId: string) => {
     try {
       await messageRepository.deleteMessage(msgId);
-      await loadMessages();
-      success('Mensagem removida.');
+      await loadMessages(true);
     } catch (err) {
       toastError('Erro ao excluir mensagem.');
+    }
+  };
+
+  const scrollToMessage = (msgId: string) => {
+    const el = document.getElementById(`msg-${msgId}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('ring-2', 'ring-emerald-500', 'ring-offset-2');
+      setTimeout(() => {
+        el.classList.remove('ring-2', 'ring-emerald-500', 'ring-offset-2');
+      }, 1800);
     }
   };
 
@@ -178,56 +229,58 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
     return m.category === activeFilter;
   });
 
-  const isStudentViewer = currentUserRole === 'student';
-  const trainerAvatar = 'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=150&auto=format&fit=crop&q=80';
-
   return (
-    <Card className="border-emerald-500/20 shadow-lg overflow-hidden flex flex-col h-[680px]">
-      {/* Header with Title and Dropdown Filter */}
-      <CardHeader className="py-4 px-6 border-b border-slate-100 dark:border-dark-border/60 bg-slate-50/60 dark:bg-dark-cardElevated/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div className="relative">
+    <Card className="border border-slate-200/90 dark:border-dark-border shadow-xl overflow-hidden flex flex-col h-[740px] max-h-[85vh] rounded-3xl bg-[#efeae2]/40 dark:bg-[#0b141a]/95">
+      {/* 1. WHATSAPP APP BAR (HEADER) */}
+      <div className="py-3 px-4 sm:px-6 border-b border-slate-200/80 dark:border-[#222d34] bg-[#f0f2f5] dark:bg-[#202c33] flex items-center justify-between gap-3 shrink-0 select-none">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="relative shrink-0">
             <img
-              src={isStudentViewer ? trainerAvatar : (student.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150')}
+              src={
+                isStudentViewer
+                  ? trainerAvatar
+                  : (student.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150')
+              }
               alt={isStudentViewer ? 'Rafaela Personal' : student.name}
-              className="w-10 h-10 rounded-2xl object-cover ring-2 ring-emerald-500/30 shrink-0"
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover ring-2 ring-emerald-500/40 shadow-xs"
             />
-            <span className="w-3 h-3 rounded-full bg-emerald-500 absolute -bottom-0.5 -right-0.5 ring-2 ring-white dark:ring-dark-card" />
+            <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-2 ring-white dark:ring-[#202c33]" />
           </div>
-          <div>
+
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <CardTitle className="text-sm font-black">
-                {isStudentViewer ? 'Bate-Papo com Rafaela Personal' : 'Bate-Papo & Alinhamento Técnico'}
-              </CardTitle>
-              <Badge variant="success" size="sm">
-                {isStudentViewer ? 'Sua Treinadora' : 'Canal Direto'}
+              <h2 className="text-sm sm:text-base font-black text-slate-900 dark:text-white truncate">
+                {isStudentViewer ? 'Rafaela Personal' : student.name}
+              </h2>
+              <Badge variant="success" size="sm" className="hidden sm:inline-flex text-[9px] py-0 px-1.5 font-bold">
+                {isStudentViewer ? 'Treinadora' : 'Aluno'}
               </Badge>
             </div>
-            <p className="text-[11px] text-slate-500 dark:text-dark-muted">
-              {isStudentViewer
-                ? 'Tire dúvidas dos seus treinos, reporte alterações de carga ou solicite orientações'
-                : `Comunicação direta entre Rafaela e ${student.name}`}
-            </p>
+            <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold truncate">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>online</span>
+              <span className="text-slate-400 dark:text-slate-500">•</span>
+              <span className="text-slate-500 dark:text-slate-400 text-[11px] font-normal truncate">
+                {isStudentViewer ? 'Canal direto para dúvidas e treinos' : 'Acompanhamento individual'}
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Dropdown Filter & Refresh */}
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <label className="text-xs font-bold text-slate-500 dark:text-dark-muted hidden md:inline">
-            Filtrar:
-          </label>
+        {/* Controles de Filtro e Sincronização */}
+        <div className="flex items-center gap-2 shrink-0">
           <div className="relative">
             <select
               value={activeFilter}
               onChange={(e) => setActiveFilter(e.target.value as any)}
-              className="text-xs font-bold bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border rounded-xl px-3 py-1.5 pr-7 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shadow-xs appearance-none"
+              className="text-xs font-bold bg-white dark:bg-[#111b21] border border-slate-200 dark:border-[#2a3942] rounded-xl px-2.5 py-1.5 pr-7 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shadow-xs appearance-none"
             >
-              <option value="all">Todas as mensagens ({messages.length})</option>
-              <option value="question">❓ Dúvidas Técnicas</option>
-              <option value="weight_change">📈 Aumento de Carga</option>
-              <option value="exercise_change">🔄 Troca de Exercício</option>
-              <option value="assessment">🏆 Avaliações da Treinadora</option>
-              <option value="motivation">✨ Motivação & Feedback</option>
+              <option value="all">Todas ({messages.length})</option>
+              <option value="question">❓ Dúvidas</option>
+              <option value="weight_change">📈 Cargas</option>
+              <option value="exercise_change">🔄 Trocas</option>
+              <option value="assessment">🏆 Avaliações</option>
+              <option value="motivation">✨ Feedback</option>
               <option value="general">💬 Geral</option>
             </select>
             <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -235,105 +288,52 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
 
           <button
             type="button"
-            title="Atualizar mensagens em tempo real"
+            title="Atualizar mensagens"
             onClick={() => {
               setIsRefreshing(true);
               loadMessages(false);
             }}
-            className="p-1.5 text-slate-500 hover:text-emerald-500 hover:bg-slate-100 dark:hover:bg-dark-card border border-slate-200 dark:border-dark-border rounded-xl transition-all cursor-pointer shadow-xs"
+            className="p-2 text-slate-500 dark:text-slate-400 hover:text-emerald-500 hover:bg-white dark:hover:bg-[#111b21] border border-slate-200 dark:border-[#2a3942] rounded-xl transition-all cursor-pointer shadow-xs"
           >
-            <RotateCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-emerald-500' : ''}`} />
+            <RotateCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-emerald-500' : ''}`} />
           </button>
-        </div>
-      </CardHeader>
-
-      {/* Quick message templates bar with clean dropdown selector */}
-      <div className="px-6 py-2.5 bg-slate-50/90 dark:bg-dark-cardElevated/30 border-b border-slate-200/50 dark:border-dark-border/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
-          <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
-            Dúvidas Frequentes & Atalhos:
-          </span>
-        </div>
-
-        <div className="relative w-full sm:w-auto">
-          <select
-            defaultValue=""
-            onChange={(e) => {
-              const val = e.target.value;
-              if (!val) return;
-              const [cat, text] = val.split(':::');
-              handleSendQuickMessage(text, cat as MessageCategory);
-              e.target.value = '';
-            }}
-            className="w-full sm:w-auto text-xs font-bold bg-white dark:bg-dark-card border border-emerald-500/40 rounded-xl px-3 py-1.5 pr-7 text-emerald-700 dark:text-emerald-300 hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shadow-xs appearance-none"
-          >
-            <option value="" disabled>
-              ⚡ Escolher modelo de dúvida pronta para preencher...
-            </option>
-            {isStudentViewer ? (
-              <>
-                <option value="question:::Oi Rafaela! Estou com uma dúvida sobre a postura e amplitude correta neste exercício.">
-                  ❓ Dúvida sobre postura e execução
-                </option>
-                <option value="weight_change:::Consegui progredir a carga hoje mantendo o controle total do movimento!">
-                  💪 Relatar aumento de carga com boa postura
-                </option>
-                <option value="exercise_change:::O aparelho da ficha estava ocupado na academia e precisei realizar a alternativa recomendada.">
-                  🔄 Reportar exercício alternativo realizado
-                </option>
-                <option value="question:::Senti bastante cansaço e fadiga muscular hoje. Posso ajustar o descanso para 60s ou reduzir uma série?">
-                  ⏱️ Cansaço / Solicitar ajuste de descanso
-                </option>
-                <option value="question:::Senti um leve desconforto na articulação durante o exercício. É normal ou devo pausar?">
-                  ⚠️ Relatar desconforto articular
-                </option>
-              </>
-            ) : (
-              <>
-                <option value="weight_change:::Parabéns pela evolução de carga! Mantivemos cadência e controle perfeito no movimento.">
-                  💪 Parabéns pela evolução de carga
-                </option>
-                <option value="exercise_change:::A substituição que você realizou foi perfeita e manteve o mesmo grupo muscular alvo.">
-                  🔄 Substituição de exercício aprovada
-                </option>
-                <option value="question:::Atenção ao intervalo de descanso entre as séries: preserve os 60 segundos completos para recuperação.">
-                  ⏱️ Atenção ao tempo de descanso
-                </option>
-                <option value="motivation:::Excelente constância e dedicação nos treinos! Continue firme que os resultados já estão visíveis.">
-                  ✨ Elogio de constância e foco
-                </option>
-              </>
-            )}
-          </select>
-          <ChevronDown className="w-3.5 h-3.5 text-emerald-500 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
         </div>
       </div>
 
-      {/* Messages Scroll Area */}
-      <div className="flex-1 p-6 overflow-y-auto space-y-4">
+      {/* 2. CHAT WALLPAPER & FEED DE MENSAGENS ESTILO WHATSAPP */}
+      <div className="flex-1 p-3 sm:p-5 overflow-y-auto space-y-3 bg-[#efeae2]/50 dark:bg-[#0b141a]/95">
+        {/* Banner de Criptografia e Privacidade estilo WhatsApp */}
+        <div className="flex justify-center my-1 select-none">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 dark:bg-amber-950/20 border border-amber-500/20 text-amber-800 dark:text-amber-300 text-[10px] font-semibold text-center max-w-md shadow-xs">
+            <ShieldCheck className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
+            <span>
+              Mensagens gravadas em tempo real. Canal oficial de dúvidas clínicas e treinos com a treinadora Rafaela.
+            </span>
+          </div>
+        </div>
+
         {loading ? (
-          <div className="py-12 flex justify-center">
-            <div className="w-6 h-6 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+          <div className="py-20 flex justify-center">
+            <div className="w-8 h-8 border-3 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
           </div>
         ) : filteredMessages.length === 0 ? (
-          <div className="py-20 text-center space-y-3">
-            <div className="w-14 h-14 rounded-3xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center mx-auto shadow-sm">
+          <div className="py-16 text-center space-y-3 max-w-sm mx-auto">
+            <div className="w-14 h-14 rounded-3xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-sm">
               <MessageSquare className="w-7 h-7" />
             </div>
-            <p className="text-base font-black text-slate-800 dark:text-slate-200">
+            <p className="text-sm font-black text-slate-800 dark:text-slate-200">
               {activeFilter === 'all'
-                ? 'Nenhuma mensagem ainda'
+                ? 'Nenhuma mensagem trocada ainda'
                 : 'Nenhuma mensagem nesta categoria'}
             </p>
-            <p className="text-xs text-slate-500 dark:text-dark-muted max-w-sm mx-auto leading-relaxed">
+            <p className="text-xs text-slate-500 dark:text-dark-muted leading-relaxed">
               {isStudentViewer
-                ? 'Tire dúvidas técnicas diretamente com a Personal Rafaela sobre suas cargas, postura ou trocas de exercícios pelo campo abaixo.'
-                : `Inicie a conversa com ${student.name} para esclarecer dúvidas e acompanhar a evolução.`}
+                ? 'Envie sua primeira dúvida sobre postura, peso ou execuções de exercícios pelo campo abaixo.'
+                : `Inicie a conversa direta com ${student.name} para alinhar treinos e metas.`}
             </p>
           </div>
         ) : (
-          filteredMessages.map((msg) => {
+          filteredMessages.map((msg, idx) => {
             const isMe =
               (currentUserRole === 'personal' && msg.senderRole === 'personal') ||
               (currentUserRole === 'student' && msg.senderRole === 'student');
@@ -341,155 +341,302 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
             const categoryInfo = msg.category ? CATEGORY_CONFIG[msg.category] : CATEGORY_CONFIG.general;
             const CategoryIcon = categoryInfo.icon;
 
+            // Agrupamento por data (ex: Hoje, Ontem)
+            const prevMsg = filteredMessages[idx - 1];
+            const showDateHeader =
+              !prevMsg ||
+              new Date(msg.timestamp).toDateString() !== new Date(prevMsg.timestamp).toDateString();
+
             return (
-              <div
-                key={msg.id}
-                className={`flex items-start gap-3 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}
-              >
-                <div className="shrink-0 mt-1">
-                  {msg.senderRole === 'personal' ? (
-                    <div className="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold text-xs shadow-md shadow-emerald-500/20">
-                      RP
-                    </div>
-                  ) : (
-                    <img
-                      src={student.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
-                      alt={msg.senderName}
-                      className="w-8 h-8 rounded-xl object-cover ring-1 ring-slate-300 dark:ring-dark-border"
-                    />
-                  )}
-                </div>
-
-                <div className={`max-w-[75%] space-y-1 ${isMe ? 'items-end' : 'items-start'}`}>
-                  <div className={`flex items-center gap-1.5 text-[11px] ${isMe ? 'justify-end' : 'justify-start'}`}>
-                    <span className="font-bold text-slate-700 dark:text-slate-300">
-                      {msg.senderName}
+              <React.Fragment key={msg.id}>
+                {showDateHeader && (
+                  <div className="flex justify-center my-2 select-none">
+                    <span className="px-3 py-0.5 rounded-lg bg-white/90 dark:bg-[#182229] border border-slate-200/60 dark:border-[#222d34] text-[10px] font-bold text-slate-600 dark:text-slate-300 shadow-xs">
+                      {formatMessageDateGroup(msg.timestamp)}
                     </span>
-                    {msg.senderRole === 'personal' && (
-                      <Badge variant="success" size="sm" className="text-[9px] py-0 px-1">Treinadora</Badge>
-                    )}
-                    {msg.category && msg.category !== 'general' && (
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1 ${categoryInfo.badgeClass}`}>
-                        <CategoryIcon className="w-3 h-3" />
-                        {categoryInfo.label}
-                      </span>
-                    )}
                   </div>
+                )}
 
+                <div
+                  id={`msg-${msg.id}`}
+                  className={`flex items-end gap-1.5 transition-all duration-300 ${
+                    isMe ? 'justify-end' : 'justify-start'
+                  }`}
+                >
+                  {/* BALÃO ESTILO WHATSAPP */}
                   <div
-                    className={`p-3.5 rounded-2xl text-xs leading-relaxed group relative ${
+                    className={`relative max-w-[85%] sm:max-w-[72%] p-3 rounded-2xl shadow-xs group transition-shadow ${
                       isMe
-                        ? 'bg-emerald-600 text-white rounded-tr-none shadow-md shadow-emerald-600/10'
-                        : `${categoryInfo.bgBubble} text-slate-800 dark:text-slate-200 rounded-tl-none`
+                        ? 'bg-[#d9fdd3] text-[#111b21] dark:bg-[#005c4b] dark:text-[#e9edef] rounded-tr-xs'
+                        : 'bg-white text-[#111b21] dark:bg-[#202c33] dark:text-[#e9edef] rounded-tl-xs border border-slate-100 dark:border-transparent'
                     }`}
                   >
-                    <p className="whitespace-pre-wrap">{msg.content}</p>
-
-                    {msg.metadata?.exerciseName && (
-                      <div
-                        className={`mt-2 p-2 rounded-xl text-[11px] font-mono flex items-center justify-between gap-2 ${
-                          isMe ? 'bg-black/20 text-white' : 'bg-white/60 dark:bg-black/30 text-slate-700 dark:text-slate-300'
+                    {/* Cabeçalho do Balão (Autor & Categoria) */}
+                    <div className="flex items-center justify-between gap-3 mb-1">
+                      <span
+                        className={`text-[11px] font-extrabold truncate ${
+                          isMe
+                            ? 'text-emerald-800 dark:text-emerald-200'
+                            : 'text-emerald-600 dark:text-emerald-400'
                         }`}
                       >
-                        <span className="font-bold flex items-center gap-1 truncate">
-                          <Dumbbell className="w-3.5 h-3.5" />
-                          {msg.metadata.exerciseName}
+                        {msg.senderName}
+                        {msg.senderRole === 'personal' && (
+                          <span className="ml-1 text-[9px] font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-800 dark:text-emerald-300">
+                            Treinadora
+                          </span>
+                        )}
+                      </span>
+
+                      {msg.category && msg.category !== 'general' && (
+                        <span
+                          className={`text-[9px] px-2 py-0.5 rounded-full flex items-center gap-1 font-bold shrink-0 ${categoryInfo.badgeClass}`}
+                        >
+                          <CategoryIcon className="w-2.5 h-2.5" />
+                          <span>{categoryInfo.label}</span>
+                        </span>
+                      )}
+                    </div>
+
+                    {/* BLOCO DE RESPOSTA COTADA (QUOTED REPLY) */}
+                    {msg.replyTo && (
+                      <div
+                        onClick={() => scrollToMessage(msg.replyTo!.messageId)}
+                        className={`mb-2 p-2 rounded-xl border-l-4 cursor-pointer transition-all ${
+                          isMe
+                            ? 'border-emerald-600 bg-emerald-600/10 dark:bg-black/20 hover:bg-emerald-600/15'
+                            : 'border-emerald-500 bg-slate-100 dark:bg-black/25 hover:bg-slate-200/70'
+                        }`}
+                        title="Clique para ir até a mensagem original"
+                      >
+                        <div className="flex items-center gap-1 text-[11px] font-extrabold text-emerald-700 dark:text-emerald-400 mb-0.5">
+                          <Reply className="w-3 h-3" />
+                          <span>{msg.replyTo.senderName}</span>
+                        </div>
+                        <p className="text-[11px] text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">
+                          {msg.replyTo.content}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* METADADOS DE EXERCÍCIO / CARGA */}
+                    {msg.metadata?.exerciseName && (
+                      <div
+                        className={`mb-2 p-2 rounded-xl text-xs font-mono flex items-center justify-between gap-2 ${
+                          isMe
+                            ? 'bg-emerald-700/15 dark:bg-black/25 text-emerald-900 dark:text-emerald-100'
+                            : 'bg-slate-100 dark:bg-black/30 text-slate-800 dark:text-slate-200'
+                        }`}
+                      >
+                        <span className="font-bold flex items-center gap-1.5 truncate">
+                          <Dumbbell className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                          <span className="truncate">{msg.metadata.exerciseName}</span>
                         </span>
                         {msg.metadata.weightAfter && (
-                          <span className="font-bold shrink-0">
+                          <span className="font-extrabold shrink-0 text-emerald-700 dark:text-emerald-300">
                             {msg.metadata.weightBefore ? `${msg.metadata.weightBefore}kg → ` : ''}
-                            <strong className="text-emerald-400">
-                              {msg.metadata.weightAfter}kg
-                            </strong>
+                            {msg.metadata.weightAfter}kg
                           </span>
                         )}
                       </div>
                     )}
 
-                    <div
-                      className={`flex items-center gap-1 justify-end mt-1 text-[10px] ${
-                        isMe ? 'text-emerald-100/70' : 'text-slate-400'
-                      }`}
-                    >
-                      <span>
+                    {/* CONTEÚDO PRINCIPAL DO TEXTO */}
+                    <p className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed break-words select-text">
+                      {msg.content}
+                    </p>
+
+                    {/* RODAPÉ DO BALÃO: HORA, CHECKMARKS & AÇÕES */}
+                    <div className="flex items-center justify-end gap-2 mt-1 select-none pt-0.5">
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400">
                         {new Date(msg.timestamp).toLocaleTimeString([], {
                           hour: '2-digit',
                           minute: '2-digit',
                         })}
                       </span>
-                      {isMe && <CheckCheck className="w-3.5 h-3.5 text-emerald-200" />}
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteMessage(msg.id)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity p-0.5 hover:text-rose-400 ml-1 cursor-pointer"
-                        title="Excluir mensagem"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </button>
+
+                      {isMe && (
+                        <CheckCheck
+                          className={`w-3.5 h-3.5 ${
+                            msg.read
+                              ? 'text-sky-500 dark:text-sky-400'
+                              : 'text-slate-400 dark:text-slate-400'
+                          }`}
+                        />
+                      )}
+
+                      {/* Botões de Ação no Balão (Responder / Excluir) */}
+                      <div className="flex items-center gap-1 opacity-70 group-hover:opacity-100 transition-opacity ml-1">
+                        <button
+                          type="button"
+                          onClick={() => setReplyingToMessage(msg)}
+                          className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 text-slate-500 dark:text-slate-300 cursor-pointer transition-colors"
+                          title="Responder a esta mensagem"
+                        >
+                          <Reply className="w-3 h-3" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteMessage(msg.id)}
+                          className="p-1 rounded-md hover:bg-rose-500/20 text-slate-400 hover:text-rose-500 cursor-pointer transition-colors"
+                          title="Excluir mensagem"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </React.Fragment>
             );
           })
         )}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area with Category Dropdown */}
-      <div className="p-4 bg-slate-50 dark:bg-dark-cardElevated/40 border-t border-slate-100 dark:border-dark-border/60 space-y-3">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-slate-500 dark:text-dark-muted">Classificar:</span>
-            <div className="relative">
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value as MessageCategory)}
-                className="text-xs font-bold bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border rounded-xl px-2.5 py-1 pr-6 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer appearance-none"
-              >
-                <option value="general">💬 Geral</option>
-                <option value="question">❓ Dúvida Técnica</option>
-                <option value="weight_change">📈 Aumento de Carga</option>
-                <option value="exercise_change">🔄 Troca de Exercício</option>
-                <option value="assessment">🏆 Avaliação da Treinadora</option>
-                <option value="motivation">✨ Motivação & Feedback</option>
-              </select>
-              <ChevronDown className="w-3 h-3 text-slate-400 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+      {/* 3. BARRA INFERIOR FIXA DE ENTRADA (WHATSAPP INPUT BAR) */}
+      <div className="border-t border-slate-200/80 dark:border-[#222d34] bg-[#f0f2f5] dark:bg-[#202c33] p-2.5 sm:p-3 space-y-2 shrink-0">
+        {/* BANNER DE RESPOSTA ATIVA (ESTILO WHATSAPP) */}
+        {replyingToMessage && (
+          <div className="flex items-center justify-between gap-3 px-3.5 py-2 rounded-2xl bg-white dark:bg-[#111b21] border-l-4 border-emerald-500 shadow-xs animate-in fade-in slide-in-from-bottom-1 duration-200">
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 font-bold text-xs text-emerald-600 dark:text-emerald-400">
+                <Reply className="w-3.5 h-3.5" />
+                <span>Respondendo a {replyingToMessage.senderName}</span>
+              </div>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 truncate mt-0.5">
+                {replyingToMessage.content}
+              </p>
             </div>
+            <button
+              type="button"
+              onClick={() => setReplyingToMessage(null)}
+              className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-dark-card cursor-pointer"
+              title="Cancelar resposta"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+        {/* ATALHOS RÁPIDOS & CLASSIFICAÇÃO DA MENSAGEM */}
+        <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 shrink-0">
+              Classificar:
+            </span>
+            {(
+              [
+                { id: 'general', label: '💬 Geral' },
+                { id: 'question', label: '❓ Dúvida' },
+                { id: 'weight_change', label: '📈 Carga' },
+                { id: 'exercise_change', label: '🔄 Troca' },
+                { id: 'motivation', label: '✨ Feedback' },
+              ] as const
+            ).map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => setSelectedCategory(cat.id)}
+                className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all cursor-pointer shrink-0 ${
+                  selectedCategory === cat.id
+                    ? 'bg-emerald-600 text-white shadow-xs'
+                    : 'bg-white dark:bg-[#111b21] border border-slate-200 dark:border-[#2a3942] text-slate-600 dark:text-slate-400 hover:border-emerald-500/50'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
           </div>
 
-          <span className="text-[11px] text-slate-400 hidden sm:inline">
-            {inputContent.length > 0 ? `${inputContent.length} caracteres` : 'Pressione Enter para enviar'}
-          </span>
+          {/* Seletor de Modelo de Dúvida Rápida */}
+          <div className="relative shrink-0">
+            <select
+              defaultValue=""
+              onChange={(e) => {
+                const val = e.target.value;
+                if (!val) return;
+                const [cat, text] = val.split(':::');
+                handleSendQuickMessage(text, cat as MessageCategory);
+                e.target.value = '';
+              }}
+              className="text-[11px] font-bold bg-white dark:bg-[#111b21] border border-emerald-500/30 rounded-xl px-2.5 py-1 pr-6 text-emerald-700 dark:text-emerald-300 hover:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer shadow-xs appearance-none"
+            >
+              <option value="" disabled>
+                ⚡ Modelos de dúvidas...
+              </option>
+              {isStudentViewer ? (
+                <>
+                  <option value="question:::Oi Rafaela! Estou com uma dúvida sobre a postura e amplitude correta neste exercício.">
+                    ❓ Dúvida sobre postura e execução
+                  </option>
+                  <option value="weight_change:::Consegui progredir a carga hoje mantendo o controle total do movimento!">
+                    💪 Relatar aumento de carga
+                  </option>
+                  <option value="exercise_change:::O aparelho estava ocupado e precisei realizar a variação alternativa recomendada.">
+                    🔄 Reportar exercício alternativo
+                  </option>
+                  <option value="question:::Senti bastante cansaço muscular hoje. Posso ajustar o descanso para 60s ou reduzir uma série?">
+                    ⏱️ Solicitar ajuste de descanso
+                  </option>
+                  <option value="question:::Senti um leve desconforto na articulação durante a série. Devo pausar ou trocar?">
+                    ⚠️ Relatar desconforto articular
+                  </option>
+                </>
+              ) : (
+                <>
+                  <option value="weight_change:::Parabéns pela evolução de carga! Mantivemos cadência e controle perfeito no movimento.">
+                    💪 Parabéns pela evolução de carga
+                  </option>
+                  <option value="exercise_change:::A substituição que você realizou foi perfeita e manteve o mesmo grupo muscular alvo.">
+                    🔄 Substituição de exercício aprovada
+                  </option>
+                  <option value="question:::Atenção ao intervalo de descanso entre as séries: preserve os 60 segundos completos para recuperação.">
+                    ⏱️ Atenção ao tempo de descanso
+                  </option>
+                  <option value="motivation:::Excelente constância e dedicação nos treinos! Continue firme que os resultados já estão visíveis.">
+                    ✨ Elogio de constância e foco
+                  </option>
+                </>
+              )}
+            </select>
+            <ChevronDown className="w-3 h-3 text-emerald-500 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
         </div>
 
-        <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-          <textarea
-            value={inputContent}
-            onChange={(e) => setInputContent(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSendMessage();
+        {/* CAMPO DE DIGITAÇÃO E BOTÃO ENVIAR ESTILO WHATSAPP */}
+        <form onSubmit={handleSendMessage} className="flex items-end gap-2">
+          <div className="flex-1 relative">
+            <textarea
+              ref={textareaRef}
+              value={inputContent}
+              onChange={(e) => setInputContent(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendMessage();
+                }
+              }}
+              placeholder={
+                replyingToMessage
+                  ? `Responder para ${replyingToMessage.senderName}...`
+                  : isStudentViewer
+                  ? 'Mensagem para Rafaela...'
+                  : `Mensagem para ${student.name}...`
               }
-            }}
-            placeholder={
-              isStudentViewer
-                ? 'Digite sua dúvida técnica ou mensagem para a Rafaela... (Enter para enviar)'
-                : 'Digite sua orientação ou feedback de treino para o aluno... (Enter para enviar)'
-            }
-            rows={2}
-            className="flex-1 resize-none rounded-xl border border-slate-200 dark:border-dark-border bg-white dark:bg-dark-card p-2.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-xs"
-          />
-          <Button
+              rows={1}
+              className="w-full resize-none rounded-3xl border border-slate-200/90 dark:border-transparent bg-white dark:bg-[#2a3942] px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-xs max-h-32 min-h-[44px]"
+            />
+          </div>
+
+          <button
             type="submit"
-            variant="primary"
-            size="md"
             disabled={!inputContent.trim()}
-            className="h-full px-4 rounded-xl shrink-0"
+            className="w-11 h-11 rounded-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:hover:bg-emerald-600 text-white flex items-center justify-center shadow-md active:scale-95 transition-all shrink-0 cursor-pointer disabled:cursor-not-allowed"
+            title="Enviar mensagem (Enter)"
           >
-            <Send className="w-4 h-4" />
-          </Button>
+            <Send className="w-4 h-4 ml-0.5" />
+          </button>
         </form>
       </div>
     </Card>
