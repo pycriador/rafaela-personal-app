@@ -93,6 +93,19 @@ const ALL_DAYS_OF_WEEK: DayOfWeek[] = [
   'Domingo',
 ];
 
+const STUDENT_TAB_LABELS: Record<string, string> = {
+  resumo: 'Resumo & Métricas',
+  treinos: 'Prescrição de Treinos',
+  conversa: 'Conversa & Bate-Papo',
+  chat: 'Conversa & Bate-Papo',
+  evolucao: 'Evolução de Cargas',
+  anamnese: 'Anamnese & Avaliações',
+  nutricao: 'Plano Alimentar',
+  historico: 'Histórico de Treinos & Sessões',
+  copilot: 'AI Copilot',
+  config: 'Configurações do Aluno',
+};
+
 export const StudentDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -1114,15 +1127,38 @@ export const StudentDetailPage: React.FC = () => {
         </div>
       </Card>
 
-      {/* Tabs Navigation (Section 9) */}
-      <StudentSubNav
-        activeTab={activeTab === 'chat' ? 'conversa' : activeTab}
-        onTabChange={setActiveTab}
-        workoutDaysCount={workoutPlan?.days?.length || 0}
-        aiPendingProposalsCount={aiProposals.filter((p) => p.status === 'generated' || p.status === 'modified').length}
-        anamnesisPendingCount={anamnesisApps.filter((a) => a.status === 'pending').length}
-        sessionsCount={sessions.length}
-      />
+      {/* Indicador de Módulo Ativo & Seletor Rápido Mobile (as 9 abas principais ficam dinâmicas no menu lateral) */}
+      <div className="flex items-center justify-between gap-3 py-2 px-1 border-b border-slate-200/80 dark:border-dark-border/60">
+        <div className="flex items-center gap-2 text-xs">
+          <span className="font-bold text-slate-400">Módulo Ativo:</span>
+          <span className="font-black px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+            {STUDENT_TAB_LABELS[activeTab === 'chat' ? 'conversa' : activeTab] || 'Resumo'}
+          </span>
+          <span className="text-slate-300 dark:text-slate-600 hidden sm:inline">•</span>
+          <span className="text-slate-500 dark:text-slate-400 text-[11px] hidden sm:inline">
+            Navegue pelos módulos usando o menu lateral dinâmico à esquerda
+          </span>
+        </div>
+
+        {/* Seletor Rápido Compacto para telas mobile */}
+        <div className="md:hidden">
+          <select
+            value={activeTab === 'chat' ? 'conversa' : activeTab}
+            onChange={(e) => setActiveTab(e.target.value)}
+            className="text-xs font-bold bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border rounded-xl px-2.5 py-1 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          >
+            <option value="resumo">Resumo & Métricas</option>
+            <option value="treinos">Treinos ({workoutPlan?.days?.length || 0}d)</option>
+            <option value="conversa">Conversa com Aluno</option>
+            <option value="evolucao">Evolução de Cargas</option>
+            <option value="anamnese">Anamnese & Avaliações</option>
+            <option value="nutricao">Plano Alimentar</option>
+            <option value="historico">Histórico & Sessões ({sessions.length})</option>
+            <option value="copilot">AI Copilot</option>
+            <option value="config">Configurações</option>
+          </select>
+        </div>
+      </div>
 
       {/* TAB 1: RESUMO (Section 10) */}
       {activeTab === 'resumo' && (

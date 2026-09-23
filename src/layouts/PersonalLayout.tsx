@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
@@ -22,6 +22,9 @@ import {
   ChevronDown,
   Play,
   ClipboardList,
+  MessageSquare,
+  History,
+  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -31,19 +34,59 @@ import { studentRepository } from '../repositories/studentRepository';
 import { Student } from '../types';
 import { NotificationDrawer } from '../components/NotificationDrawer';
 
+const STUDENT_SUB_NAV_ITEMS = [
+  { id: 'resumo', label: 'Resumo', icon: LayoutDashboard },
+  { id: 'treinos', label: 'Treinos', icon: Dumbbell },
+  { id: 'conversa', label: 'Conversa', icon: MessageSquare },
+  { id: 'evolucao', label: 'Evolução Cargas', icon: TrendingUp },
+  { id: 'anamnese', label: 'Anamnese', icon: ClipboardList },
+  { id: 'nutricao', label: 'Plano Alimentar', icon: Apple },
+  { id: 'historico', label: 'Histórico & Sessões', icon: History },
+  { id: 'copilot', label: 'AI Copilot', icon: Sparkles },
+  { id: 'config', label: 'Configurações', icon: Settings },
+];
+
 export const PersonalLayout: React.FC = () => {
   const { user, logout, quickLogin, enterStudentSimulation } = useAuth();
   const { success, error: toastError } = useToast();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  // Dynamic Students for Simulation Mode
+  // Dynamic Students for Simulation Mode & Contextual Sidebar
   const [students, setStudents] = useState<Student[]>([]);
   const [selectedStudentId, setSelectedStudentId] = useState<string>('');
   const [isSimulatingLoading, setIsSimulatingLoading] = useState(false);
+
+  // Detect if currently viewing a specific student:
+  const studentPathMatch = location.pathname.match(/^\/personal\/students\/([^/?#]+)/);
+  const currentStudentParam = studentPathMatch && studentPathMatch[1] !== 'new' ? studentPathMatch[1] : null;
+  const [activeStudentContext, setActiveStudentContext] = useState<Student | null>(null);
+
+  const activeStudentTab = searchParams.get('tab') || 'resumo';
+
+  useEffect(() => {
+    if (!currentStudentParam) {
+      setActiveStudentContext(null);
+      return;
+    }
+    const found = students.find((s) => s.id === currentStudentParam || s.userId === currentStudentParam);
+    if (found) {
+      setActiveStudentContext(found);
+    } else {
+      studentRepository.getById(currentStudentParam).then((res) => {
+        if (res) setActiveStudentContext(res);
+        else {
+          studentRepository.getByUserId(currentStudentParam).then(setActiveStudentContext);
+        }
+      });
+    }
+  }, [currentStudentParam, students]);
 
   useEffect(() => {
     if (user) {
@@ -173,22 +216,104 @@ export const PersonalLayout: React.FC = () => {
           <nav className="p-3 space-y-1 flex-1">
             {navItems.map((item) => {
               const Icon = item.icon;
+              const isStudentsItem = item.path === '/personal/students';
+              const isInsideStudent = isStudentsItem && !!currentStudentParam;
+
               return (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) =>
-                    `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-150 ${
-                      isActive
-                        ? 'bg-emerald-500 text-white font-bold shadow-md shadow-emerald-500/20'
-                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-cardElevated hover:text-slate-900 dark:hover:text-white'
-                    }`
-                  }
-                >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span>{item.name}</span>
-                </NavLink>
+                <div key={item.path} className="space-y-1">
+                  <NavLink
+                    to={item.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-150 ${
+                        isActive || isInsideStudent
+                          ? 'bg-emerald-500 text-white font-bold shadow-md shadow-emerald-500/20'
+                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-cardElevated hover:text-slate-900 dark:hover:text-white'
+                      }`
+                    }
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon className="w-4 h-4 shrink-0" />
+                      <span>{item.name}</span>
+                    </div>
+                    {isInsideStudent && (
+                      <ChevronDown className="w-3.5 h-3.5 text-white/80" />
+                    )}
+                  </NavLink>
+
+                  {/* SUBMENU DINÂMICO DO ALUNO ATIVO */}
+                  {isStudentsItem && activeStudentContext && (
+                    <div className="my-1.5 ml-2.5 pl-2.5 border-l-2 border-emerald-500/50 space-y-1 py-1 bg-slate-50/50 dark:bg-dark-cardElevated/20 rounded-r-xl">
+                      <div className="flex items-center justify-between pr-2 py-0.5 mb-1">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <img
+                            src={
+                              activeStudentContext.avatarUrl ||
+                              'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
+                            }
+                            alt={activeStudentContext.name}
+                            className="w-5 h-5 rounded-full object-cover ring-1 ring-emerald-500/40 shrink-0"
+                          />
+                          <span className="text-[11px] font-black text-slate-800 dark:text-slate-200 truncate">
+                            {activeStudentContext.name}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMobileMenuOpen(false);
+                            navigate('/personal/students');
+                          }}
+                          className="text-[10px] font-bold text-slate-400 hover:text-emerald-500 transition-colors cursor-pointer"
+                          title="Voltar para a lista geral de alunos"
+                        >
+                          Todos
+                        </button>
+                      </div>
+
+                      {/* 9 Abas Dinâmicas do Aluno */}
+                      <div className="space-y-0.5">
+                        {STUDENT_SUB_NAV_ITEMS.map((tab) => {
+                          const TabIcon = tab.icon;
+                          const isTabActive =
+                            activeStudentTab === tab.id ||
+                            (tab.id === 'conversa' && activeStudentTab === 'chat');
+
+                          return (
+                            <button
+                              key={tab.id}
+                              type="button"
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                                const targetId = activeStudentContext.userId || activeStudentContext.id;
+                                navigate(`/personal/students/${targetId}?tab=${tab.id}`);
+                              }}
+                              className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer text-left ${
+                                isTabActive
+                                  ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-extrabold shadow-2xs'
+                                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-cardElevated hover:text-slate-900 dark:hover:text-white font-medium'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 truncate">
+                                <TabIcon
+                                  className={`w-3.5 h-3.5 shrink-0 ${
+                                    isTabActive
+                                      ? 'text-emerald-600 dark:text-emerald-400'
+                                      : 'text-slate-400 dark:text-slate-500'
+                                  }`}
+                                />
+                                <span className="truncate">{tab.label}</span>
+                              </div>
+                              {isTabActive && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
               );
             })}
           </nav>
