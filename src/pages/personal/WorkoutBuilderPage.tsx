@@ -118,7 +118,7 @@ export const WorkoutBuilderPage: React.FC = () => {
       setAllExercises(exs);
 
       if (preselectedStudentId) {
-        const student = sts.find((s) => s.id === preselectedStudentId);
+        const student = sts.find((s) => s.id === preselectedStudentId || s.userId === preselectedStudentId);
         if (student) {
           setSelectedStudentId(student.id);
           const sortedAvail = [...student.availableDays].sort((a, b) => (DAY_ORDER[a] || 99) - (DAY_ORDER[b] || 99));
@@ -376,7 +376,8 @@ export const WorkoutBuilderPage: React.FC = () => {
       });
 
       success(`Plano de treino (V${versionNum}) salvo com sucesso!`);
-      navigate(`/personal/students/${selectedStudentId}`);
+      const targetStudent = students.find((s) => s.id === selectedStudentId);
+      navigate(targetStudent?.userId ? `/personal/students/${targetStudent.userId}` : `/personal/students/${selectedStudentId}`);
     } catch (err) {
       toastError('Erro ao salvar o plano de treino.');
     }
@@ -409,7 +410,7 @@ export const WorkoutBuilderPage: React.FC = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate(selectedStudentId ? `/personal/students/${selectedStudentId}` : '/personal/dashboard')}
+            onClick={() => navigate(selectedStudent?.userId ? `/personal/students/${selectedStudent.userId}` : selectedStudentId ? `/personal/students/${selectedStudentId}` : '/personal/dashboard')}
             leftIcon={<ArrowLeft className="w-4 h-4" />}
           >
             Voltar

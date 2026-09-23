@@ -291,7 +291,7 @@ export const StudentsListPage: React.FC = () => {
             {paginatedStudents.map((student) => (
               <div
                 key={student.id}
-                onClick={() => navigate(`/personal/students/${student.id}`)}
+                onClick={() => navigate(`/personal/students/${student.userId || student.id}`)}
                 className="p-4 rounded-2xl border border-slate-200 dark:border-dark-border bg-white dark:bg-dark-card hover:border-emerald-500/50 hover:bg-slate-50/50 dark:hover:bg-dark-cardElevated/50 hover:shadow-md cursor-pointer transition-all flex flex-col justify-between gap-3 group"
               >
                 <div className="flex items-start gap-3">

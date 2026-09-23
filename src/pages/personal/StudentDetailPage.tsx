@@ -205,6 +205,20 @@ export const StudentDetailPage: React.FC = () => {
     loadData();
   }, [id]);
 
+  // Normalização automática do parâmetro de rota para o ID do usuário no banco de dados (evita duplicidade de slugs de alunos)
+  useEffect(() => {
+    if (student && student.userId && id && id !== student.userId) {
+      const currentQuery = searchParams.toString();
+      navigate(
+        {
+          pathname: `/personal/students/${student.userId}`,
+          search: currentQuery ? `?${currentQuery}` : '',
+        },
+        { replace: true }
+      );
+    }
+  }, [student, id, searchParams, navigate]);
+
   // Workout Plan Versioning Handlers
   const handleActivatePlanVersion = async (planId: string) => {
     if (!student) return;
