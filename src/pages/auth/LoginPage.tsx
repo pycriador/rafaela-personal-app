@@ -7,6 +7,7 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
+import { BrandLogo } from '../../components/ui/BrandLogo';
 import { Dumbbell, Sparkles, User, Lock, ArrowRight, Sun, Moon } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
@@ -105,8 +106,8 @@ export const LoginPage: React.FC = () => {
       <div className="max-w-md w-full space-y-6">
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-900 text-white dark:bg-emerald-500 dark:text-slate-950 shadow-2xs mb-1">
-            <Dumbbell className="w-6 h-6" />
+          <div className="flex justify-center mb-1">
+            <BrandLogo size="lg" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
             RAFAELA TRAINING

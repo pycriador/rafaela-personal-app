@@ -1,6 +1,7 @@
 import React from 'react';
-import { Dumbbell, ShieldCheck, Heart, Globe, Mail, MessageCircle } from 'lucide-react';
+import { ShieldCheck, Heart, Globe, Mail, MessageCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { BrandLogo } from '../ui/BrandLogo';
 
 export const LandingFooter: React.FC = () => {
   const navigate = useNavigate();
@@ -16,9 +17,7 @@ export const LandingFooter: React.FC = () => {
           {/* Brand Info */}
           <div className="md:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-2xl bg-emerald-600 dark:bg-emerald-500 flex items-center justify-center text-white shadow-2xs">
-                <Dumbbell className="w-5 h-5" />
-              </div>
+              <BrandLogo size="md" />
               <div>
                 <span className="font-black text-lg text-white tracking-tight block">
                   Rafaela Personal

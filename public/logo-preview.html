@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logo Concepts — Rafaela Personal</title>
+<style>
+  body {
+    background-color: #0F1012;
+    color: #EDEDEF;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+    padding: 40px 24px;
+    margin: 0;
+  }
+  .container { max-width: 1000px; margin: 0 auto; }
+  h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+  p.subtitle { color: #8E95A2; font-size: 15px; margin-bottom: 40px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .card {
+    background: #15171A;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .badge {
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(16, 185, 129, 0.15);
+    color: #34D399;
+  }
+  .card h3 { font-size: 18px; margin: 0; font-weight: 700; }
+  .card p.desc { color: #8E95A2; font-size: 13px; margin: 0; line-height: 1.5; }
+  
+  .preview-stage {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #0B0D0F;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .stage-light {
+    background: #F8F9FA;
+    border: 1px solid #E2E8F0;
+    color: #0F172A;
+  }
+
+  .logo-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .box-dark { background: #1B1D21; border: 1px solid rgba(255,255,255,0.08); }
+  .box-emerald { background: #10B981; }
+  .box-light { background: #FFFFFF; border: 1px solid #E2E8F0; }
+
+  /* Simulation of Topbar */
+  .header-preview {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #1B1D21;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .header-preview-light {
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+  }
+  .brand-text h4 { font-size: 14px; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+  .brand-text span { font-size: 10px; font-weight: 600; color: #8E95A2; text-transform: uppercase; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Propostas de Identidade — Rafaela Personal</h1>
+  <p class="subtitle">Substituição do "R" padrão por um logo marcante, dinâmico e projetado especificamente para biomecânica e alta performance.</p>
+
+  <div class="grid">
+
+    <!-- OPÇÃO 1: THE KINETIC BLADE R -->
+    <div class="card">
+      <span class="badge">Opção 1 — Kinetic Blade</span>
+      <h3>O "R" Cinético Biomecânico</h3>
+      <p class="desc">A coluna vertical representa o alinhamento postural (estabilidade). O arco superior simboliza a amplitude de movimento e o kick inferior em lâmina representa velocidade e propulsão atlética.</p>
+
+      <div class="preview-stage">
+        <!-- 48px Dark Box -->
+        <div class="logo-box box-dark" style="width:48px; height:48px;">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+            <!-- Spine -->
+            <rect x="5.5" y="4.5" width="4.5" height="23" rx="2.25" fill="#10B981" />
+            <!-- Upper Arc -->
+            <path d="M10 4.5H18C22.1421 4.5 25.5 7.85786 25.5 12C25.5 16.1421 22.1421 19.5 18 19.5H10V4.5Z" fill="#EDEDEF" />
+            <!-- Inner Cutout -->
+            <path d="M14.5 9H17.5C19.1569 9 20.5 10.3431 20.5 12C20.5 13.6569 19.1569 15 17.5 15H14.5V9Z" fill="#1B1D21" />
+            <!-- Kinetic Blade Leg -->
+            <path d="M15.5 17L24.2 26.8C24.7 27.3 24.3 28 23.5 28H19.5C18.9 28 18.3 27.7 17.9 27.2L12 20.5L15.5 17Z" fill="#10B981" />
+          </svg>
+        </div>
+
+        <!-- 48px Solid Emerald Box -->
+        <div class="logo-box box-emerald" style="width:48px; height:48px;">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+            <rect x="5.5" y="4.5" width="4.5" height="23" rx="2.25" fill="#042F2E" />
+            <path d="M10 4.5H18C22.1421 4.5 25.5 7.85786 25.5 12C25.5 16.1421 22.1421 19.5 18 19.5H10V4.5Z" fill="#FFFFFF" />
+            <path d="M14.5 9H17.5C19.1569 9 20.5 10.3431 20.5 12C20.5 13.6569 19.1569 15 17.5 15H14.5V9Z" fill="#10B981" />
+            <path d="M15.5 17L24.2 26.8C24.7 27.3 24.3 28 23.5 28H19.5C18.9 28 18.3 27.7 17.9 27.2L12 20.5L15.5 17Z" fill="#042F2E" />
+          </svg>
+        </div>
+
+        <!-- 36px Standard Sidebar Size -->
+        <div class="logo-box box-dark" style="width:36px; height:36px;">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+            <rect x="5.5" y="4.5" width="4.5" height="23" rx="2.25" fill="#10B981" />
+            <path d="M10 4.5H18C22.1421 4.5 25.5 7.85786 25.5 12C25.5 16.1421 22.1421 19.5 18 19.5H10V4.5Z" fill="#EDEDEF" />
+            <path d="M14.5 9H17.5C19.1569 9 20.5 10.3431 20.5 12C20.5 13.6569 19.1569 15 17.5 15H14.5V9Z" fill="#1B1D21" />
+            <path d="M15.5 17L24.2 26.8C24.7 27.3 24.3 28 23.5 28H19.5C18.9 28 18.3 27.7 17.9 27.2L12 20.5L15.5 17Z" fill="#10B981" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Live Sidebar/Header simulation -->
+      <div class="header-preview">
+        <div class="logo-box box-dark" style="width:36px; height:36px;">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+            <rect x="5.5" y="4.5" width="4.5" height="23" rx="2.25" fill="#10B981" />
+            <path d="M10 4.5H18C22.1421 4.5 25.5 7.85786 25.5 12C25.5 16.1421 22.1421 19.5 18 19.5H10V4.5Z" fill="#EDEDEF" />
+            <path d="M14.5 9H17.5C19.1569 9 20.5 10.3431 20.5 12C20.5 13.6569 19.1569 15 17.5 15H14.5V9Z" fill="#1B1D21" />
+            <path d="M15.5 17L24.2 26.8C24.7 27.3 24.3 28 23.5 28H19.5C18.9 28 18.3 27.7 17.9 27.2L12 20.5L15.5 17Z" fill="#10B981" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h4>RAFAELA</h4>
+          <span>Personal Trainer</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPÇÃO 2: DUAL-LINE CONTINUOUS RIBBON (Linear / Apple style) -->
+    <div class="card">
+      <span class="badge">Opção 2 — Geometric Ribbon</span>
+      <h3>O "R" Ribbon Minimalista</h3>
+      <p class="desc">Dois traços contínuos com espessura óptica harmonizada. O traço esmeralda ancora a postura enquanto o laço branco envolve o centro com máxima clareza e elegância em qualquer tamanho.</p>
+
+      <div class="preview-stage">
+        <!-- 48px Dark Box -->
+        <div class="logo-box box-dark" style="width:48px; height:48px;">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+            <!-- Spine -->
+            <path d="M8 5V27" stroke="#10B981" stroke-width="3.5" stroke-linecap="round" />
+            <!-- Continuous Upper Loop & Kick -->
+            <path d="M8.5 7H16C19.866 7 23 10.134 23 14C23 17.866 19.866 21 16 21H9M15 19.5L23.5 27" stroke="#EDEDEF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+
+        <!-- 48px Solid Emerald Box -->
+        <div class="logo-box box-emerald" style="width:48px; height:48px;">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+            <path d="M8 5V27" stroke="#042F2E" stroke-width="3.5" stroke-linecap="round" />
+            <path d="M8.5 7H16C19.866 7 23 10.134 23 14C23 17.866 19.866 21 16 21H9M15 19.5L23.5 27" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+
+        <!-- 36px Standard Sidebar Size -->
+        <div class="logo-box box-dark" style="width:36px; height:36px;">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+            <path d="M8 5V27" stroke="#10B981" stroke-width="3.5" stroke-linecap="round" />
+            <path d="M8.5 7H16C19.866 7 23 10.134 23 14C23 17.866 19.866 21 16 21H9M15 19.5L23.5 27" stroke="#EDEDEF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Live Sidebar/Header simulation -->
+      <div class="header-preview">
+        <div class="logo-box box-dark" style="width:36px; height:36px;">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+            <path d="M8 5V27" stroke="#10B981" stroke-width="3.5" stroke-linecap="round" />
+            <path d="M8.5 7H16C19.866 7 23 10.134 23 14C23 17.866 19.866 21 16 21H9M15 19.5L23.5 27" stroke="#EDEDEF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h4>RAFAELA</h4>
+          <span>Personal Trainer</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPÇÃO 3: THE PRECISION VECTOR EMBLEM (Monograma Puro & Escultural) -->
+    <div class="card">
+      <span class="badge">Opção 3 — Precision Monogram</span>
+      <h3>O "R" Escultural Integrado</h3>
+      <p class="desc">Monograma em peça única sólida, com chanfros de 45° no vértice interno que unem biomecânica e força funcional. Visual de marca esportiva global como WHOOP e Oura.</p>
+
+      <div class="preview-stage">
+        <!-- 48px Dark Box -->
+        <div class="logo-box box-dark" style="width:48px; height:48px;">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M6 7C6 5.34315 7.34315 4 9 4H17C21.4183 4 25 7.58172 25 12C25 15.6548 22.548 18.7366 19.208 19.6455L24.8 26.6C25.4 27.35 24.85 28 23.9 28H19.5C18.8 28 18.2 27.65 17.8 27.15L12.5 20H10V26C10 27.1046 9.10457 28 8 28C6.89543 28 6 27.1046 6 26V7ZM10 8V16H17C19.2091 16 21 14.2091 21 12C21 9.79086 19.2091 8 17 8H10Z" fill="#10B981" />
+          </svg>
+        </div>
+
+        <!-- 48px Solid Emerald Box -->
+        <div class="logo-box box-emerald" style="width:48px; height:48px;">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M6 7C6 5.34315 7.34315 4 9 4H17C21.4183 4 25 7.58172 25 12C25 15.6548 22.548 18.7366 19.208 19.6455L24.8 26.6C25.4 27.35 24.85 28 23.9 28H19.5C18.8 28 18.2 27.65 17.8 27.15L12.5 20H10V26C10 27.1046 9.10457 28 8 28C6.89543 28 6 27.1046 6 26V7ZM10 8V16H17C19.2091 16 21 14.2091 21 12C21 9.79086 19.2091 8 17 8H10Z" fill="#042F2E" />
+          </svg>
+        </div>
+
+        <!-- 36px Standard Sidebar Size -->
+        <div class="logo-box box-dark" style="width:36px; height:36px;">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M6 7C6 5.34315 7.34315 4 9 4H17C21.4183 4 25 7.58172 25 12C25 15.6548 22.548 18.7366 19.208 19.6455L24.8 26.6C25.4 27.35 24.85 28 23.9 28H19.5C18.8 28 18.2 27.65 17.8 27.15L12.5 20H10V26C10 27.1046 9.10457 28 8 28C6.89543 28 6 27.1046 6 26V7ZM10 8V16H17C19.2091 16 21 14.2091 21 12C21 9.79086 19.2091 8 17 8H10Z" fill="#10B981" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Live Sidebar/Header simulation -->
+      <div class="header-preview">
+        <div class="logo-box box-dark" style="width:36px; height:36px;">
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M6 7C6 5.34315 7.34315 4 9 4H17C21.4183 4 25 7.58172 25 12C25 15.6548 22.548 18.7366 19.208 19.6455L24.8 26.6C25.4 27.35 24.85 28 23.9 28H19.5C18.8 28 18.2 27.65 17.8 27.15L12.5 20H10V26C10 27.1046 9.10457 28 8 28C6.89543 28 6 27.1046 6 26V7ZM10 8V16H17C19.2091 16 21 14.2091 21 12C21 9.79086 19.2091 8 17 8H10Z" fill="#10B981" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h4>RAFAELA</h4>
+          <span>Personal Trainer</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

@@ -36,6 +36,7 @@ import { notificationRepository } from '../repositories/notificationRepository';
 import { studentRepository } from '../repositories/studentRepository';
 import { Student } from '../types';
 import { NotificationDrawer } from '../components/NotificationDrawer';
+import { BrandLogo } from '../components/ui/BrandLogo';
 
 const STUDENT_SUB_NAV_ITEMS = [
   { id: 'resumo', label: 'Resumo', icon: LayoutDashboard },
@@ -228,9 +229,7 @@ export const PersonalLayout: React.FC = () => {
       {/* Mobile Top Header */}
       <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-dark-card border-b border-slate-200 dark:border-dark-border sticky top-0 z-30">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-slate-900 dark:bg-emerald-500 flex items-center justify-center text-white dark:text-slate-950 font-semibold text-sm shadow-2xs">
-            R
-          </div>
+          <BrandLogo size="sm" />
           <div>
             <span className="font-semibold tracking-tight text-sm text-slate-900 dark:text-white leading-none block">RAFAELA</span>
             <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider block mt-0.5">Personal</span>
@@ -275,9 +274,7 @@ export const PersonalLayout: React.FC = () => {
           {/* Logo & Brand */}
           <div className="p-4 sm:p-5 flex items-center justify-between border-b border-slate-100 dark:border-white/[0.06]">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-slate-900 dark:bg-emerald-500 flex items-center justify-center text-white dark:text-slate-950 font-semibold text-base shadow-2xs">
-                R
-              </div>
+              <BrandLogo size="md" />
               <div>
                 <h1 className="font-semibold tracking-tight text-sm text-slate-900 dark:text-white leading-tight">
                   RAFAELA

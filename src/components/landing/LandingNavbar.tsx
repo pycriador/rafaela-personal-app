@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dumbbell, Moon, Sun, Menu, X, ArrowRight, UserCheck } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { BrandLogo } from '../ui/BrandLogo';
 import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 
@@ -37,9 +38,7 @@ export const LandingNavbar: React.FC = () => {
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="flex items-center gap-3 cursor-pointer group"
         >
-          <div className="w-10 h-10 rounded-2xl bg-emerald-600 dark:bg-emerald-500 flex items-center justify-center text-white shadow-2xs group-hover:scale-105 transition-transform">
-            <Dumbbell className="w-5 h-5" />
-          </div>
+          <BrandLogo size="md" className="group-hover:scale-105 transition-transform" />
           <div>
             <div className="flex items-center gap-1.5">
               <span className="font-black text-lg text-slate-900 dark:text-white tracking-tight leading-none">
