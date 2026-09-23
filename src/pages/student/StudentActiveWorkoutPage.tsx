@@ -37,6 +37,10 @@ import {
   HeartPulse,
   MessageSquare,
   HelpCircle,
+  Play,
+  Pause,
+  ThumbsUp,
+  ThumbsDown,
 } from 'lucide-react';
 
 export const StudentActiveWorkoutPage: React.FC = () => {
@@ -91,8 +95,35 @@ export const StudentActiveWorkoutPage: React.FC = () => {
   // Modal 5: Bate-Papo & Dúvidas Técnicas do Treino
   const [chatModalOpen, setChatModalOpen] = useState(false);
 
-  // Track start time
-  const [startTime] = useState<string>(new Date().toISOString());
+  // Track start time & live chronometer
+  const [startTime] = useState<string>(() => new Date().toISOString());
+  const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(true);
+  const [autoSwapsCount, setAutoSwapsCount] = useState<number>(0);
+  const [exercisePreferences, setExercisePreferences] = useState<Record<string, 'liked' | 'disliked'>>({});
+
+  // Chronometer effect
+  useEffect(() => {
+    let interval: any = null;
+    if (isTimerRunning) {
+      interval = setInterval(() => {
+        setElapsedSeconds((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isTimerRunning]);
+
+  const formatChronometer = (totalSec: number) => {
+    const hours = Math.floor(totalSec / 3600);
+    const minutes = Math.floor((totalSec % 3600) / 60);
+    const seconds = totalSec % 60;
+    if (hours > 0) {
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  };
 
   useEffect(() => {
     async function load() {
@@ -313,12 +344,86 @@ export const StudentActiveWorkoutPage: React.FC = () => {
     success(`Exercício substituído por ${substitutedData.name}!`);
   };
 
+  // Handle Automatic Substitution on "Não gostei" (Item 3: max 2x)
+  const handleAutoSubstitute = async () => {
+    if (autoSwapsCount >= 2) {
+      toastError('Limite atingido: você já realizou 2 trocas automáticas nesta sessão. Se precisar de ajustes adicionais, tire sua dúvida com a Rafaela.');
+      return;
+    }
+
+    if (!currentWorkoutExercise || !currentExerciseData) return;
+
+    const existingExerciseIds = new Set(exercisesList.map((e) => e.exerciseId));
+
+    // 1. Try allowed alternatives first
+    let chosenAlternative = allowedAlternatives.find(
+      (alt) => alt.id !== currentWorkoutExercise.exerciseId && !existingExerciseIds.has(alt.id)
+    );
+
+    // 2. Fallback to same muscle group or category
+    if (!chosenAlternative) {
+      const allExList = Object.values(exercisesMap);
+      chosenAlternative = allExList.find(
+        (e) =>
+          e.id !== currentWorkoutExercise.exerciseId &&
+          !existingExerciseIds.has(e.id) &&
+          (e.category === currentExerciseData.category ||
+            e.muscleGroups.some((m) => currentExerciseData.muscleGroups?.includes(m)))
+      );
+    }
+
+    if (!chosenAlternative) {
+      toastError('Nenhum exercício substituto equivalente disponível no momento.');
+      return;
+    }
+
+    const oldName = currentExerciseData.name;
+    const newName = chosenAlternative.name;
+    const nextSwapCount = autoSwapsCount + 1;
+    setAutoSwapsCount(nextSwapCount);
+
+    const updatedList = [...exercisesList];
+    updatedList[currentIndex] = {
+      ...currentWorkoutExercise,
+      exerciseId: chosenAlternative.id,
+    };
+    setExercisesList(updatedList);
+
+    await workoutRepository.saveModification({
+      studentId: studentProfile!.id,
+      studentName: studentProfile!.name,
+      exerciseName: oldName,
+      action: 'EXERCISE_SUBSTITUTED',
+      before: oldName,
+      after: newName,
+      reason: `Não gostei do exercício (troca automática pelo app - ${nextSwapCount}/2)`,
+    });
+
+    await activityRepository.log({
+      actorId: studentProfile!.userId,
+      actorName: studentProfile!.name,
+      actorRole: 'student',
+      action: 'Exercício substituído',
+      description: `${studentProfile!.name} trocou automaticamente ${oldName} por ${newName} (motivo: não gostou).`,
+      studentId: studentProfile!.id,
+      iconType: 'swap',
+    });
+
+    const remaining = 2 - nextSwapCount;
+    success(
+      `Exercício trocado automaticamente por ${newName}! ${
+        remaining > 0 ? `(${remaining} troca automática restante)` : '(Limite de trocas automáticas atingido)'
+      }`
+    );
+  };
+
   // Handle Finish Workout (Section 26)
   const handleFinishWorkout = async () => {
     setIsFinishing(true);
 
     const totalVolume = completedSets.reduce((acc, s) => acc + s.actualWeight * s.actualReps, 0);
-    const durationMinutes = 45; // simulated workout duration
+    // Real duration in minutes from the live chronometer
+    const durationMinutes = Math.max(1, Math.round(elapsedSeconds / 60));
 
     const session: WorkoutSession = {
       id: `session-${Date.now()}`,
@@ -391,24 +496,48 @@ export const StudentActiveWorkoutPage: React.FC = () => {
   return (
     <div className="space-y-5 max-w-6xl xl:max-w-7xl mx-auto w-full">
       {/* Top Bar: Progress & Exercise Step (Section 20) */}
-      <div className="flex items-center justify-between gap-3 bg-white dark:bg-dark-card p-3 rounded-2xl border border-slate-200/80 dark:border-dark-border shadow-xs">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate('/student/dashboard')}
-          leftIcon={<ChevronLeft className="w-4 h-4" />}
-          className="text-xs font-bold cursor-pointer"
-        >
-          Sair
-        </Button>
-
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-dark-card p-3 rounded-2xl border border-slate-200/80 dark:border-dark-border shadow-xs">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-black px-3.5 py-1.5 rounded-xl bg-emerald-500/15 text-emerald-500 uppercase tracking-wider">
-            Exercício {currentIndex + 1} de {totalExercisesCount}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/student/dashboard')}
+            leftIcon={<ChevronLeft className="w-4 h-4" />}
+            className="text-xs font-bold cursor-pointer"
+          >
+            Sair
+          </Button>
+
+          <span className="text-xs font-black px-3 py-1.5 rounded-xl bg-emerald-500/15 text-emerald-500 uppercase tracking-wider">
+            {currentIndex + 1} de {totalExercisesCount}
           </span>
           <span className="hidden sm:inline text-xs font-bold text-slate-500 dark:text-dark-muted">
             • {workoutDay.name}
           </span>
+        </div>
+
+        {/* Live Workout Chronometer (Item 1) */}
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-dark-cardElevated border border-slate-200/80 dark:border-white/[0.08] font-mono shadow-2xs">
+          <button
+            type="button"
+            onClick={() => setIsTimerRunning(!isTimerRunning)}
+            className="p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            title={isTimerRunning ? 'Pausar cronômetro' : 'Retomar treino'}
+          >
+            {isTimerRunning ? (
+              <Pause className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+            ) : (
+              <Play className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500" />
+            )}
+          </button>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+              {formatChronometer(elapsedSeconds)}
+            </span>
+            <span className="text-[10px] text-slate-400 font-sans hidden md:inline">
+              (Alvo: {workoutDay.estimatedMinutes || 45}m)
+            </span>
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
@@ -467,6 +596,52 @@ export const StudentActiveWorkoutPage: React.FC = () => {
                     &ldquo;{currentExerciseData.instructions}&rdquo;
                   </p>
                 )}
+              </div>
+            </div>
+
+            {/* Avaliação do Exercício e Troca Automática (Item 3: máx 2x) */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/80 dark:border-white/[0.08]">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                  Gostou deste exercício?
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  (máx. 2 trocas automáticas)
+                </span>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setExercisePreferences((prev) => ({ ...prev, [currentWorkoutExercise.exerciseId]: 'liked' }));
+                    success('Gosto registrado! Esse feedback ajuda a Rafaela a aprimorar seus treinos.');
+                  }}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    exercisePreferences[currentWorkoutExercise.exerciseId] === 'liked'
+                      ? 'bg-emerald-600 text-white shadow-2xs'
+                      : 'bg-white dark:bg-dark-card border border-slate-200 dark:border-white/[0.1] text-slate-700 dark:text-slate-300 hover:border-emerald-500'
+                  }`}
+                >
+                  <ThumbsUp className="w-3.5 h-3.5" />
+                  <span>Gostei</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleAutoSubstitute}
+                  disabled={autoSwapsCount >= 2}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    autoSwapsCount >= 2
+                      ? 'opacity-50 cursor-not-allowed bg-slate-100 dark:bg-dark-card border border-slate-200 text-slate-400'
+                      : 'bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-400 hover:bg-rose-100'
+                  }`}
+                  title={autoSwapsCount >= 2 ? 'Limite de 2 trocas atingido' : 'Substituir exercício automaticamente'}
+                >
+                  <ThumbsDown className="w-3.5 h-3.5" />
+                  <span>Não gostei</span>
+                  <span className="text-[10px] font-mono px-1 rounded bg-rose-200/60 dark:bg-rose-500/20">
+                    {2 - autoSwapsCount} rest.
+                  </span>
+                </button>
               </div>
             </div>
 
@@ -885,7 +1060,13 @@ export const StudentActiveWorkoutPage: React.FC = () => {
       >
         <div className="space-y-4">
           {/* Summary stats */}
-          <div className="grid grid-cols-3 gap-2 text-center p-3 rounded-2xl bg-slate-100 dark:bg-dark-cardElevated font-mono text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center p-3 rounded-2xl bg-slate-100 dark:bg-dark-cardElevated font-mono text-xs">
+            <div>
+              <span className="text-[10px] text-slate-400 block">DURAÇÃO</span>
+              <strong className="text-slate-900 dark:text-white text-base">
+                {Math.max(1, Math.round(elapsedSeconds / 60))} min
+              </strong>
+            </div>
             <div>
               <span className="text-[10px] text-slate-400 block">SÉRIES</span>
               <strong className="text-slate-900 dark:text-white text-base">
@@ -904,6 +1085,21 @@ export const StudentActiveWorkoutPage: React.FC = () => {
                 {skippedExercises.length}
               </strong>
             </div>
+          </div>
+
+          {/* Comparativo de Duração com o Alvo Prescrito (Item 1) */}
+          <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-dark-card border border-slate-200/60 dark:border-white/[0.06] text-xs flex items-center justify-between">
+            <span className="text-slate-500 dark:text-dark-muted">
+              Alvo Prescrito: <strong>{workoutDay.estimatedMinutes || 45} min</strong>
+            </span>
+            {Math.round(elapsedSeconds / 60) <= (workoutDay.estimatedMinutes || 45) + 10 &&
+            Math.round(elapsedSeconds / 60) >= (workoutDay.estimatedMinutes || 45) - 10 ? (
+              <Badge variant="brand" size="sm">Dentro do tempo ideal</Badge>
+            ) : Math.round(elapsedSeconds / 60) < (workoutDay.estimatedMinutes || 45) - 10 ? (
+              <Badge variant="warning" size="sm">Treino acelerado</Badge>
+            ) : (
+              <Badge variant="neutral" size="sm">Acima do previsto</Badge>
+            )}
           </div>
 
           {/* Question: Como foi o treino? (1 a 5) */}

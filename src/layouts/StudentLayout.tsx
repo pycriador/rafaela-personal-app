@@ -18,10 +18,12 @@ import {
   ClipboardList,
   Menu,
   X,
+  Trophy,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useToast } from '../context/ToastContext';
+import { LanguageSelector } from '../components/ui/LanguageSelector';
 import { notificationRepository } from '../repositories/notificationRepository';
 import { studentRepository } from '../repositories/studentRepository';
 import { Student } from '../types';
@@ -85,6 +87,7 @@ export const StudentLayout: React.FC = () => {
   const navItems = [
     { name: 'Início', path: '/student/dashboard', icon: Home },
     { name: 'Treinos', path: '/student/workouts', icon: Dumbbell },
+    { name: 'Ranking', path: '/student/ranking', icon: Trophy },
     { name: 'Formulários', path: '/student/anamnesis', icon: ClipboardList },
     { name: 'Bate-Papo', path: '/student/chat', icon: MessageSquare },
     { name: 'Evolução', path: '/student/evolution', icon: TrendingUp },
@@ -249,6 +252,8 @@ export const StudentLayout: React.FC = () => {
                   <span className="hidden md:inline">Encerrar Teste</span>
                 </button>
               )}
+
+              <LanguageSelector />
 
               <button
                 onClick={toggleTheme}
@@ -423,6 +428,11 @@ export const StudentLayout: React.FC = () => {
 
           {/* Quick theme & notification actions inside drawer */}
           <div className="p-3 border-t border-slate-100 dark:border-dark-border/60 space-y-1">
+            <div className="flex items-center justify-between px-3.5 py-1.5">
+              <span className="text-xs font-medium text-slate-600 dark:text-slate-300">Idioma</span>
+              <LanguageSelector />
+            </div>
+
             <button
               onClick={toggleTheme}
               className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors cursor-pointer"

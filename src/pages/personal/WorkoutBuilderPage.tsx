@@ -15,6 +15,7 @@ import {
   X,
   Sparkles,
   Layers,
+  BarChart2,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -27,6 +28,7 @@ import { studentRepository } from '../../repositories/studentRepository';
 import { exerciseRepository } from '../../repositories/exerciseRepository';
 import { workoutRepository, DAY_ORDER, sortWorkoutDays } from '../../repositories/workoutRepository';
 import { activityRepository } from '../../repositories/activityRepository';
+import { notificationRepository } from '../../repositories/notificationRepository';
 import { useToast } from '../../context/ToastContext';
 import { getAssetUrl } from '../../utils/assets';
 import {
@@ -375,6 +377,18 @@ export const WorkoutBuilderPage: React.FC = () => {
         iconType: 'edit',
       });
 
+      // Send in-app notification to the student (Item 7)
+      if (student?.userId) {
+        await notificationRepository.create({
+          recipientId: student.userId,
+          recipientRole: 'student',
+          title: 'Nova Ficha de Treino Publicada 🏋️',
+          message: `Rafaela liberou sua nova ficha de treino (${planName}). Confira seus exercícios e comece com foco total!`,
+          type: 'success',
+          link: '/student/workouts',
+        });
+      }
+
       success(`Plano de treino (V${versionNum}) salvo com sucesso!`);
       const targetStudent = students.find((s) => s.id === selectedStudentId);
       navigate(targetStudent?.userId ? `/personal/students/${targetStudent.userId}` : `/personal/students/${selectedStudentId}`);
@@ -382,6 +396,61 @@ export const WorkoutBuilderPage: React.FC = () => {
       toastError('Erro ao salvar o plano de treino.');
     }
   };
+
+  // Real-time weekly volume counter by muscle group (Item 6)
+  const weeklyMuscleVolume = useMemo(() => {
+    const volumeMap: Record<string, number> = {
+      'Peitoral': 0,
+      'Costas': 0,
+      'Quadríceps': 0,
+      'Posteriores / Glúteos': 0,
+      'Ombros': 0,
+      'Bíceps': 0,
+      'Tríceps': 0,
+      'Abdômen / Core': 0,
+    };
+
+    workoutDays.forEach((day) => {
+      day.exercises.forEach((item) => {
+        const ex = allExercises.find((e) => e.id === item.exerciseId);
+        if (!ex) return;
+        const sets = Number(item.sets) || 0;
+        const cat = (ex.category || '').toLowerCase();
+        const muscles = (ex.muscleGroups || []).map((m) => m.toLowerCase()).join(' ');
+
+        if (cat.includes('peito') || muscles.includes('peitor')) {
+          volumeMap['Peitoral'] += sets;
+        }
+        if (cat.includes('costas') || muscles.includes('dorsal') || muscles.includes('latíssimo') || muscles.includes('trape')) {
+          volumeMap['Costas'] += sets;
+        }
+        if (muscles.includes('quadríceps') || muscles.includes('quadriceps') || (cat.includes('pernas') && !muscles.includes('isquio') && !muscles.includes('posterior') && !muscles.includes('glúteo'))) {
+          volumeMap['Quadríceps'] += sets;
+        }
+        if (muscles.includes('isquiotibiais') || muscles.includes('posterior') || muscles.includes('glúteo') || cat.includes('glúteos')) {
+          volumeMap['Posteriores / Glúteos'] += sets;
+        }
+        if (cat.includes('ombro') || muscles.includes('deltoide')) {
+          volumeMap['Ombros'] += sets;
+        }
+        if (muscles.includes('bíceps') || muscles.includes('biceps') || (cat.includes('braços') && muscles.includes('braquial'))) {
+          volumeMap['Bíceps'] += sets;
+        }
+        if (muscles.includes('tríceps') || muscles.includes('triceps')) {
+          volumeMap['Tríceps'] += sets;
+        }
+        if (cat.includes('abdômen') || cat.includes('abdomen') || cat.includes('core') || muscles.includes('abdom')) {
+          volumeMap['Abdômen / Core'] += sets;
+        }
+      });
+    });
+
+    return volumeMap;
+  }, [workoutDays, allExercises]);
+
+  const totalWeeklySets = useMemo(() => {
+    return Object.values(weeklyMuscleVolume).reduce((acc, v) => acc + v, 0);
+  }, [weeklyMuscleVolume]);
 
   if (loading) {
     return (
@@ -796,6 +865,88 @@ export const WorkoutBuilderPage: React.FC = () => {
               />
               <span>Salvar como <strong>Nova Versão / Novo Ciclo</strong> (preserva rotina anterior)</span>
             </label>
+          </div>
+
+          {/* Live Weekly Sets Volume Counter by Muscle Group (Item 6) */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-dark-card border border-slate-200/80 dark:border-white/[0.06] shadow-xs space-y-3.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-slate-100 dark:border-white/[0.04]">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+                  <BarChart2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                    Volume Semanal Prescrito por Grupamento
+                    <span className="text-[11px] font-normal text-slate-400 dark:text-dark-muted hidden sm:inline">
+                      • Referência hipertrófica (10 a 20 séries/semana)
+                    </span>
+                  </h3>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-500 dark:text-dark-muted font-medium">Total Semanal:</span>
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-mono">
+                  {totalWeeklySets} séries
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
+              {Object.entries(weeklyMuscleVolume).map(([muscle, sets]) => {
+                const isOptimal = sets >= 10 && sets <= 22;
+                const isHigh = sets > 22;
+                const isLow = sets > 0 && sets < 10;
+                const isEmpty = sets === 0;
+
+                return (
+                  <div
+                    key={muscle}
+                    className={`p-2.5 rounded-xl border transition-all text-center flex flex-col justify-between ${
+                      isEmpty
+                        ? 'border-slate-100 dark:border-white/[0.04] bg-slate-50/50 dark:bg-white/[0.01] opacity-60'
+                        : isOptimal
+                        ? 'border-emerald-500/30 bg-emerald-500/[0.04] dark:bg-emerald-500/[0.06]'
+                        : isHigh
+                        ? 'border-sky-500/30 bg-sky-500/[0.04] dark:bg-sky-500/[0.06]'
+                        : 'border-amber-500/30 bg-amber-500/[0.04] dark:bg-amber-500/[0.06]'
+                    }`}
+                  >
+                    <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 truncate" title={muscle}>
+                      {muscle}
+                    </span>
+                    <div className="my-1.5 flex items-baseline justify-center gap-1">
+                      <span
+                        className={`text-base font-bold font-mono ${
+                          isEmpty
+                            ? 'text-slate-400'
+                            : isOptimal
+                            ? 'text-emerald-600 dark:text-emerald-400'
+                            : isHigh
+                            ? 'text-sky-600 dark:text-sky-400'
+                            : 'text-amber-600 dark:text-amber-400'
+                        }`}
+                      >
+                        {sets}
+                      </span>
+                      <span className="text-[10px] text-slate-400">séries</span>
+                    </div>
+                    <span
+                      className={`text-[9px] font-medium px-1.5 py-0.5 rounded ${
+                        isEmpty
+                          ? 'text-slate-400 bg-slate-100 dark:bg-white/[0.04]'
+                          : isOptimal
+                          ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-500/10'
+                          : isHigh
+                          ? 'text-sky-700 dark:text-sky-300 bg-sky-500/10'
+                          : 'text-amber-700 dark:text-amber-300 bg-amber-500/10'
+                      }`}
+                    >
+                      {isEmpty ? '0 séries' : isOptimal ? 'Volume Ótimo' : isHigh ? 'Especialização' : 'Manutenção'}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           {/* Day Tabs */}

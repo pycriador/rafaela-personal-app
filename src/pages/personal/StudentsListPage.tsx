@@ -11,6 +11,9 @@ import {
   ChevronsLeft,
   ChevronsRight,
   X,
+  AlertTriangle,
+  MessageCircle,
+  Clock,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -58,6 +61,7 @@ export const StudentsListPage: React.FC = () => {
   const currentGoal = searchParams.get('goal') || 'all';
   const currentStatus = searchParams.get('status') || 'all';
   const currentFreq = searchParams.get('frequency') || 'all';
+  const currentPlanFilter = searchParams.get('planFilter') || 'all';
 
   const [searchInput, setSearchInput] = useState(currentSearch);
 
@@ -76,6 +80,48 @@ export const StudentsListPage: React.FC = () => {
     load();
   }, []);
 
+  // Calculate plan status and expiration
+  const getPlanStatus = (student: Student) => {
+    if (student.hasActivePlan === false) {
+      return { status: 'no_plan' as const, label: 'Sem Ficha Ativa' };
+    }
+    if (!student.planExpiresAt) {
+      return { status: 'active' as const, label: 'Ficha Ativa' };
+    }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const expDate = new Date(student.planExpiresAt);
+    expDate.setHours(0, 0, 0, 0);
+    const diffTime = expDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) {
+      return { status: 'expired' as const, label: `Vencido há ${Math.abs(diffDays)}d`, days: diffDays };
+    }
+    if (diffDays <= 7) {
+      return { status: 'expiring_soon' as const, label: `Vence em ${diffDays}d`, days: diffDays };
+    }
+    return { status: 'active' as const, label: `Vence em ${diffDays}d`, days: diffDays };
+  };
+
+  // Retention filter counts
+  const filterCounts = useMemo(() => {
+    let noPlan = 0;
+    let expiringSoon = 0;
+    let expired = 0;
+    let lowAdherence = 0;
+
+    allStudents.forEach((st) => {
+      const p = getPlanStatus(st);
+      if (p.status === 'no_plan') noPlan++;
+      if (p.status === 'expiring_soon') expiringSoon++;
+      if (p.status === 'expired') expired++;
+      if (st.adherencePercentage < 80) lowAdherence++;
+    });
+
+    return { noPlan, expiringSoon, expired, lowAdherence };
+  }, [allStudents]);
+
   // Sync search input if URL changes externally
   useEffect(() => {
     setSearchInput(currentSearch);
@@ -91,6 +137,26 @@ export const StudentsListPage: React.FC = () => {
       }
     });
     setSearchParams(next);
+  };
+
+  // 1-Click WhatsApp helper for plan renewal / encouragement
+  const openWhatsAppRenewal = (e: React.MouseEvent, student: Student, planStatus: ReturnType<typeof getPlanStatus>) => {
+    e.stopPropagation();
+    const cleanPhone = student.phone.replace(/\D/g, '');
+    let msg = `Olá, ${student.name}! Rafaela aqui. `;
+    if (planStatus.status === 'no_plan') {
+      msg += `Notei que você está sem ficha de treino ativa. Vamos montar seu novo ciclo de treinos para atingir seus objetivos? 💪`;
+    } else if (planStatus.status === 'expired') {
+      msg += `Sua ficha de treino venceu. Vamos agendar a renovação e ajuste de cargas para continuar seu progresso? 🏋️`;
+    } else if (planStatus.status === 'expiring_soon') {
+      msg += `Sua ficha de treino atual está próxima do vencimento (${planStatus.label}). Que tal já alinharmos os ajustes para a nova fase? 🎯`;
+    } else if (student.adherencePercentage < 80) {
+      msg += `Passando para acompanhar seus treinos desta semana! Está precisando de algum ajuste na rotina? 🚀`;
+    } else {
+      msg += `Tudo bem por aí? Passando para checar como estão os treinos e sua evolução! 🌟`;
+    }
+    const url = `https://wa.me/55${cleanPhone}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
   };
 
   // Debounce search input to URL
@@ -127,9 +193,17 @@ export const StudentsListPage: React.FC = () => {
         if (st.availableDays.length !== freqNum) return false;
       }
 
+      if (currentPlanFilter !== 'all') {
+        const planStatus = getPlanStatus(st);
+        if (currentPlanFilter === 'no_plan' && planStatus.status !== 'no_plan') return false;
+        if (currentPlanFilter === 'expiring_soon' && planStatus.status !== 'expiring_soon') return false;
+        if (currentPlanFilter === 'expired' && planStatus.status !== 'expired') return false;
+        if (currentPlanFilter === 'low_adherence' && st.adherencePercentage >= 80) return false;
+      }
+
       return true;
     });
-  }, [allStudents, currentSearch, currentGoal, currentStatus, currentFreq]);
+  }, [allStudents, currentSearch, currentGoal, currentStatus, currentFreq, currentPlanFilter]);
 
   // Pagination calculation
   const totalItems = filteredStudents.length;
@@ -143,7 +217,8 @@ export const StudentsListPage: React.FC = () => {
     currentSearch ||
     (currentGoal && currentGoal !== 'all') ||
     (currentStatus && currentStatus !== 'all') ||
-    (currentFreq && currentFreq !== 'all')
+    (currentFreq && currentFreq !== 'all') ||
+    (currentPlanFilter && currentPlanFilter !== 'all')
   );
 
   const handleClearFilters = () => {
@@ -181,12 +256,102 @@ export const StudentsListPage: React.FC = () => {
         <CardHeader className="p-0">
           <CardTitle>Alunos Matriculados & Frequência</CardTitle>
           <p className="text-xs text-slate-500">
-            Filtre por objetivo, status ou frequência semanal para acessar prontuários e gerenciar planos.
+            Filtre por objetivo, status, vigência da ficha ou frequência para gerenciar a retenção de alunos.
           </p>
         </CardHeader>
 
+        {/* Retention & Expiration Quick Filter Tabs (Items 8 & 9) */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 pt-1">
+          <button
+            type="button"
+            onClick={() => updateParams({ planFilter: null, page: '1' })}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
+              currentPlanFilter === 'all'
+                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs'
+                : 'bg-slate-100 dark:bg-white/[0.04] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <span>Todos</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/10 dark:bg-black/20">
+              {allStudents.length}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => updateParams({ planFilter: 'no_plan', page: '1' })}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
+              currentPlanFilter === 'no_plan'
+                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs'
+                : 'bg-slate-100 dark:bg-white/[0.04] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <Clock className="w-3 h-3 text-slate-400" />
+            <span>Sem Treino Ativo</span>
+            {filterCounts.noPlan > 0 && (
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-500/20 text-slate-600 dark:text-slate-300 font-bold">
+                {filterCounts.noPlan}
+              </span>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => updateParams({ planFilter: 'expiring_soon', page: '1' })}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
+              currentPlanFilter === 'expiring_soon'
+                ? 'bg-amber-600 text-white shadow-2xs font-semibold'
+                : 'bg-amber-500/10 text-amber-700 dark:text-amber-400 hover:bg-amber-500/20'
+            }`}
+          >
+            <AlertTriangle className="w-3 h-3" />
+            <span>Vencendo (&lt; 7 dias)</span>
+            {filterCounts.expiringSoon > 0 && (
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500/30 font-bold">
+                {filterCounts.expiringSoon}
+              </span>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => updateParams({ planFilter: 'expired', page: '1' })}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
+              currentPlanFilter === 'expired'
+                ? 'bg-rose-600 text-white shadow-2xs font-semibold'
+                : 'bg-rose-500/10 text-rose-700 dark:text-rose-400 hover:bg-rose-500/20'
+            }`}
+          >
+            <AlertTriangle className="w-3 h-3" />
+            <span>Planos Vencidos</span>
+            {filterCounts.expired > 0 && (
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-rose-500/30 font-bold">
+                {filterCounts.expired}
+              </span>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => updateParams({ planFilter: 'low_adherence', page: '1' })}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
+              currentPlanFilter === 'low_adherence'
+                ? 'bg-amber-700 text-white shadow-2xs font-semibold'
+                : 'bg-slate-100 dark:bg-white/[0.04] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <Activity className="w-3 h-3 text-amber-500" />
+            <span>Baixa Adesão (&lt;80%)</span>
+            {filterCounts.lowAdherence > 0 && (
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold">
+                {filterCounts.lowAdherence}
+              </span>
+            )}
+          </button>
+        </div>
+
         {/* Filters Bar */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
           <Input
             placeholder="Buscar por nome, e-mail..."
             value={searchInput}
@@ -288,80 +453,140 @@ export const StudentsListPage: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-            {paginatedStudents.map((student) => (
-              <div
-                key={student.id}
-                onClick={() => navigate(`/personal/students/${student.userId || student.id}`)}
-                className="p-4 rounded-xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-dark-card hover:border-slate-300 dark:hover:border-white/[0.16] shadow-xs cursor-pointer transition-all flex flex-col justify-between gap-3 group"
-              >
-                <div className="flex items-start gap-3">
-                  <img
-                    src={student.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
-                    alt={student.name}
-                    className="w-11 h-11 rounded-full object-cover ring-1 ring-slate-200/80 dark:ring-white/[0.08] shrink-0"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-1">
-                      <h4 className="text-sm font-semibold text-slate-900 dark:text-white truncate">
-                        {student.name}
-                      </h4>
-                      <Badge
-                        variant={
-                          student.status === 'Ativo'
-                            ? 'success'
-                            : student.status === 'Pausado'
-                            ? 'warning'
-                            : student.status === 'Atenção'
-                            ? 'danger'
-                            : 'neutral'
-                        }
-                        size="sm"
-                      >
-                        {student.status}
-                      </Badge>
-                    </div>
-                    <p className="text-xs text-slate-500 dark:text-dark-muted truncate mt-0.5">
-                      {student.email}
-                    </p>
-                    <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/[0.06] text-slate-500 dark:text-slate-400 font-medium" title="ID do Usuário no Banco de Dados">
-                        UID: {student.userId || student.id}
-                      </span>
-                      <span className="text-[11px] text-slate-400 dark:text-dark-muted font-normal truncate">
-                        {student.level} • {student.goals.join(', ')}
-                      </span>
+            {paginatedStudents.map((student) => {
+              const planStatus = getPlanStatus(student);
+              return (
+                <div
+                  key={student.id}
+                  onClick={() => navigate(`/personal/students/${student.userId || student.id}`)}
+                  className="p-4 rounded-xl border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-dark-card hover:border-slate-300 dark:hover:border-white/[0.16] shadow-xs cursor-pointer transition-all flex flex-col justify-between gap-3 group"
+                >
+                  <div className="flex items-start gap-3">
+                    <img
+                      src={student.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
+                      alt={student.name}
+                      className="w-11 h-11 rounded-full object-cover ring-1 ring-slate-200/80 dark:ring-white/[0.08] shrink-0"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-1">
+                        <h4 className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                          {student.name}
+                        </h4>
+                        <Badge
+                          variant={
+                            student.status === 'Ativo'
+                              ? 'success'
+                              : student.status === 'Pausado'
+                              ? 'warning'
+                              : student.status === 'Atenção'
+                              ? 'danger'
+                              : 'neutral'
+                          }
+                          size="sm"
+                        >
+                          {student.status}
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-dark-muted truncate mt-0.5">
+                        {student.email}
+                      </p>
+                      <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/[0.06] text-slate-500 dark:text-slate-400 font-medium" title="ID do Usuário no Banco de Dados">
+                          UID: {student.userId || student.id}
+                        </span>
+                        <span className="text-[11px] text-slate-400 dark:text-dark-muted font-normal truncate">
+                          {student.level} • {student.goals.join(', ')}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Registered training days & activity box */}
-                <div className="p-2.5 rounded-lg bg-slate-50/70 dark:bg-dark-cardElevated/40 border border-slate-200/60 dark:border-white/[0.06] text-xs space-y-1">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300 font-medium">
-                      <Calendar className="w-3.5 h-3.5 shrink-0 text-slate-400" />
-                      <span>Dias Cadastrados ({student.availableDays.length}):</span>
+                  {/* Registered training days & activity box */}
+                  <div className="p-2.5 rounded-lg bg-slate-50/70 dark:bg-dark-cardElevated/40 border border-slate-200/60 dark:border-white/[0.06] text-xs space-y-1">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-slate-600 dark:text-slate-300 font-medium">
+                        <Calendar className="w-3.5 h-3.5 shrink-0 text-slate-400" />
+                        <span>Dias Cadastrados ({student.availableDays.length}):</span>
+                      </div>
+                      <span className="font-mono font-medium text-emerald-600 dark:text-emerald-400 text-xs">
+                        {student.adherencePercentage}% adesão
+                      </span>
                     </div>
-                    <span className="font-mono font-medium text-emerald-600 dark:text-emerald-400 text-xs">
-                      {student.adherencePercentage}% adesão
+                    <span className="text-slate-700 dark:text-slate-300 font-medium block truncate">
+                      {student.availableDays.length > 0 ? student.availableDays.join(', ') : 'Nenhum dia cadastrado'}
                     </span>
                   </div>
-                  <span className="text-slate-700 dark:text-slate-300 font-medium block truncate">
-                    {student.availableDays.length > 0 ? student.availableDays.join(', ') : 'Nenhum dia cadastrado'}
-                  </span>
-                </div>
 
-                {/* Card Footer */}
-                <div className="pt-2.5 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-xs">
-                  <span className="text-[11px] text-slate-400 dark:text-dark-muted">
-                    Atividade: <strong className="text-slate-600 dark:text-slate-300 font-medium">{student.lastActive}</strong>
-                  </span>
-                  <span className="text-xs font-medium text-slate-600 dark:text-slate-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 flex items-center gap-1 transition-colors">
-                    Ver Perfil
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </span>
+                  {/* Retention Alert & 1-Click WhatsApp Renewal (Items 8 & 9) */}
+                  {planStatus.status !== 'active' ? (
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className={`p-2.5 rounded-lg border text-xs flex items-center justify-between gap-2 ${
+                        planStatus.status === 'expired'
+                          ? 'bg-rose-500/10 border-rose-500/30 text-rose-800 dark:text-rose-300'
+                          : planStatus.status === 'expiring_soon'
+                          ? 'bg-amber-500/10 border-amber-500/30 text-amber-800 dark:text-amber-300'
+                          : 'bg-slate-100 dark:bg-white/[0.04] border-slate-200 dark:border-white/[0.08] text-slate-600 dark:text-slate-400'
+                      }`}
+                    >
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+                        <span className="font-semibold truncate">{planStatus.label}</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => openWhatsAppRenewal(e, student, planStatus)}
+                        className="px-2.5 py-1 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-[11px] flex items-center gap-1 transition-colors shrink-0 shadow-2xs cursor-pointer"
+                        title="Abrir WhatsApp para renovação da ficha"
+                      >
+                        <MessageCircle className="w-3 h-3" />
+                        <span>Renovar</span>
+                      </button>
+                    </div>
+                  ) : student.adherencePercentage < 80 ? (
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className="p-2 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-300 text-xs flex items-center justify-between gap-2"
+                    >
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <Activity className="w-3.5 h-3.5 shrink-0 text-amber-500" />
+                        <span className="font-semibold truncate">Adesão Baixa ({student.adherencePercentage}%)</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => openWhatsAppRenewal(e, student, planStatus)}
+                        className="px-2 py-0.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-[11px] flex items-center gap-1 transition-colors shrink-0 cursor-pointer"
+                        title="Enviar mensagem de incentivo no WhatsApp"
+                      >
+                        <MessageCircle className="w-3 h-3" />
+                        <span>Incentivar</span>
+                      </button>
+                    </div>
+                  ) : null}
+
+                  {/* Card Footer */}
+                  <div className="pt-2.5 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] text-slate-400 dark:text-dark-muted">
+                        Atividade: <strong className="text-slate-600 dark:text-slate-300 font-medium">{student.lastActive}</strong>
+                      </span>
+                      <button
+                        type="button"
+                        onClick={(e) => openWhatsAppRenewal(e, student, planStatus)}
+                        className="p-1 rounded text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
+                        title="Contatar via WhatsApp"
+                      >
+                        <MessageCircle className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                    <span className="text-xs font-medium text-slate-600 dark:text-slate-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 flex items-center gap-1 transition-colors">
+                      Ver Perfil
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

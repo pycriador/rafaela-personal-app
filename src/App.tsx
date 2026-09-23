@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { ToastProvider } from './context/ToastContext';
+import { LanguageProvider } from './context/LanguageContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Layouts
@@ -24,6 +25,7 @@ import { NutritionManagementPage } from './pages/personal/NutritionManagementPag
 import { EvolutionOverviewPage } from './pages/personal/EvolutionOverviewPage';
 import { ReportsPage } from './pages/personal/ReportsPage';
 import { SettingsPage } from './pages/personal/SettingsPage';
+import { RankingManagementPage } from './pages/personal/RankingManagementPage';
 import { AnamnesisDashboardPage } from './pages/personal/anamnesis/AnamnesisDashboardPage';
 import { FormsListPage } from './pages/personal/anamnesis/FormsListPage';
 import { FormEditorPage } from './pages/personal/anamnesis/FormEditorPage';
@@ -38,6 +40,7 @@ import { StudentHistoryPage } from './pages/student/StudentHistoryPage';
 import { StudentEvolutionPage } from './pages/student/StudentEvolutionPage';
 import { StudentNutritionPage } from './pages/student/StudentNutritionPage';
 import { StudentProfilePage } from './pages/student/StudentProfilePage';
+import { StudentRankingPage } from './pages/student/StudentRankingPage';
 import { StudentAnamnesisPage } from './pages/student/anamnesis/StudentAnamnesisPage';
 import { StudentFillFormPage } from './pages/student/anamnesis/StudentFillFormPage';
 import { StudentResponseDetailPage } from './pages/student/anamnesis/StudentResponseDetailPage';
@@ -70,10 +73,11 @@ const RootRedirect: React.FC = () => {
 export const App: React.FC = () => {
   return (
     <ThemeProvider>
-      <ToastProvider>
-        <AuthProvider>
-          <BrowserRouter basename={import.meta.env.BASE_URL}>
-            <Routes>
+      <LanguageProvider>
+        <ToastProvider>
+          <AuthProvider>
+            <BrowserRouter basename={import.meta.env.BASE_URL}>
+              <Routes>
 
               {/* Public Routes */}
               <Route path="/" element={<LandingPage />} />
@@ -95,6 +99,7 @@ export const App: React.FC = () => {
                   <Route path="nutrition" element={<NutritionManagementPage />} />
                   <Route path="evolution" element={<EvolutionOverviewPage />} />
                   <Route path="reports" element={<ReportsPage />} />
+                  <Route path="ranking" element={<RankingManagementPage />} />
                   <Route path="settings" element={<SettingsPage />} />
                   <Route path="anamnesis" element={<AnamnesisDashboardPage />} />
                   <Route path="anamnesis/forms" element={<FormsListPage />} />
@@ -113,6 +118,7 @@ export const App: React.FC = () => {
                   <Route path="workouts" element={<StudentWorkoutsListPage />} />
                   <Route path="workout/today" element={<StudentActiveWorkoutPage />} />
                   <Route path="workout/active/:dayId" element={<StudentActiveWorkoutPage />} />
+                  <Route path="ranking" element={<StudentRankingPage />} />
                   <Route path="anamnesis" element={<StudentAnamnesisPage />} />
                   <Route path="anamnesis/fill/:applicationId" element={<StudentFillFormPage />} />
                   <Route path="anamnesis/responses/:responseId" element={<StudentResponseDetailPage />} />
@@ -130,8 +136,9 @@ export const App: React.FC = () => {
           </BrowserRouter>
         </AuthProvider>
       </ToastProvider>
-    </ThemeProvider>
-  );
+    </LanguageProvider>
+  </ThemeProvider>
+);
 };
 
 export default App;

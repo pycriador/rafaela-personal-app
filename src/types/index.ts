@@ -50,6 +50,8 @@ export interface Student {
   lastActive: string;
   status: 'Ativo' | 'Inativo' | 'Atenção' | 'Pausado' | 'Arquivado';
   adherencePercentage: number; // e.g. 92%
+  planExpiresAt?: string; // e.g. '2026-10-15'
+  hasActivePlan?: boolean;
 }
 
 export type ExerciseCategory =
@@ -108,6 +110,7 @@ export interface WorkoutDay {
   name: string; // e.g. "Treino A - Peito e Tríceps"
   dayOfWeek: DayOfWeek;
   muscleFocus: string;
+  estimatedMinutes?: number;
   exercises: WorkoutExercise[];
 }
 
@@ -306,6 +309,30 @@ export interface WorkoutTemplate {
   notes?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface RankingGroup {
+  id: string;
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  active: boolean;
+  studentIds: string[];
+  bannerUrl?: string;
+  reward?: string;
+  createdAt: string;
+}
+
+export interface StudentLeaderboardEntry {
+  studentId: string;
+  studentName: string;
+  avatarUrl?: string;
+  workoutsCompleted: number;
+  adherencePercentage: number;
+  currentStreak: number;
+  score: number;
+  rank: number;
 }
 
 export * from './anamnesis';

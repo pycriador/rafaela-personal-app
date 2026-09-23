@@ -21,6 +21,8 @@ export const initialStudents: Student[] = [
     lastActive: 'Hoje',
     status: 'Ativo',
     adherencePercentage: 96,
+    hasActivePlan: true,
+    planExpiresAt: '2026-10-30',
   },
   {
     id: 'student-joao',
@@ -42,6 +44,8 @@ export const initialStudents: Student[] = [
     lastActive: 'Ontem',
     status: 'Atenção',
     adherencePercentage: 75,
+    hasActivePlan: true,
+    planExpiresAt: '2026-09-28',
   },
   {
     id: 'student-carlos',
@@ -63,6 +67,8 @@ export const initialStudents: Student[] = [
     lastActive: 'Há 2 dias',
     status: 'Ativo',
     adherencePercentage: 88,
+    hasActivePlan: false,
+    planExpiresAt: undefined,
   },
   {
     id: 'student-ana',
@@ -84,6 +90,8 @@ export const initialStudents: Student[] = [
     lastActive: 'Hoje',
     status: 'Ativo',
     adherencePercentage: 92,
+    hasActivePlan: true,
+    planExpiresAt: '2026-09-20',
   },
   {
     id: 'student-fernanda',
@@ -105,5 +113,7 @@ export const initialStudents: Student[] = [
     lastActive: 'Hoje',
     status: 'Ativo',
     adherencePercentage: 98,
+    hasActivePlan: true,
+    planExpiresAt: '2026-11-15',
   },
 ];

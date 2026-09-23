@@ -42,6 +42,7 @@ export const STORAGE_KEYS = {
   AI_PROPOSALS: 'rafaela_app_ai_proposals_v1',
   AI_REQUESTS: 'rafaela_app_ai_requests_v1',
   AI_STUDENT_CONSENTS: 'rafaela_app_ai_student_consents_v1',
+  RANKING_GROUPS: 'rafaela_app_ranking_groups_v1',
 };
 
 /**
