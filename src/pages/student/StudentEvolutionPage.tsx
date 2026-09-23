@@ -107,75 +107,78 @@ export const StudentEvolutionPage: React.FC = () => {
         />
       </div>
 
-      {/* Gráfico de Cargas ao longo do tempo */}
-      <Card className="p-5">
-        <CardHeader className="p-0 pb-3">
-          <CardTitle className="text-sm">Evolução de Cargas (kg) por Sessão</CardTitle>
-          <p className="text-xs text-slate-500">
-            Acompanhamento de sobrecarga progressiva nos exercícios principais
-          </p>
-        </CardHeader>
-        <div className="h-56 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={progressionData}>
-              <defs>
-                <linearGradient id="supinoGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-              <XAxis dataKey="treino" stroke="#888888" fontSize={10} />
-              <YAxis stroke="#888888" fontSize={10} unit="kg" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#131b2a',
-                  borderRadius: '12px',
-                  borderColor: '#232e45',
-                  fontSize: '12px',
-                  color: '#fff',
-                }}
-              />
-              <Area
-                type="monotone"
-                dataKey="supino"
-                name="Supino Máquina"
-                stroke="#10b981"
-                strokeWidth={3}
-                fillOpacity={1}
-                fill="url(#supinoGrad)"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
+      {/* Gráficos em Grid no Desktop */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Gráfico de Cargas ao longo do tempo */}
+        <Card className="p-5">
+          <CardHeader className="p-0 pb-3">
+            <CardTitle className="text-sm">Evolução de Cargas (kg) por Sessão</CardTitle>
+            <p className="text-xs text-slate-500">
+              Acompanhamento de sobrecarga progressiva nos exercícios principais
+            </p>
+          </CardHeader>
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={progressionData}>
+                <defs>
+                  <linearGradient id="supinoGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+                <XAxis dataKey="treino" stroke="#888888" fontSize={10} />
+                <YAxis stroke="#888888" fontSize={10} unit="kg" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#131b2a',
+                    borderRadius: '12px',
+                    borderColor: '#232e45',
+                    fontSize: '12px',
+                    color: '#fff',
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="supino"
+                  name="Supino Máquina"
+                  stroke="#10b981"
+                  strokeWidth={3}
+                  fillOpacity={1}
+                  fill="url(#supinoGrad)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
 
-      {/* Volume semanal */}
-      <Card className="p-5">
-        <CardHeader className="p-0 pb-3">
-          <CardTitle className="text-sm">Volume Total Movimentado por Semana (kg)</CardTitle>
-          <p className="text-xs text-slate-500">Tonelagem acumulada</p>
-        </CardHeader>
-        <div className="h-48 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={weeklyVolume}>
-              <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-              <XAxis dataKey="semana" stroke="#888888" fontSize={10} />
-              <YAxis stroke="#888888" fontSize={10} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#131b2a',
-                  borderRadius: '12px',
-                  borderColor: '#232e45',
-                  fontSize: '12px',
-                  color: '#fff',
-                }}
-              />
-              <Bar dataKey="kg" name="Kg Levantados" fill="#06b6d4" radius={[6, 6, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
+        {/* Volume semanal */}
+        <Card className="p-5">
+          <CardHeader className="p-0 pb-3">
+            <CardTitle className="text-sm">Volume Total Movimentado por Semana (kg)</CardTitle>
+            <p className="text-xs text-slate-500">Tonelagem acumulada</p>
+          </CardHeader>
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={weeklyVolume}>
+                <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
+                <XAxis dataKey="semana" stroke="#888888" fontSize={10} />
+                <YAxis stroke="#888888" fontSize={10} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#131b2a',
+                    borderRadius: '12px',
+                    borderColor: '#232e45',
+                    fontSize: '12px',
+                    color: '#fff',
+                  }}
+                />
+                <Bar dataKey="kg" name="Kg Levantados" fill="#06b6d4" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };

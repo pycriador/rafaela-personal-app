@@ -389,32 +389,35 @@ export const StudentActiveWorkoutPage: React.FC = () => {
   const totalExercisesCount = exercisesList.length;
 
   return (
-    <div className="space-y-4 max-w-lg mx-auto">
+    <div className="space-y-5 max-w-6xl xl:max-w-7xl mx-auto w-full">
       {/* Top Bar: Progress & Exercise Step (Section 20) */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3 bg-white dark:bg-dark-card p-3 rounded-2xl border border-slate-200/80 dark:border-dark-border shadow-xs">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => navigate('/student/dashboard')}
           leftIcon={<ChevronLeft className="w-4 h-4" />}
-          className="text-xs"
+          className="text-xs font-bold cursor-pointer"
         >
           Sair
         </Button>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs font-black px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-500 uppercase tracking-wider">
+          <span className="text-xs font-black px-3.5 py-1.5 rounded-xl bg-emerald-500/15 text-emerald-500 uppercase tracking-wider">
             Exercício {currentIndex + 1} de {totalExercisesCount}
+          </span>
+          <span className="hidden sm:inline text-xs font-bold text-slate-500 dark:text-dark-muted">
+            • {workoutDay.name}
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setChatModalOpen(true)}
             leftIcon={<MessageSquare className="w-3.5 h-3.5 text-amber-500" />}
-            className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:bg-amber-500/10"
+            className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 cursor-pointer"
             title="Tirar dúvida sobre este treino com a Rafaela"
           >
             Dúvida
@@ -424,273 +427,283 @@ export const StudentActiveWorkoutPage: React.FC = () => {
             variant="secondary"
             size="sm"
             onClick={() => setFinishModalOpen(true)}
-            className="text-xs font-bold"
+            className="text-xs font-bold cursor-pointer"
           >
-            Finalizar
+            Finalizar Treino
           </Button>
         </div>
       </div>
 
-      {/* Main Exercise Card (Mobile-First, Big Buttons, Section 20, 45) */}
-      <Card className="p-5 overflow-hidden space-y-4 shadow-lg border-emerald-500/30">
-        {/* Exercise Mini Video Player & Cartoon Animation */}
-        <div className="rounded-2xl overflow-hidden bg-slate-900 border border-slate-800">
-          <ExerciseFramePlayer
-            compact
-            frames={currentExerciseData.videoFrames}
-            fallbackImage={currentExerciseData.imageUrl}
-            title={currentExerciseData.name}
-            className="h-48 sm:h-56 w-full"
-          />
-          <div className="p-3 bg-slate-950/80 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <div className="flex items-center gap-2 mb-0.5">
-                <Badge variant="brand" size="sm">
-                  {currentExerciseData.category}
-                </Badge>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/10 text-slate-300 capitalize">
-                  {currentExerciseData.equipment}
-                </span>
+      {/* Main Responsive Grid: 2 columns on desktop (Media on left, controls on right) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Left Column: Player, Video, Details and Flexibility Options */}
+        <div className="lg:col-span-6 space-y-4">
+          <Card className="p-5 overflow-hidden space-y-4 shadow-lg border-emerald-500/30">
+            {/* Exercise Mini Video Player & Cartoon Animation */}
+            <div className="rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 shadow-inner">
+              <ExerciseFramePlayer
+                compact
+                frames={currentExerciseData.videoFrames}
+                fallbackImage={currentExerciseData.imageUrl}
+                title={currentExerciseData.name}
+                className="h-56 sm:h-72 w-full"
+              />
+              <div className="p-3.5 bg-slate-950/80 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge variant="brand" size="sm">
+                      {currentExerciseData.category}
+                    </Badge>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/10 text-slate-300 capitalize">
+                      {currentExerciseData.equipment}
+                    </span>
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-black text-white leading-tight uppercase tracking-tight">
+                    {currentExerciseData.name}
+                  </h2>
+                </div>
+                {currentExerciseData.instructions && (
+                  <p className="text-xs text-slate-400 max-w-xs sm:text-right italic">
+                    &ldquo;{currentExerciseData.instructions}&rdquo;
+                  </p>
+                )}
               </div>
-              <h2 className="text-lg sm:text-xl font-black text-white leading-tight uppercase tracking-tight">
-                {currentExerciseData.name}
-              </h2>
             </div>
-            {currentExerciseData.instructions && (
-              <p className="text-[11px] text-slate-400 max-w-xs sm:text-right line-clamp-2 italic">
-                &ldquo;{currentExerciseData.instructions}&rdquo;
-              </p>
-            )}
-          </div>
-        </div>
 
-        {/* Prescrição da Rafaela (Section 2: Prescrição em Destaque) */}
-        <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
-          <div>
-            <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">
-              Prescrito pela Rafaela
-            </span>
-            <div className="flex items-baseline gap-2 mt-0.5">
-              <span className="text-base font-black text-slate-900 dark:text-white">
-                {currentWorkoutExercise.sets} séries × {currentWorkoutExercise.reps} reps
-              </span>
-              <span className="text-xs font-mono font-bold text-emerald-500">
-                {currentWorkoutExercise.weight} kg
-              </span>
-            </div>
-            {currentWorkoutExercise.notes && (
-              <p className="text-[11px] text-slate-600 dark:text-slate-300 italic mt-0.5">
-                &ldquo;{currentWorkoutExercise.notes}&rdquo;
-              </p>
-            )}
-          </div>
-          <div className="text-right shrink-0">
-            <span className="text-[10px] text-slate-400 block">DESCANSO</span>
-            <span className="text-sm font-black text-slate-700 dark:text-slate-200 font-mono">
-              {currentWorkoutExercise.restSeconds}s
-            </span>
-          </div>
-        </div>
+            {/* Flexibility Actions Buttons (Section 17, 21, 23, 24) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+              {currentWorkoutExercise.allowWeightChange && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setTempWeightInput(currentWeight);
+                    setWeightModalOpen(true);
+                  }}
+                  className="p-3 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-emerald-500 text-slate-800 dark:text-slate-200 text-xs font-bold flex flex-col items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <Dumbbell className="w-4 h-4 text-emerald-500" />
+                  <span>Alterar Carga</span>
+                </button>
+              )}
 
-        {/* Flexibility Actions Buttons (Section 17, 21, 23, 24) */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {currentWorkoutExercise.allowWeightChange && (
-            <button
-              type="button"
-              onClick={() => {
-                setTempWeightInput(currentWeight);
-                setWeightModalOpen(true);
-              }}
-              className="p-2.5 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-emerald-500 text-slate-800 dark:text-slate-200 text-xs font-bold flex flex-col items-center gap-1 transition-colors cursor-pointer"
-            >
-              <Dumbbell className="w-4 h-4 text-emerald-500" />
-              <span>Alterar Carga</span>
-            </button>
-          )}
+              {currentWorkoutExercise.allowSubstitution && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (allowedAlternatives.length === 0) {
+                      toastError('Nenhuma alternativa autorizada cadastrada para este exercício.');
+                      return;
+                    }
+                    setSelectedAlternativeId(allowedAlternatives[0].id);
+                    setSubModalOpen(true);
+                  }}
+                  className="p-3 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-cyan-500 text-slate-800 dark:text-slate-200 text-xs font-bold flex flex-col items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <ArrowRightLeft className="w-4 h-4 text-cyan-500" />
+                  <span>Substituir</span>
+                </button>
+              )}
 
-          {currentWorkoutExercise.allowSubstitution && (
-            <button
-              type="button"
-              onClick={() => {
-                if (allowedAlternatives.length === 0) {
-                  toastError('Nenhuma alternativa autorizada cadastrada para este exercício.');
-                  return;
-                }
-                setSelectedAlternativeId(allowedAlternatives[0].id);
-                setSubModalOpen(true);
-              }}
-              className="p-2.5 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-cyan-500 text-slate-800 dark:text-slate-200 text-xs font-bold flex flex-col items-center gap-1 transition-colors cursor-pointer"
-            >
-              <ArrowRightLeft className="w-4 h-4 text-cyan-500" />
-              <span>Substituir</span>
-            </button>
-          )}
+              {currentWorkoutExercise.allowSkip && (
+                <button
+                  type="button"
+                  onClick={() => setSkipModalOpen(true)}
+                  className="p-3 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-rose-500 text-slate-800 dark:text-slate-200 text-xs font-bold flex flex-col items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <AlertTriangle className="w-4 h-4 text-rose-500" />
+                  <span>Pular</span>
+                </button>
+              )}
 
-          {currentWorkoutExercise.allowSkip && (
-            <button
-              type="button"
-              onClick={() => setSkipModalOpen(true)}
-              className="p-2.5 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-rose-500 text-slate-800 dark:text-slate-200 text-xs font-bold flex flex-col items-center gap-1 transition-colors cursor-pointer"
-            >
-              <AlertTriangle className="w-4 h-4 text-rose-500" />
-              <span>Pular</span>
-            </button>
-          )}
-
-          <button
-            type="button"
-            onClick={() => setChatModalOpen(true)}
-            className="p-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:border-amber-500 text-amber-700 dark:text-amber-300 text-xs font-bold flex flex-col items-center gap-1 transition-colors cursor-pointer"
-            title="Tirar dúvida técnica com a Rafaela sobre este exercício"
-          >
-            <HelpCircle className="w-4 h-4 text-amber-500" />
-            <span>Tirar Dúvida</span>
-          </button>
-        </div>
-
-        {/* Interactive Set Logger (Section 20: Números Grandes, Registro Rápido) */}
-        {!isCurrentExerciseSkipped ? (
-          <div className="space-y-4 pt-2 border-t border-slate-100 dark:border-dark-border/60">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-extrabold text-slate-700 dark:text-slate-300">
-                Série {currentExerciseSets.length + 1} de {currentWorkoutExercise.sets}
-              </span>
               <button
-                onClick={() => setIsTimerOpen(true)}
-                className="flex items-center gap-1 text-xs text-emerald-500 font-bold"
+                type="button"
+                onClick={() => setChatModalOpen(true)}
+                className="p-3 rounded-xl border border-amber-500/30 bg-amber-500/10 hover:border-amber-500 text-amber-700 dark:text-amber-300 text-xs font-bold flex flex-col items-center gap-1.5 transition-colors cursor-pointer"
+                title="Tirar dúvida técnica com a Rafaela sobre este exercício"
               >
-                <Clock className="w-3.5 h-3.5" />
-                Cronômetro
+                <HelpCircle className="w-4 h-4 text-amber-500" />
+                <span>Tirar Dúvida</span>
               </button>
             </div>
+          </Card>
+        </div>
 
-            {/* Big inputs for Weight and Reps */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="p-3 rounded-2xl bg-slate-100 dark:bg-dark-cardElevated text-center space-y-1">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                  Carga (kg)
+        {/* Right Column: Prescrição, Registro de Carga/Reps e Navegação */}
+        <div className="lg:col-span-6 space-y-4">
+          <Card className="p-5 overflow-hidden space-y-4 shadow-lg border-emerald-500/20">
+            {/* Prescrição da Rafaela (Section 2: Prescrição em Destaque) */}
+            <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">
+                  Prescrito pela Rafaela
                 </span>
-                <div className="flex items-center justify-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentWeight((prev) => Math.max(0, prev - 2))}
-                    className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 font-bold text-lg"
-                  >
-                    -
-                  </button>
-                  <span className="text-3xl font-black font-mono text-slate-900 dark:text-white">
-                    {currentWeight}
+                <div className="flex items-baseline gap-2 mt-0.5">
+                  <span className="text-lg font-black text-slate-900 dark:text-white">
+                    {currentWorkoutExercise.sets} séries × {currentWorkoutExercise.reps} reps
                   </span>
-                  <button
-                    type="button"
-                    onClick={() => setCurrentWeight((prev) => prev + 2)}
-                    className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 font-bold text-lg"
-                  >
-                    +
-                  </button>
+                  <span className="text-sm font-mono font-bold text-emerald-500">
+                    {currentWorkoutExercise.weight} kg
+                  </span>
                 </div>
+                {currentWorkoutExercise.notes && (
+                  <p className="text-xs text-slate-600 dark:text-slate-300 italic mt-0.5">
+                    &ldquo;{currentWorkoutExercise.notes}&rdquo;
+                  </p>
+                )}
               </div>
-
-              <div className="p-3 rounded-2xl bg-slate-100 dark:bg-dark-cardElevated text-center space-y-1">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                  Repetições
+              <div className="text-right shrink-0">
+                <span className="text-[10px] text-slate-400 block font-bold">DESCANSO</span>
+                <span className="text-base font-black text-slate-700 dark:text-slate-200 font-mono">
+                  {currentWorkoutExercise.restSeconds}s
                 </span>
-                <div className="flex items-center justify-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentReps((prev) => Math.max(1, prev - 1))}
-                    className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 font-bold text-lg"
-                  >
-                    -
-                  </button>
-                  <span className="text-3xl font-black font-mono text-slate-900 dark:text-white">
-                    {currentReps}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setCurrentReps((prev) => prev + 1)}
-                    className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 font-bold text-lg"
-                  >
-                    +
-                  </button>
-                </div>
               </div>
             </div>
 
-            {/* Big Action Button (Section 20) */}
+            {/* Interactive Set Logger (Section 20: Números Grandes, Registro Rápido) */}
+            {!isCurrentExerciseSkipped ? (
+              <div className="space-y-4 pt-2 border-t border-slate-100 dark:border-dark-border/60">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-extrabold text-slate-700 dark:text-slate-300">
+                    Série {currentExerciseSets.length + 1} de {currentWorkoutExercise.sets}
+                  </span>
+                  <button
+                    onClick={() => setIsTimerOpen(true)}
+                    className="flex items-center gap-1 text-xs text-emerald-500 font-bold cursor-pointer"
+                  >
+                    <Clock className="w-3.5 h-3.5" />
+                    Cronômetro
+                  </button>
+                </div>
+
+                {/* Big inputs for Weight and Reps */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3.5 rounded-2xl bg-slate-100 dark:bg-dark-cardElevated text-center space-y-1">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Carga (kg)
+                    </span>
+                    <div className="flex items-center justify-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setCurrentWeight((prev) => Math.max(0, prev - 2))}
+                        className="w-9 h-9 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 font-bold text-lg cursor-pointer"
+                      >
+                        -
+                      </button>
+                      <span className="text-3xl font-black font-mono text-slate-900 dark:text-white">
+                        {currentWeight}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setCurrentWeight((prev) => prev + 2)}
+                        className="w-9 h-9 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 font-bold text-lg cursor-pointer"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="p-3.5 rounded-2xl bg-slate-100 dark:bg-dark-cardElevated text-center space-y-1">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      Repetições
+                    </span>
+                    <div className="flex items-center justify-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setCurrentReps((prev) => Math.max(1, prev - 1))}
+                        className="w-9 h-9 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 font-bold text-lg cursor-pointer"
+                      >
+                        -
+                      </button>
+                      <span className="text-3xl font-black font-mono text-slate-900 dark:text-white">
+                        {currentReps}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setCurrentReps((prev) => prev + 1)}
+                        className="w-9 h-9 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 font-bold text-lg cursor-pointer"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Big Action Button (Section 20) */}
+                <Button
+                  variant="primary"
+                  size="xl"
+                  fullWidth
+                  onClick={handleLogSet}
+                  leftIcon={<Check className="w-6 h-6 stroke-[3]" />}
+                  className="text-base font-black py-4 shadow-xl shadow-emerald-500/25 cursor-pointer"
+                >
+                  Registrar Série {currentExerciseSets.length + 1}
+                </Button>
+              </div>
+            ) : (
+              <div className="p-4 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-center space-y-1">
+                <span className="text-xs font-bold text-rose-500 uppercase">
+                  Exercício Pulado
+                </span>
+                <p className="text-xs text-slate-600 dark:text-slate-300">
+                  Você optou por pular este exercício.
+                </p>
+              </div>
+            )}
+
+            {/* Recorded Sets List (Section 20: Série 1, Série 2, etc.) */}
+            {currentExerciseSets.length > 0 && (
+              <div className="space-y-1.5 pt-3 border-t border-slate-100 dark:border-dark-border/60">
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+                  Séries Registradas nesta sessão:
+                </span>
+                <div className="space-y-1 font-mono text-xs">
+                  {currentExerciseSets.map((s) => (
+                    <div
+                      key={s.setIndex}
+                      className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-dark-cardElevated/50"
+                    >
+                      <span className="font-bold text-slate-700 dark:text-slate-300">
+                        Série {s.setIndex}
+                      </span>
+                      <span className="text-emerald-500 font-bold">
+                        {s.actualWeight} kg × {s.actualReps} reps
+                      </span>
+                      <span className="text-[10px] text-slate-400">
+                        {new Date(s.completedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </Card>
+
+          {/* Navigation between exercises */}
+          <div className="flex items-center justify-between gap-3 pt-1">
             <Button
-              variant="primary"
-              size="xl"
-              fullWidth
-              onClick={handleLogSet}
-              leftIcon={<Check className="w-6 h-6 stroke-[3]" />}
-              className="text-base font-black py-4 shadow-xl shadow-emerald-500/25"
+              variant="secondary"
+              size="md"
+              onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
+              disabled={currentIndex === 0}
+              leftIcon={<ChevronLeft className="w-4 h-4" />}
+              className="flex-1 cursor-pointer"
             >
-              Registrar Série {currentExerciseSets.length + 1}
+              Anterior
+            </Button>
+
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => setCurrentIndex((prev) => Math.min(exercisesList.length - 1, prev + 1))}
+              disabled={currentIndex === exercisesList.length - 1}
+              rightIcon={<ChevronRight className="w-4 h-4" />}
+              className="flex-1 cursor-pointer"
+            >
+              Próximo
             </Button>
           </div>
-        ) : (
-          <div className="p-4 rounded-2xl bg-rose-500/15 border border-rose-500/30 text-center space-y-1">
-            <span className="text-xs font-bold text-rose-500 uppercase">
-              Exercício Pulado
-            </span>
-            <p className="text-xs text-slate-600 dark:text-slate-300">
-              Você optou por pular este exercício.
-            </p>
-          </div>
-        )}
-
-        {/* Recorded Sets List (Section 20: Série 1, Série 2, etc.) */}
-        {currentExerciseSets.length > 0 && (
-          <div className="space-y-1.5 pt-3 border-t border-slate-100 dark:border-dark-border/60">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-              Séries Registradas nesta sessão:
-            </span>
-            <div className="space-y-1 font-mono text-xs">
-              {currentExerciseSets.map((s) => (
-                <div
-                  key={s.setIndex}
-                  className="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-dark-cardElevated/50"
-                >
-                  <span className="font-bold text-slate-700 dark:text-slate-300">
-                    Série {s.setIndex}
-                  </span>
-                  <span className="text-emerald-500 font-bold">
-                    {s.actualWeight} kg × {s.actualReps} reps
-                  </span>
-                  <span className="text-[10px] text-slate-400">
-                    {new Date(s.completedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </Card>
-
-      {/* Navigation between exercises */}
-      <div className="flex items-center justify-between gap-3 pt-2">
-        <Button
-          variant="secondary"
-          size="md"
-          onClick={() => setCurrentIndex((prev) => Math.max(0, prev - 1))}
-          disabled={currentIndex === 0}
-          leftIcon={<ChevronLeft className="w-4 h-4" />}
-          className="flex-1"
-        >
-          Anterior
-        </Button>
-
-        <Button
-          variant="secondary"
-          size="md"
-          onClick={() => setCurrentIndex((prev) => Math.min(exercisesList.length - 1, prev + 1))}
-          disabled={currentIndex === exercisesList.length - 1}
-          rightIcon={<ChevronRight className="w-4 h-4" />}
-          className="flex-1"
-        >
-          Próximo
-        </Button>
+        </div>
       </div>
 
       {/* MODAL 1: Alterar Carga (Section 21) */}

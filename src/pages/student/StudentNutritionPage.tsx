@@ -50,12 +50,12 @@ export const StudentNutritionPage: React.FC = () => {
       </div>
 
       {nutrition ? (
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {nutrition.meals.map((meal) => (
             <Card key={meal.id} className="p-4 space-y-3">
               <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-dark-border/60">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                   <h3 className="text-sm font-bold text-slate-900 dark:text-white">
                     {meal.name}
                   </h3>

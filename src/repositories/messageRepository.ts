@@ -2,98 +2,23 @@ import { StudentMessage, MessageCategory } from '../types';
 import { getItem, setItem, STORAGE_KEYS, isSimulationModeActive } from './storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
-export const initialStudentMessages: StudentMessage[] = [
-  {
-    id: 'msg-1',
-    studentId: 'student-mariana',
-    senderId: 'student-mariana',
-    senderName: 'Mariana Silva',
-    senderRole: 'student',
-    content: 'Oi Rafaela! Consegui subir a carga no Supino Máquina hoje para 32kg (+2kg). Senti um estímulo muito bom e sem dor no ombro!',
-    category: 'weight_change',
-    metadata: {
-      exerciseName: 'Supino Máquina',
-      weightBefore: 30,
-      weightAfter: 32,
-    },
-    timestamp: new Date(Date.now() - 3600 * 1000 * 24).toISOString(),
-    read: true,
-  },
-  {
-    id: 'msg-2',
-    studentId: 'student-mariana',
-    senderId: 'user-rafaela',
-    senderName: 'Rafaela Personal',
-    senderRole: 'personal',
-    content: 'Sensacional Mariana! Vi aqui no painel a sua alteração. A cadência e a postura continuaram corretas? Na próxima semana podemos manter 32kg e focar em 10 reps cravadas em todas as 4 séries!',
-    category: 'assessment',
-    timestamp: new Date(Date.now() - 3600 * 1000 * 22).toISOString(),
-    read: true,
-  },
-  {
-    id: 'msg-3',
-    studentId: 'student-mariana',
-    senderId: 'student-mariana',
-    senderName: 'Mariana Silva',
-    senderRole: 'student',
-    content: 'Sim! Desci controlando em 2 segundos e descansei 60s certinho. Também precisei trocar o Tríceps Testa pelo Tríceps Francês porque o banco estava ocupado, mas executei com 8kg com boa pegada.',
-    category: 'exercise_change',
-    metadata: {
-      exerciseName: 'Tríceps Francês com Halter',
-    },
-    timestamp: new Date(Date.now() - 3600 * 1000 * 18).toISOString(),
-    read: true,
-  },
-  {
-    id: 'msg-4',
-    studentId: 'student-mariana',
-    senderId: 'user-rafaela',
-    senderName: 'Rafaela Personal',
-    senderRole: 'personal',
-    content: 'Perfeita a substituição! O Tríceps Francês é exatamente a alternativa recomendada na sua ficha. Continue firme com essa constância!',
-    category: 'motivation',
-    timestamp: new Date(Date.now() - 3600 * 1000 * 15).toISOString(),
-    read: true,
-  },
-  {
-    id: 'msg-joao-1',
-    studentId: 'student-joao',
-    senderId: 'user-rafaela',
-    senderName: 'Rafaela Personal',
-    senderRole: 'personal',
-    content: 'Olá João! Montei seu novo Circuito Funcional com foco em queima e fortalecimento superior. Note que deixei flexibilidade total para você ajustar as cargas caso sinta necessidade.',
-    category: 'assessment',
-    timestamp: new Date(Date.now() - 3600 * 1000 * 48).toISOString(),
-    read: true,
-  },
-  {
-    id: 'msg-joao-2',
-    studentId: 'student-joao',
-    senderId: 'student-joao',
-    senderName: 'João Pedro Santos',
-    senderRole: 'student',
-    content: 'Oi Rafaela! Executei o Treino A ontem. Consegui manter 25kg no primeiro exercício, mas no final do circuito o cansaço pesou bastante. O descanso de 45 segundos tá bem intenso!',
-    category: 'question',
-    metadata: {
-      exerciseName: 'Supino Máquina Sentado',
-      weightBefore: 25,
-      weightAfter: 25,
-    },
-    timestamp: new Date(Date.now() - 3600 * 1000 * 20).toISOString(),
-    read: true,
-  },
-  {
-    id: 'msg-joao-3',
-    studentId: 'student-joao',
-    senderId: 'user-rafaela',
-    senderName: 'Rafaela Personal',
-    senderRole: 'personal',
-    content: 'Excelente feedback, João! Isso é normal nas primeiras duas semanas desse ciclo metabólico. Se sentir muita fadiga respiratória, pode estender o descanso para até 60 segundos entre as passagens sem problemas!',
-    category: 'motivation',
-    timestamp: new Date(Date.now() - 3600 * 1000 * 12).toISOString(),
-    read: true,
-  },
-];
+export const initialStudentMessages: StudentMessage[] = [];
+
+const LEGACY_MOCK_IDS = new Set([
+  'msg-1',
+  'msg-2',
+  'msg-3',
+  'msg-4',
+  'msg-joao-1',
+  'msg-joao-2',
+  'msg-joao-3',
+]);
+
+function cleanRealMessages(messages: StudentMessage[]): StudentMessage[] {
+  return (messages || []).filter(
+    (m) => !LEGACY_MOCK_IDS.has(m.id) && !m.id.startsWith('msg-joao-')
+  );
+}
 
 function normalizeStudentKey(id: string): string {
   return id.replace(/^(student-|user-)/, '');
@@ -147,7 +72,11 @@ export class SupabaseMessageRepository implements IMessageRepository {
       }
     }
 
-    const all = getItem<StudentMessage[]>(STORAGE_KEYS.STUDENT_MESSAGES, initialStudentMessages);
+    const raw = getItem<StudentMessage[]>(STORAGE_KEYS.STUDENT_MESSAGES, []);
+    const all = cleanRealMessages(raw);
+    if (all.length !== raw.length) {
+      setItem(STORAGE_KEYS.STUDENT_MESSAGES, all);
+    }
     return all
       .filter((m) => matchesStudentId(m.studentId, studentId))
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
@@ -180,7 +109,7 @@ export class SupabaseMessageRepository implements IMessageRepository {
       }
     }
 
-    const all = getItem<StudentMessage[]>(STORAGE_KEYS.STUDENT_MESSAGES, initialStudentMessages);
+    const all = cleanRealMessages(getItem<StudentMessage[]>(STORAGE_KEYS.STUDENT_MESSAGES, []));
     all.push(newMessage);
     setItem(STORAGE_KEYS.STUDENT_MESSAGES, all);
 
@@ -188,7 +117,7 @@ export class SupabaseMessageRepository implements IMessageRepository {
   }
 
   async markAsRead(studentId: string, readerRole: 'personal' | 'student'): Promise<void> {
-    const all = getItem<StudentMessage[]>(STORAGE_KEYS.STUDENT_MESSAGES, initialStudentMessages);
+    const all = cleanRealMessages(getItem<StudentMessage[]>(STORAGE_KEYS.STUDENT_MESSAGES, []));
     let modified = false;
 
     all.forEach((m) => {
@@ -204,7 +133,7 @@ export class SupabaseMessageRepository implements IMessageRepository {
   }
 
   async deleteMessage(id: string): Promise<boolean> {
-    const all = getItem<StudentMessage[]>(STORAGE_KEYS.STUDENT_MESSAGES, initialStudentMessages);
+    const all = cleanRealMessages(getItem<StudentMessage[]>(STORAGE_KEYS.STUDENT_MESSAGES, []));
     const filtered = all.filter((m) => m.id !== id);
     setItem(STORAGE_KEYS.STUDENT_MESSAGES, filtered);
     return true;

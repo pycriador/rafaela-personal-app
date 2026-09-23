@@ -62,56 +62,64 @@ export const StudentWorkoutsListPage: React.FC = () => {
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {sortWorkoutDays(plan.days).map((day) => (
-          <Card key={day.id} className="overflow-hidden p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2.5">
-                <span className="px-2.5 py-1 rounded-xl bg-emerald-500 text-white font-black text-xs uppercase">
-                  {day.dayOfWeek}
-                </span>
-                <div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                    {day.name}
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-dark-muted">
-                    {day.muscleFocus}
-                  </p>
+          <Card key={day.id} className="overflow-hidden p-5 flex flex-col justify-between space-y-4 hover:border-emerald-500/40 transition-all shadow-xs">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span className="px-2.5 py-1 rounded-xl bg-emerald-500 text-white font-black text-xs uppercase shrink-0">
+                    {day.dayOfWeek}
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white truncate">
+                      {day.name}
+                    </h3>
+                    <p className="text-xs text-slate-500 dark:text-dark-muted truncate">
+                      {day.muscleFocus}
+                    </p>
+                  </div>
                 </div>
+
+                <Badge variant="neutral" size="sm" className="font-mono text-[10px] shrink-0">
+                  {day.exercises.length} ex
+                </Badge>
               </div>
 
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => navigate(`/student/workout/active/${day.id}`)}
-                leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
-              >
-                Iniciar
-              </Button>
+              {/* List of exercises in this day */}
+              <div className="divide-y divide-slate-100 dark:divide-dark-border/60 bg-slate-50 dark:bg-dark-cardElevated/40 rounded-2xl p-3 max-h-56 overflow-y-auto">
+                {day.exercises.map((item, idx) => {
+                  const ex = exercisesMap[item.exerciseId];
+                  return (
+                    <div key={idx} className="py-2 flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2 min-w-0 pr-2">
+                        <span className="font-mono font-bold text-slate-400">{idx + 1}.</span>
+                        <span className="font-bold text-slate-800 dark:text-slate-200 truncate">
+                          {ex?.name || 'Exercício'}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5 shrink-0 font-mono text-[11px]">
+                        <span className="font-semibold text-emerald-500">
+                          {item.sets}×{item.reps}
+                        </span>
+                        <span className="text-slate-400">({item.weight}kg)</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
-            {/* List of exercises in this day */}
-            <div className="divide-y divide-slate-100 dark:divide-dark-border/60 bg-slate-50 dark:bg-dark-cardElevated/40 rounded-2xl p-3">
-              {day.exercises.map((item, idx) => {
-                const ex = exercisesMap[item.exerciseId];
-                return (
-                  <div key={idx} className="py-2.5 flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2 min-w-0 pr-2">
-                      <span className="font-mono font-bold text-slate-400">{idx + 1}.</span>
-                      <span className="font-bold text-slate-800 dark:text-slate-200 truncate">
-                        {ex?.name || 'Exercício'}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0 font-mono">
-                      <span className="font-semibold text-emerald-500">
-                        {item.sets} × {item.reps}
-                      </span>
-                      <span className="text-slate-400">({item.weight} kg)</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            <Button
+              variant="primary"
+              size="md"
+              fullWidth
+              onClick={() => navigate(`/student/workout/active/${day.id}`)}
+              leftIcon={<Play className="w-3.5 h-3.5 fill-current" />}
+              className="mt-2 font-bold cursor-pointer"
+            >
+              Iniciar Treino
+            </Button>
           </Card>
         ))}
       </div>

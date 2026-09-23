@@ -94,13 +94,13 @@ export const StudentLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-slate-50 dark:bg-dark-bg text-slate-900 dark:text-white flex flex-col pb-32 md:pb-16 w-full transition-colors duration-200">
+    <div className="min-h-screen min-h-[100dvh] bg-slate-50 dark:bg-dark-bg text-slate-900 dark:text-white flex flex-col pb-28 md:pb-8 w-full transition-colors duration-200">
       {/* Sticky Top Section containing Banner & Header */}
       <div className="sticky top-0 z-30 flex flex-col shadow-xs">
         {/* Top Banner when in Simulation Mode */}
         {isSimulationMode && (
-          <div className="bg-gradient-to-r from-amber-500/20 via-amber-500/15 to-emerald-500/15 border-b border-amber-500/40 px-3 sm:px-4 py-2 text-xs backdrop-blur-md">
-            <div className="max-w-4xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="bg-gradient-to-r from-amber-500/20 via-amber-500/15 to-emerald-500/15 border-b border-amber-500/40 px-3 sm:px-6 py-2 text-xs backdrop-blur-md">
+            <div className="max-w-6xl xl:max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-2 min-w-0">
                 <span className="flex h-2 w-2 relative shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
@@ -159,9 +159,10 @@ export const StudentLayout: React.FC = () => {
         )}
 
         {/* Top Header */}
-        <header className="bg-white/85 dark:bg-dark-card/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-dark-border px-4 py-3">
-          <div className="max-w-4xl mx-auto w-full flex items-center justify-between">
-            <div className="flex items-center gap-3 min-w-0">
+        <header className="bg-white/85 dark:bg-dark-card/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-dark-border px-4 sm:px-6 py-2.5">
+          <div className="max-w-6xl xl:max-w-7xl mx-auto w-full flex items-center justify-between gap-4">
+            {/* Student Avatar & Basic Info */}
+            <div className="flex items-center gap-3 min-w-0 shrink-0">
               <img
                 src={user?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
                 alt={user?.name}
@@ -179,13 +180,36 @@ export const StudentLayout: React.FC = () => {
               </div>
             </div>
 
+            {/* Desktop Navigation Menu (Elegant, Responsive, No mobile squeeze) */}
+            <nav className="hidden md:flex items-center gap-1 bg-slate-100/80 dark:bg-dark-cardElevated/70 p-1 rounded-2xl border border-slate-200/60 dark:border-dark-border">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    className={({ isActive }) =>
+                      `flex items-center gap-1.5 py-1.5 px-3 rounded-xl text-xs font-bold transition-all ${
+                        isActive
+                          ? 'bg-white dark:bg-dark-card text-emerald-600 dark:text-emerald-400 shadow-xs'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      }`
+                    }
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{item.name}</span>
+                  </NavLink>
+                );
+              })}
+            </nav>
+
             {/* Right header actions */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 shrink-0">
               {/* Only show Encerrar Teste button if actively simulating in Sandbox */}
               {isSimulationMode && (
                 <button
                   onClick={handleSwitchToPersonal}
-                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 text-xs font-bold transition-colors"
+                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-700 dark:text-amber-300 text-xs font-bold transition-colors cursor-pointer"
                   title="Encerrar teste de simulação e voltar para a visão da Rafaela"
                 >
                   <ArrowLeftRight className="w-3.5 h-3.5" />
@@ -193,44 +217,44 @@ export const StudentLayout: React.FC = () => {
                 </button>
               )}
 
-            <button
-              onClick={toggleTheme}
-              className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors"
-              aria-label="Tema"
-            >
-              {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
-            </button>
+              <button
+                onClick={toggleTheme}
+                className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors cursor-pointer"
+                aria-label="Tema"
+              >
+                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+              </button>
 
-            <button
-              onClick={() => setIsNotifOpen(true)}
-              className="p-2 relative text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors"
-              aria-label="Notificações"
-            >
-              <Bell className="w-4 h-4" />
-              {unreadCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-500 rounded-full ring-2 ring-white dark:ring-dark-card" />
-              )}
-            </button>
+              <button
+                onClick={() => setIsNotifOpen(true)}
+                className="p-2 relative text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors cursor-pointer"
+                aria-label="Notificações"
+              >
+                <Bell className="w-4 h-4" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-500 rounded-full ring-2 ring-white dark:ring-dark-card" />
+                )}
+              </button>
 
-            <button
-              onClick={handleLogout}
-              className="p-2 text-slate-400 hover:text-rose-500 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors"
-              title="Sair"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
+              <button
+                onClick={handleLogout}
+                className="p-2 text-slate-400 hover:text-rose-500 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors cursor-pointer"
+                title="Sair"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
           </div>
-        </div>
-      </header>
-    </div>
+        </header>
+      </div>
 
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-lg md:max-w-4xl mx-auto w-full px-4 pt-4 sm:pt-6 pb-28 sm:pb-16">
+      {/* Main Content Area - Full screen width responsive container */}
+      <main className="flex-1 max-w-6xl xl:max-w-7xl mx-auto w-full px-4 sm:px-6 pt-5 pb-24 md:pb-8">
         <Outlet />
       </main>
 
-      {/* Bottom Navigation - Mobile First (Section 46) */}
-      <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl border-t border-slate-200/80 dark:border-dark-border py-2 px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-2xl">
+      {/* Bottom Navigation - ONLY on mobile screens (Section 46) */}
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-dark-card/95 backdrop-blur-xl border-t border-slate-200/80 dark:border-dark-border py-2 px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] shadow-2xl">
         <div className="max-w-md mx-auto flex items-center justify-around">
           {navItems.map((item) => {
             const Icon = item.icon;
