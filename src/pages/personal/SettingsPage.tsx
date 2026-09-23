@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
@@ -83,9 +84,33 @@ export const SettingsPage: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const { success, info } = useToast();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [loadingStats, setLoadingStats] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
-  const [activeTab, setActiveTab] = useState<'students' | 'backup' | 'system'>('students');
+
+  // Sync activeTab with URL search parameters (?tab=usuarios, ?tab=backup, ?tab=sistema)
+  const rawTab = searchParams.get('tab') || 'usuarios';
+  const activeTab: 'usuarios' | 'backup' | 'sistema' =
+    rawTab === 'backup' || rawTab === 'exportacao' || rawTab === 'backups'
+      ? 'backup'
+      : rawTab === 'sistema' || rawTab === 'system' || rawTab === 'aparencia'
+      ? 'sistema'
+      : 'usuarios';
+
+  const handleTabChange = (newTab: 'usuarios' | 'backup' | 'sistema') => {
+    const next = new URLSearchParams(searchParams);
+    next.set('tab', newTab);
+    if (newTab !== 'usuarios') {
+      next.delete('page');
+      next.delete('search');
+      next.delete('role');
+      next.delete('status');
+      next.delete('level');
+      next.delete('limit');
+    }
+    setSearchParams(next);
+  };
 
   // Table records state for stats
   const [students, setStudents] = useState<Student[]>([]);
@@ -457,27 +482,27 @@ export const SettingsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
+      {/* Navigation Tabs (URL Synced: ?tab=usuarios | ?tab=backup | ?tab=sistema) */}
       <div className="flex items-center gap-2 border-b border-slate-200 dark:border-dark-border pb-1 overflow-x-auto">
         <button
           type="button"
-          onClick={() => setActiveTab('students')}
+          onClick={() => handleTabChange('usuarios')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
-            activeTab === 'students'
+            activeTab === 'usuarios'
               ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
           }`}
         >
           <Users className="w-4 h-4" />
-          <span>Gestão de Alunos & Contas</span>
-          <span className={`text-xs px-2 py-0.5 rounded-full font-bold ml-1 ${activeTab === 'students' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-dark-border text-slate-700 dark:text-slate-300'}`}>
-            {students.length}
+          <span>Gestão de Usuários & Contas</span>
+          <span className={`text-xs px-2 py-0.5 rounded-full font-bold ml-1 ${activeTab === 'usuarios' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-dark-border text-slate-700 dark:text-slate-300'}`}>
+            {users.length || students.length}
           </span>
         </button>
 
         <button
           type="button"
-          onClick={() => setActiveTab('backup')}
+          onClick={() => handleTabChange('backup')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'backup'
               ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
@@ -490,9 +515,9 @@ export const SettingsPage: React.FC = () => {
 
         <button
           type="button"
-          onClick={() => setActiveTab('system')}
+          onClick={() => handleTabChange('sistema')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
-            activeTab === 'system'
+            activeTab === 'sistema'
               ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
           }`}
@@ -502,8 +527,8 @@ export const SettingsPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Tab 1: Student Management (Full CRUD, Photos in Supabase Storage, Passwords, Archive, Delete) */}
-      {activeTab === 'students' && (
+      {/* Tab 1: User & Student Management (Full CRUD, Photos in Supabase Storage, Passwords, Archive, Delete) */}
+      {activeTab === 'usuarios' && (
         <StudentManagerSection />
       )}
 
@@ -742,7 +767,7 @@ export const SettingsPage: React.FC = () => {
       )}
 
       {/* Tab 3: System Appearance & Infrastructure */}
-      {activeTab === 'system' && (
+      {activeTab === 'sistema' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
           {/* Card: Tema Visual */}
           <Card className="p-6 space-y-4">
