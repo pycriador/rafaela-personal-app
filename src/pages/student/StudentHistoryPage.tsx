@@ -68,17 +68,28 @@ export const StudentHistoryPage: React.FC = () => {
     );
   }
 
+  // Se a rota for /student/chat, renderiza a experiência integrada de chat em tela cheia
+  if (isDedicatedChat) {
+    return (
+      <div className="w-full flex flex-col flex-1">
+        <StudentTrainerChatSection
+          student={studentProfile}
+          currentUserId={user?.id || studentProfile.userId || studentProfile.id}
+          currentUserRole="student"
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-            {isDedicatedChat ? 'Bate-Papo com a Rafaela' : 'Comunicação & Histórico'}
+          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+            Histórico de Treinos & Sessões
           </h1>
           <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
-            {isDedicatedChat
-              ? 'Tire dúvidas dos treinos, reporte aumentos de carga e converse em tempo real estilo WhatsApp'
-              : 'Consulte seu histórico de sessões executadas e converse com sua treinadora'}
+            Consulte seu histórico de sessões executadas e feedbacks da treinadora
           </p>
         </div>
 
@@ -87,38 +98,21 @@ export const StudentHistoryPage: React.FC = () => {
           <button
             type="button"
             onClick={() => handleTabChange('chat')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer ${
-              activeSubTab === 'chat'
-                ? 'bg-emerald-500 text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all cursor-pointer"
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            <span>Bate-Papo & Dúvidas</span>
-            <Badge variant="success" size="sm" className="py-0 px-1 text-[9px]">Ativo</Badge>
+            <span>Ir para Bate-Papo</span>
           </button>
           <button
             type="button"
             onClick={() => handleTabChange('sessoes')}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs transition-all cursor-pointer ${
-              activeSubTab === 'sessoes'
-                ? 'bg-emerald-500 text-white shadow-xs'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs bg-emerald-500 text-white shadow-xs transition-all cursor-pointer"
           >
             <History className="w-3.5 h-3.5" />
             <span>Sessões ({sessions.length})</span>
           </button>
         </div>
       </div>
-
-      {activeSubTab === 'chat' && (
-        <StudentTrainerChatSection
-          student={studentProfile}
-          currentUserId={user?.id || studentProfile.userId || studentProfile.id}
-          currentUserRole="student"
-        />
-      )}
 
       {activeSubTab === 'sessoes' &&
         (sessions.length === 0 ? (

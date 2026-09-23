@@ -14,11 +14,8 @@ import {
   RotateCw,
   Reply,
   X,
-  Smile,
   ShieldCheck,
 } from 'lucide-react';
-import { Card } from '../ui/Card';
-import { Badge } from '../ui/Badge';
 import { Student, StudentMessage, MessageCategory } from '../../types';
 import { messageRepository } from '../../repositories/messageRepository';
 import { useToast } from '../../context/ToastContext';
@@ -230,9 +227,9 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
   });
 
   return (
-    <Card className="border border-slate-200/90 dark:border-dark-border shadow-xl overflow-hidden flex flex-col h-[740px] max-h-[85vh] rounded-3xl bg-[#efeae2]/40 dark:bg-[#0b141a]/95">
-      {/* 1. WHATSAPP APP BAR (HEADER) */}
-      <div className="py-3 px-4 sm:px-6 border-b border-slate-200/80 dark:border-[#222d34] bg-[#f0f2f5] dark:bg-[#202c33] flex items-center justify-between gap-3 shrink-0 select-none">
+    <div className="flex flex-col w-full flex-1 min-h-[calc(100vh-12rem)] relative">
+      {/* 1. BARRA SUPERIOR INTEGRADA (A PESSOA COM QUEM ESTAMOS CONVERSANDO NO TOPO) */}
+      <div className="sticky top-0 z-20 py-3.5 px-4 sm:px-6 bg-white/95 dark:bg-dark-card/95 backdrop-blur-md border-b border-slate-200/80 dark:border-dark-border/80 rounded-2xl flex items-center justify-between gap-3 shadow-xs">
         <div className="flex items-center gap-3 min-w-0">
           <div className="relative shrink-0">
             <img
@@ -242,26 +239,28 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
                   : (student.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150')
               }
               alt={isStudentViewer ? 'Rafaela Personal' : student.name}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover ring-2 ring-emerald-500/40 shadow-xs"
+              className="w-11 h-11 sm:w-12 sm:h-12 rounded-full object-cover ring-2 ring-emerald-500/40 shadow-xs"
             />
-            <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-2 ring-white dark:ring-[#202c33]" />
+            <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-2 ring-white dark:ring-dark-card" />
           </div>
 
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h2 className="text-sm sm:text-base font-black text-slate-900 dark:text-white truncate">
+              <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate">
                 {isStudentViewer ? 'Rafaela Personal' : student.name}
               </h2>
-              <Badge variant="success" size="sm" className="hidden sm:inline-flex text-[9px] py-0 px-1.5 font-bold">
-                {isStudentViewer ? 'Treinadora' : 'Aluno'}
-              </Badge>
+              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                {isStudentViewer ? 'Treinadora Oficial' : 'Aluno'}
+              </span>
             </div>
             <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold truncate">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>online</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Online agora</span>
               <span className="text-slate-400 dark:text-slate-500">•</span>
-              <span className="text-slate-500 dark:text-slate-400 text-[11px] font-normal truncate">
-                {isStudentViewer ? 'Canal direto para dúvidas e treinos' : 'Acompanhamento individual'}
+              <span className="text-slate-500 dark:text-slate-400 text-xs font-normal truncate">
+                {isStudentViewer
+                  ? 'Canal oficial de dúvidas técnicas, execuções e treinos'
+                  : 'Acompanhamento individual de metas e cargas'}
               </span>
             </div>
           </div>
@@ -273,42 +272,40 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
             <select
               value={activeFilter}
               onChange={(e) => setActiveFilter(e.target.value as any)}
-              className="text-xs font-bold bg-white dark:bg-[#111b21] border border-slate-200 dark:border-[#2a3942] rounded-xl px-2.5 py-1.5 pr-7 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shadow-xs appearance-none"
+              className="text-xs font-bold bg-slate-50 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border rounded-xl px-2.5 py-1.5 pr-7 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shadow-xs appearance-none"
             >
-              <option value="all">Todas ({messages.length})</option>
-              <option value="question">❓ Dúvidas</option>
-              <option value="weight_change">📈 Cargas</option>
-              <option value="exercise_change">🔄 Trocas</option>
+              <option value="all">Todas as mensagens ({messages.length})</option>
+              <option value="question">❓ Dúvidas Técnicas</option>
+              <option value="weight_change">📈 Aumento de Cargas</option>
+              <option value="exercise_change">🔄 Trocas de Exercício</option>
               <option value="assessment">🏆 Avaliações</option>
-              <option value="motivation">✨ Feedback</option>
-              <option value="general">💬 Geral</option>
+              <option value="motivation">✨ Feedback & Motivação</option>
+              <option value="general">💬 Mensagens Gerais</option>
             </select>
             <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
 
           <button
             type="button"
-            title="Atualizar mensagens"
+            title="Atualizar mensagens em tempo real"
             onClick={() => {
               setIsRefreshing(true);
               loadMessages(false);
             }}
-            className="p-2 text-slate-500 dark:text-slate-400 hover:text-emerald-500 hover:bg-white dark:hover:bg-[#111b21] border border-slate-200 dark:border-[#2a3942] rounded-xl transition-all cursor-pointer shadow-xs"
+            className="p-2 text-slate-500 dark:text-slate-400 hover:text-emerald-500 hover:bg-slate-100 dark:hover:bg-dark-cardElevated border border-slate-200 dark:border-dark-border rounded-xl transition-all cursor-pointer shadow-xs"
           >
             <RotateCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-emerald-500' : ''}`} />
           </button>
         </div>
       </div>
 
-      {/* 2. CHAT WALLPAPER & FEED DE MENSAGENS ESTILO WHATSAPP */}
-      <div className="flex-1 p-3 sm:p-5 overflow-y-auto space-y-3 bg-[#efeae2]/50 dark:bg-[#0b141a]/95">
-        {/* Banner de Criptografia e Privacidade estilo WhatsApp */}
-        <div className="flex justify-center my-1 select-none">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 dark:bg-amber-950/20 border border-amber-500/20 text-amber-800 dark:text-amber-300 text-[10px] font-semibold text-center max-w-md shadow-xs">
-            <ShieldCheck className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
-            <span>
-              Mensagens gravadas em tempo real. Canal oficial de dúvidas clínicas e treinos com a treinadora Rafaela.
-            </span>
+      {/* 2. FLUXO NATURAL DE MENSAGENS (SEM CAIXAS OU SCROLLBARS FORÇADAS) */}
+      <div className="flex-1 py-4 sm:py-6 px-1 sm:px-3 space-y-4">
+        {/* Banner Sutil de Privacidade */}
+        <div className="flex justify-center select-none my-1">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-200/50 dark:bg-dark-cardElevated/60 text-slate-500 dark:text-slate-400 text-[11px] font-semibold text-center max-w-md">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+            <span>Canal seguro gravado no banco de dados. Tire suas dúvidas diretamente com a treinadora.</span>
           </div>
         </div>
 
@@ -317,7 +314,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
             <div className="w-8 h-8 border-3 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
           </div>
         ) : filteredMessages.length === 0 ? (
-          <div className="py-16 text-center space-y-3 max-w-sm mx-auto">
+          <div className="py-20 text-center space-y-3 max-w-sm mx-auto">
             <div className="w-14 h-14 rounded-3xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-sm">
               <MessageSquare className="w-7 h-7" />
             </div>
@@ -328,7 +325,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
             </p>
             <p className="text-xs text-slate-500 dark:text-dark-muted leading-relaxed">
               {isStudentViewer
-                ? 'Envie sua primeira dúvida sobre postura, peso ou execuções de exercícios pelo campo abaixo.'
+                ? 'Envie sua primeira dúvida sobre postura, execução ou evolução de cargas pela barra abaixo.'
                 : `Inicie a conversa direta com ${student.name} para alinhar treinos e metas.`}
             </p>
           </div>
@@ -341,7 +338,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
             const categoryInfo = msg.category ? CATEGORY_CONFIG[msg.category] : CATEGORY_CONFIG.general;
             const CategoryIcon = categoryInfo.icon;
 
-            // Agrupamento por data (ex: Hoje, Ontem)
+            // Agrupamento por data (Hoje, Ontem, etc.)
             const prevMsg = filteredMessages[idx - 1];
             const showDateHeader =
               !prevMsg ||
@@ -350,8 +347,8 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
             return (
               <React.Fragment key={msg.id}>
                 {showDateHeader && (
-                  <div className="flex justify-center my-2 select-none">
-                    <span className="px-3 py-0.5 rounded-lg bg-white/90 dark:bg-[#182229] border border-slate-200/60 dark:border-[#222d34] text-[10px] font-bold text-slate-600 dark:text-slate-300 shadow-xs">
+                  <div className="flex justify-center my-3 select-none">
+                    <span className="px-3.5 py-1 rounded-full bg-slate-200/80 dark:bg-dark-cardElevated/90 text-[11px] font-bold text-slate-600 dark:text-slate-300 shadow-2xs">
                       {formatMessageDateGroup(msg.timestamp)}
                     </span>
                   </div>
@@ -359,20 +356,20 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
 
                 <div
                   id={`msg-${msg.id}`}
-                  className={`flex items-end gap-1.5 transition-all duration-300 ${
+                  className={`flex items-end gap-2 transition-all duration-300 ${
                     isMe ? 'justify-end' : 'justify-start'
                   }`}
                 >
-                  {/* BALÃO ESTILO WHATSAPP */}
+                  {/* BALÃO DE MENSAGEM */}
                   <div
-                    className={`relative max-w-[85%] sm:max-w-[72%] p-3 rounded-2xl shadow-xs group transition-shadow ${
+                    className={`relative max-w-[85%] sm:max-w-[70%] p-3.5 rounded-2xl shadow-xs group transition-shadow ${
                       isMe
                         ? 'bg-[#d9fdd3] text-[#111b21] dark:bg-[#005c4b] dark:text-[#e9edef] rounded-tr-xs'
-                        : 'bg-white text-[#111b21] dark:bg-[#202c33] dark:text-[#e9edef] rounded-tl-xs border border-slate-100 dark:border-transparent'
+                        : 'bg-white text-[#111b21] dark:bg-dark-card dark:text-[#e9edef] rounded-tl-xs border border-slate-200/70 dark:border-dark-border/60'
                     }`}
                   >
                     {/* Cabeçalho do Balão (Autor & Categoria) */}
-                    <div className="flex items-center justify-between gap-3 mb-1">
+                    <div className="flex items-center justify-between gap-3 mb-1.5">
                       <span
                         className={`text-[11px] font-extrabold truncate ${
                           isMe
@@ -402,7 +399,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
                     {msg.replyTo && (
                       <div
                         onClick={() => scrollToMessage(msg.replyTo!.messageId)}
-                        className={`mb-2 p-2 rounded-xl border-l-4 cursor-pointer transition-all ${
+                        className={`mb-2 p-2.5 rounded-xl border-l-4 cursor-pointer transition-all ${
                           isMe
                             ? 'border-emerald-600 bg-emerald-600/10 dark:bg-black/20 hover:bg-emerald-600/15'
                             : 'border-emerald-500 bg-slate-100 dark:bg-black/25 hover:bg-slate-200/70'
@@ -442,12 +439,12 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
                     )}
 
                     {/* CONTEÚDO PRINCIPAL DO TEXTO */}
-                    <p className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed break-words select-text">
+                    <p className="text-sm whitespace-pre-wrap leading-relaxed break-words select-text">
                       {msg.content}
                     </p>
 
                     {/* RODAPÉ DO BALÃO: HORA, CHECKMARKS & AÇÕES */}
-                    <div className="flex items-center justify-end gap-2 mt-1 select-none pt-0.5">
+                    <div className="flex items-center justify-end gap-2 mt-1.5 select-none pt-0.5">
                       <span className="text-[10px] text-slate-500 dark:text-slate-400">
                         {new Date(msg.timestamp).toLocaleTimeString([], {
                           hour: '2-digit',
@@ -471,9 +468,9 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
                           type="button"
                           onClick={() => setReplyingToMessage(msg)}
                           className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 text-slate-500 dark:text-slate-300 cursor-pointer transition-colors"
-                          title="Responder a esta mensagem"
+                          title="Responder a esta mensagem específica"
                         >
-                          <Reply className="w-3 h-3" />
+                          <Reply className="w-3.5 h-3.5" />
                         </button>
                         <button
                           type="button"
@@ -481,7 +478,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
                           className="p-1 rounded-md hover:bg-rose-500/20 text-slate-400 hover:text-rose-500 cursor-pointer transition-colors"
                           title="Excluir mensagem"
                         >
-                          <Trash2 className="w-3 h-3" />
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
@@ -494,11 +491,11 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
         <div ref={messagesEndRef} />
       </div>
 
-      {/* 3. BARRA INFERIOR FIXA DE ENTRADA (WHATSAPP INPUT BAR) */}
-      <div className="border-t border-slate-200/80 dark:border-[#222d34] bg-[#f0f2f5] dark:bg-[#202c33] p-2.5 sm:p-3 space-y-2 shrink-0">
-        {/* BANNER DE RESPOSTA ATIVA (ESTILO WHATSAPP) */}
+      {/* 3. BARRA INFERIOR FIXA DE RESPOSTA (STICKY AT BOTTOM) */}
+      <div className="sticky bottom-0 z-20 pt-2.5 pb-3 px-3 sm:px-5 bg-white/95 dark:bg-dark-card/95 backdrop-blur-md border-t border-slate-200/80 dark:border-dark-border/80 rounded-2xl shadow-lg mt-4 space-y-2.5">
+        {/* BANNER DE RESPOSTA ATIVA (QUOTED REPLY DOCKED) */}
         {replyingToMessage && (
-          <div className="flex items-center justify-between gap-3 px-3.5 py-2 rounded-2xl bg-white dark:bg-[#111b21] border-l-4 border-emerald-500 shadow-xs animate-in fade-in slide-in-from-bottom-1 duration-200">
+          <div className="flex items-center justify-between gap-3 px-3.5 py-2 rounded-2xl bg-slate-100/90 dark:bg-dark-cardElevated border-l-4 border-emerald-500 shadow-xs animate-in fade-in slide-in-from-bottom-1 duration-200">
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 font-bold text-xs text-emerald-600 dark:text-emerald-400">
                 <Reply className="w-3.5 h-3.5" />
@@ -511,7 +508,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
             <button
               type="button"
               onClick={() => setReplyingToMessage(null)}
-              className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-dark-card cursor-pointer"
+              className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-200/60 dark:hover:bg-dark-border cursor-pointer"
               title="Cancelar resposta"
             >
               <X className="w-4 h-4" />
@@ -541,7 +538,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
                 className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition-all cursor-pointer shrink-0 ${
                   selectedCategory === cat.id
                     ? 'bg-emerald-600 text-white shadow-xs'
-                    : 'bg-white dark:bg-[#111b21] border border-slate-200 dark:border-[#2a3942] text-slate-600 dark:text-slate-400 hover:border-emerald-500/50'
+                    : 'bg-slate-100 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border text-slate-600 dark:text-slate-400 hover:border-emerald-500/50'
                 }`}
               >
                 {cat.label}
@@ -549,7 +546,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
             ))}
           </div>
 
-          {/* Seletor de Modelo de Dúvida Rápida */}
+          {/* Modelos Rápidos de Dúvida */}
           <div className="relative shrink-0">
             <select
               defaultValue=""
@@ -560,7 +557,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
                 handleSendQuickMessage(text, cat as MessageCategory);
                 e.target.value = '';
               }}
-              className="text-[11px] font-bold bg-white dark:bg-[#111b21] border border-emerald-500/30 rounded-xl px-2.5 py-1 pr-6 text-emerald-700 dark:text-emerald-300 hover:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer shadow-xs appearance-none"
+              className="text-[11px] font-bold bg-slate-100 dark:bg-dark-cardElevated border border-emerald-500/30 rounded-xl px-2.5 py-1 pr-6 text-emerald-700 dark:text-emerald-300 hover:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer shadow-xs appearance-none"
             >
               <option value="" disabled>
                 ⚡ Modelos de dúvidas...
@@ -604,7 +601,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
           </div>
         </div>
 
-        {/* CAMPO DE DIGITAÇÃO E BOTÃO ENVIAR ESTILO WHATSAPP */}
+        {/* CAMPO DE DIGITAÇÃO E BOTÃO ENVIAR */}
         <form onSubmit={handleSendMessage} className="flex items-end gap-2">
           <div className="flex-1 relative">
             <textarea
@@ -621,24 +618,24 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
                 replyingToMessage
                   ? `Responder para ${replyingToMessage.senderName}...`
                   : isStudentViewer
-                  ? 'Mensagem para Rafaela...'
-                  : `Mensagem para ${student.name}...`
+                  ? 'Digite sua mensagem para a Rafaela... (Enter para enviar)'
+                  : `Digite sua mensagem para ${student.name}... (Enter para enviar)`
               }
               rows={1}
-              className="w-full resize-none rounded-3xl border border-slate-200/90 dark:border-transparent bg-white dark:bg-[#2a3942] px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-xs max-h-32 min-h-[44px]"
+              className="w-full resize-none rounded-2xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated/80 px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white dark:focus:bg-dark-card shadow-xs max-h-32 min-h-[46px]"
             />
           </div>
 
           <button
             type="submit"
             disabled={!inputContent.trim()}
-            className="w-11 h-11 rounded-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:hover:bg-emerald-600 text-white flex items-center justify-center shadow-md active:scale-95 transition-all shrink-0 cursor-pointer disabled:cursor-not-allowed"
+            className="w-11 h-11 rounded-2xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:hover:bg-emerald-600 text-white flex items-center justify-center shadow-md active:scale-95 transition-all shrink-0 cursor-pointer disabled:cursor-not-allowed"
             title="Enviar mensagem (Enter)"
           >
             <Send className="w-4 h-4 ml-0.5" />
           </button>
         </form>
       </div>
-    </Card>
+    </div>
   );
 };
