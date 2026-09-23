@@ -750,55 +750,121 @@ export const StudentActiveWorkoutPage: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Big inputs for Weight and Reps */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="p-3.5 rounded-2xl bg-slate-100 dark:bg-dark-cardElevated text-center space-y-1">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                {/* Big inputs for Weight and Reps with direct typing and quick adjustments */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Weight Box */}
+                  <div className="p-3.5 rounded-2xl bg-slate-100 dark:bg-dark-cardElevated text-center space-y-2">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
                       Carga (kg)
                     </span>
-                    <div className="flex items-center justify-center gap-3">
+                    <div className="flex items-center justify-center gap-2">
                       <button
                         type="button"
-                        onClick={() => setCurrentWeight((prev) => Math.max(0, prev - 2))}
-                        className="w-9 h-9 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 font-bold text-lg cursor-pointer"
+                        onClick={() => setCurrentWeight((prev) => Math.max(0, prev - 1))}
+                        className="w-10 h-10 rounded-xl bg-white dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 font-bold text-xl text-slate-700 dark:text-slate-200 shadow-2xs transition-colors cursor-pointer shrink-0"
+                        title="Diminuir 1 kg"
                       >
                         -
                       </button>
-                      <span className="text-3xl font-black font-mono text-slate-900 dark:text-white">
-                        {currentWeight}
-                      </span>
+                      <div className="flex items-center justify-center gap-1 min-w-[5rem]">
+                        <input
+                          type="number"
+                          inputMode="decimal"
+                          value={currentWeight === 0 ? '' : currentWeight}
+                          onChange={(e) => {
+                            const val = e.target.value === '' ? 0 : parseFloat(e.target.value);
+                            setCurrentWeight(isNaN(val) ? 0 : Math.max(0, val));
+                          }}
+                          placeholder="0"
+                          className="w-20 text-center text-3xl font-black font-mono text-slate-900 dark:text-white bg-transparent border-b-2 border-slate-300 dark:border-white/[0.1] hover:border-emerald-500 focus:border-emerald-500 focus:outline-none transition-colors"
+                          title="Clique para digitar a carga diretamente"
+                        />
+                        <span className="text-xs font-bold text-slate-400 font-mono">kg</span>
+                      </div>
                       <button
                         type="button"
-                        onClick={() => setCurrentWeight((prev) => prev + 2)}
-                        className="w-9 h-9 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 font-bold text-lg cursor-pointer"
+                        onClick={() => setCurrentWeight((prev) => prev + 1)}
+                        className="w-10 h-10 rounded-xl bg-white dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 font-bold text-xl text-slate-700 dark:text-slate-200 shadow-2xs transition-colors cursor-pointer shrink-0"
+                        title="Aumentar 1 kg"
                       >
                         +
                       </button>
                     </div>
+
+                    {/* Quick increment buttons */}
+                    <div className="flex items-center justify-center gap-1.5 flex-wrap pt-0.5">
+                      {[-5, -2, +2, +5, +10].map((delta) => (
+                        <button
+                          key={delta}
+                          type="button"
+                          onClick={() => setCurrentWeight((prev) => Math.max(0, prev + delta))}
+                          className={`px-2 py-0.5 rounded-md text-[11px] font-bold font-mono transition-colors cursor-pointer ${
+                            delta > 0
+                              ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/20'
+                              : 'bg-white/80 dark:bg-white/[0.05] text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+                          }`}
+                        >
+                          {delta > 0 ? `+${delta}` : delta}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
-                  <div className="p-3.5 rounded-2xl bg-slate-100 dark:bg-dark-cardElevated text-center space-y-1">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                  {/* Reps Box */}
+                  <div className="p-3.5 rounded-2xl bg-slate-100 dark:bg-dark-cardElevated text-center space-y-2">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
                       Repetições
                     </span>
-                    <div className="flex items-center justify-center gap-3">
+                    <div className="flex items-center justify-center gap-2">
                       <button
                         type="button"
                         onClick={() => setCurrentReps((prev) => Math.max(1, prev - 1))}
-                        className="w-9 h-9 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 font-bold text-lg cursor-pointer"
+                        className="w-10 h-10 rounded-xl bg-white dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 font-bold text-xl text-slate-700 dark:text-slate-200 shadow-2xs transition-colors cursor-pointer shrink-0"
+                        title="Diminuir 1 repetição"
                       >
                         -
                       </button>
-                      <span className="text-3xl font-black font-mono text-slate-900 dark:text-white">
-                        {currentReps}
-                      </span>
+                      <div className="flex items-center justify-center gap-1 min-w-[5rem]">
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          value={currentReps === 0 ? '' : currentReps}
+                          onChange={(e) => {
+                            const val = e.target.value === '' ? 0 : parseInt(e.target.value, 10);
+                            setCurrentReps(isNaN(val) ? 0 : Math.max(1, val));
+                          }}
+                          placeholder="1"
+                          className="w-16 text-center text-3xl font-black font-mono text-slate-900 dark:text-white bg-transparent border-b-2 border-slate-300 dark:border-white/[0.1] hover:border-emerald-500 focus:border-emerald-500 focus:outline-none transition-colors"
+                          title="Clique para digitar as repetições diretamente"
+                        />
+                        <span className="text-xs font-bold text-slate-400 font-mono">reps</span>
+                      </div>
                       <button
                         type="button"
                         onClick={() => setCurrentReps((prev) => prev + 1)}
-                        className="w-9 h-9 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 font-bold text-lg cursor-pointer"
+                        className="w-10 h-10 rounded-xl bg-white dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 font-bold text-xl text-slate-700 dark:text-slate-200 shadow-2xs transition-colors cursor-pointer shrink-0"
+                        title="Aumentar 1 repetição"
                       >
                         +
                       </button>
+                    </div>
+
+                    {/* Quick Reps increment buttons */}
+                    <div className="flex items-center justify-center gap-1.5 flex-wrap pt-0.5">
+                      {[-2, -1, +1, +2, +5].map((delta) => (
+                        <button
+                          key={delta}
+                          type="button"
+                          onClick={() => setCurrentReps((prev) => Math.max(1, prev + delta))}
+                          className={`px-2 py-0.5 rounded-md text-[11px] font-bold font-mono transition-colors cursor-pointer ${
+                            delta > 0
+                              ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/20'
+                              : 'bg-white/80 dark:bg-white/[0.05] text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+                          }`}
+                        >
+                          {delta > 0 ? `+${delta}` : delta}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -886,31 +952,66 @@ export const StudentActiveWorkoutPage: React.FC = () => {
         isOpen={weightModalOpen}
         onClose={() => setWeightModalOpen(false)}
         title="Alterar Carga do Exercício"
-        description="Ajuste o peso caso esteja fácil ou pesado. A Rafaela será notificada dessa alteração."
+        description="Ajuste o peso digitando diretamente ou usando os botões rápidos. A Rafaela será notificada dessa alteração."
         size="sm"
       >
         <div className="space-y-4 text-center">
-          <div className="p-3 rounded-xl bg-slate-100 dark:bg-dark-cardElevated text-xs font-mono">
-            <span className="text-slate-500">Prescrito original:</span>{' '}
-            <strong>{currentWorkoutExercise.weight} kg</strong>
+          <div className="p-3 rounded-xl bg-slate-100 dark:bg-dark-cardElevated text-xs font-mono flex items-center justify-between">
+            <span className="text-slate-500">Prescrito original:</span>
+            <strong className="text-slate-900 dark:text-white font-bold">{currentWorkoutExercise.weight} kg</strong>
           </div>
 
-          <div className="flex items-center justify-center gap-3">
+          <div className="flex items-center justify-center gap-2">
             <button
-              onClick={() => setTempWeightInput((w) => Math.max(0, w - 2))}
-              className="w-12 h-12 rounded-2xl bg-slate-200 dark:bg-dark-cardElevated font-bold text-2xl"
+              type="button"
+              onClick={() => setTempWeightInput((w) => Math.max(0, w - 1))}
+              className="w-11 h-11 rounded-xl bg-slate-200 dark:bg-dark-cardElevated hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white font-bold text-xl cursor-pointer"
+              title="Diminuir 1 kg"
             >
               -
             </button>
-            <div className="w-28 text-4xl font-black font-mono text-emerald-500">
-              {tempWeightInput} kg
+            <div className="flex items-center justify-center gap-1">
+              <input
+                type="number"
+                inputMode="decimal"
+                value={tempWeightInput === 0 ? '' : tempWeightInput}
+                onChange={(e) => {
+                  const val = e.target.value === '' ? 0 : parseFloat(e.target.value);
+                  setTempWeightInput(isNaN(val) ? 0 : Math.max(0, val));
+                }}
+                placeholder="0"
+                className="w-24 text-center text-4xl font-black font-mono text-emerald-600 dark:text-emerald-400 bg-transparent border-b-2 border-slate-200 dark:border-white/[0.1] hover:border-emerald-500 focus:border-emerald-500 focus:outline-none transition-colors"
+                title="Digite o peso desejado"
+              />
+              <span className="text-xl font-bold font-mono text-slate-400">kg</span>
             </div>
             <button
-              onClick={() => setTempWeightInput((w) => w + 2)}
-              className="w-12 h-12 rounded-2xl bg-slate-200 dark:bg-dark-cardElevated font-bold text-2xl"
+              type="button"
+              onClick={() => setTempWeightInput((w) => w + 1)}
+              className="w-11 h-11 rounded-xl bg-slate-200 dark:bg-dark-cardElevated hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-white font-bold text-xl cursor-pointer"
+              title="Aumentar 1 kg"
             >
               +
             </button>
+          </div>
+
+          {/* Quick adjustment chips */}
+          <div className="flex items-center justify-center gap-1.5 flex-wrap pt-1">
+            <span className="text-[11px] text-slate-400 block w-full mb-1">Ajuste rápido:</span>
+            {[-10, -5, -2, -1, +1, +2, +5, +10].map((delta) => (
+              <button
+                key={delta}
+                type="button"
+                onClick={() => setTempWeightInput((w) => Math.max(0, w + delta))}
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold font-mono transition-colors cursor-pointer ${
+                  delta > 0
+                    ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20'
+                    : 'bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                }`}
+              >
+                {delta > 0 ? `+${delta}` : delta} kg
+              </button>
+            ))}
           </div>
 
           <div className="text-xs font-bold text-emerald-500 font-mono">
