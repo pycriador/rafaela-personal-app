@@ -21,6 +21,7 @@ import {
   RefreshCw,
   CheckCircle2,
   FileText,
+  Sparkles,
 } from 'lucide-react';
 import { studentRepository } from '../../repositories/studentRepository';
 import { workoutRepository } from '../../repositories/workoutRepository';
@@ -29,6 +30,10 @@ import { exerciseRepository } from '../../repositories/exerciseRepository';
 import { activityRepository } from '../../repositories/activityRepository';
 import { userRepository } from '../../repositories/userRepository';
 import { StudentManagerSection } from '../../components/settings/StudentManagerSection';
+import { AISettingsView } from './settings/ai/AISettingsView';
+import { AIUsageDashboard } from './settings/ai/AIUsageDashboard';
+import { AIPlaygroundPage } from './settings/ai/AIPlaygroundPage';
+import { AIRequestHistoryPage } from './settings/ai/AIRequestHistoryPage';
 import { isSupabaseConfigured } from '../../lib/supabase';
 import {
   Student,
@@ -89,16 +94,28 @@ export const SettingsPage: React.FC = () => {
   const [loadingStats, setLoadingStats] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
 
-  // Sync activeTab with URL search parameters (?tab=usuarios, ?tab=backup, ?tab=sistema)
+  // Sync activeTab with URL search parameters (?tab=usuarios, ?tab=backup, ?tab=sistema, ?tab=ia)
   const rawTab = searchParams.get('tab') || 'usuarios';
-  const activeTab: 'usuarios' | 'backup' | 'sistema' =
+  const activeTab: 'usuarios' | 'backup' | 'sistema' | 'ia' =
     rawTab === 'backup' || rawTab === 'exportacao' || rawTab === 'backups'
       ? 'backup'
       : rawTab === 'sistema' || rawTab === 'system' || rawTab === 'aparencia'
       ? 'sistema'
+      : rawTab === 'ia' || rawTab === 'ai' || rawTab === 'gemini' || rawTab === 'copilot'
+      ? 'ia'
       : 'usuarios';
 
-  const handleTabChange = (newTab: 'usuarios' | 'backup' | 'sistema') => {
+  const rawSubTab = searchParams.get('subtab') || 'config';
+  const aiSubTab: 'config' | 'usage' | 'playground' | 'history' =
+    rawSubTab === 'usage' || rawSubTab === 'custos'
+      ? 'usage'
+      : rawSubTab === 'playground' || rawSubTab === 'teste'
+      ? 'playground'
+      : rawSubTab === 'history' || rawSubTab === 'auditoria'
+      ? 'history'
+      : 'config';
+
+  const handleTabChange = (newTab: 'usuarios' | 'backup' | 'sistema' | 'ia') => {
     const next = new URLSearchParams(searchParams);
     next.set('tab', newTab);
     if (newTab !== 'usuarios') {
@@ -109,6 +126,13 @@ export const SettingsPage: React.FC = () => {
       next.delete('level');
       next.delete('limit');
     }
+    setSearchParams(next);
+  };
+
+  const handleAiSubTabChange = (sub: 'config' | 'usage' | 'playground' | 'history') => {
+    const next = new URLSearchParams(searchParams);
+    next.set('tab', 'ia');
+    next.set('subtab', sub);
     setSearchParams(next);
   };
 
@@ -525,6 +549,19 @@ export const SettingsPage: React.FC = () => {
           <Layers className="w-4 h-4" />
           <span>Aparência & Infraestrutura</span>
         </button>
+
+        <button
+          type="button"
+          onClick={() => handleTabChange('ia')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'ia'
+              ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
+          }`}
+        >
+          <Sparkles className="w-4 h-4 text-amber-300" />
+          <span>Inteligência Artificial (Copilot)</span>
+        </button>
       </div>
 
       {/* Tab 1: User & Student Management (Full CRUD, Photos in Supabase Storage, Passwords, Archive, Delete) */}
@@ -869,6 +906,65 @@ export const SettingsPage: React.FC = () => {
               </div>
             </div>
           </Card>
+        </div>
+      )}
+
+      {/* Tab 4: Inteligência Artificial (Copilot, Gemini, Custos, Playground, Histórico) */}
+      {activeTab === 'ia' && (
+        <div className="space-y-6">
+          {/* Sub Navigation Bar */}
+          <div className="flex items-center gap-2 border-b border-slate-200 dark:border-dark-border pb-1 overflow-x-auto text-xs">
+            <button
+              type="button"
+              onClick={() => handleAiSubTabChange('config')}
+              className={`px-3.5 py-2 rounded-xl font-bold transition-all cursor-pointer ${
+                aiSubTab === 'config'
+                  ? 'bg-emerald-500 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
+              }`}
+            >
+              Configuração & API Key
+            </button>
+            <button
+              type="button"
+              onClick={() => handleAiSubTabChange('usage')}
+              className={`px-3.5 py-2 rounded-xl font-bold transition-all cursor-pointer ${
+                aiSubTab === 'usage'
+                  ? 'bg-emerald-500 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
+              }`}
+            >
+              Consumo, Tokens & Custos
+            </button>
+            <button
+              type="button"
+              onClick={() => handleAiSubTabChange('playground')}
+              className={`px-3.5 py-2 rounded-xl font-bold transition-all cursor-pointer ${
+                aiSubTab === 'playground'
+                  ? 'bg-emerald-500 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
+              }`}
+            >
+              Playground & Testes
+            </button>
+            <button
+              type="button"
+              onClick={() => handleAiSubTabChange('history')}
+              className={`px-3.5 py-2 rounded-xl font-bold transition-all cursor-pointer ${
+                aiSubTab === 'history'
+                  ? 'bg-emerald-500 text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
+              }`}
+            >
+              Auditoria & Histórico
+            </button>
+          </div>
+
+          {/* Sub Tab Views */}
+          {aiSubTab === 'config' && <AISettingsView />}
+          {aiSubTab === 'usage' && <AIUsageDashboard />}
+          {aiSubTab === 'playground' && <AIPlaygroundPage />}
+          {aiSubTab === 'history' && <AIRequestHistoryPage />}
         </div>
       )}
     </div>

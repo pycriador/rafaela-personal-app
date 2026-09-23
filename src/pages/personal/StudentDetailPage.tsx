@@ -72,7 +72,15 @@ import {
   FormResponse,
   Form,
   FormVersion,
+  AIWorkoutProposal,
+  AIRequest,
 } from '../../types';
+import { AICopilotModal } from '../../components/ai/AICopilotModal';
+import { AIProposalReviewDrawer } from '../../components/ai/AIProposalReviewDrawer';
+import { AIExerciseAlternativeModal } from '../../components/ai/AIExerciseAlternativeModal';
+import { AIConsentToggle } from '../../components/ai/AIConsentToggle';
+import { aiProposalRepository } from '../../repositories/aiProposalRepository';
+import { aiRequestRepository } from '../../repositories/aiRequestRepository';
 
 const ALL_DAYS_OF_WEEK: DayOfWeek[] = [
   'Segunda',
@@ -206,6 +214,32 @@ export const StudentDetailPage: React.FC = () => {
     }
   };
 
+  // AI Copilot state
+  const [isAICopilotOpen, setIsAICopilotOpen] = useState(false);
+  const [reviewingProposal, setReviewingProposal] = useState<AIWorkoutProposal | null>(null);
+  const [aiProposals, setAiProposals] = useState<AIWorkoutProposal[]>([]);
+  const [aiStudentRequests, setAiStudentRequests] = useState<AIRequest[]>([]);
+  const [selectedExerciseForAIAlt, setSelectedExerciseForAIAlt] = useState<{
+    id: string;
+    name: string;
+    dayId?: string;
+  } | null>(null);
+
+  const refreshAiData = async (stId?: string) => {
+    const targetStudentId = stId || student?.id;
+    if (!targetStudentId) return;
+    try {
+      const [proposals, reqs] = await Promise.all([
+        aiProposalRepository.getByStudentId(targetStudentId),
+        aiRequestRepository.getByStudentId(targetStudentId),
+      ]);
+      setAiProposals(proposals);
+      setAiStudentRequests(reqs);
+    } catch (err) {
+      console.error('Erro ao carregar dados de IA do aluno:', err);
+    }
+  };
+
   useEffect(() => {
     async function loadData() {
       if (!id) return;
@@ -259,6 +293,7 @@ export const StudentDetailPage: React.FC = () => {
       setExercisesMap(map);
 
       await refreshAnamnesis(studentId, userId);
+      await refreshAiData(studentId);
       setLoading(false);
     }
     loadData();
@@ -1043,6 +1078,15 @@ export const StudentDetailPage: React.FC = () => {
               Testar como Aluno
             </Button>
             <Button
+              variant="secondary"
+              onClick={() => setIsAICopilotOpen(true)}
+              leftIcon={<Sparkles className="w-4 h-4 text-amber-400" />}
+              className="border-amber-500/40 text-amber-400 hover:bg-amber-500/10 hover:border-amber-500 text-xs"
+              title="Abrir o Copilot de IA para gerar propostas ou analisar o treino"
+            >
+              AI Copilot
+            </Button>
+            <Button
               variant="primary"
               onClick={() => navigate(`/personal/workouts/new?studentId=${student.id}`)}
               leftIcon={<Dumbbell className="w-4 h-4" />}
@@ -1064,6 +1108,7 @@ export const StudentDetailPage: React.FC = () => {
           { id: 'alimentacao', label: 'Alimentação', icon: <Apple className="w-4 h-4" /> },
           { id: 'evolucao', label: 'Evolução', icon: <TrendingUp className="w-4 h-4" /> },
           { id: 'historico', label: 'Histórico & Auditoria', icon: <History className="w-4 h-4" /> },
+          { id: 'ia', label: 'IA Copilot', icon: <Sparkles className="w-4 h-4 text-amber-400" /> },
           { id: 'configuracoes', label: 'Configurações', icon: <Settings className="w-4 h-4" /> },
         ]}
       />
@@ -1566,6 +1611,23 @@ export const StudentDetailPage: React.FC = () => {
                             <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.allowSkip ? 'bg-amber-500/15 text-amber-500' : 'bg-slate-200 dark:bg-slate-800 text-slate-400 line-through'}`}>
                               Pular
                             </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (exercise) {
+                                  setSelectedExerciseForAIAlt({
+                                    id: exercise.id,
+                                    name: exercise.name,
+                                    dayId: day.id,
+                                  });
+                                }
+                              }}
+                              className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/15 text-purple-600 dark:text-purple-400 hover:bg-purple-500/25 transition-colors flex items-center gap-1 cursor-pointer"
+                              title="Solicitar sugestões inteligentes de substituição à IA"
+                            >
+                              <Sparkles className="w-3 h-3" />
+                              IA: Alternativa
+                            </button>
                           </div>
                         </div>
                       );
@@ -2338,6 +2400,147 @@ export const StudentDetailPage: React.FC = () => {
         </div>
       )}
 
+      {/* TAB 7: IA COPILOT (Histórico de Propostas, Auditoria de Inferências) */}
+      {activeTab === 'ia' && (
+        <div className="space-y-6">
+          {/* Header & Quick Action */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-amber-400" />
+                Copilot de Treinos com IA & Histórico de Propostas
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
+                Propostas estruturadas geradas por Inteligência Artificial, validação de regras e auditoria para {student.name}.
+              </p>
+            </div>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setIsAICopilotOpen(true)}
+              leftIcon={<Sparkles className="w-4 h-4 text-amber-300" />}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
+              Nova Proposta com IA
+            </Button>
+          </div>
+
+          {/* Banner de Conformidade e Supervisão Humana */}
+          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-950 dark:text-amber-200 flex items-start gap-3">
+            <Sparkles className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+            <div className="text-xs sm:text-sm space-y-1">
+              <p className="font-bold">Supervisão Humana Obrigatória</p>
+              <p className="text-slate-600 dark:text-amber-300/80 leading-relaxed text-xs">
+                As propostas sugeridas pela IA não alteram o treino ativo do aluno até que a Rafaela faça a revisão clínica
+                completa e clique em <strong>Aprovar Treino</strong>.
+              </p>
+            </div>
+          </div>
+
+          {/* Lista de Propostas */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
+              <History className="w-4 h-4 text-emerald-500" />
+              Propostas Registradas ({aiProposals.length})
+            </h4>
+
+            {aiProposals.length === 0 ? (
+              <Card className="p-8 text-center space-y-3 border-dashed">
+                <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-500 flex items-center justify-center mx-auto">
+                  <Sparkles className="w-6 h-6" />
+                </div>
+                <h5 className="text-sm font-bold text-slate-800 dark:text-white">
+                  Nenhuma proposta de IA gerada ainda para este aluno
+                </h5>
+                <p className="text-xs text-slate-500 max-w-md mx-auto">
+                  Clique no botão abaixo para abrir o assistente e prescrever um novo ciclo de treinos com o Copilot.
+                </p>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => setIsAICopilotOpen(true)}
+                  leftIcon={<Sparkles className="w-4 h-4" />}
+                >
+                  Abrir AI Copilot
+                </Button>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {aiProposals.map((proposal) => {
+                  const totalExercises = proposal.days.reduce((acc, d) => acc + d.exercises.length, 0);
+                  const isPending = proposal.status === 'generated';
+                  const isApproved = proposal.status === 'approved';
+                  const isRejected = proposal.status === 'rejected';
+
+                  return (
+                    <Card
+                      key={proposal.id}
+                      className={`p-5 space-y-4 transition-all ${
+                        isPending ? 'border-amber-500/40 ring-1 ring-amber-500/20' : ''
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h5 className="font-bold text-sm text-slate-900 dark:text-white">
+                              {proposal.workoutName}
+                            </h5>
+                            <Badge
+                              variant={
+                                isApproved
+                                  ? 'success'
+                                  : isRejected
+                                  ? 'danger'
+                                  : isPending
+                                  ? 'warning'
+                                  : 'brand'
+                              }
+                              size="sm"
+                            >
+                              {isApproved
+                                ? 'Aprovada'
+                                : isRejected
+                                ? 'Rejeitada'
+                                : isPending
+                                ? 'Aguardando Revisão'
+                                : 'Modificada'}
+                            </Badge>
+                          </div>
+                          <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
+                            Objetivo: {proposal.goal} • {proposal.days.length} dias • {totalExercises} exercícios
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Warnings & Notes */}
+                      {proposal.warnings && proposal.warnings.length > 0 && (
+                        <div className="p-2.5 rounded-lg bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/40 text-[11px] text-amber-800 dark:text-amber-300">
+                          <strong>Alerta Clínico:</strong> {proposal.warnings[0]}
+                        </div>
+                      )}
+
+                      <div className="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-100 dark:border-dark-border">
+                        <span className="font-mono text-[11px]">
+                          {new Date(proposal.createdAt).toLocaleDateString('pt-BR')} • {proposal.model}
+                        </span>
+                        <Button
+                          variant={isPending ? 'primary' : 'secondary'}
+                          size="sm"
+                          onClick={() => setReviewingProposal(proposal)}
+                          className="text-xs"
+                        >
+                          {isPending ? 'Revisar & Aprovar' : 'Visualizar Proposta'}
+                        </Button>
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* TAB 6: CONFIGURAÇÕES (Status Real & Persistência) */}
       {activeTab === 'configuracoes' && (
         <Card className="p-6">
@@ -2347,6 +2550,9 @@ export const StudentDetailPage: React.FC = () => {
           </p>
 
           <div className="space-y-4 max-w-xl">
+            {/* LGPD AI Consent Section */}
+            <AIConsentToggle studentId={student.id} studentName={student.name} />
+
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-dark-cardElevated/50 border border-slate-200/60 dark:border-dark-border/60 flex items-center justify-between">
               <div>
                 <h4 className="text-sm font-bold text-slate-900 dark:text-white">
@@ -3092,6 +3298,70 @@ export const StudentDetailPage: React.FC = () => {
           targetStudentId={student.id}
           onApplied={() => {
             refreshAnamnesis(student.id, student.userId);
+          }}
+        />
+      )}
+
+      {/* MODAL 1: AI Copilot Assistant */}
+      {student && (
+        <AICopilotModal
+          isOpen={isAICopilotOpen}
+          onClose={() => setIsAICopilotOpen(false)}
+          student={student}
+          currentPlan={workoutPlan}
+          onPlanApplied={(plan: WorkoutPlan) => {
+            refreshAiData(student.id);
+            setWorkoutPlan(plan);
+            setActiveTab('treinos');
+          }}
+        />
+      )}
+
+      {/* DRAWER 2: AI Proposal Review & Approval */}
+      {reviewingProposal && student && (
+        <AIProposalReviewDrawer
+          isOpen={!!reviewingProposal}
+          onClose={() => setReviewingProposal(null)}
+          proposal={reviewingProposal}
+          currentPlan={workoutPlan}
+          onApproved={(updatedPlan: WorkoutPlan) => {
+            refreshAiData(student.id);
+            setWorkoutPlan(updatedPlan);
+            setReviewingProposal(null);
+            setActiveTab('treinos');
+          }}
+        />
+      )}
+
+      {/* MODAL 3: AI Exercise Alternative Suggestion */}
+      {selectedExerciseForAIAlt && student && (
+        <AIExerciseAlternativeModal
+          isOpen={!!selectedExerciseForAIAlt}
+          onClose={() => setSelectedExerciseForAIAlt(null)}
+          currentExercise={{
+            id: selectedExerciseForAIAlt.id,
+            name: selectedExerciseForAIAlt.name,
+          }}
+          onApplyAlternative={async (altExId: string, altExName: string) => {
+            if (selectedExerciseForAIAlt.dayId && workoutPlan) {
+              const updatedDays = workoutPlan.days.map((d) => {
+                if (d.id === selectedExerciseForAIAlt.dayId) {
+                  return {
+                    ...d,
+                    exercises: d.exercises.map((e) =>
+                      e.exerciseId === selectedExerciseForAIAlt.id ? { ...e, exerciseId: altExId } : e
+                    ),
+                  };
+                }
+                return d;
+              });
+              const saved = await workoutRepository.savePlan({ ...workoutPlan, days: updatedDays });
+              setWorkoutPlan(saved);
+              success(`Exercício substituído por "${altExName}" com sucesso no treino!`);
+            } else {
+              info(`Alternativa "${altExName}" selecionada.`);
+            }
+            setSelectedExerciseForAIAlt(null);
           }}
         />
       )}

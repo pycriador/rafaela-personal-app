@@ -301,3 +301,4 @@ export interface WorkoutTemplate {
 }
 
 export * from './anamnesis';
+export * from './ai';

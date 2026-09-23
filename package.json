@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test:flow": "npx tsx test-flow.js",
     "test:anamnesis": "npx tsx test-anamnesis-flow.js",
+    "test:ai": "npx tsx test-ai-copilot-flow.js",
     "db:seed": "node scripts/seed-supabase.cjs"
   },
   "dependencies": {

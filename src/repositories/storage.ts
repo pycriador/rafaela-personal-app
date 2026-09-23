@@ -11,6 +11,10 @@ import { initialFormFields } from '../data/anamnesis/formFields';
 import { initialFormApplications } from '../data/anamnesis/formApplications';
 import { initialFormResponses } from '../data/anamnesis/formResponses';
 import { initialConsents } from '../data/anamnesis/consents';
+import { initialAIModels } from '../data/ai/aiModels';
+import { initialAIConfig } from '../data/ai/aiDefaultConfig';
+import { initialAIProposals } from '../data/ai/aiProposals';
+import { initialAIRequests } from '../data/ai/aiRequests';
 
 export const STORAGE_KEYS = {
   USERS: 'rafaela_app_users_v1',
@@ -33,6 +37,11 @@ export const STORAGE_KEYS = {
   FORM_APPLICATIONS: 'rafaela_app_form_applications_v1',
   FORM_RESPONSES: 'rafaela_app_form_responses_v1',
   CONSENTS: 'rafaela_app_consents_v1',
+  AI_CONFIG: 'rafaela_app_ai_config_v1',
+  AI_MODELS: 'rafaela_app_ai_models_v1',
+  AI_PROPOSALS: 'rafaela_app_ai_proposals_v1',
+  AI_REQUESTS: 'rafaela_app_ai_requests_v1',
+  AI_STUDENT_CONSENTS: 'rafaela_app_ai_student_consents_v1',
 };
 
 /**
@@ -142,6 +151,18 @@ export function initStorage() {
   }
   if (!localStorage.getItem(STORAGE_KEYS.CONSENTS)) {
     localStorage.setItem(STORAGE_KEYS.CONSENTS, JSON.stringify(initialConsents));
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.AI_CONFIG)) {
+    localStorage.setItem(STORAGE_KEYS.AI_CONFIG, JSON.stringify(initialAIConfig));
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.AI_MODELS)) {
+    localStorage.setItem(STORAGE_KEYS.AI_MODELS, JSON.stringify(initialAIModels));
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.AI_PROPOSALS)) {
+    localStorage.setItem(STORAGE_KEYS.AI_PROPOSALS, JSON.stringify(initialAIProposals));
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.AI_REQUESTS)) {
+    localStorage.setItem(STORAGE_KEYS.AI_REQUESTS, JSON.stringify(initialAIRequests));
   }
 }
 
