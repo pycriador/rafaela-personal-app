@@ -120,7 +120,7 @@ export const AnamnesisDashboardPage: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate('/personal/anamnesis/applications')}
+            onClick={() => navigate('/personal/forms/applications')}
             leftIcon={<Users className="w-4 h-4" />}
             className="text-xs font-bold"
           >

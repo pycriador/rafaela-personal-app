@@ -65,4 +65,36 @@ export const initialFormResponses: FormResponse[] = [
     submittedBy: 'student-joao',
     notes: 'Avaliado pela Rafaela na montagem do ciclo 1.',
   },
+
+  // Carlos Pereira - Anamnese Inicial
+  {
+    id: 'resp-carlos-init',
+    applicationId: 'app-carlos-init',
+    formId: 'form-anamnese-inicial',
+    formVersionId: 'ver-init-v1',
+    studentId: 'student-carlos',
+    status: 'reviewed',
+    answers: initialFormAnswers.filter((a) => a.responseId === 'resp-carlos-init'),
+    consentRecord: initialConsents.find((c) => c.responseId === 'resp-carlos-init'),
+    startedAt: '2026-08-06T11:00:00.000Z',
+    submittedAt: '2026-08-06T11:35:00.000Z',
+    submittedBy: 'student-carlos',
+    notes: 'Avaliado pela Rafaela na montagem do ciclo de treino.',
+  },
+
+  // Mariana Silva - Check-in Mensal Agosto
+  {
+    id: 'resp-mariana-checkin-ago',
+    applicationId: 'app-mariana-checkin-ago',
+    formId: 'form-checkin-mensal',
+    formVersionId: 'ver-checkin-v1',
+    studentId: 'student-mariana',
+    status: 'reviewed',
+    answers: initialFormAnswers.filter((a) => a.responseId === 'resp-mariana-checkin-ago'),
+    consentRecord: initialConsents.find((c) => c.responseId === 'resp-mariana-checkin-ago'),
+    startedAt: '2026-08-28T09:10:00.000Z',
+    submittedAt: '2026-08-28T09:20:00.000Z',
+    submittedBy: 'student-mariana',
+    notes: 'Adesão consistente mantida no mês.',
+  },
 ];

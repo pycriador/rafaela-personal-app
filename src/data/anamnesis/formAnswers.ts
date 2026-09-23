@@ -60,4 +60,31 @@ export const initialFormAnswers: FormAnswer[] = [
   { id: 'ans-j1-20', responseId: 'resp-joao-init', fieldId: 'f-init-20', value: '2L - 3L' },
   { id: 'ans-j1-21', responseId: 'resp-joao-init', fieldId: 'f-init-21', value: 'Foco em evolução de cargas com boa cadência e técnica controlada.' },
   { id: 'ans-j1-22', responseId: 'resp-joao-init', fieldId: 'f-init-22', value: true },
+
+  // Carlos Pereira - Anamnese Inicial
+  { id: 'ans-c1-1', responseId: 'resp-carlos-init', fieldId: 'f-init-1', value: 'Carlos Pereira' },
+  { id: 'ans-c1-2', responseId: 'resp-carlos-init', fieldId: 'f-init-2', value: '1988-11-22' },
+  { id: 'ans-c1-3', responseId: 'resp-carlos-init', fieldId: 'f-init-3', value: '(11) 97654-3210' },
+  { id: 'ans-c1-4', responseId: 'resp-carlos-init', fieldId: 'f-init-4', value: 'carlos.pereira@email.com' },
+  { id: 'ans-c1-5', responseId: 'resp-carlos-init', fieldId: 'f-init-5', value: 'Emagrecimento' },
+  { id: 'ans-c1-6', responseId: 'resp-carlos-init', fieldId: 'f-init-6', value: ['Alívio de Dores', 'Energia'] },
+  { id: 'ans-c1-7', responseId: 'resp-carlos-init', fieldId: 'f-init-7', value: 3 },
+  { id: 'ans-c1-8', responseId: 'resp-carlos-init', fieldId: 'f-init-8', value: false },
+  { id: 'ans-c1-9', responseId: 'resp-carlos-init', fieldId: 'f-init-9', value: 'Sedentário há 3 anos' },
+  { id: 'ans-c1-10', responseId: 'resp-carlos-init', fieldId: 'f-init-10', value: true },
+  { id: 'ans-c1-11', responseId: 'resp-carlos-init', fieldId: 'f-init-11', value: false },
+  { id: 'ans-c1-13', responseId: 'resp-carlos-init', fieldId: 'f-init-13', value: true },
+  { id: 'ans-c1-14', responseId: 'resp-carlos-init', fieldId: 'f-init-14', value: 'Desconforto na lombar em dias sentados no trabalho.' },
+  { id: 'ans-c1-15', responseId: 'resp-carlos-init', fieldId: 'f-init-15', value: 'Evitar cargas axiais pesadas sem suporte.' },
+  { id: 'ans-c1-16', responseId: 'resp-carlos-init', fieldId: 'f-init-16', value: false },
+  { id: 'ans-c1-18', responseId: 'resp-carlos-init', fieldId: 'f-init-18', value: 6 },
+  { id: 'ans-c1-19', responseId: 'resp-carlos-init', fieldId: 'f-init-19', value: 4 },
+  { id: 'ans-c1-20', responseId: 'resp-carlos-init', fieldId: 'f-init-20', value: '1L - 2L' },
+  { id: 'ans-c1-21', responseId: 'resp-carlos-init', fieldId: 'f-init-21', value: 'Recuperar condicionamento e postura.' },
+  { id: 'ans-c1-22', responseId: 'resp-carlos-init', fieldId: 'f-init-22', value: true },
+
+  // Mariana Silva - Check-in Mensal Agosto
+  { id: 'ans-mc-1', responseId: 'resp-mariana-checkin-ago', fieldId: 'f-check-1', value: 62.5 },
+  { id: 'ans-mc-2', responseId: 'resp-mariana-checkin-ago', fieldId: 'f-check-2', value: 4 },
+  { id: 'ans-mc-3', responseId: 'resp-mariana-checkin-ago', fieldId: 'f-check-3', value: 'Consegui manter 4 treinos por semana e bati a meta de água quase todos os dias!' },
 ];

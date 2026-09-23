@@ -58,8 +58,12 @@ export const formResponseRepository = {
   async getById(id: string): Promise<FormResponse | null> {
     if (isSupabaseConfigured) {
       try {
-        const { data, error } = await supabase.from('form_responses').select('*').eq('id', id).maybeSingle();
-        if (!error && data) {
+        let { data, error } = await supabase.from('form_responses').select('*').eq('id', id).maybeSingle();
+        if (!data || error) {
+          const resApp = await supabase.from('form_responses').select('*').eq('application_id', id).maybeSingle();
+          if (resApp.data && !resApp.error) data = resApp.data;
+        }
+        if (data) {
           return mapFromDb(data);
         }
       } catch (err) {
@@ -67,7 +71,7 @@ export const formResponseRepository = {
       }
     }
     const list = await this.getAll();
-    return list.find((r) => r.id === id) || null;
+    return list.find((r) => r.id === id || r.applicationId === id) || null;
   },
 
   async getByApplicationId(applicationId: string): Promise<FormResponse | null> {

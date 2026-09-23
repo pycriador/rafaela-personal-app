@@ -110,4 +110,32 @@ export const initialFormApplications: FormApplication[] = [
     message: 'Seja bem-vinda Fernanda! Por gentileza, responda o formulário de anamnese.',
     isMandatory: true,
   },
+
+  // Carlos Pereira - Anamnese Inicial Concluída
+  {
+    id: 'app-carlos-init',
+    formId: 'form-anamnese-inicial',
+    formVersionId: 'ver-init-v1',
+    studentId: 'student-carlos',
+    status: 'completed',
+    assignedBy: 'user-rafaela',
+    assignedAt: '2026-08-05T09:00:00.000Z',
+    dueAt: '2026-08-15T23:59:59.000Z',
+    message: 'Carlos, preencha sua anamnese completa para adaptarmos seus treinos.',
+    isMandatory: true,
+  },
+
+  // Mariana Silva - Check-in Mensal Agosto Concluído
+  {
+    id: 'app-mariana-checkin-ago',
+    formId: 'form-checkin-mensal',
+    formVersionId: 'ver-checkin-v1',
+    studentId: 'student-mariana',
+    status: 'completed',
+    assignedBy: 'user-rafaela',
+    assignedAt: '2026-08-25T10:00:00.000Z',
+    dueAt: '2026-09-02T23:59:59.000Z',
+    message: 'Mariana, check-in do mês de agosto para avaliação.',
+    isMandatory: true,
+  },
 ];

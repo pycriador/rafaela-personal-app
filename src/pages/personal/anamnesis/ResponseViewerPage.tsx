@@ -24,9 +24,12 @@ export const ResponseViewerPage: React.FC = () => {
     async function loadData() {
       if (!id) return;
       try {
-        const resp = await formResponseService.getResponseById(id);
+        let resp = await formResponseService.getResponseById(id);
         if (!resp) {
-          navigate('/personal/anamnesis');
+          resp = await formResponseService.getResponseByApplicationId(id);
+        }
+        if (!resp) {
+          navigate('/personal/forms/applications');
           return;
         }
         setResponse(resp);
@@ -66,11 +69,11 @@ export const ResponseViewerPage: React.FC = () => {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/personal/forms/applications')}
           leftIcon={<ArrowLeft className="w-4 h-4" />}
           className="text-xs"
         >
-          Voltar
+          Voltar para Envios & Respostas
         </Button>
       </div>
 

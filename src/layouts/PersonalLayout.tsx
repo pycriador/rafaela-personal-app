@@ -56,7 +56,7 @@ const ANAMNESIS_SUB_NAV_ITEMS = [
   { id: 'visao-geral', label: 'Visão Geral', path: '/personal/anamnesis', icon: LayoutDashboard },
   { id: 'modelos', label: 'Modelos de Fichas', path: '/personal/anamnesis/forms', icon: FileText },
   { id: 'novo-formulario', label: 'Novo Formulário', path: '/personal/anamnesis/forms/new', icon: PlusCircle },
-  { id: 'envios', label: 'Envios & Respostas', path: '/personal/anamnesis/applications', icon: Send },
+  { id: 'envios', label: 'Envios & Respostas', path: '/personal/forms/applications', icon: Send },
 ];
 
 const SETTINGS_SUB_NAV_ITEMS = [
@@ -494,6 +494,8 @@ export const PersonalLayout: React.FC = () => {
                             }
                             if (sub.id === 'envios') {
                               return (
+                                location.pathname.startsWith('/personal/forms/applications') ||
+                                location.pathname.startsWith('/personal/forms/responses') ||
                                 location.pathname.startsWith('/personal/anamnesis/applications') ||
                                 location.pathname.startsWith('/personal/anamnesis/responses')
                               );

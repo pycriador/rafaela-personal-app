@@ -125,4 +125,19 @@ export const formApplicationService = {
     }
     return app;
   },
+
+  async deleteApplication(applicationId: string): Promise<boolean> {
+    const success = await formApplicationRepository.delete(applicationId);
+    if (success) {
+      await activityRepository.log({
+        actorId: 'user-rafaela',
+        actorName: 'Rafaela Personal',
+        actorRole: 'personal',
+        action: 'Envio excluído',
+        description: `Rafaela excluiu o envio de formulário.`,
+        iconType: 'skip',
+      });
+    }
+    return success;
+  },
 };

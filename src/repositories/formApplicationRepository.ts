@@ -158,4 +158,19 @@ export const formApplicationRepository = {
     app.status = 'completed';
     return this.save(app);
   },
+
+  async delete(id: string): Promise<boolean> {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
+      try {
+        await supabase.from('form_applications').delete().eq('id', id);
+      } catch (err) {
+        // fallback
+      }
+    }
+
+    const list = getItem<FormApplication[]>(STORAGE_KEYS.FORM_APPLICATIONS, initialFormApplications);
+    const filtered = list.filter((a) => a.id !== id);
+    setItem(STORAGE_KEYS.FORM_APPLICATIONS, filtered);
+    return true;
+  },
 };

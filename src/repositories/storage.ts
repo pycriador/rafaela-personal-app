@@ -179,12 +179,45 @@ export function initStorage() {
   }
   if (!localStorage.getItem(STORAGE_KEYS.FORM_APPLICATIONS)) {
     localStorage.setItem(STORAGE_KEYS.FORM_APPLICATIONS, JSON.stringify(initialFormApplications));
+  } else {
+    try {
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.FORM_APPLICATIONS) || '[]');
+      const ids = new Set(stored.map((a: any) => a.id));
+      const missing = initialFormApplications.filter((a) => !ids.has(a.id));
+      if (missing.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.FORM_APPLICATIONS, JSON.stringify([...stored, ...missing]));
+      }
+    } catch {
+      localStorage.setItem(STORAGE_KEYS.FORM_APPLICATIONS, JSON.stringify(initialFormApplications));
+    }
   }
   if (!localStorage.getItem(STORAGE_KEYS.FORM_RESPONSES)) {
     localStorage.setItem(STORAGE_KEYS.FORM_RESPONSES, JSON.stringify(initialFormResponses));
+  } else {
+    try {
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.FORM_RESPONSES) || '[]');
+      const ids = new Set(stored.map((r: any) => r.id));
+      const missing = initialFormResponses.filter((r) => !ids.has(r.id));
+      if (missing.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.FORM_RESPONSES, JSON.stringify([...stored, ...missing]));
+      }
+    } catch {
+      localStorage.setItem(STORAGE_KEYS.FORM_RESPONSES, JSON.stringify(initialFormResponses));
+    }
   }
   if (!localStorage.getItem(STORAGE_KEYS.CONSENTS)) {
     localStorage.setItem(STORAGE_KEYS.CONSENTS, JSON.stringify(initialConsents));
+  } else {
+    try {
+      const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.CONSENTS) || '[]');
+      const ids = new Set(stored.map((c: any) => c.id));
+      const missing = initialConsents.filter((c) => !ids.has(c.id));
+      if (missing.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.CONSENTS, JSON.stringify([...stored, ...missing]));
+      }
+    } catch {
+      localStorage.setItem(STORAGE_KEYS.CONSENTS, JSON.stringify(initialConsents));
+    }
   }
   if (!localStorage.getItem(STORAGE_KEYS.AI_CONFIG)) {
     localStorage.setItem(STORAGE_KEYS.AI_CONFIG, JSON.stringify(initialAIConfig));

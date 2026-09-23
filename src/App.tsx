@@ -105,7 +105,9 @@ export const App: React.FC = () => {
                   <Route path="anamnesis/forms" element={<FormsListPage />} />
                   <Route path="anamnesis/forms/new" element={<FormEditorPage />} />
                   <Route path="anamnesis/forms/:id/edit" element={<FormEditorPage />} />
-                  <Route path="anamnesis/applications" element={<ApplicationsListPage />} />
+                  <Route path="forms/applications" element={<ApplicationsListPage />} />
+                  <Route path="anamnesis/applications" element={<Navigate to="/personal/forms/applications" replace />} />
+                  <Route path="forms/responses/:id" element={<ResponseViewerPage />} />
                   <Route path="anamnesis/responses/:id" element={<ResponseViewerPage />} />
                 </Route>
               </Route>
