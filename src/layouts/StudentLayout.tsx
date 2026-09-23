@@ -85,7 +85,7 @@ export const StudentLayout: React.FC = () => {
   const navItems = [
     { name: 'Início', path: '/student/dashboard', icon: Home },
     { name: 'Treinos', path: '/student/workouts', icon: Dumbbell },
-    { name: 'Anamnese', path: '/student/anamnesis', icon: ClipboardList },
+    { name: 'Formulários', path: '/student/anamnesis', icon: ClipboardList },
     { name: 'Bate-Papo', path: '/student/chat', icon: MessageSquare },
     { name: 'Evolução', path: '/student/evolution', icon: TrendingUp },
     { name: 'Alimentação', path: '/student/nutrition', icon: Apple },

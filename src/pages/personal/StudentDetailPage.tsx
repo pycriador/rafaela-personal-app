@@ -99,7 +99,7 @@ const STUDENT_TAB_LABELS: Record<string, string> = {
   conversa: 'Conversa & Bate-Papo',
   chat: 'Conversa & Bate-Papo',
   evolucao: 'Evolução de Cargas',
-  anamnese: 'Anamnese & Avaliações',
+  anamnese: 'Formulários & Avaliações',
   alimentacao: 'Plano Alimentar',
   nutricao: 'Plano Alimentar',
   historico: 'Histórico de Treinos & Sessões',
@@ -1180,7 +1180,7 @@ export const StudentDetailPage: React.FC = () => {
             <option value="treinos">Treinos ({workoutPlan?.days?.length || 0}d)</option>
             <option value="conversa">Conversa com Aluno</option>
             <option value="evolucao">Evolução de Cargas</option>
-            <option value="anamnese">Anamnese & Avaliações</option>
+            <option value="anamnese">Formulários & Avaliações</option>
             <option value="alimentacao">Plano Alimentar</option>
             <option value="historico">Histórico & Sessões ({sessions.length})</option>
             <option value="ia">AI Copilot</option>
