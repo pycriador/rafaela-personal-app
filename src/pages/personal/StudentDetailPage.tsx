@@ -2174,14 +2174,6 @@ export const StudentDetailPage: React.FC = () => {
       {/* TAB 4: ALIMENTAÇÃO (Section 31 & 32) */}
       {activeTab === 'alimentacao' && (
         <div className="space-y-6">
-          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs flex items-start gap-2.5">
-            <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-amber-500" />
-            <div>
-              <strong className="block font-bold">Aviso Legal & Diretriz de Competência:</strong>
-              {nutrition?.disclaimer || 'Conteúdo demonstrativo. A prescrição nutricional formal requer profissional habilitado.'}
-            </div>
-          </div>
-
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white">

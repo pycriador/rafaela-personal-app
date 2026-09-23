@@ -4,7 +4,7 @@ import { nutritionRepository } from '../../repositories/nutritionRepository';
 import { NutritionPlan } from '../../types';
 import { Card } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
-import { Apple, Clock, AlertTriangle, ArrowRightLeft } from 'lucide-react';
+import { Clock, ArrowRightLeft } from 'lucide-react';
 
 export const StudentNutritionPage: React.FC = () => {
   const { studentProfile } = useAuth();
@@ -36,17 +36,8 @@ export const StudentNutritionPage: React.FC = () => {
           Minha Alimentação
         </h1>
         <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
-          {nutrition?.goal || 'Plano de apoio e orientações demonstrativas'}
+          {nutrition?.goal || 'Plano de apoio e orientações alimentares'}
         </p>
-      </div>
-
-      {/* Mandatory Disclaimer (Section 32 & 34) */}
-      <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs flex items-start gap-2.5">
-        <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-amber-500" />
-        <div>
-          <strong className="block font-bold">Conteúdo Demonstrativo:</strong>
-          Orientações com foco em consistência e opções de substituição. Orientações individualizadas devem ser prescritas por nutricionista habilitado.
-        </div>
       </div>
 
       {nutrition ? (

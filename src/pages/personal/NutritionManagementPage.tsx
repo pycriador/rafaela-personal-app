@@ -10,7 +10,6 @@ import { studentRepository } from '../../repositories/studentRepository';
 import { NutritionPlan, Student } from '../../types';
 import {
   Apple,
-  AlertTriangle,
   Search,
   ChevronLeft,
   ChevronRight,
@@ -141,20 +140,7 @@ export const NutritionManagementPage: React.FC = () => {
             Gestão de Alimentação dos Alunos
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-dark-muted mt-0.5">
-            Orientações alimentares demonstrativas e opções de substituições inteligentes
-          </p>
-        </div>
-      </div>
-
-      {/* Mandatory Disclaimer (Section 32 & 34) */}
-      <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs flex items-start gap-3">
-        <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5 text-amber-500" />
-        <div className="space-y-1">
-          <strong className="font-bold text-sm block">
-            Diretriz Profissional Importante (Conteúdo Demonstrativo):
-          </strong>
-          <p className="leading-relaxed">
-            No produto real, não assumir que a personal trainer prescreve dietas. O módulo está preparado para integração de conteúdos elaborados ou validados por nutricionista habilitado, garantindo conformidade com o CFN (Conselho Federal de Nutricionistas).
+            Orientações alimentares e opções de substituições inteligentes
           </p>
         </div>
       </div>

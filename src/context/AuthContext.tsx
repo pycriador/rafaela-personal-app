@@ -85,7 +85,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const found = await userRepository.getByEmail(email);
     if (!found) {
       setIsLoading(false);
-      return { success: false, error: 'E-mail não encontrado nos dados demonstrativos.' };
+      return { success: false, error: 'E-mail não encontrado.' };
     }
 
     setUser(found);

@@ -6,7 +6,7 @@ export const initialNutritionPlans: NutritionPlan[] = [
     studentId: 'student-mariana',
     goal: 'Hipertrofia Limpa & Recuperação Muscular',
     dailyCalories: 2250,
-    disclaimer: 'Conteúdo demonstrativo. No produto real, a prescrição e adequação dietética individualizada são de competência exclusiva de nutricionista habilitado.',
+    disclaimer: 'Orientações nutricionais e opções de substituição alinhadas aos seus objetivos de treino.',
     updatedAt: '2026-09-10',
     meals: [
       {
@@ -144,7 +144,7 @@ export const initialNutritionPlans: NutritionPlan[] = [
     studentId: 'student-joao',
     goal: 'Déficit Calórico Orientado para Emagrecimento',
     dailyCalories: 1850,
-    disclaimer: 'Conteúdo demonstrativo. No produto real, a prescrição e adequação dietética individualizada são de competência exclusiva de nutricionista habilitado.',
+    disclaimer: 'Orientações nutricionais e opções de substituição alinhadas aos seus objetivos de treino.',
     updatedAt: '2026-09-08',
     meals: [
       {
