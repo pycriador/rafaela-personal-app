@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
   Home,
   Dumbbell,
@@ -41,6 +41,8 @@ export const StudentLayout: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
   const { success, error: toastError } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isChatPage = location.pathname.includes('/student/chat');
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -124,9 +126,13 @@ export const StudentLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-slate-50 dark:bg-dark-bg text-slate-900 dark:text-white flex flex-col pb-8 w-full transition-colors duration-200">
+    <div
+      className={`min-h-screen min-h-[100dvh] bg-slate-50 dark:bg-dark-bg text-slate-900 dark:text-white flex flex-col w-full transition-colors duration-200 ${
+        isChatPage ? 'h-screen h-[100dvh] overflow-hidden pb-0' : 'pb-8'
+      }`}
+    >
       {/* Sticky Top Section containing Banner & Header */}
-      <div className="sticky top-0 z-30 flex flex-col shadow-xs">
+      <div className="sticky top-0 z-30 flex flex-col shadow-xs shrink-0">
         {/* Top Banner when in Simulation Mode */}
         {isSimulationMode && (
           <div className="bg-gradient-to-r from-amber-500/20 via-amber-500/15 to-emerald-500/15 border-b border-amber-500/40 px-3 sm:px-6 py-2 text-xs backdrop-blur-md">
@@ -289,8 +295,14 @@ export const StudentLayout: React.FC = () => {
         </header>
       </div>
 
-      {/* Main Content Area - Full screen width responsive container without bottom bar padding */}
-      <main className="flex-1 max-w-6xl xl:max-w-7xl mx-auto w-full px-4 sm:px-6 py-5">
+      {/* Main Content Area */}
+      <main
+        className={`flex-1 w-full min-h-0 ${
+          isChatPage
+            ? 'p-0 flex flex-col overflow-hidden max-w-none'
+            : 'max-w-6xl xl:max-w-7xl mx-auto px-4 sm:px-6 py-5'
+        }`}
+      >
         <Outlet />
       </main>
 

@@ -1953,11 +1953,12 @@ export const StudentDetailPage: React.FC = () => {
 
       {/* TAB: BATE-PAPO & CONVERSA COM O ALUNO (URL: ?tab=conversa) */}
       {(activeTab === 'conversa' || activeTab === 'chat') && student && (
-        <div className="space-y-6">
+        <div className="w-full">
           <StudentTrainerChatSection
             student={student}
             currentUserId="user-rafaela"
             currentUserRole="personal"
+            className="h-[680px] rounded-2xl border border-slate-200/80 dark:border-dark-border/80 shadow-xs overflow-hidden"
           />
         </div>
       )}

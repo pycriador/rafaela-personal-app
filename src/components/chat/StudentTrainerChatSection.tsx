@@ -24,6 +24,7 @@ interface StudentTrainerChatSectionProps {
   student: Student;
   currentUserId?: string;
   currentUserRole?: 'personal' | 'student';
+  className?: string;
 }
 
 const CATEGORY_CONFIG: Record<
@@ -85,6 +86,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
   student,
   currentUserId = 'user-rafaela',
   currentUserRole = 'personal',
+  className,
 }) => {
   const { error: toastError } = useToast();
   const [messages, setMessages] = useState<StudentMessage[]>([]);
@@ -96,7 +98,6 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
   const [replyingToMessage, setReplyingToMessage] = useState<StudentMessage | null>(null);
 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const hasInitialScrolled = useRef<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const isStudentViewer = currentUserRole === 'student';
@@ -109,16 +110,6 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
       const msgs = await messageRepository.getMessagesByStudentId(student.id);
       setMessages(msgs);
       await messageRepository.markAsRead(student.id, currentUserRole);
-
-      // Scroll interno inicial apenas uma vez no carregamento, SEM scrollIntoView ou forçar a janela
-      if (!hasInitialScrolled.current && msgs.length > 0) {
-        hasInitialScrolled.current = true;
-        setTimeout(() => {
-          if (messagesContainerRef.current) {
-            messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
-          }
-        }, 50);
-      }
     } catch (err) {
       console.error('Erro ao carregar mensagens:', err);
     } finally {
@@ -243,83 +234,86 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
   });
 
   return (
-    <div className="flex flex-col w-full h-[calc(100dvh-6.5rem)] sm:h-[calc(100dvh-7rem)] overflow-hidden rounded-2xl bg-white dark:bg-dark-card border border-slate-200/80 dark:border-dark-border/80 shadow-xs">
-      {/* 1. BARRA SUPERIOR FIXA NO TOPO */}
-      <div className="shrink-0 z-10 py-3 px-4 sm:px-6 bg-[#f0f2f5] dark:bg-[#202c33] border-b border-slate-200/80 dark:border-dark-border/80 flex items-center justify-between gap-3 select-none">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="relative shrink-0">
-            <img
-              src={
-                isStudentViewer
-                  ? trainerAvatar
-                  : (student.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150')
-              }
-              alt={isStudentViewer ? 'Rafaela Personal' : student.name}
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover ring-2 ring-emerald-500/40 shadow-xs"
-            />
-            <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-2 ring-white dark:ring-dark-card" />
+    <div className={`flex flex-col w-full h-full flex-1 min-h-0 overflow-hidden bg-transparent ${className || ''}`}>
+      {/* 1. BARRA SUPERIOR FIXA NO TOPO (SEM CAIXA) */}
+      <div className="shrink-0 z-10 py-3 px-4 sm:px-6 md:px-8 bg-white/95 dark:bg-dark-card/95 backdrop-blur-md border-b border-slate-200/80 dark:border-dark-border/80 select-none shadow-2xs">
+        <div className="max-w-4xl mx-auto w-full flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="relative shrink-0">
+              <img
+                src={
+                  isStudentViewer
+                    ? trainerAvatar
+                    : (student.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150')
+                }
+                alt={isStudentViewer ? 'Rafaela Personal' : student.name}
+                className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover ring-2 ring-emerald-500/40 shadow-xs"
+              />
+              <span className="w-3.5 h-3.5 rounded-full bg-emerald-500 absolute bottom-0 right-0 ring-2 ring-white dark:ring-dark-card" />
+            </div>
+
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate">
+                  {isStudentViewer ? 'Rafaela Personal' : student.name}
+                </h2>
+                <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+                  {isStudentViewer ? 'Treinadora Oficial' : 'Aluno'}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold truncate">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Online agora</span>
+                <span className="text-slate-400 dark:text-slate-500">•</span>
+                <span className="text-slate-500 dark:text-slate-400 text-xs font-normal truncate">
+                  {isStudentViewer
+                    ? 'Canal oficial de dúvidas técnicas, execuções e treinos'
+                    : 'Acompanhamento individual de metas e cargas'}
+                </span>
+              </div>
+            </div>
           </div>
 
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white truncate">
-                {isStudentViewer ? 'Rafaela Personal' : student.name}
-              </h2>
-              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-                {isStudentViewer ? 'Treinadora Oficial' : 'Aluno'}
-              </span>
+          {/* Controles de Filtro e Sincronização */}
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="relative">
+              <select
+                value={activeFilter}
+                onChange={(e) => setActiveFilter(e.target.value as any)}
+                className="text-xs font-bold bg-white dark:bg-[#111b21] border border-slate-200 dark:border-dark-border rounded-xl px-2.5 py-1.5 pr-7 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shadow-xs appearance-none"
+              >
+                <option value="all">Todas ({messages.length})</option>
+                <option value="question">❓ Dúvidas</option>
+                <option value="weight_change">📈 Cargas</option>
+                <option value="exercise_change">🔄 Trocas</option>
+                <option value="assessment">🏆 Avaliações</option>
+                <option value="motivation">✨ Feedback</option>
+                <option value="general">💬 Geral</option>
+              </select>
+              <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold truncate">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Online agora</span>
-              <span className="text-slate-400 dark:text-slate-500">•</span>
-              <span className="text-slate-500 dark:text-slate-400 text-xs font-normal truncate">
-                {isStudentViewer
-                  ? 'Canal oficial de dúvidas técnicas, execuções e treinos'
-                  : 'Acompanhamento individual de metas e cargas'}
-              </span>
-            </div>
-          </div>
-        </div>
 
-        {/* Controles de Filtro e Sincronização */}
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="relative">
-            <select
-              value={activeFilter}
-              onChange={(e) => setActiveFilter(e.target.value as any)}
-              className="text-xs font-bold bg-white dark:bg-[#111b21] border border-slate-200 dark:border-dark-border rounded-xl px-2.5 py-1.5 pr-7 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shadow-xs appearance-none"
+            <button
+              type="button"
+              title="Atualizar mensagens"
+              onClick={() => {
+                setIsRefreshing(true);
+                loadMessages(false);
+              }}
+              className="p-2 text-slate-500 dark:text-slate-400 hover:text-emerald-500 hover:bg-white dark:hover:bg-[#111b21] border border-slate-200 dark:border-dark-border rounded-xl transition-all cursor-pointer shadow-xs"
             >
-              <option value="all">Todas ({messages.length})</option>
-              <option value="question">❓ Dúvidas</option>
-              <option value="weight_change">📈 Cargas</option>
-              <option value="exercise_change">🔄 Trocas</option>
-              <option value="assessment">🏆 Avaliações</option>
-              <option value="motivation">✨ Feedback</option>
-              <option value="general">💬 Geral</option>
-            </select>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <RotateCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-emerald-500' : ''}`} />
+            </button>
           </div>
-
-          <button
-            type="button"
-            title="Atualizar mensagens"
-            onClick={() => {
-              setIsRefreshing(true);
-              loadMessages(false);
-            }}
-            className="p-2 text-slate-500 dark:text-slate-400 hover:text-emerald-500 hover:bg-white dark:hover:bg-[#111b21] border border-slate-200 dark:border-dark-border rounded-xl transition-all cursor-pointer shadow-xs"
-          >
-            <RotateCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-emerald-500' : ''}`} />
-          </button>
         </div>
       </div>
 
-      {/* 2. FLUXO DE MENSAGENS COM ROLAGEM EXCLUSIVA (TOPO E RODAPÉ FIXOS) */}
+      {/* 2. ÁREA CENTRAL DE MENSAGENS COM ROLAGEM EXCLUSIVA */}
       <div
         ref={messagesContainerRef}
-        className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-5 space-y-4 bg-[#efeae2]/20 dark:bg-[#0b141a]/40"
+        className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 md:px-8 py-4 sm:py-6 bg-[#efeae2]/15 dark:bg-[#0b141a]/30"
       >
+        <div className="max-w-4xl mx-auto w-full space-y-4">
         {/* Banner Sutil de Privacidade */}
         <div className="flex justify-center select-none my-1">
           <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-200/50 dark:bg-dark-cardElevated/60 text-slate-500 dark:text-slate-400 text-[11px] font-semibold text-center max-w-md">
@@ -507,10 +501,12 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
             );
           })
         )}
+        </div>
       </div>
 
       {/* 3. BARRA INFERIOR FIXA DE RESPOSTA (RODAPÉ FIXO NO FUNDO) */}
-      <div className="shrink-0 z-10 pt-2.5 pb-3 px-3 sm:px-5 bg-[#f0f2f5] dark:bg-[#202c33] border-t border-slate-200/80 dark:border-dark-border/80 space-y-2.5">
+      <div className="shrink-0 z-10 px-4 sm:px-6 md:px-8 py-3 bg-white/95 dark:bg-dark-card/95 backdrop-blur-md border-t border-slate-200/80 dark:border-dark-border/80">
+        <div className="max-w-4xl mx-auto w-full space-y-2.5">
         {/* BANNER DE RESPOSTA ATIVA (QUOTED REPLY DOCKED) */}
         {replyingToMessage && (
           <div className="flex items-center justify-between gap-3 px-3.5 py-2 rounded-2xl bg-slate-100/90 dark:bg-dark-cardElevated border-l-4 border-emerald-500 shadow-xs animate-in fade-in slide-in-from-bottom-1 duration-200">
@@ -653,6 +649,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
             <Send className="w-4 h-4 ml-0.5" />
           </button>
         </form>
+        </div>
       </div>
     </div>
   );

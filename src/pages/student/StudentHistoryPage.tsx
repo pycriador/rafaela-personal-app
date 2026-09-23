@@ -71,7 +71,7 @@ export const StudentHistoryPage: React.FC = () => {
   // Se a rota for /student/chat, renderiza a experiência integrada de chat em tela cheia
   if (isDedicatedChat) {
     return (
-      <div className="w-full flex flex-col flex-1">
+      <div className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden">
         <StudentTrainerChatSection
           student={studentProfile}
           currentUserId={user?.id || studentProfile.userId || studentProfile.id}
