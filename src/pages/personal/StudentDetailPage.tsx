@@ -35,6 +35,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Ca
 import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { Tabs } from '../../components/ui/Tabs';
+import { StudentSubNav } from '../../components/students/StudentSubNav';
 import { StatCard } from '../../components/ui/StatCard';
 import { Modal } from '../../components/ui/Modal';
 import { Input } from '../../components/ui/Input';
@@ -1114,20 +1115,13 @@ export const StudentDetailPage: React.FC = () => {
       </Card>
 
       {/* Tabs Navigation (Section 9) */}
-      <Tabs
+      <StudentSubNav
         activeTab={activeTab === 'chat' ? 'conversa' : activeTab}
-        onChange={setActiveTab}
-        tabs={[
-          { id: 'resumo', label: 'Resumo', icon: <Users className="w-4 h-4" /> },
-          { id: 'treinos', label: 'Treinos', icon: <Dumbbell className="w-4 h-4" /> },
-          { id: 'conversa', label: 'Conversa', icon: <MessageSquare className="w-4 h-4" /> },
-          { id: 'anamnese', label: 'Anamnese', icon: <ClipboardList className="w-4 h-4" /> },
-          { id: 'alimentacao', label: 'Alimentação', icon: <Apple className="w-4 h-4" /> },
-          { id: 'evolucao', label: 'Evolução', icon: <TrendingUp className="w-4 h-4" /> },
-          { id: 'historico', label: 'Histórico & Auditoria', icon: <History className="w-4 h-4" /> },
-          { id: 'ia', label: 'IA Copilot', icon: <Sparkles className="w-4 h-4 text-amber-400" /> },
-          { id: 'configuracoes', label: 'Configurações', icon: <Settings className="w-4 h-4" /> },
-        ]}
+        onTabChange={setActiveTab}
+        workoutDaysCount={workoutPlan?.days?.length || 0}
+        aiPendingProposalsCount={aiProposals.filter((p) => p.status === 'generated' || p.status === 'modified').length}
+        anamnesisPendingCount={anamnesisApps.filter((a) => a.status === 'pending').length}
+        sessionsCount={sessions.length}
       />
 
       {/* TAB 1: RESUMO (Section 10) */}
