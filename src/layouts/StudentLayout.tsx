@@ -255,7 +255,7 @@ export const StudentLayout: React.FC = () => {
                 className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors cursor-pointer"
                 aria-label="Alternar tema"
               >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+                {theme === 'dark' ? <Sun className="w-4 h-4 text-slate-400" /> : <Moon className="w-4 h-4" />}
               </button>
 
               <button
@@ -428,7 +428,7 @@ export const StudentLayout: React.FC = () => {
               className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors cursor-pointer"
             >
               <div className="flex items-center gap-2.5">
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-500" />}
+                {theme === 'dark' ? <Sun className="w-4 h-4 text-slate-400" /> : <Moon className="w-4 h-4 text-slate-500" />}
                 <span>Tema {theme === 'dark' ? 'Escuro' : 'Claro'}</span>
               </div>
               <span className="text-[11px] text-slate-400 font-normal capitalize">{theme}</span>

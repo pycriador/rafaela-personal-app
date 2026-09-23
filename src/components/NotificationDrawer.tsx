@@ -71,7 +71,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({ isOpen, 
               <div className="mt-0.5 shrink-0">
                 {notif.type === 'alert' && <AlertCircle className="w-4 h-4 text-rose-500" />}
                 {notif.type === 'warning' && <AlertTriangle className="w-4 h-4 text-amber-500" />}
-                {notif.type === 'info' && <Info className="w-4 h-4 text-cyan-500" />}
+                {notif.type === 'info' && <Info className="w-4 h-4 text-slate-500 dark:text-slate-400" />}
                 {!notif.type && <Bell className="w-4 h-4 text-emerald-500" />}
               </div>
               <div className="flex-1 min-w-0">

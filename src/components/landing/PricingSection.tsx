@@ -146,7 +146,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
               onClick={() => setActiveTab('combo')}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                 activeTab === 'combo'
-                  ? 'bg-emerald-500 text-white shadow-sm shadow-emerald-500/25 ring-1 ring-emerald-400'
+                  ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
                   : 'text-slate-500 dark:text-dark-muted hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -199,13 +199,13 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
               key={plan.id}
               className={`relative p-6 sm:p-7 rounded-3xl flex flex-col justify-between transition-all duration-200 bg-white dark:bg-dark-card border ${
                 plan.popular
-                  ? 'border-emerald-500 shadow-xl shadow-emerald-500/10 ring-2 ring-emerald-500/20'
+                  ? 'border-emerald-500/80 shadow-md ring-1 ring-emerald-500/30'
                   : 'border-slate-200 dark:border-dark-border hover:border-slate-300 dark:hover:border-slate-700'
               }`}
             >
               {/* Highlight Tag */}
               {plan.tag && (
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-emerald-500 text-white text-[10px] font-black uppercase tracking-wider shadow-md shadow-emerald-500/30 flex items-center gap-1">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-bold uppercase tracking-wider shadow-xs flex items-center gap-1">
                   <Sparkles className="w-3 h-3" />
                   <span>{plan.tag}</span>
                 </div>

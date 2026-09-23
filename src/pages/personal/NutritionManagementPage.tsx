@@ -377,7 +377,7 @@ export const NutritionManagementPage: React.FC = () => {
                     onClick={() => updateParams({ page: String(p) })}
                     className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
                       safePage === p
-                        ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/25 ring-2 ring-emerald-500/30'
+                        ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs font-semibold'
                         : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                     }`}
                   >

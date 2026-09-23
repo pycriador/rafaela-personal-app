@@ -16,7 +16,7 @@ export const LandingFooter: React.FC = () => {
           {/* Brand Info */}
           <div className="md:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-2xl bg-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/30">
+              <div className="w-9 h-9 rounded-2xl bg-emerald-600 dark:bg-emerald-500 flex items-center justify-center text-white shadow-2xs">
                 <Dumbbell className="w-5 h-5" />
               </div>
               <div>

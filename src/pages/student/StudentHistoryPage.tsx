@@ -178,7 +178,7 @@ export const StudentHistoryPage: React.FC = () => {
               )}
 
               {s.substitutedExercises.length > 0 && (
-                <div className="text-xs text-cyan-500 bg-cyan-500/10 p-2 rounded-lg">
+                <div className="text-xs text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-white/[0.04] border border-slate-200/60 dark:border-white/[0.06] p-2 rounded-lg">
                   Substituição: de {s.substitutedExercises[0].originalExerciseName} para <strong>{s.substitutedExercises[0].substitutedExerciseName}</strong>
                 </div>
               )}

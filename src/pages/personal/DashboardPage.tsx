@@ -309,7 +309,7 @@ export const DashboardPage: React.FC = () => {
                         {act.iconType === 'dumbbell' && <Dumbbell className="w-4 h-4 text-emerald-500" />}
                         {act.iconType === 'skip' && <AlertTriangle className="w-4 h-4 text-rose-500" />}
                         {act.iconType === 'check' && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
-                        {act.iconType === 'swap' && <ArrowUpRight className="w-4 h-4 text-cyan-500" />}
+                        {act.iconType === 'swap' && <ArrowUpRight className="w-4 h-4 text-slate-500 dark:text-slate-400" />}
                         {!act.iconType && <Activity className="w-4 h-4 text-slate-400" />}
                       </div>
                       <div className="flex-1 min-w-0">

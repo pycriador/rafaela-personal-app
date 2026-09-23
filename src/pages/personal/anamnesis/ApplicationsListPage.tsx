@@ -331,7 +331,7 @@ export const ApplicationsListPage: React.FC = () => {
                               className="text-xs font-bold"
                               title="Reaplicar formulário gerando nova solicitação sem sobrescrever esta"
                             >
-                              <RotateCcw className="w-3.5 h-3.5 text-cyan-500" />
+                              <RotateCcw className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                               <span className="hidden sm:inline">Reaplicar</span>
                             </Button>
                           )}

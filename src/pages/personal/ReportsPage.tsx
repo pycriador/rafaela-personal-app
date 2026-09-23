@@ -208,12 +208,12 @@ export const ReportsPage: React.FC = () => {
 
       {/* 3 Quick Export Action Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-5 flex flex-col justify-between hover:shadow-md transition-shadow">
+        <Card className="p-5 flex flex-col justify-between hover:border-slate-300 dark:hover:border-white/[0.15] transition-all shadow-xs">
           <div>
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-500 flex items-center justify-center mb-3">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-white/[0.08] flex items-center justify-center mb-3">
               <Calendar className="w-5 h-5" />
             </div>
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Relatório de Adesão Mensal</h3>
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Relatório de Adesão Mensal</h3>
             <p className="text-xs text-slate-500 dark:text-dark-muted mt-1 leading-relaxed">
               Consolidação de treinos prescritos, executados e frequência semanal de todos os {students.length} alunos.
             </p>
@@ -229,12 +229,12 @@ export const ReportsPage: React.FC = () => {
           </Button>
         </Card>
 
-        <Card className="p-5 flex flex-col justify-between hover:shadow-md transition-shadow">
+        <Card className="p-5 flex flex-col justify-between hover:border-slate-300 dark:hover:border-white/[0.15] transition-all shadow-xs">
           <div>
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/15 text-cyan-500 flex items-center justify-center mb-3">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-white/[0.08] flex items-center justify-center mb-3">
               <Scale className="w-5 h-5" />
             </div>
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Auditoria de Cargas & Variações</h3>
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Auditoria de Cargas & Variações</h3>
             <p className="text-xs text-slate-500 dark:text-dark-muted mt-1 leading-relaxed">
               Histórico com {modifications.length} registros de alterações Prescrito vs. Executado e justificativas.
             </p>
@@ -250,12 +250,12 @@ export const ReportsPage: React.FC = () => {
           </Button>
         </Card>
 
-        <Card className="p-5 flex flex-col justify-between hover:shadow-md transition-shadow">
+        <Card className="p-5 flex flex-col justify-between hover:border-slate-300 dark:hover:border-white/[0.15] transition-all shadow-xs">
           <div>
-            <div className="w-10 h-10 rounded-xl bg-purple-500/15 text-purple-500 flex items-center justify-center mb-3">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-white/[0.08] flex items-center justify-center mb-3">
               <ShieldCheck className="w-5 h-5" />
             </div>
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Conformidade & LGPD (Dados)</h3>
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">Conformidade & LGPD (Dados)</h3>
             <p className="text-xs text-slate-500 dark:text-dark-muted mt-1 leading-relaxed">
               Portabilidade e consentimento de dados cadastrais dos alunos para auditoria legal.
             </p>

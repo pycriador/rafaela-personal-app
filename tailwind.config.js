@@ -22,10 +22,10 @@ export default {
           950: '#022c22',
         },
         dark: {
-          bg: '#0B0F14',
-          card: '#12151B',
-          cardElevated: '#181C24',
-          border: 'rgba(255, 255, 255, 0.08)',
+          bg: '#0F1012',
+          card: '#15171A',
+          cardElevated: '#1B1D21',
+          border: 'rgba(255, 255, 255, 0.07)',
           muted: '#8E95A2',
         }
       },
@@ -49,7 +49,6 @@ export default {
         'lg': '0 12px 24px -4px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)',
         'xl': '0 20px 32px -6px rgba(0, 0, 0, 0.1), 0 8px 12px -4px rgba(0, 0, 0, 0.04)',
         '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.16)',
-        'glow-brand': '0 0 16px -4px rgba(16, 185, 129, 0.18)',
       }
     },
   },

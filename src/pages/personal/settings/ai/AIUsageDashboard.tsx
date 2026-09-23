@@ -126,55 +126,55 @@ export const AIUsageDashboard: React.FC = () => {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="p-4 bg-gradient-to-br from-emerald-500/10 to-transparent border-emerald-500/20">
+        <Card className="p-4 border-slate-200/80 dark:border-white/[0.08] shadow-xs">
           <div className="flex items-center justify-between text-slate-500 dark:text-dark-muted text-xs mb-1">
             <span>Requisições Totais</span>
-            <Zap className="w-4 h-4 text-emerald-500" />
+            <Zap className="w-4 h-4 text-slate-400 dark:text-slate-500" />
           </div>
-          <div className="text-2xl font-black text-slate-900 dark:text-white">
+          <div className="text-2xl font-semibold text-slate-900 dark:text-white font-mono tracking-tight">
             {stats.totalRequests}
           </div>
-          <div className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1 flex items-center gap-1 font-semibold">
+          <div className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1 flex items-center gap-1 font-medium">
             <CheckCircle2 className="w-3 h-3" />
             {stats.successRate}% sucesso operacional
           </div>
         </Card>
 
-        <Card className="p-4 bg-gradient-to-br from-cyan-500/10 to-transparent border-cyan-500/20">
+        <Card className="p-4 border-slate-200/80 dark:border-white/[0.08] shadow-xs">
           <div className="flex items-center justify-between text-slate-500 dark:text-dark-muted text-xs mb-1">
             <span>Tokens Consumidos</span>
-            <TrendingUp className="w-4 h-4 text-cyan-500" />
+            <TrendingUp className="w-4 h-4 text-slate-400 dark:text-slate-500" />
           </div>
-          <div className="text-2xl font-black text-slate-900 dark:text-white">
+          <div className="text-2xl font-semibold text-slate-900 dark:text-white font-mono tracking-tight">
             {stats.totalTokens.toLocaleString('pt-BR')}
           </div>
-          <div className="text-[11px] text-slate-500 dark:text-dark-muted mt-1">
+          <div className="text-[11px] text-slate-400 dark:text-dark-muted mt-1 font-normal">
             Prompt + Completion acumulados
           </div>
         </Card>
 
-        <Card className="p-4 bg-gradient-to-br from-amber-500/10 to-transparent border-amber-500/20">
+        <Card className="p-4 border-slate-200/80 dark:border-white/[0.08] shadow-xs">
           <div className="flex items-center justify-between text-slate-500 dark:text-dark-muted text-xs mb-1">
             <span>Latência Média</span>
-            <Clock className="w-4 h-4 text-amber-500" />
+            <Clock className="w-4 h-4 text-slate-400 dark:text-slate-500" />
           </div>
-          <div className="text-2xl font-black text-slate-900 dark:text-white">
+          <div className="text-2xl font-semibold text-slate-900 dark:text-white font-mono tracking-tight">
             {stats.avgLatencyMs} <span className="text-xs font-normal text-slate-400">ms</span>
           </div>
-          <div className="text-[11px] text-slate-500 dark:text-dark-muted mt-1">
+          <div className="text-[11px] text-slate-400 dark:text-dark-muted mt-1 font-normal">
             Tempo de resposta por chamada
           </div>
         </Card>
 
-        <Card className="p-4 bg-gradient-to-br from-purple-500/10 to-transparent border-purple-500/20">
+        <Card className="p-4 border-slate-200/80 dark:border-white/[0.08] shadow-xs">
           <div className="flex items-center justify-between text-slate-500 dark:text-dark-muted text-xs mb-1">
             <span>Custo Estimado</span>
-            <DollarSign className="w-4 h-4 text-purple-500" />
+            <DollarSign className="w-4 h-4 text-slate-400 dark:text-slate-500" />
           </div>
-          <div className="text-2xl font-black text-slate-900 dark:text-white">
+          <div className="text-2xl font-semibold text-slate-900 dark:text-white font-mono tracking-tight">
             ${stats.estimatedCostUsd.toFixed(4)}
           </div>
-          <div className="text-[11px] text-purple-600 dark:text-purple-400 mt-1 font-semibold">
+          <div className="text-[11px] text-slate-500 dark:text-dark-muted mt-1 font-medium">
             ≈ R$ {(stats.estimatedCostUsd * 5.6).toFixed(2)} (BRL)
           </div>
         </Card>
@@ -184,9 +184,9 @@ export const AIUsageDashboard: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Distribuição por Modelo */}
         <Card className="p-5 space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-dark-border">
-            <CardTitle className="text-sm font-bold flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-emerald-500" />
+          <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-white/[0.06]">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-slate-500 dark:text-slate-400" />
               Consumo por Modelo
             </CardTitle>
             <Badge variant="neutral" size="sm">{modelBreakdown.length} modelos</Badge>
@@ -199,20 +199,20 @@ export const AIUsageDashboard: React.FC = () => {
               modelBreakdown.map((item) => {
                 const pct = stats.totalTokens > 0 ? Math.round((item.tokens / stats.totalTokens) * 100) : 0;
                 return (
-                  <div key={item.model} className="p-3 rounded-xl bg-slate-50 dark:bg-dark-bg space-y-2 border border-slate-100 dark:border-dark-border">
+                  <div key={item.model} className="p-3 rounded-xl bg-slate-50/70 dark:bg-dark-cardElevated/40 space-y-2 border border-slate-200/60 dark:border-white/[0.06]">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-bold text-slate-800 dark:text-white">{item.model}</span>
+                      <span className="font-semibold text-slate-800 dark:text-white">{item.model}</span>
                       <span className="text-slate-500 font-mono text-[11px]">
                         {item.requests} reqs • {item.tokens.toLocaleString('pt-BR')} tokens
                       </span>
                     </div>
-                    <div className="w-full bg-slate-200 dark:bg-dark-border h-2 rounded-full overflow-hidden">
+                    <div className="w-full bg-slate-200/80 dark:bg-white/[0.08] h-2 rounded-full overflow-hidden">
                       <div
                         className="bg-emerald-500 h-full rounded-full transition-all"
                         style={{ width: `${Math.max(pct, 4)}%` }}
                       />
                     </div>
-                    <div className="text-right text-[10px] text-slate-400 font-semibold">{pct}% dos tokens</div>
+                    <div className="text-right text-[10px] text-slate-400 font-medium">{pct}% dos tokens</div>
                   </div>
                 );
               })
@@ -222,9 +222,9 @@ export const AIUsageDashboard: React.FC = () => {
 
         {/* Distribuição por Tipo de Tarefa */}
         <Card className="p-5 space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-dark-border">
-            <CardTitle className="text-sm font-bold flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-cyan-500" />
+          <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-white/[0.06]">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-slate-500 dark:text-slate-400" />
               Distribuição por Tipo de Tarefa
             </CardTitle>
             <Badge variant="neutral" size="sm">{taskBreakdown.length} tarefas</Badge>
@@ -235,22 +235,22 @@ export const AIUsageDashboard: React.FC = () => {
               <p className="text-xs text-slate-400 py-4 text-center">Nenhuma requisição registrada ainda.</p>
             ) : (
               taskBreakdown.map((t) => (
-                <div key={t.task} className="p-3 rounded-xl bg-slate-50 dark:bg-dark-bg space-y-2 border border-slate-100 dark:border-dark-border">
+                <div key={t.task} className="p-3 rounded-xl bg-slate-50/70 dark:bg-dark-cardElevated/40 space-y-2 border border-slate-200/60 dark:border-white/[0.06]">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-slate-800 dark:text-white">
+                    <span className="font-semibold text-slate-800 dark:text-white">
                       {taskLabels[t.task] || t.task}
                     </span>
                     <span className="text-slate-500 font-mono text-[11px]">
                       {t.count} chamadas
                     </span>
                   </div>
-                  <div className="w-full bg-slate-200 dark:bg-dark-border h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-slate-200/80 dark:bg-white/[0.08] h-2 rounded-full overflow-hidden">
                     <div
-                      className="bg-cyan-500 h-full rounded-full transition-all"
+                      className="bg-slate-700 dark:bg-slate-300 h-full rounded-full transition-all"
                       style={{ width: `${Math.max(t.percentage, 4)}%` }}
                     />
                   </div>
-                  <div className="text-right text-[10px] text-slate-400 font-semibold">{t.percentage}% do total</div>
+                  <div className="text-right text-[10px] text-slate-400 font-medium">{t.percentage}% do total</div>
                 </div>
               ))
             )}

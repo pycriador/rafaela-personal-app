@@ -27,7 +27,7 @@ export const HeroSection: React.FC = () => {
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.1]">
               Treinamento personalizado com a{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-500">
+              <span className="text-emerald-600 dark:text-emerald-400">
                 ciência e precisão
               </span>{' '}
               que seu corpo merece.
@@ -45,7 +45,7 @@ export const HeroSection: React.FC = () => {
                 size="lg"
                 onClick={() => scrollTo('planos')}
                 rightIcon={<ArrowRight className="w-4 h-4" />}
-                className="w-full sm:w-auto text-sm font-bold shadow-lg shadow-emerald-500/25 px-8"
+                className="w-full sm:w-auto text-sm font-semibold shadow-2xs px-8"
               >
                 Conhecer os Planos & Começar
               </Button>
@@ -81,7 +81,7 @@ export const HeroSection: React.FC = () => {
             {/* Decorative Floating Cards */}
             <div className="relative mx-auto max-w-sm sm:max-w-md">
               {/* Outer Phone/App Container */}
-              <div className="relative rounded-3xl bg-slate-950 p-4 shadow-2xl border border-slate-800 shadow-emerald-500/10">
+              <div className="relative rounded-3xl bg-slate-950 p-4 shadow-2xl border border-slate-800">
                 {/* Header inside phone mockup */}
                 <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10">
                   <div className="flex items-center gap-2">

@@ -504,7 +504,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
               disabled={isSubmitting || readonly}
               onClick={handleTriggerSubmit}
               leftIcon={<CheckCircle2 className="w-5 h-5 fill-current" />}
-              className="text-sm font-black shadow-lg shadow-emerald-500/25 cursor-pointer"
+              className="text-sm font-bold shadow-2xs cursor-pointer"
             >
               {isSubmitting ? 'Enviando...' : 'Confirmar e Enviar (Simulação)'}
             </Button>
@@ -671,7 +671,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
                   disabled={isSubmitting || readonly}
                   onClick={handleTriggerSubmit}
                   leftIcon={<CheckCircle2 className="w-5 h-5 fill-current" />}
-                  className="text-sm font-black shadow-lg shadow-emerald-500/25 cursor-pointer"
+                  className="text-sm font-bold shadow-2xs cursor-pointer"
                 >
                   {isSubmitting ? 'Enviando Formulário...' : (isPreview ? 'Confirmar e Enviar (Simulação)' : 'Confirmar e Enviar')}
                 </Button>

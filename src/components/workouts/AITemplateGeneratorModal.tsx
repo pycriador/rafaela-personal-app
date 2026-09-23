@@ -194,8 +194,8 @@ export const AITemplateGeneratorModal: React.FC<AITemplateGeneratorModalProps> =
         {/* Header Branding */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200 dark:border-dark-border">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-white flex items-center justify-center shadow-lg shadow-emerald-500/25 shrink-0">
-              <Sparkles className="w-6 h-6 animate-pulse" />
+            <div className="w-12 h-12 rounded-2xl bg-emerald-600 dark:bg-emerald-500 text-white flex items-center justify-center shadow-xs shrink-0">
+              <Sparkles className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -396,7 +396,7 @@ export const AITemplateGeneratorModal: React.FC<AITemplateGeneratorModalProps> =
                 onClick={handleGenerate}
                 isLoading={isGenerating}
                 leftIcon={<Sparkles className="w-4 h-4 text-emerald-200" />}
-                className="shadow-lg shadow-emerald-500/25 font-bold"
+                className="shadow-2xs font-semibold"
               >
                 {isGenerating ? 'IA Estruturando Série...' : 'Gerar Série com IA'}
               </Button>
@@ -406,7 +406,7 @@ export const AITemplateGeneratorModal: React.FC<AITemplateGeneratorModalProps> =
           /* STEP 2: REVIEW & EDIT GENERATED TEMPLATE */
           <div className="space-y-6">
             {/* Template Header Overview */}
-            <div className="p-5 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent border border-emerald-500/30 space-y-3">
+            <div className="p-5 rounded-2xl bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border space-y-3 shadow-xs">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
                   <Badge variant="brand" size="md">
@@ -592,7 +592,7 @@ export const AITemplateGeneratorModal: React.FC<AITemplateGeneratorModalProps> =
                   onClick={handleSave}
                   isLoading={isSaving}
                   leftIcon={<CheckCircle2 className="w-4 h-4 text-white" />}
-                  className="shadow-lg shadow-emerald-500/25 font-bold w-full sm:w-auto"
+                  className="shadow-2xs font-semibold w-full sm:w-auto"
                 >
                   Salvar como Série Modelo
                 </Button>

@@ -591,8 +591,8 @@ export const FormEditorPage: React.FC = () => {
                             </div>
 
                             {field.condition && (
-                              <p className="text-[10px] text-cyan-600 dark:text-cyan-400 font-semibold mt-0.5 flex items-center gap-1">
-                                <Sparkles className="w-3 h-3" />
+                              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-0.5 flex items-center gap-1">
+                                <Sparkles className="w-3 h-3 text-slate-400" />
                                 <span>Condicional (exibido apenas se {field.condition.operator} {String(field.condition.value)})</span>
                               </p>
                             )}

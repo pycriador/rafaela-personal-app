@@ -498,7 +498,7 @@ export const ExercisesPage: React.FC = () => {
             )}
 
             {currentCategory !== 'all' && (
-              <span className="inline-flex items-center gap-1 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-semibold px-2 py-0.5 rounded-lg text-[11px] border border-blue-200 dark:border-blue-800/50">
+              <span className="inline-flex items-center gap-1 bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 font-medium px-2 py-0.5 rounded-lg text-[11px] border border-slate-200/80 dark:border-white/[0.08]">
                 Categoria: {currentCategory}
                 <button
                   type="button"
@@ -511,7 +511,7 @@ export const ExercisesPage: React.FC = () => {
             )}
 
             {currentType !== 'all' && (
-              <span className="inline-flex items-center gap-1 bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 font-semibold px-2 py-0.5 rounded-lg text-[11px] border border-purple-200 dark:border-purple-800/50">
+              <span className="inline-flex items-center gap-1 bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 font-medium px-2 py-0.5 rounded-lg text-[11px] border border-slate-200/80 dark:border-white/[0.08]">
                 Tipo: {currentType}
                 <button
                   type="button"
@@ -775,7 +775,7 @@ export const ExercisesPage: React.FC = () => {
                       onClick={() => handlePageChange(p)}
                       className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
                         validCurrentPage === p
-                          ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/25 ring-2 ring-emerald-500/30'
+                          ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs font-semibold'
                           : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                       }`}
                     >

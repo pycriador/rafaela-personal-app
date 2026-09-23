@@ -691,7 +691,7 @@ export const WorkoutBuilderPage: React.FC = () => {
                     onClick={() => updateStudentParams({ studentPage: String(p), page: String(p) })}
                     className={`w-8 h-8 rounded-xl text-xs font-bold transition-all ${
                       validStudentPage === p
-                        ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/25 ring-2 ring-emerald-500/30'
+                        ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs font-semibold'
                         : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                     }`}
                   >
@@ -806,7 +806,7 @@ export const WorkoutBuilderPage: React.FC = () => {
                 onClick={() => setActiveDayIndex(idx)}
                 className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2 cursor-pointer ${
                   activeDayIndex === idx
-                    ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                    ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
                     : 'bg-white dark:bg-dark-card text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-dark-border'
                 }`}
               >
@@ -952,10 +952,10 @@ export const WorkoutBuilderPage: React.FC = () => {
                             <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.allowSetChange ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 line-through'}`}>
                               Alterar Séries
                             </span>
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.allowSubstitution ? 'bg-cyan-500/15 text-cyan-600 dark:text-cyan-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 line-through'}`}>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.allowSubstitution ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 line-through'}`}>
                               Substituir ({item.alternatives.length})
                             </span>
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.allowSkip ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 line-through'}`}>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.allowSkip ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 line-through'}`}>
                               Pular
                             </span>
                           </div>

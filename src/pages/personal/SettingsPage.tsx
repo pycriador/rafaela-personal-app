@@ -513,7 +513,7 @@ export const SettingsPage: React.FC = () => {
           onClick={() => handleTabChange('usuarios')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'usuarios'
-              ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
           }`}
         >
@@ -529,7 +529,7 @@ export const SettingsPage: React.FC = () => {
           onClick={() => handleTabChange('backup')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'backup'
-              ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
           }`}
         >
@@ -542,7 +542,7 @@ export const SettingsPage: React.FC = () => {
           onClick={() => handleTabChange('sistema')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'sistema'
-              ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
           }`}
         >
@@ -555,11 +555,11 @@ export const SettingsPage: React.FC = () => {
           onClick={() => handleTabChange('ia')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'ia'
-              ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
           }`}
         >
-          <Sparkles className="w-4 h-4 text-amber-300" />
+          <Sparkles className="w-4 h-4" />
           <span>Inteligência Artificial (Copilot)</span>
         </button>
       </div>
@@ -631,7 +631,7 @@ export const SettingsPage: React.FC = () => {
 
                 <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
                   <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                    <Dumbbell className="w-3.5 h-3.5 text-blue-500" />
+                    <Dumbbell className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                     <span>Treinos</span>
                   </div>
                   <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
@@ -642,7 +642,7 @@ export const SettingsPage: React.FC = () => {
 
                 <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
                   <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                    <Clock className="w-3.5 h-3.5 text-cyan-500" />
+                    <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                     <span>Sessões</span>
                   </div>
                   <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
@@ -653,7 +653,7 @@ export const SettingsPage: React.FC = () => {
 
                 <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
                   <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                    <ShieldCheck className="w-3.5 h-3.5 text-amber-500" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                     <span>Auditoria</span>
                   </div>
                   <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
@@ -664,7 +664,7 @@ export const SettingsPage: React.FC = () => {
 
                 <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
                   <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                    <Apple className="w-3.5 h-3.5 text-rose-500" />
+                    <Apple className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                     <span>Nutrição</span>
                   </div>
                   <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
@@ -675,7 +675,7 @@ export const SettingsPage: React.FC = () => {
 
                 <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
                   <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                    <FileText className="w-3.5 h-3.5 text-purple-500" />
+                    <FileText className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                     <span>Exercícios</span>
                   </div>
                   <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
@@ -686,7 +686,7 @@ export const SettingsPage: React.FC = () => {
 
                 <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
                   <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                    <Lock className="w-3.5 h-3.5 text-emerald-500" />
+                    <Lock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                     <span>Usuários</span>
                   </div>
                   <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
@@ -697,7 +697,7 @@ export const SettingsPage: React.FC = () => {
 
                 <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/60 dark:border-dark-border/40">
                   <div className="flex items-center gap-2 text-slate-500 text-xs mb-1">
-                    <Layers className="w-3.5 h-3.5 text-teal-500" />
+                    <Layers className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                     <span>Eventos</span>
                   </div>
                   <span className="text-xl font-black text-slate-900 dark:text-white font-mono">
@@ -821,12 +821,12 @@ export const SettingsPage: React.FC = () => {
                 onClick={() => theme !== 'dark' && toggleTheme()}
                 className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between min-h-[110px] cursor-pointer ${
                   theme === 'dark'
-                    ? 'border-emerald-500 bg-slate-900 text-white shadow-lg shadow-emerald-500/10 ring-2 ring-emerald-500/20'
-                    : 'border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:border-emerald-500/40'
+                    ? 'border-emerald-500/80 bg-slate-900 text-white shadow-2xs ring-1 ring-emerald-500/30'
+                    : 'border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/[0.15]'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <div className="w-8 h-8 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400">
+                  <div className="w-8 h-8 rounded-xl bg-slate-800 flex items-center justify-center text-slate-200">
                     <Moon className="w-4 h-4" />
                   </div>
                   {theme === 'dark' && (
@@ -844,12 +844,12 @@ export const SettingsPage: React.FC = () => {
                 onClick={() => theme !== 'light' && toggleTheme()}
                 className={`p-4 rounded-2xl border text-left transition-all flex flex-col justify-between min-h-[110px] cursor-pointer ${
                   theme === 'light'
-                    ? 'border-emerald-500 bg-white text-slate-900 shadow-lg shadow-emerald-500/10 ring-2 ring-emerald-500/20'
-                    : 'border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:border-emerald-500/40'
+                    ? 'border-emerald-500/80 bg-white text-slate-900 shadow-2xs ring-1 ring-emerald-500/30'
+                    : 'border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/[0.15]'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <div className="w-8 h-8 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-500">
+                  <div className="w-8 h-8 rounded-xl bg-slate-100 flex items-center justify-center text-slate-700">
                     <Sun className="w-4 h-4" />
                   </div>
                   {theme === 'light' && (

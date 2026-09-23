@@ -157,7 +157,7 @@ export const WorkoutTemplatesModal: React.FC<WorkoutTemplatesModalProps> = ({
                         <span className="text-[10px] text-slate-400 uppercase font-mono font-bold">
                           {template.level}
                         </span>
-                        <span className="px-1.5 py-0.5 rounded-md bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 text-[10px] font-mono font-bold flex items-center gap-1">
+                        <span className="px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-white/[0.06] text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-white/[0.08] text-[10px] font-mono font-bold flex items-center gap-1">
                           <GitFork className="w-2.5 h-2.5" />
                           {template.versionTag || `v${template.version || 1}.0`}
                         </span>
@@ -187,12 +187,12 @@ export const WorkoutTemplatesModal: React.FC<WorkoutTemplatesModalProps> = ({
 
                   <div className="flex items-center gap-3 mt-3 text-xs text-slate-400">
                     <span className="flex items-center gap-1 font-mono font-bold text-slate-600 dark:text-slate-300">
-                      <Dumbbell className="w-3.5 h-3.5 text-emerald-500" />
+                      <Dumbbell className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                       {template.exercises.length} exercícios
                     </span>
                     <span>•</span>
                     <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-cyan-500" />
+                      <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                       ~{template.estimatedMinutes} min
                     </span>
                   </div>

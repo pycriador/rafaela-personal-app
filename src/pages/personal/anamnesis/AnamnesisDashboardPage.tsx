@@ -156,7 +156,7 @@ export const AnamnesisDashboardPage: React.FC = () => {
         <StatCard
           title="Respostas Recebidas"
           value={stats.submittedResponsesCount}
-          icon={<CheckCircle2 className="w-6 h-6 text-cyan-500" />}
+          icon={<CheckCircle2 className="w-6 h-6 text-emerald-500" />}
           subtitle="Anamneses preenchidas com aceite"
         />
         <StatCard

@@ -72,9 +72,9 @@ export const StudentNutritionPage: React.FC = () => {
 
                     {item.substitutions && item.substitutions.length > 0 && (
                       <div className="flex items-start gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 bg-white/60 dark:bg-slate-900/40 p-1.5 rounded-lg">
-                        <ArrowRightLeft className="w-3 h-3 text-cyan-500 shrink-0 mt-0.5" />
+                        <ArrowRightLeft className="w-3 h-3 text-slate-400 shrink-0 mt-0.5" />
                         <span>
-                          <strong className="text-cyan-600 dark:text-cyan-400">Substituir por:</strong>{' '}
+                          <strong className="text-slate-700 dark:text-slate-300">Substituir por:</strong>{' '}
                           {item.substitutions.join(' ou ')}
                         </span>
                       </div>

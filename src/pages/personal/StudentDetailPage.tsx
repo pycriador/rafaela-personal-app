@@ -1215,7 +1215,7 @@ export const StudentDetailPage: React.FC = () => {
             <StatCard
               title="Próximo Treino"
               value={nextWorkoutInfo.label}
-              icon={<Calendar className="w-6 h-6 text-cyan-500" />}
+              icon={<Calendar className="w-6 h-6 text-slate-500 dark:text-slate-400" />}
               subtitle={`${nextWorkoutInfo.workoutName}${nextWorkoutInfo.dateStr ? ` • ${nextWorkoutInfo.dateStr}` : ''}`}
             />
           </div>
@@ -1360,7 +1360,7 @@ export const StudentDetailPage: React.FC = () => {
                         )}
 
                         {mod.action === 'EXERCISE_SUBSTITUTED' && (
-                          <div className="text-xs text-cyan-500 font-medium">
+                          <div className="text-xs text-slate-600 dark:text-slate-300 font-medium">
                             Substituído por alternativa autorizada: <strong>{mod.after}</strong> (Motivo: {mod.reason})
                           </div>
                         )}
@@ -1679,13 +1679,13 @@ export const StudentDetailPage: React.FC = () => {
 
                           {/* Flexibility Permissions Badges (Section 17 & 18) */}
                           <div className="flex flex-wrap items-center gap-1 sm:justify-end">
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.allowWeightChange ? 'bg-emerald-500/15 text-emerald-500' : 'bg-slate-200 dark:bg-slate-800 text-slate-400 line-through'}`}>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.allowWeightChange ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' : 'bg-slate-200 dark:bg-slate-800 text-slate-400 line-through'}`}>
                               Alterar Carga
                             </span>
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.allowSubstitution ? 'bg-cyan-500/15 text-cyan-500' : 'bg-slate-200 dark:bg-slate-800 text-slate-400 line-through'}`}>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.allowSubstitution ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' : 'bg-slate-200 dark:bg-slate-800 text-slate-400 line-through'}`}>
                               Substituir
                             </span>
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.allowSkip ? 'bg-amber-500/15 text-amber-500' : 'bg-slate-200 dark:bg-slate-800 text-slate-400 line-through'}`}>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${item.allowSkip ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400' : 'bg-slate-200 dark:bg-slate-800 text-slate-400 line-through'}`}>
                               Pular
                             </span>
                             <button
@@ -1699,10 +1699,10 @@ export const StudentDetailPage: React.FC = () => {
                                   });
                                 }
                               }}
-                              className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-500/15 text-purple-600 dark:text-purple-400 hover:bg-purple-500/25 transition-colors flex items-center gap-1 cursor-pointer"
+                              className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/[0.1] transition-colors flex items-center gap-1 cursor-pointer"
                               title="Solicitar sugestões inteligentes de substituição à IA"
                             >
-                              <Sparkles className="w-3 h-3" />
+                              <Sparkles className="w-3 h-3 text-slate-400" />
                               IA: Alternativa
                             </button>
                           </div>
@@ -1777,7 +1777,7 @@ export const StudentDetailPage: React.FC = () => {
                       ? new Date(latestResponse.submittedAt).toLocaleDateString('pt-BR')
                       : 'Nenhum'
                   }
-                  icon={<History className="w-5 h-5 text-cyan-500" />}
+                  icon={<History className="w-5 h-5 text-slate-500 dark:text-slate-400" />}
                   subtitle={
                     latestResponse
                       ? formsMap[latestResponse.formId]?.name || 'Formulário'
@@ -2354,7 +2354,7 @@ export const StudentDetailPage: React.FC = () => {
               title="Volume Total Levantado"
               value={`${completedSessions.reduce((acc, s) => acc + s.totalVolumeKg, 0).toLocaleString()} kg`}
               subtitle="Carga total somada"
-              icon={<Dumbbell className="w-5 h-5 text-cyan-500" />}
+              icon={<Dumbbell className="w-5 h-5 text-slate-500 dark:text-slate-400" />}
             />
             <StatCard
               title="Exercícios Monitorados"
@@ -3175,7 +3175,7 @@ export const StudentDetailPage: React.FC = () => {
                           onClick={() => setSelectedNewDayOfWeek(dayName)}
                           className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer flex flex-col items-center justify-center gap-1 ${
                             isSelected
-                              ? 'border-emerald-500 bg-emerald-500 text-white shadow-md shadow-emerald-500/20 font-bold'
+                              ? 'border-emerald-600 bg-emerald-600 dark:border-emerald-500 dark:bg-emerald-500 text-white shadow-2xs font-semibold'
                               : 'border-slate-200 dark:border-dark-border bg-white dark:bg-dark-card hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200'
                           }`}
                         >

@@ -277,13 +277,13 @@ export const EvolutionOverviewPage: React.FC = () => {
       {selectedStudent ? (
         <div className="space-y-6">
           {/* Selected Student Banner */}
-          <Card className="p-5 bg-gradient-to-r from-slate-900 to-slate-800 text-white border-none shadow-lg">
+          <Card className="p-5 bg-slate-900 dark:bg-dark-card border border-slate-800 dark:border-dark-border text-white shadow-xs">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <img
                   src={selectedStudent.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
                   alt={selectedStudent.name}
-                  className="w-16 h-16 rounded-2xl object-cover ring-2 ring-emerald-500/50"
+                  className="w-16 h-16 rounded-2xl object-cover ring-1 ring-white/10"
                 />
                 <div>
                   <div className="flex items-center gap-2">
@@ -332,7 +332,7 @@ export const EvolutionOverviewPage: React.FC = () => {
               title="Tonelagem Total"
               value={`${studentCompletedSessions.reduce((acc, s) => acc + (s.totalVolumeKg || 0), 0).toLocaleString()} kg`}
               subtitle="Carga real somada"
-              icon={<Dumbbell className="w-6 h-6 text-cyan-500" />}
+              icon={<Dumbbell className="w-6 h-6 text-slate-500 dark:text-slate-400" />}
             />
             <StatCard
               title="Taxa de Adesão"
@@ -551,7 +551,7 @@ export const EvolutionOverviewPage: React.FC = () => {
               title="Exercícios Modificados"
               value={changedModificationsCount > 0 ? String(changedModificationsCount) : '18'}
               subtitle="Autoajustes pelo aluno"
-              icon={<TrendingUp className="w-6 h-6 text-cyan-500" />}
+              icon={<TrendingUp className="w-6 h-6 text-slate-500 dark:text-slate-400" />}
             />
             <StatCard
               title="Exercícios Pulados"

@@ -5,7 +5,7 @@ interface ProgressBarProps {
   label?: string;
   subLabel?: string;
   size?: 'sm' | 'md' | 'lg';
-  variant?: 'emerald' | 'cyan' | 'amber' | 'rose';
+  variant?: 'emerald' | 'cyan' | 'amber' | 'rose' | 'neutral' | 'brand';
   className?: string;
 }
 
@@ -27,7 +27,9 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   const colorClasses = {
     emerald: 'bg-emerald-500',
-    cyan: 'bg-cyan-500',
+    brand: 'bg-emerald-500',
+    cyan: 'bg-slate-600 dark:bg-slate-400',
+    neutral: 'bg-slate-600 dark:bg-slate-400',
     amber: 'bg-amber-500',
     rose: 'bg-rose-500',
   };

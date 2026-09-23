@@ -6,6 +6,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Card } from '../../components/ui/Card';
+import { Badge } from '../../components/ui/Badge';
 import { Dumbbell, Sparkles, User, Lock, ArrowRight, Sun, Moon } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
@@ -57,7 +58,7 @@ export const LoginPage: React.FC = () => {
     role: 'personal' as const,
     tag: 'Personal Trainer',
     desc: 'Visão do Professor: gestão de alunos, fichas, biblioteca de exercícios e financeiro',
-    color: 'border-emerald-500/50 bg-emerald-500/10 hover:bg-emerald-500/20 shadow-xs',
+    color: 'border-slate-200/90 dark:border-white/[0.08] bg-slate-50/70 dark:bg-dark-cardElevated/50 hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors shadow-2xs',
   };
 
   const studentUsers = [
@@ -66,9 +67,9 @@ export const LoginPage: React.FC = () => {
       name: 'João Pedro Santos',
       email: 'joao.santos@email.com',
       role: 'student' as const,
-      tag: 'Aluno • Emagrecimento',
+      tag: 'Aluna • Emagrecimento',
       desc: 'Área do Aluno: ficha de treino, execução de séries e bate-papo de dúvidas',
-      color: 'border-amber-500/40 bg-amber-500/5 hover:bg-amber-500/15',
+      color: 'border-slate-200/90 dark:border-white/[0.08] bg-slate-50/70 dark:bg-dark-cardElevated/50 hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors shadow-2xs',
     },
     {
       id: 'user-mariana',
@@ -77,7 +78,7 @@ export const LoginPage: React.FC = () => {
       role: 'student' as const,
       tag: 'Aluna • Hipertrofia',
       desc: 'Área do Aluno: ficha de musculação, progressão de carga e alimentação',
-      color: 'border-cyan-500/40 bg-cyan-500/5 hover:bg-cyan-500/15',
+      color: 'border-slate-200/90 dark:border-white/[0.08] bg-slate-50/70 dark:bg-dark-cardElevated/50 hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors shadow-2xs',
     },
     {
       id: 'user-carlos',
@@ -86,7 +87,7 @@ export const LoginPage: React.FC = () => {
       role: 'student' as const,
       tag: 'Aluno • Condicionamento',
       desc: 'Área do Aluno: full body iniciante e acompanhamento de métricas',
-      color: 'border-purple-500/40 bg-purple-500/5 hover:bg-purple-500/15',
+      color: 'border-slate-200/90 dark:border-white/[0.08] bg-slate-50/70 dark:bg-dark-cardElevated/50 hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors shadow-2xs',
     },
   ];
 
@@ -95,64 +96,64 @@ export const LoginPage: React.FC = () => {
       {/* Theme toggle in corner */}
       <button
         onClick={toggleTheme}
-        className="absolute top-4 right-4 p-3 rounded-2xl bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors shadow-sm"
+        className="absolute top-4 right-4 p-2.5 rounded-xl bg-white dark:bg-dark-card border border-slate-200 dark:border-white/[0.08] text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors shadow-2xs"
         title="Alternar tema"
       >
-        {theme === 'dark' ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5" />}
+        {theme === 'dark' ? <Sun className="w-4 h-4 text-slate-400" /> : <Moon className="w-4 h-4" />}
       </button>
 
       <div className="max-w-md w-full space-y-6">
         {/* Header Branding */}
         <div className="text-center space-y-2">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-tr from-emerald-600 to-emerald-400 text-white shadow-xl shadow-emerald-500/25 mb-1">
-            <Dumbbell className="w-8 h-8" />
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-slate-900 text-white dark:bg-emerald-500 dark:text-slate-950 shadow-2xs mb-1">
+            <Dumbbell className="w-6 h-6" />
           </div>
-          <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
             RAFAELA TRAINING
           </h1>
-          <p className="text-sm font-medium text-slate-500 dark:text-dark-muted">
+          <p className="text-xs sm:text-sm font-normal text-slate-500 dark:text-dark-muted">
             Plataforma de Treinos Personalizados • Prescrição & Execução
           </p>
         </div>
 
         {/* Quick Demo Login Box */}
-        <Card className="p-5 border-emerald-500/30 space-y-4">
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-            <Sparkles className="w-4 h-4" />
+        <Card className="p-5 border-slate-200/80 dark:border-white/[0.08] shadow-xs space-y-4">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
             Acesso Rápido com 1 Clique
           </div>
 
           {/* Section 1: Professor */}
           <div className="space-y-1.5">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+            <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider block">
               Entrar como Profissional (Personal Trainer)
             </span>
             <button
               type="button"
               onClick={() => handleQuick(trainerUser.id, trainerUser.role)}
               disabled={loading}
-              className={`w-full text-left p-3.5 rounded-xl border transition-all duration-150 flex items-center justify-between group ${trainerUser.color}`}
+              className={`w-full text-left p-3 rounded-xl border transition-all duration-150 flex items-center justify-between group ${trainerUser.color}`}
             >
               <div className="min-w-0 pr-2">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-black text-slate-900 dark:text-white">
+                  <span className="text-xs font-semibold text-slate-900 dark:text-white">
                     {trainerUser.name}
                   </span>
-                  <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded bg-emerald-500 text-white shadow-xs">
+                  <Badge variant="brand" size="sm">
                     {trainerUser.tag}
-                  </span>
+                  </Badge>
                 </div>
-                <p className="text-[11px] text-slate-600 dark:text-slate-300 truncate mt-0.5 font-medium">
+                <p className="text-[11px] text-slate-500 dark:text-dark-muted truncate mt-0.5 font-normal">
                   {trainerUser.desc}
                 </p>
               </div>
-              <ArrowRight className="w-4 h-4 text-emerald-500 group-hover:translate-x-1 transition-all shrink-0" />
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all shrink-0" />
             </button>
           </div>
 
           {/* Section 2: Alunos */}
-          <div className="space-y-2 pt-1 border-t border-slate-100 dark:border-dark-border/60">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+          <div className="space-y-2 pt-1 border-t border-slate-100 dark:border-white/[0.06]">
+            <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider block">
               Entrar como Aluno (Login Único & Funcional)
             </span>
             <div className="space-y-1.5">
@@ -166,12 +167,12 @@ export const LoginPage: React.FC = () => {
                 >
                   <div className="min-w-0 pr-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-slate-900 dark:text-white">
+                      <span className="text-xs font-semibold text-slate-900 dark:text-white">
                         {u.name}
                       </span>
-                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-black/10 dark:bg-white/10 text-slate-700 dark:text-slate-300">
+                      <Badge variant="neutral" size="sm">
                         {u.tag}
-                      </span>
+                      </Badge>
                     </div>
                     <p className="text-[11px] text-slate-500 dark:text-dark-muted truncate mt-0.5">
                       {u.desc}

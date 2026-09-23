@@ -96,7 +96,7 @@ export const FormResponseViewer: React.FC<FormResponseViewerProps> = ({
     <div className="space-y-6 max-w-4xl mx-auto w-full">
       {/* Header com Metadados da Resposta (ocultável se já exibido externamente) */}
       {!hideHeader && (
-        <Card className="p-5 sm:p-6 border-emerald-500/30 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent space-y-4">
+        <Card className="p-5 sm:p-6 border border-slate-200/80 dark:border-dark-border space-y-4 shadow-xs">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200/70 dark:border-dark-border/60">
             <div>
               <div className="flex items-center gap-2 mb-1">

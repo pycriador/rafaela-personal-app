@@ -152,9 +152,9 @@ export const StudentFillFormPage: React.FC = () => {
       </div>
 
       {/* Header Banner */}
-      <Card className="p-6 bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-cyan-500/10 border-emerald-500/30">
+      <Card className="p-6 border border-slate-200/80 dark:border-dark-border shadow-xs">
         <div className="flex items-start gap-4">
-          <div className="p-3 rounded-2xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 shrink-0">
+          <div className="p-3 rounded-2xl bg-slate-100 dark:bg-white/[0.06] text-slate-800 dark:text-slate-200 shrink-0">
             <ClipboardList className="w-7 h-7" />
           </div>
           <div className="space-y-1">

@@ -493,7 +493,7 @@ export const StudentDashboardPage: React.FC = () => {
             </Card>
 
             <Card className="p-4 flex items-center gap-3 border-slate-200/80 dark:border-white/[0.08] shadow-xs">
-              <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-200/60 dark:border-cyan-500/20 text-cyan-600 dark:text-cyan-400 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-white/[0.06] border border-slate-200/60 dark:border-white/[0.08] text-slate-700 dark:text-slate-300 flex items-center justify-center shrink-0">
                 <Award className="w-5 h-5" />
               </div>
               <div>

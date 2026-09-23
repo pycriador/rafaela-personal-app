@@ -109,7 +109,7 @@ export const RestTimer: React.FC<RestTimerProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={() => setIsRunning(!isRunning)}
-              className="p-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold transition-all active:scale-95 shadow-lg shadow-emerald-500/30"
+              className="p-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition-all active:scale-95 shadow-2xs"
             >
               {isRunning ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
             </button>

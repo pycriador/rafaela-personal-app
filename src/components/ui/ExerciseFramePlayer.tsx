@@ -138,8 +138,8 @@ export const ExerciseFramePlayer: React.FC<ExerciseFramePlayerProps> = ({
             title={isPlaying ? 'Pausar animação' : 'Executar animação'}
             className={`absolute bottom-2.5 right-2.5 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md transition-all ${
               isPlaying
-                ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30'
-                : 'bg-black/70 hover:bg-emerald-500 text-white hover:shadow-lg hover:shadow-emerald-500/30 border border-white/20'
+                ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
+                : 'bg-black/70 hover:bg-black/90 text-white border border-white/20'
             }`}
           >
             {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current ml-0.5" />}
@@ -232,9 +232,9 @@ export const ExerciseFramePlayer: React.FC<ExerciseFramePlayerProps> = ({
                 key={idx}
                 type="button"
                 onClick={(e) => handleFrameSelect(idx, e)}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-bold transition-all ${
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-semibold transition-all ${
                   idx === currentFrameIdx
-                    ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30 ring-1 ring-emerald-400'
+                    ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
                     : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
                 }`}
               >
@@ -251,10 +251,10 @@ export const ExerciseFramePlayer: React.FC<ExerciseFramePlayerProps> = ({
           <button
             type="button"
             onClick={togglePlay}
-            className={`flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold transition-all shadow-lg select-none ${
+            className={`flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-semibold transition-all shadow-2xs select-none ${
               isPlaying
-                ? 'bg-emerald-500 text-white shadow-emerald-500/30 hover:bg-emerald-600'
-                : 'bg-white text-slate-900 hover:bg-slate-100 shadow-white/10'
+                ? 'bg-emerald-600 dark:bg-emerald-500 text-white hover:bg-emerald-700'
+                : 'bg-white text-slate-900 hover:bg-slate-100'
             }`}
           >
             {isPlaying ? (

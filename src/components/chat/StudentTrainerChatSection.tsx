@@ -54,14 +54,14 @@ const CATEGORY_CONFIG: Record<
   exercise_change: {
     label: 'Troca de Exercício',
     icon: RotateCcw,
-    badgeClass: 'bg-cyan-500/20 text-cyan-700 dark:text-cyan-400 font-bold',
-    bgLight: 'bg-cyan-500/10 dark:bg-cyan-950/20',
+    badgeClass: 'bg-slate-100 dark:bg-white/[0.06] text-slate-700 dark:text-slate-300 font-semibold',
+    bgLight: 'bg-slate-50 dark:bg-white/[0.02]',
   },
   assessment: {
     label: 'Avaliação da Treinadora',
     icon: Award,
-    badgeClass: 'bg-purple-500/20 text-purple-700 dark:text-purple-400 font-bold',
-    bgLight: 'bg-purple-500/10 dark:bg-purple-950/20',
+    badgeClass: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 font-semibold',
+    bgLight: 'bg-emerald-500/10 dark:bg-emerald-950/20',
   },
   motivation: {
     label: 'Motivação & Feedback',

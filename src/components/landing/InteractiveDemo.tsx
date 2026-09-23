@@ -132,8 +132,8 @@ export const InteractiveDemo: React.FC = () => {
               onClick={() => setSelectedId(ex.id)}
               className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer flex items-center gap-2 ${
                 selectedId === ex.id
-                  ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30 ring-2 ring-emerald-500/20'
-                  : 'bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-300 hover:border-emerald-500/50'
+                  ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs font-semibold'
+                  : 'bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-300 hover:border-slate-300 dark:hover:border-white/[0.15]'
               }`}
             >
               <span>{ex.name}</span>

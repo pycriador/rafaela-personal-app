@@ -497,9 +497,9 @@ export const StudentActiveWorkoutPage: React.FC = () => {
                     setSelectedAlternativeId(allowedAlternatives[0].id);
                     setSubModalOpen(true);
                   }}
-                  className="p-3 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-cyan-500 text-slate-800 dark:text-slate-200 text-xs font-bold flex flex-col items-center gap-1.5 transition-colors cursor-pointer"
+                  className="p-3 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-cardElevated hover:border-slate-400 dark:hover:border-white/[0.2] text-slate-800 dark:text-slate-200 text-xs font-bold flex flex-col items-center gap-1.5 transition-colors cursor-pointer"
                 >
-                  <ArrowRightLeft className="w-4 h-4 text-cyan-500" />
+                  <ArrowRightLeft className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                   <span>Substituir</span>
                 </button>
               )}
@@ -635,7 +635,7 @@ export const StudentActiveWorkoutPage: React.FC = () => {
                   fullWidth
                   onClick={handleLogSet}
                   leftIcon={<Check className="w-6 h-6 stroke-[3]" />}
-                  className="text-base font-black py-4 shadow-xl shadow-emerald-500/25 cursor-pointer"
+                  className="text-base font-black py-4 shadow-xs cursor-pointer"
                 >
                   Registrar Série {currentExerciseSets.length + 1}
                 </Button>
@@ -835,7 +835,7 @@ export const StudentActiveWorkoutPage: React.FC = () => {
                 onClick={() => setSelectedAlternativeId(alt.id)}
                 className={`w-full p-3 rounded-xl border text-xs font-bold text-left flex items-center justify-between transition-all ${
                   selectedAlternativeId === alt.id
-                    ? 'border-cyan-500 bg-cyan-500/15 text-cyan-600 dark:text-cyan-400'
+                    ? 'border-emerald-600/70 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
                     : 'border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-300'
                 }`}
               >
@@ -846,7 +846,7 @@ export const StudentActiveWorkoutPage: React.FC = () => {
                   </span>
                 </div>
                 {selectedAlternativeId === alt.id && (
-                  <Check className="w-4 h-4 text-cyan-500" />
+                  <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 )}
               </button>
             ))}
@@ -919,7 +919,7 @@ export const StudentActiveWorkoutPage: React.FC = () => {
                   onClick={() => setPerceivedRating(val)}
                   className={`w-10 h-10 rounded-2xl font-bold text-sm transition-all ${
                     perceivedRating === val
-                      ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 scale-105'
+                      ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs scale-105'
                       : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400'
                   }`}
                 >

@@ -243,7 +243,7 @@ export const PersonalLayout: React.FC = () => {
             className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors"
             aria-label="Alternar tema"
           >
-            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+            {theme === 'dark' ? <Sun className="w-4 h-4 text-slate-400" /> : <Moon className="w-4 h-4" />}
           </button>
           <button
             onClick={() => setIsNotifOpen(true)}
@@ -674,7 +674,7 @@ export const PersonalLayout: React.FC = () => {
                 className="hidden md:flex p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors"
                 title="Alternar tema"
               >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
+                {theme === 'dark' ? <Sun className="w-4 h-4 text-slate-400" /> : <Moon className="w-4 h-4" />}
               </button>
               <button
                 onClick={handleLogout}

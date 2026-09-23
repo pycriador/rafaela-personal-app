@@ -48,28 +48,20 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl shadow-xl border backdrop-blur-md transition-all duration-300 animate-slide-in ${
-              t.type === 'success'
-                ? 'bg-emerald-950/90 text-emerald-100 border-emerald-500/50'
-                : t.type === 'error'
-                ? 'bg-red-950/90 text-red-100 border-red-500/50'
-                : t.type === 'warning'
-                ? 'bg-amber-950/90 text-amber-100 border-amber-500/50'
-                : 'bg-slate-900/95 text-slate-100 border-slate-700'
-            }`}
+            className="pointer-events-auto flex items-start gap-3 p-3.5 rounded-xl shadow-lg border border-slate-200/90 dark:border-white/[0.1] bg-white dark:bg-dark-cardElevated text-slate-900 dark:text-slate-100 transition-all duration-300 animate-slide-in"
           >
             <div className="mt-0.5 shrink-0">
-              {t.type === 'success' && <CheckCircle2 className="w-5 h-5 text-emerald-400" />}
-              {t.type === 'error' && <AlertCircle className="w-5 h-5 text-red-400" />}
-              {t.type === 'warning' && <AlertTriangle className="w-5 h-5 text-amber-400" />}
-              {t.type === 'info' && <Info className="w-5 h-5 text-cyan-400" />}
+              {t.type === 'success' && <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />}
+              {t.type === 'error' && <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />}
+              {t.type === 'warning' && <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400" />}
+              {t.type === 'info' && <Info className="w-4 h-4 text-slate-500 dark:text-slate-300" />}
             </div>
-            <div className="flex-1 text-sm font-medium leading-relaxed">{t.message}</div>
+            <div className="flex-1 text-xs sm:text-sm font-medium leading-relaxed">{t.message}</div>
             <button
               onClick={() => removeToast(t.id)}
-              className="text-slate-400 hover:text-white transition-colors"
+              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5" />
             </button>
           </div>
         ))}

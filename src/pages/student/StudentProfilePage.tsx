@@ -44,7 +44,7 @@ export const StudentProfilePage: React.FC = () => {
           <img
             src={studentProfile.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
             alt={studentProfile.name}
-            className="w-24 h-24 rounded-3xl object-cover ring-4 ring-emerald-500/30 shadow-lg shadow-emerald-500/20"
+            className="w-24 h-24 rounded-3xl object-cover ring-2 ring-slate-200 dark:ring-white/10 shadow-sm"
           />
         </div>
 

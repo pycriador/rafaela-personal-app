@@ -335,9 +335,9 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('upload')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 cursor-pointer ${
               activeTab === 'upload'
-                ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
                 : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -348,9 +348,9 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('library')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 cursor-pointer ${
               activeTab === 'library'
-                ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
                 : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -361,9 +361,9 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('custom')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 cursor-pointer ${
               activeTab === 'custom'
-                ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
                 : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -374,9 +374,9 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
           <button
             type="button"
             onClick={() => setActiveTab('url')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shrink-0 cursor-pointer ${
               activeTab === 'url'
-                ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
+                ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
                 : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
             }`}
           >
@@ -410,11 +410,11 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                     className="hidden"
                   />
 
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mb-3 shadow-md shadow-emerald-500/10">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-100 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/[0.08] flex items-center justify-center mb-3 text-slate-700 dark:text-slate-300">
                     {isProcessing ? (
-                      <RefreshCw className="w-7 h-7 sm:w-8 sm:h-8 text-emerald-500 animate-spin" />
+                      <RefreshCw className="w-7 h-7 sm:w-8 sm:h-8 animate-spin" />
                     ) : (
-                      <UploadCloud className="w-7 h-7 sm:w-8 sm:h-8 text-emerald-500" />
+                      <UploadCloud className="w-7 h-7 sm:w-8 sm:h-8" />
                     )}
                   </div>
 
@@ -578,7 +578,7 @@ export const ExerciseMediaModal: React.FC<ExerciseMediaModalProps> = ({
                   <div
                     key={ex.id}
                     onClick={() => handleApplyFromLibrary(ex)}
-                    className="group relative rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500 p-2.5 sm:p-3 flex flex-col justify-between cursor-pointer transition-all duration-200 hover:shadow-xl hover:shadow-emerald-500/10 hover:-translate-y-0.5 text-left"
+                    className="group relative rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-600 p-2.5 sm:p-3 flex flex-col justify-between cursor-pointer transition-all duration-200 hover:shadow-md hover:shadow-black/30 hover:-translate-y-0.5 text-left"
                   >
                     {/* Illustration stage */}
                     <div className="w-full h-24 sm:h-28 rounded-xl bg-slate-950 flex items-center justify-center p-2 overflow-hidden mb-2 relative border border-white/5">
