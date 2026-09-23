@@ -1,38 +1,38 @@
 import { FormApplication } from '../../types';
 
 export const initialFormApplications: FormApplication[] = [
-  // Mariana Silva - Respondeu a v1 no início de agosto
+  // Lucas Ferreira (student-1) - Anamnese Inicial Concluída
   {
-    id: 'app-mariana-init-v1',
+    id: 'app-student-1-init-v1',
     formId: 'form-anamnese-inicial',
     formVersionId: 'ver-init-v1',
-    studentId: 'student-mariana',
+    studentId: 'student-1',
     status: 'completed',
     assignedBy: 'user-rafaela',
     assignedAt: '2026-08-01T10:00:00.000Z',
     dueAt: '2026-08-10T23:59:59.000Z',
-    message: 'Olá Mariana! Por favor, preencha sua anamnese completa para estruturarmos seu primeiro ciclo.',
+    message: 'Olá Lucas! Por favor, preencha sua anamnese completa para estruturarmos seu primeiro ciclo.',
     isMandatory: true,
   },
-  // Mariana Silva - Reaplicação da v2 em setembro
+  // Lucas Ferreira (student-1) - Anamnese v2 Reaplicada Concluída
   {
-    id: 'app-mariana-init-v2',
+    id: 'app-student-1-init-v2',
     formId: 'form-anamnese-inicial',
     formVersionId: 'ver-init-v2',
-    studentId: 'student-mariana',
+    studentId: 'student-1',
     status: 'completed',
     assignedBy: 'user-rafaela',
     assignedAt: '2026-09-15T15:00:00.000Z',
     dueAt: '2026-09-22T23:59:59.000Z',
-    message: 'Mariana, atualizamos algumas perguntas sobre suplementação na anamnese.',
+    message: 'Lucas, atualizamos algumas perguntas sobre suplementação na anamnese.',
     isMandatory: true,
   },
-  // Mariana Silva - Check-in do mês atual pendente
+  // Lucas Ferreira (student-1) - Check-in mensal pendente
   {
-    id: 'app-mariana-checkin',
+    id: 'app-student-1-checkin',
     formId: 'form-checkin-mensal',
     formVersionId: 'ver-checkin-v1',
-    studentId: 'student-mariana',
+    studentId: 'student-1',
     status: 'pending',
     assignedBy: 'user-rafaela',
     assignedAt: '2026-09-20T10:00:00.000Z',
@@ -41,101 +41,100 @@ export const initialFormApplications: FormApplication[] = [
     isMandatory: false,
   },
 
-  // João Santos - Anamnese Inicial v1 Concluída
+  // Camila Rocha (student-2) - Anamnese Inicial Concluída
   {
-    id: 'app-joao-init-v1',
+    id: 'app-student-2-init-v1',
     formId: 'form-anamnese-inicial',
     formVersionId: 'ver-init-v1',
-    studentId: 'student-joao',
+    studentId: 'student-2',
     status: 'completed',
     assignedBy: 'user-rafaela',
     assignedAt: '2026-08-01T10:00:00.000Z',
     dueAt: '2026-08-15T23:59:59.000Z',
-    message: 'João, preencha sua anamnese inicial para estruturarmos seu primeiro treino.',
+    message: 'Camila, preencha sua anamnese inicial para estruturarmos seu primeiro treino.',
     isMandatory: true,
   },
-
-  // João Santos - Anamnese Inicial pendente
+  // Camila Rocha (student-2) - Anamnese Inicial v2 Pendente
   {
-    id: 'app-joao-init-v2',
+    id: 'app-student-2-init-v2',
     formId: 'form-anamnese-inicial',
     formVersionId: 'ver-init-v2',
-    studentId: 'student-joao',
+    studentId: 'student-2',
     status: 'pending',
     assignedBy: 'user-rafaela',
     assignedAt: '2026-09-18T11:00:00.000Z',
     dueAt: '2026-09-25T23:59:59.000Z',
-    message: 'João, preencha sua anamnese para calibrarmos as cargas das suas séries.',
+    message: 'Camila, preencha sua anamnese para calibrarmos as cargas das suas séries.',
     isMandatory: true,
   },
 
-  // Carlos Pereira - Atualização de saúde pendente
+  // Matheus Oliveira (student-3) - Atualização de saúde pendente
   {
-    id: 'app-carlos-health',
+    id: 'app-student-3-health',
     formId: 'form-atualizacao-saude',
     formVersionId: 'ver-health-v1',
-    studentId: 'student-carlos',
+    studentId: 'student-3',
     status: 'pending',
     assignedBy: 'user-rafaela',
     assignedAt: '2026-09-19T14:30:00.000Z',
     dueAt: '2026-09-26T23:59:59.000Z',
-    message: 'Carlos, favor atualizar se a dor lombar persistiu esta semana.',
+    message: 'Matheus, favor atualizar se a dor no ombro direito persistiu esta semana.',
     isMandatory: true,
   },
 
-  // Ana Souza - Avaliação de treino respondida
+  // Juliana Barbosa (student-4) - Avaliação de treino respondida
   {
-    id: 'app-ana-eval',
+    id: 'app-student-4-eval',
     formId: 'form-avaliacao-treino',
     formVersionId: 'ver-eval-v1',
-    studentId: 'student-ana',
+    studentId: 'student-4',
     status: 'completed',
     assignedBy: 'user-rafaela',
     assignedAt: '2026-09-10T09:00:00.000Z',
     dueAt: '2026-09-15T23:59:59.000Z',
-    message: 'Ana, me dê um retorno sobre como sentiu a sobrecarga deste novo bloco.',
+    message: 'Juliana, me dê um retorno sobre como sentiu a sobrecarga deste novo bloco.',
     isMandatory: false,
   },
 
-  // Fernanda Lima - Anamnese inicial pendente
+  // Gabriel Monteiro (student-5) - Anamnese inicial pendente
   {
-    id: 'app-fernanda-init',
+    id: 'app-student-5-init',
     formId: 'form-anamnese-inicial',
     formVersionId: 'ver-init-v2',
-    studentId: 'student-fernanda',
+    studentId: 'student-5',
     status: 'pending',
     assignedBy: 'user-rafaela',
     assignedAt: '2026-09-21T08:00:00.000Z',
     dueAt: '2026-09-28T23:59:59.000Z',
-    message: 'Seja bem-vinda Fernanda! Por gentileza, responda o formulário de anamnese.',
+    message: 'Seja bem-vindo Gabriel! Por gentileza, responda o formulário de anamnese.',
     isMandatory: true,
   },
 
-  // Carlos Pereira - Anamnese Inicial Concluída
+  // Renata Albuquerque (student-6) - Anamnese Inicial Concluída
   {
-    id: 'app-carlos-init',
+    id: 'app-student-6-init',
     formId: 'form-anamnese-inicial',
     formVersionId: 'ver-init-v1',
-    studentId: 'student-carlos',
+    studentId: 'student-6',
     status: 'completed',
     assignedBy: 'user-rafaela',
     assignedAt: '2026-08-05T09:00:00.000Z',
     dueAt: '2026-08-15T23:59:59.000Z',
-    message: 'Carlos, preencha sua anamnese completa para adaptarmos seus treinos.',
+    message: 'Renata, preencha sua anamnese completa para adaptarmos seus treinos.',
     isMandatory: true,
   },
 
-  // Mariana Silva - Check-in Mensal Agosto Concluído
+  // Lucas Ferreira (student-1) - Check-in Mensal Agosto Concluído
   {
-    id: 'app-mariana-checkin-ago',
+    id: 'app-student-1-checkin-ago',
     formId: 'form-checkin-mensal',
     formVersionId: 'ver-checkin-v1',
-    studentId: 'student-mariana',
+    studentId: 'student-1',
     status: 'completed',
     assignedBy: 'user-rafaela',
     assignedAt: '2026-08-25T10:00:00.000Z',
     dueAt: '2026-09-02T23:59:59.000Z',
-    message: 'Mariana, check-in do mês de agosto para avaliação.',
+    message: 'Lucas, check-in do mês de agosto para avaliação.',
     isMandatory: true,
   },
 ];

@@ -2,8 +2,8 @@ import { AIWorkoutProposal } from '../../types';
 
 export const initialAIProposals: AIWorkoutProposal[] = [
   {
-    id: 'prop-mariana-01',
-    studentId: 'student-mariana',
+    id: 'prop-student-1-01',
+    studentId: 'student-1',
     requestId: 'req-init-01',
     promptVersion: 'workout-generator-v1.0',
     model: 'gemini-2.0-flash',

@@ -4,7 +4,7 @@ export const initialAIRequests: AIRequest[] = [
   {
     id: 'req-init-01',
     trainerId: 'user-rafaela',
-    studentId: 'student-mariana',
+    studentId: 'student-1',
     task: 'workout_generation',
     model: 'gemini-2.0-flash',
     promptVersion: 'workout-generator-v1.0',
@@ -20,7 +20,7 @@ export const initialAIRequests: AIRequest[] = [
   {
     id: 'req-init-02',
     trainerId: 'user-rafaela',
-    studentId: 'student-joao',
+    studentId: 'student-2',
     task: 'exercise_alternative',
     model: 'gemini-2.0-flash',
     promptVersion: 'exercise-copilot-v1.0',

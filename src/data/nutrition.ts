@@ -2,10 +2,10 @@ import { NutritionPlan } from '../types';
 
 export const initialNutritionPlans: NutritionPlan[] = [
   {
-    id: 'nutrition-mariana',
-    studentId: 'student-mariana',
+    id: 'nutrition-student-1',
+    studentId: 'student-1',
     goal: 'Hipertrofia Limpa & Recuperação Muscular',
-    dailyCalories: 2250,
+    dailyCalories: 2450,
     disclaimer: 'Orientações nutricionais e opções de substituição alinhadas aos seus objetivos de treino.',
     updatedAt: '2026-09-10',
     meals: [
@@ -140,8 +140,8 @@ export const initialNutritionPlans: NutritionPlan[] = [
     ],
   },
   {
-    id: 'nutrition-joao',
-    studentId: 'student-joao',
+    id: 'nutrition-student-2',
+    studentId: 'student-2',
     goal: 'Déficit Calórico Orientado para Emagrecimento',
     dailyCalories: 1850,
     disclaimer: 'Orientações nutricionais e opções de substituição alinhadas aos seus objetivos de treino.',

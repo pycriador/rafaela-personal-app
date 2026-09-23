@@ -15,17 +15,18 @@ import { initialAIModels } from '../data/ai/aiModels';
 import { initialAIConfig } from '../data/ai/aiDefaultConfig';
 import { initialAIProposals } from '../data/ai/aiProposals';
 import { initialAIRequests } from '../data/ai/aiRequests';
+import { initialRankingGroups } from '../data/rankingGroups';
 
 export const STORAGE_KEYS = {
-  USERS: 'rafaela_app_users_v1',
-  STUDENTS: 'rafaela_app_students_v1',
+  USERS: 'rafaela_app_users_v2',
+  STUDENTS: 'rafaela_app_students_v2',
   EXERCISES: 'rafaela_app_exercises_v3', // bumped to v3 for cartoon vector illustrations
-  WORKOUT_PLANS: 'rafaela_app_workout_plans_v1',
-  SESSIONS: 'rafaela_app_sessions_v1',
-  MODIFICATIONS: 'rafaela_app_modifications_v1',
-  NUTRITION: 'rafaela_app_nutrition_v1',
-  ACTIVITIES: 'rafaela_app_activities_v1',
-  NOTIFICATIONS: 'rafaela_app_notifications_v1',
+  WORKOUT_PLANS: 'rafaela_app_workout_plans_v2',
+  SESSIONS: 'rafaela_app_sessions_v2',
+  MODIFICATIONS: 'rafaela_app_modifications_v2',
+  NUTRITION: 'rafaela_app_nutrition_v2',
+  ACTIVITIES: 'rafaela_app_activities_v2',
+  NOTIFICATIONS: 'rafaela_app_notifications_v2',
   CURRENT_USER: 'rafaela_app_current_user_v1',
   THEME: 'rafaela_app_theme_v1',
   CUSTOM_MEDIA: 'rafaela_app_custom_media_v1',
@@ -34,15 +35,15 @@ export const STORAGE_KEYS = {
   FORMS: 'rafaela_app_forms_v1',
   FORM_VERSIONS: 'rafaela_app_form_versions_v1',
   FORM_FIELDS: 'rafaela_app_form_fields_v1',
-  FORM_APPLICATIONS: 'rafaela_app_form_applications_v1',
-  FORM_RESPONSES: 'rafaela_app_form_responses_v1',
-  CONSENTS: 'rafaela_app_consents_v1',
+  FORM_APPLICATIONS: 'rafaela_app_form_applications_v2',
+  FORM_RESPONSES: 'rafaela_app_form_responses_v2',
+  CONSENTS: 'rafaela_app_consents_v2',
   AI_CONFIG: 'rafaela_app_ai_config_v1',
   AI_MODELS: 'rafaela_app_ai_models_v1',
-  AI_PROPOSALS: 'rafaela_app_ai_proposals_v1',
-  AI_REQUESTS: 'rafaela_app_ai_requests_v1',
+  AI_PROPOSALS: 'rafaela_app_ai_proposals_v2',
+  AI_REQUESTS: 'rafaela_app_ai_requests_v2',
   AI_STUDENT_CONSENTS: 'rafaela_app_ai_student_consents_v1',
-  RANKING_GROUPS: 'rafaela_app_ranking_groups_v1',
+  RANKING_GROUPS: 'rafaela_app_ranking_groups_v2',
 };
 
 /**
@@ -230,6 +231,9 @@ export function initStorage() {
   }
   if (!localStorage.getItem(STORAGE_KEYS.AI_REQUESTS)) {
     localStorage.setItem(STORAGE_KEYS.AI_REQUESTS, JSON.stringify(initialAIRequests));
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.RANKING_GROUPS)) {
+    localStorage.setItem(STORAGE_KEYS.RANKING_GROUPS, JSON.stringify(initialRankingGroups));
   }
 }
 
