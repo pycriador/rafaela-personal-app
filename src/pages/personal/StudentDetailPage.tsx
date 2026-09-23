@@ -112,24 +112,13 @@ export const StudentDetailPage: React.FC = () => {
   const [previewExercise, setPreviewExercise] = useState<Exercise | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Subtab for historico: 'sessoes' | 'chat'
-  const initialSubtab = searchParams.get('subtab') === 'chat' ? 'chat' : 'sessoes';
-  const [historicoSubTab, setHistoricoSubTab] = useState<'sessoes' | 'chat'>(initialSubtab);
-
-  const handleHistoricoSubTabChange = (tab: 'sessoes' | 'chat') => {
-    setHistoricoSubTab(tab);
-    const nextParams = new URLSearchParams(searchParams);
-    nextParams.set('tab', 'historico');
-    nextParams.set('subtab', tab);
-    setSearchParams(nextParams, { replace: true });
-  };
-
+  // Redirect legacy / fallback subtab=chat to dedicated tab=conversa
   useEffect(() => {
-    const sub = searchParams.get('subtab');
-    if (sub === 'chat' && historicoSubTab !== 'chat') {
-      setHistoricoSubTab('chat');
-    } else if (sub === 'sessoes' && historicoSubTab !== 'sessoes') {
-      setHistoricoSubTab('sessoes');
+    if (searchParams.get('tab') === 'historico' && searchParams.get('subtab') === 'chat') {
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.set('tab', 'conversa');
+      nextParams.delete('subtab');
+      setSearchParams(nextParams, { replace: true });
     }
   }, [searchParams]);
 
@@ -1079,6 +1068,15 @@ export const StudentDetailPage: React.FC = () => {
           <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
             <Button
               variant="outline"
+              onClick={() => setActiveTab('conversa')}
+              leftIcon={<MessageSquare className="w-4 h-4 text-emerald-400" />}
+              className="border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500 text-xs"
+              title="Abrir canal direto de conversa com o aluno"
+            >
+              Conversar
+            </Button>
+            <Button
+              variant="outline"
               onClick={async () => {
                 if (!student) return;
                 const ok = await enterStudentSimulation(student.id);
@@ -1117,11 +1115,12 @@ export const StudentDetailPage: React.FC = () => {
 
       {/* Tabs Navigation (Section 9) */}
       <Tabs
-        activeTab={activeTab}
+        activeTab={activeTab === 'chat' ? 'conversa' : activeTab}
         onChange={setActiveTab}
         tabs={[
           { id: 'resumo', label: 'Resumo', icon: <Users className="w-4 h-4" /> },
           { id: 'treinos', label: 'Treinos', icon: <Dumbbell className="w-4 h-4" /> },
+          { id: 'conversa', label: 'Conversa', icon: <MessageSquare className="w-4 h-4" /> },
           { id: 'anamnese', label: 'Anamnese', icon: <ClipboardList className="w-4 h-4" /> },
           { id: 'alimentacao', label: 'Alimentação', icon: <Apple className="w-4 h-4" /> },
           { id: 'evolucao', label: 'Evolução', icon: <TrendingUp className="w-4 h-4" /> },
@@ -1922,75 +1921,34 @@ export const StudentDetailPage: React.FC = () => {
         </div>
       )}
 
+      {/* TAB: BATE-PAPO & CONVERSA COM O ALUNO (URL: ?tab=conversa) */}
+      {(activeTab === 'conversa' || activeTab === 'chat') && student && (
+        <div className="space-y-6">
+          <StudentTrainerChatSection
+            student={student}
+            currentUserId="user-rafaela"
+            currentUserRole="personal"
+          />
+        </div>
+      )}
+
       {/* TAB 3: HISTÓRICO & AUDITORIA (Section 2, 29, 41) */}
       {activeTab === 'historico' && (
         <div className="space-y-6">
-          {/* Sub-tab Navigation: Sessões vs Bate-Papo */}
-          <div className="flex items-center gap-2 border-b border-slate-200 dark:border-dark-border pb-1 overflow-x-auto">
-            <button
-              type="button"
-              onClick={() => handleHistoricoSubTabChange('sessoes')}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap ${
-                historicoSubTab === 'sessoes'
-                  ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
-              }`}
-            >
-              <History className="w-4 h-4" />
-              <span>Sessões Executadas & Avaliações</span>
-              <span
-                className={`text-xs px-2 py-0.5 rounded-full font-bold ml-1 ${
-                  historicoSubTab === 'sessoes'
-                    ? 'bg-white/20 text-white'
-                    : 'bg-slate-200 dark:bg-dark-border text-slate-700 dark:text-slate-300'
-                }`}
-              >
-                {sessions.length}
-              </span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleHistoricoSubTabChange('chat')}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap ${
-                historicoSubTab === 'chat'
-                  ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
-              }`}
-            >
-              <MessageSquare className="w-4 h-4" />
-              <span>Bate-Papo & Alinhamento Técnico</span>
-              <Badge variant="success" size="sm" className="ml-1">
-                Ativo
-              </Badge>
-            </button>
-          </div>
-
-          {/* Subtab 1: Bate-Papo Exclusivo Aluno ↔ Treinadora */}
-          {historicoSubTab === 'chat' && (
-            <StudentTrainerChatSection
-              student={student}
-              currentUserId="user-rafaela"
-              currentUserRole="personal"
-            />
-          )}
-
-          {/* Subtab 2: Histórico de Sessões e Avaliações */}
-          {historicoSubTab === 'sessoes' && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                    Histórico de Sessões Executadas
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-dark-muted">
-                    Consulte as cargas executadas, percepção de esforço e registre feedbacks técnicos
-                  </p>
-                </div>
-                <span className="text-xs text-slate-500 dark:text-dark-muted font-mono">
-                  {sessions.length} treinos registrados
-                </span>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+                  Histórico de Sessões Executadas
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-dark-muted">
+                  Consulte as cargas executadas, percepção de esforço e registre feedbacks técnicos
+                </p>
               </div>
+              <span className="text-xs text-slate-500 dark:text-dark-muted font-mono">
+                {sessions.length} treinos registrados
+              </span>
+            </div>
 
               {sessions.length === 0 ? (
                 <Card className="py-12 text-center text-slate-400 text-xs">
@@ -2179,7 +2137,6 @@ export const StudentDetailPage: React.FC = () => {
                 );
               })()}
             </div>
-          )}
         </div>
       )}
 
