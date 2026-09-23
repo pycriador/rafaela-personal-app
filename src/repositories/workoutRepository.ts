@@ -409,7 +409,7 @@ export class SupabaseWorkoutRepository implements IWorkoutRepository {
     });
 
     if (target) {
-      if (isSupabaseConfigured) {
+      if (isSupabaseConfigured && !isSimulationModeActive()) {
         try {
           await supabase.from('workout_plans').update({ active: false }).eq('student_id', studentId);
           await supabase.from('workout_plans').update({ active: true, updated_at: new Date().toISOString() }).eq('id', planId);

@@ -1,5 +1,5 @@
 import { Exercise, ExerciseCategory, ExerciseType } from '../types';
-import { getItem, setItem, STORAGE_KEYS } from './storage';
+import { getItem, setItem, STORAGE_KEYS, isSimulationModeActive } from './storage';
 import { initialExercises } from '../data/exercises';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
@@ -173,7 +173,7 @@ export class SupabaseExerciseRepository implements IExerciseRepository {
       id: `exercise-${Date.now()}`,
     };
 
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('exercises').insert(mapToDb(newExercise));
       } catch (err) {
@@ -190,7 +190,7 @@ export class SupabaseExerciseRepository implements IExerciseRepository {
   async update(id: string, updates: Partial<Exercise>): Promise<Exercise | null> {
     let updatedExercise: Exercise | null = null;
 
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         const { data, error } = await supabase
           .from('exercises')
@@ -218,7 +218,7 @@ export class SupabaseExerciseRepository implements IExerciseRepository {
   }
 
   async delete(id: string): Promise<boolean> {
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('exercises').delete().eq('id', id);
       } catch (err) {

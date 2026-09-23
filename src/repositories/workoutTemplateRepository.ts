@@ -1,5 +1,5 @@
 import { WorkoutTemplate, WorkoutExercise } from '../types';
-import { getItem, setItem, STORAGE_KEYS } from './storage';
+import { getItem, setItem, STORAGE_KEYS, isSimulationModeActive } from './storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 export const initialWorkoutTemplates: WorkoutTemplate[] = [
@@ -323,7 +323,7 @@ export class SupabaseWorkoutTemplateRepository implements IWorkoutTemplateReposi
       createdAt: template.createdAt || new Date().toISOString().split('T')[0],
     };
 
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('workout_templates').upsert({
           id: enriched.id,
@@ -416,7 +416,7 @@ export class SupabaseWorkoutTemplateRepository implements IWorkoutTemplateReposi
   }
 
   async delete(id: string): Promise<boolean> {
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('workout_templates').delete().eq('id', id);
       } catch (err) {

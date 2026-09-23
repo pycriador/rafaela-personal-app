@@ -1,23 +1,100 @@
 import { FormResponse } from '../types';
 import { initialFormResponses } from '../data/anamnesis/formResponses';
-import { STORAGE_KEYS, getItem, setItem } from './storage';
+import { STORAGE_KEYS, getItem, setItem, isSimulationModeActive } from './storage';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
+
+function mapFromDb(row: any): FormResponse {
+  let answersList: any[] = [];
+  if (Array.isArray(row.answers)) {
+    answersList = row.answers;
+  } else if (typeof row.answers === 'object' && row.answers !== null) {
+    answersList = Object.entries(row.answers).map(([fieldId, value]) => ({
+      id: `ans-${row.id}-${fieldId}`,
+      responseId: row.id,
+      fieldId,
+      value,
+    }));
+  }
+
+  const status: FormResponse['status'] = row.is_draft
+    ? 'draft'
+    : row.review_status === 'reviewed'
+    ? 'reviewed'
+    : 'submitted';
+
+  return {
+    id: row.id,
+    applicationId: row.application_id || row.applicationId,
+    formId: row.form_id || row.formId,
+    formVersionId: row.form_version_id || row.formVersionId,
+    studentId: row.student_id || row.studentId,
+    status,
+    answers: answersList,
+    submittedAt: row.submitted_at || row.submittedAt,
+    startedAt: row.started_at,
+  };
+}
 
 export const formResponseRepository = {
   async getAll(): Promise<FormResponse[]> {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase.from('form_responses').select('*').order('submitted_at', { ascending: false });
+        if (!error && data && data.length > 0) {
+          return data.map(mapFromDb);
+        }
+      } catch (err) {
+        // fallback
+      }
+    }
     return getItem<FormResponse[]>(STORAGE_KEYS.FORM_RESPONSES, initialFormResponses);
   },
 
   async getById(id: string): Promise<FormResponse | null> {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase.from('form_responses').select('*').eq('id', id).maybeSingle();
+        if (!error && data) {
+          return mapFromDb(data);
+        }
+      } catch (err) {
+        // fallback
+      }
+    }
     const list = await this.getAll();
     return list.find((r) => r.id === id) || null;
   },
 
   async getByApplicationId(applicationId: string): Promise<FormResponse | null> {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase.from('form_responses').select('*').eq('application_id', applicationId).maybeSingle();
+        if (!error && data) {
+          return mapFromDb(data);
+        }
+      } catch (err) {
+        // fallback
+      }
+    }
     const list = await this.getAll();
     return list.find((r) => r.applicationId === applicationId) || null;
   },
 
   async getByStudentId(studentId: string): Promise<FormResponse[]> {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase
+          .from('form_responses')
+          .select('*')
+          .eq('student_id', studentId)
+          .order('submitted_at', { ascending: false });
+        if (!error && data && data.length > 0) {
+          return data.map(mapFromDb);
+        }
+      } catch (err) {
+        // fallback
+      }
+    }
     const list = await this.getAll();
     return list
       .filter((r) => r.studentId === studentId)
@@ -25,7 +102,26 @@ export const formResponseRepository = {
   },
 
   async save(response: FormResponse): Promise<FormResponse> {
-    const list = await this.getAll();
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
+      try {
+        await supabase.from('form_responses').upsert({
+          id: response.id,
+          application_id: response.applicationId,
+          form_id: response.formId,
+          form_version_id: response.formVersionId,
+          student_id: response.studentId,
+          answers: response.answers || [],
+          submitted_at: response.submittedAt || new Date().toISOString(),
+          is_draft: response.status === 'draft',
+          review_status: response.status === 'reviewed' ? 'reviewed' : 'pending',
+          reviewer_notes: null,
+        });
+      } catch (err) {
+        // fallback
+      }
+    }
+
+    const list = getItem<FormResponse[]>(STORAGE_KEYS.FORM_RESPONSES, initialFormResponses);
     const index = list.findIndex((r) => r.id === response.id);
     let updated: FormResponse[];
     if (index >= 0) {

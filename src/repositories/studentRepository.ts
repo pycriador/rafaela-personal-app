@@ -1,5 +1,5 @@
 import { Student } from '../types';
-import { getItem, setItem, STORAGE_KEYS } from './storage';
+import { getItem, setItem, STORAGE_KEYS, isSimulationModeActive } from './storage';
 import { initialStudents } from '../data/students';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
@@ -178,7 +178,7 @@ export class SupabaseStudentRepository implements IStudentRepository {
       adherencePercentage: 100,
     };
 
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         const row = mapToDb(newStudent);
         await supabase.from('students').insert(row);
@@ -196,7 +196,7 @@ export class SupabaseStudentRepository implements IStudentRepository {
   async update(id: string, updates: Partial<Student>): Promise<Student | null> {
     let updatedStudent: Student | null = null;
 
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         const rowUpdates = mapToDb(updates);
         const { data, error } = await supabase
@@ -229,7 +229,7 @@ export class SupabaseStudentRepository implements IStudentRepository {
   }
 
   async delete(id: string): Promise<boolean> {
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('students').delete().eq('id', id);
       } catch (err) {

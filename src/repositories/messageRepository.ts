@@ -200,6 +200,20 @@ export class SupabaseMessageRepository implements IMessageRepository {
     });
 
     if (modified) {
+      if (isSupabaseConfigured && !isSimulationModeActive()) {
+        try {
+          const candidateArray = Array.from(candidates);
+          const orConditions = candidateArray.map((id) => `student_id.eq.${id}`).join(',');
+          await supabase
+            .from('student_messages')
+            .update({ read: true })
+            .or(orConditions)
+            .neq('sender_role', readerRole);
+        } catch (err) {
+          console.error('Supabase markAsRead error:', err);
+        }
+      }
+
       setItem(STORAGE_KEYS.STUDENT_MESSAGES, all);
       if (typeof window !== 'undefined') {
         window.dispatchEvent(
@@ -212,6 +226,14 @@ export class SupabaseMessageRepository implements IMessageRepository {
   }
 
   async deleteMessage(id: string): Promise<boolean> {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
+      try {
+        await supabase.from('student_messages').delete().eq('id', id);
+      } catch (err) {
+        console.error('Supabase deleteMessage error:', err);
+      }
+    }
+
     const all = cleanRealMessages(getItem<StudentMessage[]>(STORAGE_KEYS.STUDENT_MESSAGES, []));
     const filtered = all.filter((m) => m.id !== id);
     setItem(STORAGE_KEYS.STUDENT_MESSAGES, filtered);

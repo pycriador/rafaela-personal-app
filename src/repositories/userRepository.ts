@@ -1,5 +1,5 @@
 import { User } from '../types';
-import { getItem, setItem, STORAGE_KEYS } from './storage';
+import { getItem, setItem, STORAGE_KEYS, isSimulationModeActive } from './storage';
 import { initialUsers } from '../data/users';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
@@ -90,7 +90,7 @@ export class SupabaseUserRepository implements IUserRepository {
   }
 
   async create(user: User): Promise<User> {
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('users').insert(mapToDb(user));
       } catch (err) {
@@ -107,7 +107,7 @@ export class SupabaseUserRepository implements IUserRepository {
   async update(id: string, updates: Partial<User>): Promise<User | null> {
     let updatedUser: User | null = null;
 
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         const { data, error } = await supabase
           .from('users')
@@ -132,7 +132,7 @@ export class SupabaseUserRepository implements IUserRepository {
   }
 
   async delete(id: string): Promise<boolean> {
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('users').delete().eq('id', id);
       } catch (err) {
@@ -147,7 +147,7 @@ export class SupabaseUserRepository implements IUserRepository {
   }
 
   async deleteByStudentProfileId(studentProfileId: string): Promise<boolean> {
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('users').delete().eq('student_profile_id', studentProfileId);
       } catch (err) {

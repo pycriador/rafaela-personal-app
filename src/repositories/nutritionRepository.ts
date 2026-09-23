@@ -1,5 +1,5 @@
 import { NutritionPlan, Meal, FoodItem } from '../types';
-import { getItem, setItem, STORAGE_KEYS } from './storage';
+import { getItem, setItem, STORAGE_KEYS, isSimulationModeActive } from './storage';
 import { initialNutritionPlans } from '../data/nutrition';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
@@ -81,7 +81,7 @@ export class SupabaseNutritionRepository implements INutritionRepository {
       updatedAt: new Date().toISOString().split('T')[0],
     };
 
-    if (isSupabaseConfigured) {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         await supabase.from('nutrition_plans').upsert(mapToDb(updatedPlan));
       } catch (err) {
