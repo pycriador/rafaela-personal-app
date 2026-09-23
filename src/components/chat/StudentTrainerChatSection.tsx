@@ -11,6 +11,7 @@ import {
   Dumbbell,
   Trash2,
   ChevronDown,
+  RotateCw,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -75,26 +76,56 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
   const { success, error: toastError } = useToast();
   const [messages, setMessages] = useState<StudentMessage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [inputContent, setInputContent] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<MessageCategory>('general');
   const [activeFilter, setActiveFilter] = useState<'all' | MessageCategory>('all');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const loadMessages = async () => {
+  const loadMessages = async (isBackground = false) => {
     try {
+      if (!isBackground) setLoading(true);
       const msgs = await messageRepository.getMessagesByStudentId(student.id);
       setMessages(msgs);
       await messageRepository.markAsRead(student.id, currentUserRole);
     } catch (err) {
       console.error('Erro ao carregar mensagens:', err);
     } finally {
-      setLoading(false);
+      if (!isBackground) setLoading(false);
+      setIsRefreshing(false);
     }
   };
 
   useEffect(() => {
     loadMessages();
-  }, [student.id]);
+
+    // 1. Polling contínuo em background para chat responsivo em tempo real
+    const interval = setInterval(() => {
+      loadMessages(true);
+    }, 2500);
+
+    // 2. Ouvinte de evento cross-tab / cross-window (storage change)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'rafaela_app_student_messages_v1') {
+        loadMessages(true);
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+
+    // 3. Ouvinte de evento local disparado ao enviar ou marcar mensagens
+    const handleChatMessageEvent = () => {
+      loadMessages(true);
+    };
+    window.addEventListener('rafaela_chat_message', handleChatMessageEvent);
+    window.addEventListener('rafaela_chat_read', handleChatMessageEvent);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('rafaela_chat_message', handleChatMessageEvent);
+      window.removeEventListener('rafaela_chat_read', handleChatMessageEvent);
+    };
+  }, [student.id, currentUserRole]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -180,7 +211,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
           </div>
         </div>
 
-        {/* Dropdown Filter (replaces awkward horizontal scrolling) */}
+        {/* Dropdown Filter & Refresh */}
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <label className="text-xs font-bold text-slate-500 dark:text-dark-muted hidden md:inline">
             Filtrar:
@@ -201,6 +232,18 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
             </select>
             <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
+
+          <button
+            type="button"
+            title="Atualizar mensagens em tempo real"
+            onClick={() => {
+              setIsRefreshing(true);
+              loadMessages(false);
+            }}
+            className="p-1.5 text-slate-500 hover:text-emerald-500 hover:bg-slate-100 dark:hover:bg-dark-card border border-slate-200 dark:border-dark-border rounded-xl transition-all cursor-pointer shadow-xs"
+          >
+            <RotateCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-emerald-500' : ''}`} />
+          </button>
         </div>
       </CardHeader>
 

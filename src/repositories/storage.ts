@@ -169,7 +169,13 @@ export function initStorage() {
 export function getItem<T>(key: string, fallback: T): T {
   try {
     // Se o modo simulação estiver ativo, verifica primeiro se há alteração no sandbox temporário
-    if (isSimulationModeActive() && typeof sessionStorage !== 'undefined') {
+    // EXCEÇÃO: mensagens de chat (STUDENT_MESSAGES) são sempre mantidas no localStorage real
+    // para permitir comunicação contínua e testes fiéis entre Personal e Aluno.
+    if (
+      isSimulationModeActive() &&
+      typeof sessionStorage !== 'undefined' &&
+      key !== STORAGE_KEYS.STUDENT_MESSAGES
+    ) {
       const sandboxed = sessionStorage.getItem(`sim_sandbox_${key}`);
       if (sandboxed !== null) {
         return JSON.parse(sandboxed);
@@ -189,8 +195,12 @@ export function getItem<T>(key: string, fallback: T): T {
 export function setItem<T>(key: string, value: T): void {
   try {
     // Se estiver em modo de simulação, grava SOMENTE no sandbox temporário de sessão!
-    // O localStorage permanente do aluno NUNCA é mutado.
-    if (isSimulationModeActive() && typeof sessionStorage !== 'undefined') {
+    // EXCEÇÃO: mensagens de chat (STUDENT_MESSAGES) são sempre persistidas no localStorage real.
+    if (
+      isSimulationModeActive() &&
+      typeof sessionStorage !== 'undefined' &&
+      key !== STORAGE_KEYS.STUDENT_MESSAGES
+    ) {
       sessionStorage.setItem(`sim_sandbox_${key}`, JSON.stringify(value));
       return;
     }

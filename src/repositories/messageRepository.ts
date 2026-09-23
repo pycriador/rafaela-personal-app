@@ -1,5 +1,6 @@
-import { StudentMessage, MessageCategory } from '../types';
+import { StudentMessage } from '../types';
 import { getItem, setItem, STORAGE_KEYS, isSimulationModeActive } from './storage';
+import { studentRepository } from './studentRepository';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 export const initialStudentMessages: StudentMessage[] = [];
@@ -20,13 +21,62 @@ function cleanRealMessages(messages: StudentMessage[]): StudentMessage[] {
   );
 }
 
-function normalizeStudentKey(id: string): string {
-  return id.replace(/^(student-|user-)/, '');
+function cleanStudentKey(id: string): string {
+  if (!id) return '';
+  return id.replace(/^(user-|student-)+/gi, '').toLowerCase().trim();
 }
 
-function matchesStudentId(target: string, query: string): boolean {
-  if (target === query) return true;
-  return normalizeStudentKey(target) === normalizeStudentKey(query);
+async function getStudentCandidateIds(queryId: string): Promise<Set<string>> {
+  const set = new Set<string>();
+  if (!queryId) return set;
+
+  set.add(queryId);
+  const clean = cleanStudentKey(queryId);
+  if (clean) {
+    set.add(clean);
+    set.add(`student-${clean}`);
+    set.add(`user-${clean}`);
+  }
+
+  try {
+    const student =
+      (await studentRepository.getById(queryId)) ||
+      (await studentRepository.getByUserId(queryId));
+    if (student) {
+      if (student.id) {
+        set.add(student.id);
+        const c1 = cleanStudentKey(student.id);
+        if (c1) {
+          set.add(c1);
+          set.add(`student-${c1}`);
+          set.add(`user-${c1}`);
+        }
+      }
+      if (student.userId) {
+        set.add(student.userId);
+        const c2 = cleanStudentKey(student.userId);
+        if (c2) {
+          set.add(c2);
+          set.add(`student-${c2}`);
+          set.add(`user-${c2}`);
+        }
+      }
+    }
+  } catch (err) {
+    // repository lookup fallback
+  }
+
+  return set;
+}
+
+function matchesCandidateIds(targetId: string, candidateIds: Set<string>): boolean {
+  if (!targetId) return false;
+  if (candidateIds.has(targetId)) return true;
+  const clean = cleanStudentKey(targetId);
+  if (candidateIds.has(clean)) return true;
+  if (candidateIds.has(`student-${clean}`)) return true;
+  if (candidateIds.has(`user-${clean}`)) return true;
+  return false;
 }
 
 export interface IMessageRepository {
@@ -38,18 +88,16 @@ export interface IMessageRepository {
 
 export class SupabaseMessageRepository implements IMessageRepository {
   async getMessagesByStudentId(studentId: string): Promise<StudentMessage[]> {
-    const altId = studentId.startsWith('user-')
-      ? studentId.replace('user-', 'student-')
-      : studentId.startsWith('student-')
-      ? studentId.replace('student-', 'user-')
-      : studentId;
+    const candidates = await getStudentCandidateIds(studentId);
 
     if (isSupabaseConfigured) {
       try {
+        const candidateArray = Array.from(candidates);
+        const orConditions = candidateArray.map((id) => `student_id.eq.${id}`).join(',');
         const { data, error } = await supabase
           .from('student_messages')
           .select('*')
-          .or(`student_id.eq.${studentId},student_id.eq.${altId}`)
+          .or(orConditions)
           .order('created_at', { ascending: true });
 
         if (!error && data && data.length > 0) {
@@ -78,13 +126,27 @@ export class SupabaseMessageRepository implements IMessageRepository {
       setItem(STORAGE_KEYS.STUDENT_MESSAGES, all);
     }
     return all
-      .filter((m) => matchesStudentId(m.studentId, studentId))
+      .filter((m) => matchesCandidateIds(m.studentId, candidates))
       .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
   }
 
   async sendMessage(msgData: Omit<StudentMessage, 'id' | 'timestamp' | 'read'>): Promise<StudentMessage> {
+    // Canonicalize studentId to student.id if possible
+    let canonicalStudentId = msgData.studentId;
+    try {
+      const student =
+        (await studentRepository.getById(msgData.studentId)) ||
+        (await studentRepository.getByUserId(msgData.studentId));
+      if (student && student.id) {
+        canonicalStudentId = student.id;
+      }
+    } catch {
+      // fallback
+    }
+
     const newMessage: StudentMessage = {
       ...msgData,
+      studentId: canonicalStudentId,
       id: `msg-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       timestamp: new Date().toISOString(),
       read: false,
@@ -113,15 +175,25 @@ export class SupabaseMessageRepository implements IMessageRepository {
     all.push(newMessage);
     setItem(STORAGE_KEYS.STUDENT_MESSAGES, all);
 
+    // Notify any local listeners immediately
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('rafaela_chat_message', {
+          detail: { studentId: canonicalStudentId, message: newMessage },
+        })
+      );
+    }
+
     return newMessage;
   }
 
   async markAsRead(studentId: string, readerRole: 'personal' | 'student'): Promise<void> {
+    const candidates = await getStudentCandidateIds(studentId);
     const all = cleanRealMessages(getItem<StudentMessage[]>(STORAGE_KEYS.STUDENT_MESSAGES, []));
     let modified = false;
 
     all.forEach((m) => {
-      if (matchesStudentId(m.studentId, studentId) && m.senderRole !== readerRole && !m.read) {
+      if (matchesCandidateIds(m.studentId, candidates) && m.senderRole !== readerRole && !m.read) {
         m.read = true;
         modified = true;
       }
@@ -129,6 +201,13 @@ export class SupabaseMessageRepository implements IMessageRepository {
 
     if (modified) {
       setItem(STORAGE_KEYS.STUDENT_MESSAGES, all);
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(
+          new CustomEvent('rafaela_chat_read', {
+            detail: { studentId },
+          })
+        );
+      }
     }
   }
 
@@ -136,6 +215,9 @@ export class SupabaseMessageRepository implements IMessageRepository {
     const all = cleanRealMessages(getItem<StudentMessage[]>(STORAGE_KEYS.STUDENT_MESSAGES, []));
     const filtered = all.filter((m) => m.id !== id);
     setItem(STORAGE_KEYS.STUDENT_MESSAGES, filtered);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('rafaela_chat_message', { detail: { deletedId: id } }));
+    }
     return true;
   }
 }

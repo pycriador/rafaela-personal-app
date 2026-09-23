@@ -113,7 +113,25 @@ export const StudentDetailPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   // Subtab for historico: 'sessoes' | 'chat'
-  const [historicoSubTab, setHistoricoSubTab] = useState<'sessoes' | 'chat'>('sessoes');
+  const initialSubtab = searchParams.get('subtab') === 'chat' ? 'chat' : 'sessoes';
+  const [historicoSubTab, setHistoricoSubTab] = useState<'sessoes' | 'chat'>(initialSubtab);
+
+  const handleHistoricoSubTabChange = (tab: 'sessoes' | 'chat') => {
+    setHistoricoSubTab(tab);
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.set('tab', 'historico');
+    nextParams.set('subtab', tab);
+    setSearchParams(nextParams, { replace: true });
+  };
+
+  useEffect(() => {
+    const sub = searchParams.get('subtab');
+    if (sub === 'chat' && historicoSubTab !== 'chat') {
+      setHistoricoSubTab('chat');
+    } else if (sub === 'sessoes' && historicoSubTab !== 'sessoes') {
+      setHistoricoSubTab('sessoes');
+    }
+  }, [searchParams]);
 
   // Trainer Feedback modal states
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
@@ -1911,7 +1929,7 @@ export const StudentDetailPage: React.FC = () => {
           <div className="flex items-center gap-2 border-b border-slate-200 dark:border-dark-border pb-1 overflow-x-auto">
             <button
               type="button"
-              onClick={() => setHistoricoSubTab('sessoes')}
+              onClick={() => handleHistoricoSubTabChange('sessoes')}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap ${
                 historicoSubTab === 'sessoes'
                   ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
@@ -1933,7 +1951,7 @@ export const StudentDetailPage: React.FC = () => {
 
             <button
               type="button"
-              onClick={() => setHistoricoSubTab('chat')}
+              onClick={() => handleHistoricoSubTabChange('chat')}
               className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap ${
                 historicoSubTab === 'chat'
                   ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/20'
@@ -1950,7 +1968,11 @@ export const StudentDetailPage: React.FC = () => {
 
           {/* Subtab 1: Bate-Papo Exclusivo Aluno ↔ Treinadora */}
           {historicoSubTab === 'chat' && (
-            <StudentTrainerChatSection student={student} />
+            <StudentTrainerChatSection
+              student={student}
+              currentUserId="user-rafaela"
+              currentUserRole="personal"
+            />
           )}
 
           {/* Subtab 2: Histórico de Sessões e Avaliações */}

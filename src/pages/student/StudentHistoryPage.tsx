@@ -35,8 +35,17 @@ export const StudentHistoryPage: React.FC = () => {
 
   const handleTabChange = (tab: 'chat' | 'sessoes') => {
     setActiveSubTab(tab);
-    setSearchParams({ subtab: tab });
+    setSearchParams({ subtab: tab }, { replace: true });
   };
+
+  useEffect(() => {
+    const sub = searchParams.get('subtab');
+    if (sub === 'sessoes' && activeSubTab !== 'sessoes') {
+      setActiveSubTab('sessoes');
+    } else if (sub === 'chat' && activeSubTab !== 'chat') {
+      setActiveSubTab('chat');
+    }
+  }, [searchParams]);
 
   if (loading || !studentProfile) {
     return (
