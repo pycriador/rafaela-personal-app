@@ -100,9 +100,12 @@ const STUDENT_TAB_LABELS: Record<string, string> = {
   chat: 'Conversa & Bate-Papo',
   evolucao: 'Evolução de Cargas',
   anamnese: 'Anamnese & Avaliações',
+  alimentacao: 'Plano Alimentar',
   nutricao: 'Plano Alimentar',
   historico: 'Histórico de Treinos & Sessões',
+  ia: 'AI Copilot',
   copilot: 'AI Copilot',
+  configuracoes: 'Configurações do Aluno',
   config: 'Configurações do Aluno',
 };
 
@@ -165,7 +168,14 @@ export const StudentDetailPage: React.FC = () => {
   const [editingDayInfo, setEditingDayInfo] = useState<{ dayId: string; dayOfWeek: string; name: string; muscleFocus: string } | null>(null);
 
   // Tab and session pagination synced with URL
-  const activeTab = searchParams.get('tab') || 'resumo';
+  const rawTab = searchParams.get('tab') || 'resumo';
+  const activeTab =
+    rawTab === 'chat' ? 'conversa'
+    : (rawTab === 'nutricao' || rawTab === 'alimentacao') ? 'alimentacao'
+    : (rawTab === 'copilot' || rawTab === 'ia') ? 'ia'
+    : (rawTab === 'config' || rawTab === 'configuracoes') ? 'configuracoes'
+    : rawTab;
+
   const setActiveTab = (newTab: string) => {
     const next = new URLSearchParams(searchParams);
     next.set('tab', newTab);
@@ -1151,7 +1161,7 @@ export const StudentDetailPage: React.FC = () => {
         <div className="flex items-center gap-2 text-xs">
           <span className="font-bold text-slate-400">Módulo Ativo:</span>
           <span className="font-black px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-            {STUDENT_TAB_LABELS[activeTab === 'chat' ? 'conversa' : activeTab] || 'Resumo'}
+            {STUDENT_TAB_LABELS[activeTab] || 'Resumo'}
           </span>
           <span className="text-slate-300 dark:text-slate-600 hidden sm:inline">•</span>
           <span className="text-slate-500 dark:text-slate-400 text-[11px] hidden sm:inline">
@@ -1162,19 +1172,19 @@ export const StudentDetailPage: React.FC = () => {
         {/* Seletor Rápido Compacto para telas mobile */}
         <div className="md:hidden">
           <select
-            value={activeTab === 'chat' ? 'conversa' : activeTab}
+            value={activeTab}
             onChange={(e) => setActiveTab(e.target.value)}
-            className="text-xs font-bold bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border rounded-xl px-2.5 py-1 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="text-xs font-bold bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border rounded-xl px-2.5 py-1 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
           >
             <option value="resumo">Resumo & Métricas</option>
             <option value="treinos">Treinos ({workoutPlan?.days?.length || 0}d)</option>
             <option value="conversa">Conversa com Aluno</option>
             <option value="evolucao">Evolução de Cargas</option>
             <option value="anamnese">Anamnese & Avaliações</option>
-            <option value="nutricao">Plano Alimentar</option>
+            <option value="alimentacao">Plano Alimentar</option>
             <option value="historico">Histórico & Sessões ({sessions.length})</option>
-            <option value="copilot">AI Copilot</option>
-            <option value="config">Configurações</option>
+            <option value="ia">AI Copilot</option>
+            <option value="configuracoes">Configurações</option>
           </select>
         </div>
       </div>
@@ -2179,7 +2189,7 @@ export const StudentDetailPage: React.FC = () => {
       )}
 
       {/* TAB 4: ALIMENTAÇÃO (Section 31 & 32) */}
-      {activeTab === 'alimentacao' && (
+      {(activeTab === 'alimentacao' || activeTab === 'nutricao') && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
@@ -2410,7 +2420,7 @@ export const StudentDetailPage: React.FC = () => {
       )}
 
       {/* TAB 7: IA COPILOT (Histórico de Propostas, Auditoria de Inferências) */}
-      {activeTab === 'ia' && (
+      {(activeTab === 'ia' || activeTab === 'copilot') && (
         <div className="space-y-6">
           {/* Header & Quick Action */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -2551,7 +2561,7 @@ export const StudentDetailPage: React.FC = () => {
       )}
 
       {/* TAB 6: CONFIGURAÇÕES (Status Real & Persistência) */}
-      {activeTab === 'configuracoes' && (
+      {(activeTab === 'configuracoes' || activeTab === 'config') && (
         <Card className="p-6">
           <CardTitle className="mb-2">Configurações do Aluno</CardTitle>
           <p className="text-xs text-slate-500 mb-6">

@@ -40,10 +40,10 @@ const STUDENT_SUB_NAV_ITEMS = [
   { id: 'conversa', label: 'Conversa', icon: MessageSquare },
   { id: 'evolucao', label: 'Evolução Cargas', icon: TrendingUp },
   { id: 'anamnese', label: 'Anamnese', icon: ClipboardList },
-  { id: 'nutricao', label: 'Plano Alimentar', icon: Apple },
+  { id: 'alimentacao', label: 'Plano Alimentar', icon: Apple },
   { id: 'historico', label: 'Histórico & Sessões', icon: History },
-  { id: 'copilot', label: 'AI Copilot', icon: Sparkles },
-  { id: 'config', label: 'Configurações', icon: Settings },
+  { id: 'ia', label: 'AI Copilot', icon: Sparkles },
+  { id: 'configuracoes', label: 'Configurações', icon: Settings },
 ];
 
 export const PersonalLayout: React.FC = () => {
@@ -68,7 +68,14 @@ export const PersonalLayout: React.FC = () => {
   const currentStudentParam = studentPathMatch && studentPathMatch[1] !== 'new' ? studentPathMatch[1] : null;
   const [activeStudentContext, setActiveStudentContext] = useState<Student | null>(null);
 
-  const activeStudentTab = searchParams.get('tab') || 'resumo';
+  const rawStudentTab = searchParams.get('tab') || 'resumo';
+  const activeStudentTab =
+    rawStudentTab === 'chat' ? 'conversa'
+    : (rawStudentTab === 'nutricao' || rawStudentTab === 'alimentacao') ? 'alimentacao'
+    : (rawStudentTab === 'copilot' || rawStudentTab === 'ia') ? 'ia'
+    : (rawStudentTab === 'config' || rawStudentTab === 'configuracoes') ? 'configuracoes'
+    : rawStudentTab;
+
   const isPersonalChatTab = Boolean(
     currentStudentParam && (activeStudentTab === 'conversa' || activeStudentTab === 'chat')
   );
