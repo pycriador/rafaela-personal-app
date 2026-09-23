@@ -15,6 +15,7 @@ import {
   Reply,
   X,
   ShieldCheck,
+  ArrowLeft,
 } from 'lucide-react';
 import { Student, StudentMessage, MessageCategory } from '../../types';
 import { messageRepository } from '../../repositories/messageRepository';
@@ -25,6 +26,7 @@ interface StudentTrainerChatSectionProps {
   currentUserId?: string;
   currentUserRole?: 'personal' | 'student';
   className?: string;
+  onBack?: () => void;
 }
 
 const CATEGORY_CONFIG: Record<
@@ -87,6 +89,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
   currentUserId = 'user-rafaela',
   currentUserRole = 'personal',
   className,
+  onBack,
 }) => {
   const { error: toastError } = useToast();
   const [messages, setMessages] = useState<StudentMessage[]>([]);
@@ -263,6 +266,17 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
       <div className="shrink-0 z-10 py-3 px-4 sm:px-6 md:px-8 bg-white/95 dark:bg-dark-card/95 backdrop-blur-md border-b border-slate-200/80 dark:border-dark-border/80 select-none shadow-2xs">
         <div className="max-w-4xl mx-auto w-full flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
+            {onBack && (
+              <button
+                type="button"
+                onClick={onBack}
+                className="p-1.5 -ml-1 text-slate-500 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors cursor-pointer"
+                title="Voltar para a área do aluno"
+                aria-label="Voltar"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+            )}
             <div className="relative shrink-0">
               <img
                 src={
@@ -591,7 +605,7 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
               className="text-xs font-bold bg-slate-100 dark:bg-dark-cardElevated border border-emerald-500/40 rounded-xl px-2.5 py-1.5 pr-7 text-emerald-800 dark:text-emerald-300 hover:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shadow-xs appearance-none"
             >
               <option value="" disabled>
-                ⚡ Modelos de dúvidas...
+                {isStudentViewer ? '⚡ Modelos de dúvidas...' : '⚡ Modelos de respostas...'}
               </option>
               {isStudentViewer ? (
                 <>
@@ -622,8 +636,14 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
                   <option value="question:::Atenção ao intervalo de descanso entre as séries: preserve os 60 segundos completos para recuperação.">
                     ⏱️ Atenção ao tempo de descanso
                   </option>
+                  <option value="question:::Ótima dúvida técnica! Na fase excêntrica (descida), controle o peso em 2 a 3 segundos para ativar mais fibras.">
+                    🎯 Orientação de cadência e amplitude
+                  </option>
                   <option value="motivation:::Excelente constância e dedicação nos treinos! Continue firme que os resultados já estão visíveis.">
                     ✨ Elogio de constância e foco
+                  </option>
+                  <option value="question:::Caso sinta qualquer desconforto articular, reduza a carga ou pause a série imediatamente.">
+                    ⚠️ Recomendação de segurança
                   </option>
                 </>
               )}

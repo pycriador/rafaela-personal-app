@@ -1021,6 +1021,24 @@ export const StudentDetailPage: React.FC = () => {
     );
   }
 
+  // Experiência Dedicada de Chat em Tela Cheia (WhatsApp Style, sem caixas e sem barras duplas)
+  if (activeTab === 'conversa' || activeTab === 'chat') {
+    return (
+      <div className="w-full h-full flex flex-col flex-1 min-h-0 overflow-hidden">
+        <StudentTrainerChatSection
+          student={student}
+          currentUserId="user-rafaela"
+          currentUserRole="personal"
+          onBack={() => {
+            const nextParams = new URLSearchParams(searchParams);
+            nextParams.set('tab', 'resumo');
+            setSearchParams(nextParams);
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Top Bar with back button */}
@@ -1948,18 +1966,6 @@ export const StudentDetailPage: React.FC = () => {
               </div>
             )}
           </div>
-        </div>
-      )}
-
-      {/* TAB: BATE-PAPO & CONVERSA COM O ALUNO (URL: ?tab=conversa) */}
-      {(activeTab === 'conversa' || activeTab === 'chat') && student && (
-        <div className="w-full">
-          <StudentTrainerChatSection
-            student={student}
-            currentUserId="user-rafaela"
-            currentUserRole="personal"
-            className="h-[680px] rounded-2xl border border-slate-200/80 dark:border-dark-border/80 shadow-xs overflow-hidden"
-          />
         </div>
       )}
 

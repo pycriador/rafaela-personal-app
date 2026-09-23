@@ -69,6 +69,9 @@ export const PersonalLayout: React.FC = () => {
   const [activeStudentContext, setActiveStudentContext] = useState<Student | null>(null);
 
   const activeStudentTab = searchParams.get('tab') || 'resumo';
+  const isPersonalChatTab = Boolean(
+    currentStudentParam && (activeStudentTab === 'conversa' || activeStudentTab === 'chat')
+  );
 
   useEffect(() => {
     if (!currentStudentParam) {
@@ -141,7 +144,11 @@ export const PersonalLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-dark-bg text-slate-900 dark:text-white flex flex-col md:flex-row">
+    <div
+      className={`bg-slate-50 dark:bg-dark-bg text-slate-900 dark:text-white flex flex-col md:flex-row ${
+        isPersonalChatTab ? 'h-screen h-[100dvh] overflow-hidden' : 'min-h-screen'
+      }`}
+    >
       {/* Mobile Top Header */}
       <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-dark-card border-b border-slate-200 dark:border-dark-border sticky top-0 z-30">
         <div className="flex items-center gap-2.5">
@@ -413,30 +420,38 @@ export const PersonalLayout: React.FC = () => {
       )}
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-x-hidden">
+      <div className={`flex-1 flex flex-col min-w-0 ${isPersonalChatTab ? 'h-full overflow-hidden' : 'overflow-x-hidden'}`}>
         {/* Desktop Topbar */}
-        <header className="hidden md:flex items-center justify-between px-8 py-4 bg-white/70 dark:bg-dark-card/70 backdrop-blur-md border-b border-slate-200/80 dark:border-dark-border sticky top-0 z-20">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-              Painel de Gestão • Online
-            </span>
-          </div>
+        {!isPersonalChatTab && (
+          <header className="hidden md:flex items-center justify-between px-8 py-4 bg-white/70 dark:bg-dark-card/70 backdrop-blur-md border-b border-slate-200/80 dark:border-dark-border sticky top-0 z-20">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                Painel de Gestão • Online
+              </span>
+            </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsNotifOpen(true)}
-              className="relative p-2.5 rounded-xl bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-300 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
-              title="Notificações"
-            >
-              <Bell className="w-4 h-4" />
-              {unreadCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-500 rounded-full ring-2 ring-white dark:ring-dark-card" />
-              )}
-            </button>
-          </div>
-        </header>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setIsNotifOpen(true)}
+                className="relative p-2.5 rounded-xl bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-300 hover:text-emerald-500 dark:hover:text-emerald-400 transition-colors"
+                title="Notificações"
+              >
+                <Bell className="w-4 h-4" />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-500 rounded-full ring-2 ring-white dark:ring-dark-card" />
+                )}
+              </button>
+            </div>
+          </header>
+        )}
 
-        <main className="p-4 sm:p-6 md:p-8 flex-1 max-w-7xl mx-auto w-full">
+        <main
+          className={`flex-1 w-full min-h-0 ${
+            isPersonalChatTab
+              ? 'p-0 flex flex-col overflow-hidden max-w-none'
+              : 'p-4 sm:p-6 md:p-8 max-w-7xl mx-auto'
+          }`}
+        >
           <Outlet />
         </main>
       </div>
