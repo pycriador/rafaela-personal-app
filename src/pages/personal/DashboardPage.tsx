@@ -15,6 +15,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  ClipboardList,
 } from 'lucide-react';
 import { StatCard } from '../../components/ui/StatCard';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
@@ -23,6 +24,8 @@ import { Button } from '../../components/ui/Button';
 import { studentRepository } from '../../repositories/studentRepository';
 import { activityRepository } from '../../repositories/activityRepository';
 import { workoutRepository } from '../../repositories/workoutRepository';
+import { formApplicationRepository } from '../../repositories/formApplicationRepository';
+import { formResponseRepository } from '../../repositories/formResponseRepository';
 import { Student, ActivityLog, WorkoutModification, WorkoutSession } from '../../types';
 
 export const DashboardPage: React.FC = () => {
@@ -32,6 +35,8 @@ export const DashboardPage: React.FC = () => {
   const [activities, setActivities] = useState<ActivityLog[]>([]);
   const [modifications, setModifications] = useState<WorkoutModification[]>([]);
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
+  const [pendingAnamnesisCount, setPendingAnamnesisCount] = useState(0);
+  const [recentResponsesCount, setRecentResponsesCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const pageParam = parseInt(searchParams.get('page') || searchParams.get('activityPage') || '1', 10);
@@ -41,16 +46,22 @@ export const DashboardPage: React.FC = () => {
   useEffect(() => {
     async function loadData() {
       try {
-        const [allStudents, allActivities, allMods, allSessions] = await Promise.all([
+        const [allStudents, allActivities, allMods, allSessions, allApps, allResps] = await Promise.all([
           studentRepository.getAll(),
           activityRepository.getAll(100),
           workoutRepository.getModifications(),
           workoutRepository.getSessions(),
+          formApplicationRepository.getAll(),
+          formResponseRepository.getAll(),
         ]);
         setStudents(allStudents);
         setActivities(allActivities);
         setModifications(allMods);
         setSessions(allSessions);
+        setPendingAnamnesisCount(
+          allApps.filter((a) => a.status === 'pending' || a.status === 'in_progress').length
+        );
+        setRecentResponsesCount(allResps.length);
       } catch (err) {
         console.error('Erro ao carregar dados do dashboard:', err);
       } finally {
@@ -163,6 +174,39 @@ export const DashboardPage: React.FC = () => {
           icon={<AlertTriangle className="w-6 h-6 text-rose-500" />}
         />
       </div>
+
+      {/* Widget / Banner Anamnese & Saúde */}
+      <Card className="p-4 bg-gradient-to-r from-emerald-500/10 via-teal-500/5 to-cyan-500/10 border-emerald-500/30">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+              <ClipboardList className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                Anamnese, Saúde & Formulários Personalizados
+                {pendingAnamnesisCount > 0 && (
+                  <Badge variant="warning" size="sm">
+                    {pendingAnamnesisCount} pendentes
+                  </Badge>
+                )}
+              </h4>
+              <p className="text-xs text-slate-600 dark:text-dark-muted mt-0.5">
+                {recentResponsesCount} respostas registradas • Acompanhe histórico clínico e aplique formulários aos alunos
+              </p>
+            </div>
+          </div>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => navigate('/personal/anamnesis')}
+            rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+            className="shrink-0"
+          >
+            Acessar Módulo
+          </Button>
+        </div>
+      </Card>
 
       {/* Section: Precisa da Sua Atenção (Section 5) */}
       <div className="space-y-4">

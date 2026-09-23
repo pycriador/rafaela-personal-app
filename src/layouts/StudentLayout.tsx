@@ -14,6 +14,7 @@ import {
   FlaskConical,
   MessageSquare,
   ChevronDown,
+  ClipboardList,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -54,6 +55,7 @@ export const StudentLayout: React.FC = () => {
   const navItems = [
     { name: 'Início', path: '/student/dashboard', icon: Home },
     { name: 'Treinos', path: '/student/workouts', icon: Dumbbell },
+    { name: 'Anamnese', path: '/student/anamnesis', icon: ClipboardList },
     { name: 'Bate-Papo', path: '/student/chat', icon: MessageSquare },
     { name: 'Evolução', path: '/student/evolution', icon: TrendingUp },
     { name: 'Alimentação', path: '/student/nutrition', icon: Apple },

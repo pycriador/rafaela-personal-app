@@ -6,7 +6,9 @@ import { Button } from '../../components/ui/Button';
 import { Badge } from '../../components/ui/Badge';
 import { workoutRepository } from '../../repositories/workoutRepository';
 import { messageRepository } from '../../repositories/messageRepository';
-import { WorkoutPlan, WorkoutDay, WorkoutSession, DayOfWeek, StudentMessage } from '../../types';
+import { WorkoutPlan, WorkoutDay, WorkoutSession, DayOfWeek, StudentMessage, FormApplication, Form } from '../../types';
+import { formApplicationService } from '../../services/anamnesis/formApplicationService';
+import { formService } from '../../services/anamnesis/formService';
 import {
   Play,
   Flame,
@@ -22,6 +24,7 @@ import {
   HelpCircle,
   Moon,
   ChevronRight,
+  ClipboardList,
 } from 'lucide-react';
 
 const DAYS_MAP: Record<number, DayOfWeek> = {
@@ -43,6 +46,8 @@ export const StudentDashboardPage: React.FC = () => {
   const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlan | null>(null);
   const [sessions, setSessions] = useState<WorkoutSession[]>([]);
   const [messages, setMessages] = useState<StudentMessage[]>([]);
+  const [pendingApps, setPendingApps] = useState<FormApplication[]>([]);
+  const [formsMap, setFormsMap] = useState<Record<string, Form>>({});
   const [loading, setLoading] = useState(true);
 
   const todayDayOfWeek = DAYS_MAP[new Date().getDay()] || 'Segunda';
@@ -51,14 +56,25 @@ export const StudentDashboardPage: React.FC = () => {
     async function load() {
       if (!studentProfile) return;
       const targetId = studentProfile.userId || studentProfile.id;
-      const [plan, sess, msgs] = await Promise.all([
+      const [plan, sess, msgs, apps, allForms] = await Promise.all([
         workoutRepository.getPlanByStudentId(targetId),
         workoutRepository.getSessions(targetId),
         messageRepository.getMessagesByStudentId(targetId),
+        formApplicationService.getApplicationsByStudentId(targetId).then(async (res) => {
+          if (res && res.length > 0) return res;
+          return studentProfile.id ? formApplicationService.getApplicationsByStudentId(studentProfile.id) : [];
+        }),
+        formService.getForms(),
       ]);
       setWorkoutPlan(plan);
       setSessions(sess);
       setMessages(msgs);
+      setPendingApps(apps.filter((a: FormApplication) => a.status === 'pending' || a.status === 'in_progress'));
+      const fMap: Record<string, Form> = {};
+      allForms.forEach((f: Form) => {
+        fMap[f.id] = f;
+      });
+      setFormsMap(fMap);
       setLoading(false);
     }
     load();
@@ -178,6 +194,43 @@ export const StudentDashboardPage: React.FC = () => {
           Ficha: {workoutPlan?.name || 'Rotina Personalizada'}
         </Badge>
       </div>
+
+      {/* Alerta de Formulário / Anamnese Pendente (Section 7, 72) */}
+      {pendingApps.length > 0 && (
+        <Card className="p-4 bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-orange-500/15 border-amber-500/40 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400 shrink-0">
+                <ClipboardList className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                    {pendingApps.length === 1
+                      ? 'Formulário de Saúde Pendente'
+                      : `${pendingApps.length} Formulários Pendentes`}
+                  </h4>
+                  <Badge variant="warning" size="sm">
+                    {pendingApps[0].isMandatory ? 'Obrigatório' : 'Pendente'}
+                  </Badge>
+                </div>
+                <p className="text-xs text-slate-600 dark:text-dark-muted mt-0.5">
+                  {formsMap[pendingApps[0].formId]?.name || 'Anamnese'} • Preencha para que a sua treinadora oriente seus treinos com máxima segurança.
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => navigate(`/student/anamnesis/fill/${pendingApps[0].id}`)}
+              rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+              className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold border-none shrink-0"
+            >
+              Responder Agora
+            </Button>
+          </div>
+        </Card>
+      )}
 
       {/* Responsive Multi-column Grid for Dashboard */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">

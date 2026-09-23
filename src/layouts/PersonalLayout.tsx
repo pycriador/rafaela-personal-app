@@ -21,6 +21,7 @@ import {
   FlaskConical,
   ChevronDown,
   Play,
+  ClipboardList,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -63,6 +64,7 @@ export const PersonalLayout: React.FC = () => {
     { name: 'Séries Prontas', path: '/personal/templates', icon: Layers },
     { name: 'Exercícios', path: '/personal/exercises', icon: Library },
     { name: 'Alimentação', path: '/personal/nutrition', icon: Apple },
+    { name: 'Anamnese', path: '/personal/anamnesis', icon: ClipboardList },
     { name: 'Evolução', path: '/personal/evolution', icon: TrendingUp },
     { name: 'Relatórios', path: '/personal/reports', icon: FileText },
     { name: 'Configurações', path: '/personal/settings', icon: Settings },

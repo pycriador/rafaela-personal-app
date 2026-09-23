@@ -300,4 +300,4 @@ export interface WorkoutTemplate {
   updatedAt: string;
 }
 
-
+export * from './anamnesis';

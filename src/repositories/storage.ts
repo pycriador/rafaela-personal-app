@@ -5,8 +5,14 @@ import { initialWorkoutPlans, initialSessions, initialModifications } from '../d
 import { initialNutritionPlans } from '../data/nutrition';
 import { initialActivities } from '../data/activities';
 import { initialNotifications } from '../data/notifications';
+import { initialForms } from '../data/anamnesis/forms';
+import { initialFormVersions } from '../data/anamnesis/formVersions';
+import { initialFormFields } from '../data/anamnesis/formFields';
+import { initialFormApplications } from '../data/anamnesis/formApplications';
+import { initialFormResponses } from '../data/anamnesis/formResponses';
+import { initialConsents } from '../data/anamnesis/consents';
 
-const STORAGE_KEYS = {
+export const STORAGE_KEYS = {
   USERS: 'rafaela_app_users_v1',
   STUDENTS: 'rafaela_app_students_v1',
   EXERCISES: 'rafaela_app_exercises_v3', // bumped to v3 for cartoon vector illustrations
@@ -21,6 +27,12 @@ const STORAGE_KEYS = {
   CUSTOM_MEDIA: 'rafaela_app_custom_media_v1',
   STUDENT_MESSAGES: 'rafaela_app_student_messages_v1',
   WORKOUT_TEMPLATES: 'rafaela_app_workout_templates_v1',
+  FORMS: 'rafaela_app_forms_v1',
+  FORM_VERSIONS: 'rafaela_app_form_versions_v1',
+  FORM_FIELDS: 'rafaela_app_form_fields_v1',
+  FORM_APPLICATIONS: 'rafaela_app_form_applications_v1',
+  FORM_RESPONSES: 'rafaela_app_form_responses_v1',
+  CONSENTS: 'rafaela_app_consents_v1',
 };
 
 /**
@@ -113,6 +125,24 @@ export function initStorage() {
   if (!localStorage.getItem(STORAGE_KEYS.NOTIFICATIONS)) {
     localStorage.setItem(STORAGE_KEYS.NOTIFICATIONS, JSON.stringify(initialNotifications));
   }
+  if (!localStorage.getItem(STORAGE_KEYS.FORMS)) {
+    localStorage.setItem(STORAGE_KEYS.FORMS, JSON.stringify(initialForms));
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.FORM_VERSIONS)) {
+    localStorage.setItem(STORAGE_KEYS.FORM_VERSIONS, JSON.stringify(initialFormVersions));
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.FORM_FIELDS)) {
+    localStorage.setItem(STORAGE_KEYS.FORM_FIELDS, JSON.stringify(initialFormFields));
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.FORM_APPLICATIONS)) {
+    localStorage.setItem(STORAGE_KEYS.FORM_APPLICATIONS, JSON.stringify(initialFormApplications));
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.FORM_RESPONSES)) {
+    localStorage.setItem(STORAGE_KEYS.FORM_RESPONSES, JSON.stringify(initialFormResponses));
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.CONSENTS)) {
+    localStorage.setItem(STORAGE_KEYS.CONSENTS, JSON.stringify(initialConsents));
+  }
 }
 
 export function getItem<T>(key: string, fallback: T): T {
@@ -150,5 +180,3 @@ export function setItem<T>(key: string, value: T): void {
     console.error(`Error writing ${key} to storage:`, err);
   }
 }
-
-export { STORAGE_KEYS };

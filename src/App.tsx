@@ -24,6 +24,11 @@ import { NutritionManagementPage } from './pages/personal/NutritionManagementPag
 import { EvolutionOverviewPage } from './pages/personal/EvolutionOverviewPage';
 import { ReportsPage } from './pages/personal/ReportsPage';
 import { SettingsPage } from './pages/personal/SettingsPage';
+import { AnamnesisDashboardPage } from './pages/personal/anamnesis/AnamnesisDashboardPage';
+import { FormsListPage } from './pages/personal/anamnesis/FormsListPage';
+import { FormEditorPage } from './pages/personal/anamnesis/FormEditorPage';
+import { ApplicationsListPage } from './pages/personal/anamnesis/ApplicationsListPage';
+import { ResponseViewerPage } from './pages/personal/anamnesis/ResponseViewerPage';
 
 // Student Pages
 import { StudentDashboardPage } from './pages/student/StudentDashboardPage';
@@ -33,6 +38,9 @@ import { StudentHistoryPage } from './pages/student/StudentHistoryPage';
 import { StudentEvolutionPage } from './pages/student/StudentEvolutionPage';
 import { StudentNutritionPage } from './pages/student/StudentNutritionPage';
 import { StudentProfilePage } from './pages/student/StudentProfilePage';
+import { StudentAnamnesisPage } from './pages/student/anamnesis/StudentAnamnesisPage';
+import { StudentFillFormPage } from './pages/student/anamnesis/StudentFillFormPage';
+import { StudentResponseDetailPage } from './pages/student/anamnesis/StudentResponseDetailPage';
 
 // Public Pages
 import { LandingPage } from './pages/public/LandingPage';
@@ -88,6 +96,12 @@ export const App: React.FC = () => {
                   <Route path="evolution" element={<EvolutionOverviewPage />} />
                   <Route path="reports" element={<ReportsPage />} />
                   <Route path="settings" element={<SettingsPage />} />
+                  <Route path="anamnesis" element={<AnamnesisDashboardPage />} />
+                  <Route path="anamnesis/forms" element={<FormsListPage />} />
+                  <Route path="anamnesis/forms/new" element={<FormEditorPage />} />
+                  <Route path="anamnesis/forms/:id/edit" element={<FormEditorPage />} />
+                  <Route path="anamnesis/applications" element={<ApplicationsListPage />} />
+                  <Route path="anamnesis/responses/:id" element={<ResponseViewerPage />} />
                 </Route>
               </Route>
 
@@ -99,6 +113,9 @@ export const App: React.FC = () => {
                   <Route path="workouts" element={<StudentWorkoutsListPage />} />
                   <Route path="workout/today" element={<StudentActiveWorkoutPage />} />
                   <Route path="workout/active/:dayId" element={<StudentActiveWorkoutPage />} />
+                  <Route path="anamnesis" element={<StudentAnamnesisPage />} />
+                  <Route path="anamnesis/fill/:applicationId" element={<StudentFillFormPage />} />
+                  <Route path="anamnesis/responses/:responseId" element={<StudentResponseDetailPage />} />
                   <Route path="chat" element={<StudentHistoryPage />} />
                   <Route path="history" element={<StudentHistoryPage />} />
                   <Route path="evolution" element={<StudentEvolutionPage />} />

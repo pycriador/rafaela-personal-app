@@ -1,0 +1,55 @@
+import { FormVersion } from '../../types';
+import { initialFormSections } from './formSections';
+
+export const initialFormVersions: FormVersion[] = [
+  {
+    id: 'ver-init-v1',
+    formId: 'form-anamnese-inicial',
+    version: 1,
+    status: 'published',
+    sections: initialFormSections.filter((s) => s.versionId === 'ver-init-v1'),
+    termsVersion: '1.0',
+    publishedAt: '2026-08-01T10:00:00.000Z',
+    createdAt: '2026-08-01T09:30:00.000Z',
+  },
+  {
+    id: 'ver-init-v2',
+    formId: 'form-anamnese-inicial',
+    version: 2,
+    status: 'published',
+    sections: initialFormSections.filter((s) => s.versionId === 'ver-init-v2'),
+    termsVersion: '2.0',
+    publishedAt: '2026-09-15T14:00:00.000Z',
+    createdAt: '2026-09-15T11:00:00.000Z',
+  },
+  {
+    id: 'ver-health-v1',
+    formId: 'form-atualizacao-saude',
+    version: 1,
+    status: 'published',
+    sections: initialFormSections.filter((s) => s.versionId === 'ver-health-v1'),
+    termsVersion: '1.0',
+    publishedAt: '2026-08-10T10:00:00.000Z',
+    createdAt: '2026-08-10T09:00:00.000Z',
+  },
+  {
+    id: 'ver-eval-v1',
+    formId: 'form-avaliacao-treino',
+    version: 1,
+    status: 'published',
+    sections: initialFormSections.filter((s) => s.versionId === 'ver-eval-v1'),
+    termsVersion: '1.0',
+    publishedAt: '2026-08-15T10:00:00.000Z',
+    createdAt: '2026-08-15T09:00:00.000Z',
+  },
+  {
+    id: 'ver-checkin-v1',
+    formId: 'form-checkin-mensal',
+    version: 1,
+    status: 'published',
+    sections: initialFormSections.filter((s) => s.versionId === 'ver-checkin-v1'),
+    termsVersion: '1.0',
+    publishedAt: '2026-09-01T10:00:00.000Z',
+    createdAt: '2026-09-01T09:00:00.000Z',
+  },
+];

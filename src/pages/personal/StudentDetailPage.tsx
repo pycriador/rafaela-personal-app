@@ -27,6 +27,9 @@ import {
   Star,
   Layers,
   FlaskConical,
+  ClipboardList,
+  FileText,
+  Eye,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -38,6 +41,8 @@ import { Input } from '../../components/ui/Input';
 import { ExerciseFramePlayer } from '../../components/ui/ExerciseFramePlayer';
 import { StudentTrainerChatSection } from '../../components/chat/StudentTrainerChatSection';
 import { WorkoutTemplatesModal } from '../../components/workouts/WorkoutTemplatesModal';
+import { FormStatusBadge } from '../../components/forms/FormStatusBadge';
+import { FormApplicationModal } from '../../components/forms/FormApplicationModal';
 import { useToast } from '../../context/ToastContext';
 import { useAuth } from '../../context/AuthContext';
 import { getAssetUrl } from '../../utils/assets';
@@ -47,6 +52,10 @@ import { nutritionRepository } from '../../repositories/nutritionRepository';
 import { exerciseRepository } from '../../repositories/exerciseRepository';
 import { activityRepository } from '../../repositories/activityRepository';
 import { messageRepository } from '../../repositories/messageRepository';
+import { formService } from '../../services/anamnesis/formService';
+import { formApplicationService } from '../../services/anamnesis/formApplicationService';
+import { formResponseService } from '../../services/anamnesis/formResponseService';
+import { formVersionRepository } from '../../repositories/formVersionRepository';
 import {
   Student,
   WorkoutPlan,
@@ -59,6 +68,10 @@ import {
   WorkoutTemplate,
   DayOfWeek,
   WorkoutDay,
+  FormApplication,
+  FormResponse,
+  Form,
+  FormVersion,
 } from '../../types';
 
 const ALL_DAYS_OF_WEEK: DayOfWeek[] = [
@@ -152,6 +165,47 @@ export const StudentDetailPage: React.FC = () => {
   // Archive modal state
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
 
+  // Anamnesis / Formulários state
+  const [anamnesisApps, setAnamnesisApps] = useState<FormApplication[]>([]);
+  const [anamnesisResponses, setAnamnesisResponses] = useState<FormResponse[]>([]);
+  const [formsMap, setFormsMap] = useState<Record<string, Form>>({});
+  const [formVersionsMap, setFormVersionsMap] = useState<Record<string, FormVersion>>({});
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+
+  const refreshAnamnesis = async (stId?: string, uId?: string) => {
+    const targetStudentId = stId || student?.id;
+    const targetUserId = uId || student?.userId;
+    if (!targetStudentId) return;
+
+    try {
+      const [apps, resps, allForms, allVers] = await Promise.all([
+        formApplicationService.getApplicationsByStudentId(targetStudentId).then(async (res) => {
+          if (res && res.length > 0) return res;
+          return targetUserId ? formApplicationService.getApplicationsByStudentId(targetUserId) : [];
+        }),
+        formResponseService.getResponsesByStudentId(targetStudentId).then(async (res) => {
+          if (res && res.length > 0) return res;
+          return targetUserId ? formResponseService.getResponsesByStudentId(targetUserId) : [];
+        }),
+        formService.getForms(),
+        formVersionRepository.getAll(),
+      ]);
+
+      setAnamnesisApps(apps);
+      setAnamnesisResponses(resps);
+
+      const fMap: Record<string, Form> = {};
+      allForms.forEach((f) => { fMap[f.id] = f; });
+      setFormsMap(fMap);
+
+      const vMap: Record<string, FormVersion> = {};
+      allVers.forEach((v) => { vMap[v.id] = v; });
+      setFormVersionsMap(vMap);
+    } catch (e) {
+      console.error('Error refreshing anamnesis:', e);
+    }
+  };
+
   useEffect(() => {
     async function loadData() {
       if (!id) return;
@@ -203,10 +257,27 @@ export const StudentDetailPage: React.FC = () => {
         map[e.id] = e;
       });
       setExercisesMap(map);
+
+      await refreshAnamnesis(studentId, userId);
       setLoading(false);
     }
     loadData();
   }, [id]);
+
+  const handleCancelApplication = async (appId: string) => {
+    try {
+      await formApplicationService.cancelApplication(appId);
+      success('Aplicação cancelada.');
+      if (student) await refreshAnamnesis(student.id, student.userId);
+    } catch {
+      toastError('Erro ao cancelar aplicação.');
+    }
+  };
+
+  const handleRemindApplication = (app: FormApplication) => {
+    const fName = formsMap[app.formId]?.name || 'formulário';
+    info(`Lembrete para o preenchimento de "${fName}" enviado ao aluno.`);
+  };
 
   // Normalização automática do parâmetro de rota para o ID do usuário no banco de dados (evita duplicidade de slugs de alunos)
   useEffect(() => {
@@ -989,9 +1060,10 @@ export const StudentDetailPage: React.FC = () => {
         tabs={[
           { id: 'resumo', label: 'Resumo', icon: <Users className="w-4 h-4" /> },
           { id: 'treinos', label: 'Treinos', icon: <Dumbbell className="w-4 h-4" /> },
-          { id: 'historico', label: 'Histórico & Auditoria', icon: <History className="w-4 h-4" /> },
+          { id: 'anamnese', label: 'Anamnese', icon: <ClipboardList className="w-4 h-4" /> },
           { id: 'alimentacao', label: 'Alimentação', icon: <Apple className="w-4 h-4" /> },
           { id: 'evolucao', label: 'Evolução', icon: <TrendingUp className="w-4 h-4" /> },
+          { id: 'historico', label: 'Histórico & Auditoria', icon: <History className="w-4 h-4" /> },
           { id: 'configuracoes', label: 'Configurações', icon: <Settings className="w-4 h-4" /> },
         ]}
       />
@@ -1506,6 +1578,269 @@ export const StudentDetailPage: React.FC = () => {
         </div>
         );
       })()}
+
+      {/* TAB: ANAMNESE & SAÚDE (Section 7, 65, 66, 67, 68) */}
+      {activeTab === 'anamnese' && (
+        <div className="space-y-6">
+          {/* Header & Quick Action */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <ClipboardList className="w-5 h-5 text-emerald-500" />
+                Fichas de Anamnese & Formulários de Saúde
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
+                Histórico clínico, questionários de saúde e formulários personalizados aplicados para este aluno.
+              </p>
+            </div>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => setIsApplyModalOpen(true)}
+              leftIcon={<Plus className="w-4 h-4" />}
+            >
+              Aplicar Formulário
+            </Button>
+          </div>
+
+          {/* Stat Cards */}
+          {(() => {
+            const pendingApps = anamnesisApps.filter(
+              (a) => a.status === 'pending' || a.status === 'in_progress'
+            );
+            const completedApps = anamnesisApps.filter((a) => a.status === 'completed');
+            const latestResponse = anamnesisResponses[0];
+
+            return (
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <StatCard
+                  title="Formulários Aplicados"
+                  value={anamnesisApps.length}
+                  icon={<ClipboardList className="w-5 h-5 text-emerald-500" />}
+                  subtitle="Total de envios gerados"
+                />
+                <StatCard
+                  title="Pendentes de Preenchimento"
+                  value={pendingApps.length}
+                  icon={<AlertTriangle className="w-5 h-5 text-amber-500" />}
+                  subtitle={pendingApps.length > 0 ? 'Aguardando envio do aluno' : 'Tudo em dia'}
+                />
+                <StatCard
+                  title="Respostas Concluídas"
+                  value={completedApps.length}
+                  icon={<CheckCircle2 className="w-5 h-5 text-emerald-500" />}
+                  subtitle="Questionários respondidos"
+                />
+                <StatCard
+                  title="Último Envio"
+                  value={
+                    latestResponse?.submittedAt
+                      ? new Date(latestResponse.submittedAt).toLocaleDateString('pt-BR')
+                      : 'Nenhum'
+                  }
+                  icon={<History className="w-5 h-5 text-cyan-500" />}
+                  subtitle={
+                    latestResponse
+                      ? formsMap[latestResponse.formId]?.name || 'Formulário'
+                      : 'Sem preenchimentos'
+                  }
+                />
+              </div>
+            );
+          })()}
+
+          {/* Seção 1: Formulários Pendentes */}
+          {(() => {
+            const pendingApps = anamnesisApps.filter(
+              (a) => a.status === 'pending' || a.status === 'in_progress'
+            );
+
+            if (pendingApps.length === 0) return null;
+
+            return (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                    Formulários Aguardando Resposta ({pendingApps.length})
+                  </h4>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {pendingApps.map((app) => {
+                    const form = formsMap[app.formId];
+                    const version = formVersionsMap[app.formVersionId];
+                    const isOverdue = app.dueAt && new Date(app.dueAt) < new Date();
+
+                    return (
+                      <Card
+                        key={app.id}
+                        className="p-5 border-amber-500/30 bg-amber-500/5 hover:border-amber-500/50 transition-all flex flex-col justify-between"
+                      >
+                        <div className="space-y-2">
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <h5 className="text-sm font-bold text-slate-900 dark:text-white">
+                                  {form?.name || 'Formulário Personalizado'}
+                                </h5>
+                                {version && (
+                                  <Badge variant="neutral" size="sm" className="font-mono text-[10px]">
+                                    v{version.version}
+                                  </Badge>
+                                )}
+                              </div>
+                              <p className="text-xs text-slate-500 mt-0.5">
+                                {form?.description || 'Saúde & Treino'}
+                              </p>
+                            </div>
+                            <FormStatusBadge status={app.status} />
+                          </div>
+
+                          {app.message && (
+                            <p className="text-xs text-slate-600 dark:text-dark-muted bg-white/60 dark:bg-dark-card/60 p-2.5 rounded-xl border border-slate-100 dark:border-dark-border italic">
+                              &ldquo;{app.message}&rdquo;
+                            </p>
+                          )}
+
+                          <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-dark-muted pt-2 border-t border-slate-100 dark:border-dark-border/40">
+                            <span>
+                              Aplicado em:{' '}
+                              <strong>{new Date(app.assignedAt).toLocaleDateString('pt-BR')}</strong>
+                            </span>
+                            {app.dueAt && (
+                              <span className={isOverdue ? 'text-rose-500 font-bold' : ''}>
+                                Prazo: <strong>{new Date(app.dueAt).toLocaleDateString('pt-BR')}</strong>
+                                {isOverdue && ' (Atrasado)'}
+                              </span>
+                            )}
+                            {app.isMandatory && (
+                              <Badge variant="warning" size="sm" className="text-[10px]">
+                                Obrigatório
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-end gap-2 pt-4 mt-2 border-t border-slate-100 dark:border-dark-border/40">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-xs text-rose-500 hover:bg-rose-500/10"
+                            onClick={() => handleCancelApplication(app.id)}
+                          >
+                            Cancelar
+                          </Button>
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            className="text-xs"
+                            onClick={() => handleRemindApplication(app)}
+                          >
+                            Lembrar Aluno
+                          </Button>
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Seção 2: Histórico de Respostas */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+              Histórico de Respostas Concluídas ({anamnesisResponses.length})
+            </h4>
+
+            {anamnesisResponses.length === 0 ? (
+              <Card className="py-12 text-center text-xs text-slate-400">
+                <ClipboardList className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-2" />
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                  Nenhuma resposta concluída ainda
+                </p>
+                <p className="text-xs text-slate-500 mt-1 mb-4">
+                  Quando o aluno preencher um formulário, as respostas completas e o termo de consentimento aparecerão aqui.
+                </p>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => setIsApplyModalOpen(true)}
+                  leftIcon={<Plus className="w-3.5 h-3.5" />}
+                >
+                  Aplicar Formulário Agora
+                </Button>
+              </Card>
+            ) : (
+              <div className="space-y-3">
+                {anamnesisResponses.map((resp) => {
+                  const form = formsMap[resp.formId];
+                  const version = formVersionsMap[resp.formVersionId];
+
+                  return (
+                    <Card
+                      key={resp.id}
+                      className="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-emerald-500/40 transition-all"
+                    >
+                      <div className="space-y-1.5">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h5 className="text-sm font-bold text-slate-900 dark:text-white">
+                            {form?.name || 'Formulário Personalizado'}
+                          </h5>
+                          {version && (
+                            <Badge variant="neutral" size="sm" className="font-mono text-[10px]">
+                              v{version.version}
+                            </Badge>
+                          )}
+                          <FormStatusBadge status="completed" />
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-dark-muted font-mono">
+                          <span>
+                            Respondido em:{' '}
+                            <strong className="text-slate-700 dark:text-slate-300">
+                              {resp.submittedAt ? new Date(resp.submittedAt).toLocaleString('pt-BR', {
+                                dateStyle: 'short',
+                                timeStyle: 'short',
+                              }) : 'Não enviado'}
+                            </strong>
+                          </span>
+                          <span>•</span>
+                          <span>
+                            {resp.answers.length} respostas registradas
+                          </span>
+                          {resp.consentRecord && (
+                            <>
+                              <span>•</span>
+                              <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                                ✓ Consentimento LGPD Assinado
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => navigate(`/personal/anamnesis/responses/${resp.id}`)}
+                          leftIcon={<Eye className="w-4 h-4 text-emerald-500" />}
+                          className="text-xs"
+                        >
+                          Ver Respostas
+                        </Button>
+                      </div>
+                    </Card>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* TAB 3: HISTÓRICO & AUDITORIA (Section 2, 29, 41) */}
       {activeTab === 'historico' && (
@@ -2747,6 +3082,18 @@ export const StudentDetailPage: React.FC = () => {
             </div>
           </form>
         </Modal>
+      )}
+
+      {/* Modal: Aplicar Formulário de Anamnese / Saúde */}
+      {student && (
+        <FormApplicationModal
+          isOpen={isApplyModalOpen}
+          onClose={() => setIsApplyModalOpen(false)}
+          targetStudentId={student.id}
+          onApplied={() => {
+            refreshAnamnesis(student.id, student.userId);
+          }}
+        />
       )}
     </div>
   );
