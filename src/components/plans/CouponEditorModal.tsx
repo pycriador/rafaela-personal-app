@@ -37,6 +37,10 @@ export const CouponEditorModal: React.FC<CouponEditorModalProps> = ({
   const [hasMinPrice, setHasMinPrice] = useState(false);
   const [minPlanPrice, setMinPlanPrice] = useState<string>('150');
 
+  // Regras de Acúmulo e Uso Único
+  const [isCumulative, setIsCumulative] = useState(false);
+  const [singleUsePerStudent, setSingleUsePerStudent] = useState(true);
+
   const [active, setActive] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -71,6 +75,8 @@ export const CouponEditorModal: React.FC<CouponEditorModalProps> = ({
         setMinPlanPrice('150');
       }
 
+      setIsCumulative(couponToEdit.isCumulative ?? false);
+      setSingleUsePerStudent(couponToEdit.singleUsePerStudent ?? true);
       setActive(couponToEdit.active);
     } else {
       setCode('');
@@ -83,6 +89,8 @@ export const CouponEditorModal: React.FC<CouponEditorModalProps> = ({
       setExpiresAt('');
       setHasMinPrice(false);
       setMinPlanPrice('150');
+      setIsCumulative(false);
+      setSingleUsePerStudent(true);
       setActive(true);
     }
   }, [couponToEdit, isOpen]);
@@ -154,6 +162,8 @@ export const CouponEditorModal: React.FC<CouponEditorModalProps> = ({
         maxUses: parsedMaxUses,
         expiresAt: hasExpiry ? expiresAt : null,
         minPlanPrice: parsedMinPrice,
+        isCumulative,
+        singleUsePerStudent,
         active,
       });
 
@@ -394,6 +404,58 @@ export const CouponEditorModal: React.FC<CouponEditorModalProps> = ({
               Aplicável a qualquer valor de plano (sem exigência mínima).
             </p>
           )}
+        </div>
+
+        {/* Regras Avançadas: Cumulativo vs Uso Único */}
+        <div className="p-3.5 rounded-xl border border-slate-200/80 dark:border-white/[0.08] bg-slate-50/50 dark:bg-white/[0.01] space-y-3">
+          <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 block">
+            Regras de Acúmulo & Utilização por Aluno
+          </span>
+
+          {/* Cupom Acumulativo */}
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-xs font-medium text-slate-700 dark:text-slate-300 block">
+                Cupom Acumulativo
+              </span>
+              <span className="text-[11px] text-slate-400 block">
+                {isCumulative
+                  ? 'Permite acumular com outros descontos ou cupons aplicados.'
+                  : 'Uso exclusivo — não pode ser combinado com nenhum outro desconto.'}
+              </span>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={isCumulative}
+                onChange={(e) => setIsCumulative(e.target.checked)}
+                className="sr-only peer"
+              />
+              <div className="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
+
+          <div className="border-t border-slate-200/60 dark:border-white/[0.06] pt-2 flex items-center justify-between">
+            <div>
+              <span className="text-xs font-medium text-slate-700 dark:text-slate-300 block">
+                Uso Único por Aluno
+              </span>
+              <span className="text-[11px] text-slate-400 block">
+                {singleUsePerStudent
+                  ? 'Cada aluno só pode resgatar este cupom 1 única vez na conta.'
+                  : 'Reutilizável — o mesmo aluno pode aplicar em renovações ou novos planos.'}
+              </span>
+            </div>
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={singleUsePerStudent}
+                onChange={(e) => setSingleUsePerStudent(e.target.checked)}
+                className="sr-only peer"
+              />
+              <div className="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
         </div>
 
         {/* Status Ativo / Inativo */}

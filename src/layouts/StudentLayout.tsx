@@ -19,6 +19,7 @@ import {
   Menu,
   X,
   Trophy,
+  CreditCard,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -92,6 +93,7 @@ export const StudentLayout: React.FC = () => {
     { name: 'Bate-Papo', path: '/student/chat', icon: MessageSquare },
     { name: 'Evolução', path: '/student/evolution', icon: TrendingUp },
     { name: 'Alimentação', path: '/student/nutrition', icon: Apple },
+    { name: 'Financeiro', path: '/student/financial', icon: CreditCard },
     { name: 'Perfil', path: '/student/profile', icon: User },
   ];
 

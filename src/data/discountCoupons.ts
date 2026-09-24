@@ -11,6 +11,8 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     usedCount: 14,
     expiresAt: null, // Sem validade
     minPlanPrice: 100,
+    isCumulative: false, // Uso exclusivo / não acumulativo
+    singleUsePerStudent: true, // Uso único por aluno
     active: true,
     createdAt: '2026-01-10T10:00:00.000Z',
     updatedAt: '2026-01-10T10:00:00.000Z',
@@ -25,6 +27,8 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     usedCount: 8,
     expiresAt: '2026-12-31',
     minPlanPrice: 150,
+    isCumulative: true, // Acumulativo
+    singleUsePerStudent: true,
     active: true,
     createdAt: '2026-01-15T10:00:00.000Z',
     updatedAt: '2026-01-15T10:00:00.000Z',
@@ -39,6 +43,8 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     usedCount: 12,
     expiresAt: '2026-12-31',
     minPlanPrice: 300,
+    isCumulative: false, // Uso exclusivo
+    singleUsePerStudent: false, // Reutilizável em renovações
     active: true,
     createdAt: '2026-02-01T10:00:00.000Z',
     updatedAt: '2026-02-01T10:00:00.000Z',
@@ -53,6 +59,8 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     usedCount: 6,
     expiresAt: '2026-04-30',
     minPlanPrice: 200,
+    isCumulative: false,
+    singleUsePerStudent: true,
     active: true,
     createdAt: '2026-02-15T10:00:00.000Z',
     updatedAt: '2026-02-15T10:00:00.000Z',
@@ -67,6 +75,8 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     usedCount: 5,
     expiresAt: '2026-11-30',
     minPlanPrice: 250,
+    isCumulative: true, // Acumulativo
+    singleUsePerStudent: true,
     active: true,
     createdAt: '2026-02-10T10:00:00.000Z',
     updatedAt: '2026-02-10T10:00:00.000Z',
@@ -81,6 +91,8 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     usedCount: 3,
     expiresAt: '2026-12-31',
     minPlanPrice: 600,
+    isCumulative: false,
+    singleUsePerStudent: true,
     active: true,
     createdAt: '2026-01-20T10:00:00.000Z',
     updatedAt: '2026-01-20T10:00:00.000Z',
@@ -95,6 +107,8 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     usedCount: 22,
     expiresAt: null,
     minPlanPrice: 150,
+    isCumulative: true,
+    singleUsePerStudent: true,
     active: true,
     createdAt: '2026-01-01T10:00:00.000Z',
     updatedAt: '2026-01-01T10:00:00.000Z',
@@ -109,6 +123,8 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     usedCount: 50, // Esgotado
     expiresAt: '2025-11-30', // Expirado
     minPlanPrice: 200,
+    isCumulative: false,
+    singleUsePerStudent: true,
     active: false,
     createdAt: '2025-11-01T10:00:00.000Z',
     updatedAt: '2025-11-30T10:00:00.000Z',

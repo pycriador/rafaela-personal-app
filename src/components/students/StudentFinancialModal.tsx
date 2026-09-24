@@ -31,6 +31,7 @@ import {
   PaymentStatus,
   MembershipPlan,
   DiscountType,
+  DiscountCoupon,
 } from '../../types';
 import { studentRepository } from '../../repositories/studentRepository';
 import { planRepository } from '../../repositories/planRepository';
@@ -130,10 +131,13 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
   const [newPayMethod, setNewPayMethod] = useState<PaymentMethod>('pix');
   const [newPayStatus, setNewPayStatus] = useState<PaymentStatus>('pendente');
 
-  // Load catalog plans
+  const [availableCoupons, setAvailableCoupons] = useState<DiscountCoupon[]>([]);
+
+  // Load catalog plans and coupons
   useEffect(() => {
     if (isOpen) {
       planRepository.getPlans().then(setCatalogPlans);
+      couponRepository.getCoupons().then(setAvailableCoupons);
     }
   }, [isOpen]);
 
@@ -255,6 +259,15 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
     setPrice(result.finalPrice);
     // Automatically recalculate pending installments with the new total
     setPayments((prev) => recalculatePendingInstallmentAmounts(prev, result.finalPrice));
+  };
+
+  const handleRemoveDiscount = () => {
+    setDiscountType('none');
+    setDiscountValue(0);
+    setDiscountCouponCode('');
+    setPrice(originalPrice);
+    setPayments((prev) => recalculatePendingInstallmentAmounts(prev, originalPrice));
+    info('Desconto removido. Parcelas pendentes restauradas para o valor integral.');
   };
 
   // Frequency auto-adjust helper
@@ -638,9 +651,21 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
                 Descontos & Cupons Promocionais
               </h4>
             </div>
-            <span className="text-[11px] text-slate-400">
-              Muda automaticamente os valores das parcelas pendentes
-            </span>
+
+            <div className="flex items-center gap-2">
+              {discountType !== 'none' && (
+                <button
+                  type="button"
+                  onClick={handleRemoveDiscount}
+                  className="text-xs text-rose-500 hover:text-rose-700 underline font-semibold cursor-pointer"
+                >
+                  Remover Desconto
+                </button>
+              )}
+              <span className="text-[11px] text-slate-400 hidden sm:inline">
+                Muda automaticamente os valores das parcelas pendentes
+              </span>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -664,20 +689,67 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
             </div>
 
             {discountType === 'coupon' && (
-              <div className="sm:col-span-2">
-                <label className="text-[11px] font-medium text-slate-500 dark:text-dark-muted block mb-1">
-                  Cupom (ex: PROMO10, RAFAELA15, BLACKFRIDAY, OFF50)
-                </label>
-                <Input
-                  type="text"
-                  placeholder="Código do cupom..."
-                  value={discountCouponCode}
-                  onChange={(e) => {
-                    const code = e.target.value.toUpperCase();
-                    handleApplyDiscount('coupon', discountValue, code);
-                  }}
-                  className="text-xs font-mono font-bold tracking-wider"
-                />
+              <div className="sm:col-span-2 space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-medium text-slate-500 dark:text-dark-muted block">
+                    Cupom de Desconto
+                  </label>
+                  {availableCoupons.filter((c) => c.active).length > 0 && (
+                    <span className="text-[10px] text-slate-400">
+                      Ou selecione um cupom ativo abaixo:
+                    </span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <Input
+                    type="text"
+                    placeholder="Digitar código (ex: VERAO2026)..."
+                    value={discountCouponCode}
+                    onChange={(e) => {
+                      const code = e.target.value.toUpperCase();
+                      handleApplyDiscount('coupon', discountValue, code);
+                    }}
+                    className="text-xs font-mono font-bold tracking-wider"
+                  />
+
+                  {availableCoupons.length > 0 && (
+                    <Select
+                      value={discountCouponCode}
+                      onChange={async (e) => {
+                        const code = e.target.value;
+                        if (!code) {
+                          handleRemoveDiscount();
+                          return;
+                        }
+                        const validation = await couponRepository.validateCoupon({
+                          code,
+                          planPrice: originalPrice,
+                          studentId: student.id,
+                          hasOtherDiscount: false,
+                        });
+                        if (!validation.isValid) {
+                          toastError(validation.message);
+                        } else {
+                          success(validation.message);
+                        }
+                        handleApplyDiscount('coupon', discountValue, code);
+                      }}
+                      className="text-xs font-mono"
+                    >
+                      <option value="">-- Escolher Cupom Cadastrado --</option>
+                      {availableCoupons
+                        .filter((c) => c.active)
+                        .map((c) => (
+                          <option key={c.id} value={c.code}>
+                            {c.code} ({c.discountType === 'percentage' ? `${c.discountValue}% OFF` : `R$ ${c.discountValue.toFixed(2)} OFF`})
+                            {c.singleUsePerStudent ? ' • Uso Único' : ''}
+                            {!c.isCumulative ? ' • Não Acumulativo' : ''}
+                          </option>
+                        ))}
+                    </Select>
+                  )}
+                </div>
               </div>
             )}
 

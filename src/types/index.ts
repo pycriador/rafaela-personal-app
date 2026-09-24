@@ -85,6 +85,8 @@ export interface DiscountCoupon {
   usedCount: number; // Quantidade de vezes já utilizado
   expiresAt?: string | null; // YYYY-MM-DD ou null/undefined se sem prazo
   minPlanPrice?: number | null; // Preço mínimo do plano para aplicação
+  isCumulative?: boolean; // Permite acumular com outros descontos/cupons (false = uso exclusivo / não acumulativo)
+  singleUsePerStudent?: boolean; // Cupom de uso único por aluno (true = cada aluno só usa 1 vez na conta)
   active: boolean;
   createdAt: string;
   updatedAt: string;

@@ -25,6 +25,9 @@ import {
   Moon,
   ChevronRight,
   ClipboardList,
+  CreditCard,
+  DollarSign,
+  Tag,
 } from 'lucide-react';
 
 const DAYS_MAP: Record<number, DayOfWeek> = {
@@ -538,6 +541,75 @@ export const StudentDashboardPage: React.FC = () => {
               </div>
               <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-colors" />
             </button>
+
+            {/* Categoria Financeiro & Mensalidades */}
+            <div className="p-4 rounded-xl bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border border-emerald-500/20 shadow-xs space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                    <CreditCard className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                      Meu Financeiro
+                    </h4>
+                    <span className="text-[11px] text-slate-500 dark:text-dark-muted block">
+                      {studentProfile.financialPlan?.planName || 'Consultoria de Treino'}
+                    </span>
+                  </div>
+                </div>
+
+                <Badge
+                  variant={
+                    studentProfile.financialPlan?.payments.some((p) => p.status === 'pendente')
+                      ? 'warning'
+                      : 'success'
+                  }
+                  size="sm"
+                >
+                  {studentProfile.financialPlan?.payments.some((p) => p.status === 'pendente')
+                    ? 'Parcelas Pendentes'
+                    : 'Em Dia'}
+                </Badge>
+              </div>
+
+              {/* Detalhes de parcelas e cupom */}
+              {studentProfile.financialPlan && (
+                <div className="space-y-1.5 text-xs">
+                  <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
+                    <span>Quitação:</span>
+                    <span className="font-semibold text-slate-900 dark:text-white">
+                      {studentProfile.financialPlan.payments.filter((p) => p.status === 'pago').length} de{' '}
+                      {studentProfile.financialPlan.payments.length} parcelas pagas
+                    </span>
+                  </div>
+
+                  {studentProfile.financialPlan.discountCouponCode && (
+                    <div className="flex items-center justify-between text-[11px] text-emerald-600 dark:text-emerald-400">
+                      <span className="flex items-center gap-1">
+                        <Tag className="w-3 h-3" /> Cupom aplicado:
+                      </span>
+                      <span className="font-mono font-bold">
+                        {studentProfile.financialPlan.discountCouponCode}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="flex items-center gap-2 pt-1">
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="sm"
+                  onClick={() => navigate('/student/financial')}
+                  className="w-full text-xs py-1.5"
+                  rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+                >
+                  Ver Financeiro Completo
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -64,6 +64,8 @@ import { formService } from '../../services/anamnesis/formService';
 import { formApplicationService } from '../../services/anamnesis/formApplicationService';
 import { formResponseService } from '../../services/anamnesis/formResponseService';
 import { formVersionRepository } from '../../repositories/formVersionRepository';
+import { couponRepository } from '../../repositories/couponRepository';
+import { recalculatePendingInstallmentAmounts } from '../../utils/financialCalculations';
 import {
   Student,
   WorkoutPlan,
@@ -1301,6 +1303,34 @@ export const StudentDetailPage: React.FC = () => {
               }
             };
 
+            const handleRemoveCouponFromStudent = async () => {
+              if (!student.financialPlan) return;
+              const currentPlan = student.financialPlan;
+              const code = currentPlan.discountCouponCode;
+              const originalPrice = currentPlan.originalPrice || currentPlan.price;
+
+              const recalculatedPayments = recalculatePendingInstallmentAmounts(
+                currentPlan.payments || [],
+                originalPrice
+              );
+
+              const updatedPlan = {
+                ...currentPlan,
+                price: originalPrice,
+                discountType: 'none' as const,
+                discountValue: 0,
+                discountCouponCode: undefined,
+                payments: recalculatedPayments,
+              };
+
+              const updated = await studentRepository.update(student.id, { financialPlan: updatedPlan });
+              if (code) {
+                await couponRepository.removeCouponUsage(code, student.id);
+              }
+              setStudent(updated || { ...student, financialPlan: updatedPlan });
+              success(`Cupom ${code ? `"${code}"` : ''} removido do aluno com sucesso.`);
+            };
+
             return (
               <Card className="overflow-hidden border border-slate-200/80 dark:border-dark-border shadow-xs">
                 {/* Banner de Alerta Visual */}
@@ -1369,15 +1399,41 @@ export const StudentDetailPage: React.FC = () => {
                         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
                           Plano Atual & Valor
                         </span>
-                        {student.financialPlan?.discountType && student.financialPlan.discountType !== 'none' && (
-                          <Badge variant="success" size="sm" className="text-[10px]">
-                            {student.financialPlan.discountCouponCode
-                              ? `Cupom ${student.financialPlan.discountCouponCode}`
-                              : student.financialPlan.discountType === 'percentage'
-                              ? `${student.financialPlan.discountValue}% OFF`
-                              : `R$ ${student.financialPlan.discountValue} OFF`}
-                          </Badge>
-                        )}
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          {student.financialPlan?.discountType && student.financialPlan.discountType !== 'none' && (
+                            <div className="flex items-center gap-1">
+                              <Badge variant="success" size="sm" className="text-[10px]">
+                                {student.financialPlan.discountCouponCode
+                                  ? `Cupom ${student.financialPlan.discountCouponCode}`
+                                  : student.financialPlan.discountType === 'percentage'
+                                  ? `${student.financialPlan.discountValue}% OFF`
+                                  : `R$ ${student.financialPlan.discountValue} OFF`}
+                              </Badge>
+                              {student.financialPlan.discountCouponCode && (
+                                <button
+                                  type="button"
+                                  onClick={handleRemoveCouponFromStudent}
+                                  className="text-[10px] text-rose-500 hover:text-rose-700 underline font-semibold cursor-pointer"
+                                  title="Remover cupom deste aluno"
+                                >
+                                  Remover
+                                </button>
+                              )}
+                            </div>
+                          )}
+                          {(!student.financialPlan?.discountCouponCode || student.financialPlan?.discountType === 'none') && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setFinancialModalMode('default');
+                                setIsFinancialModalOpen(true);
+                              }}
+                              className="text-[10px] text-emerald-600 dark:text-emerald-400 hover:underline font-semibold cursor-pointer"
+                            >
+                              + Cupom
+                            </button>
+                          )}
+                        </div>
                       </div>
 
                       <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">

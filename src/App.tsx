@@ -45,6 +45,7 @@ import { StudentRankingPage } from './pages/student/StudentRankingPage';
 import { StudentAnamnesisPage } from './pages/student/anamnesis/StudentAnamnesisPage';
 import { StudentFillFormPage } from './pages/student/anamnesis/StudentFillFormPage';
 import { StudentResponseDetailPage } from './pages/student/anamnesis/StudentResponseDetailPage';
+import { StudentFinancialPage } from './pages/student/StudentFinancialPage';
 
 // Public Pages
 import { LandingPage } from './pages/public/LandingPage';
@@ -130,6 +131,7 @@ export const App: React.FC = () => {
                   <Route path="history" element={<StudentHistoryPage />} />
                   <Route path="evolution" element={<StudentEvolutionPage />} />
                   <Route path="nutrition" element={<StudentNutritionPage />} />
+                  <Route path="financial" element={<StudentFinancialPage />} />
                   <Route path="profile" element={<StudentProfilePage />} />
                 </Route>
               </Route>
