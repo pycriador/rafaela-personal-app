@@ -337,8 +337,13 @@ export interface Notification {
   message: string;
   read: boolean;
   timestamp: string;
-  type: 'alert' | 'info' | 'success' | 'warning';
+  type: 'alert' | 'info' | 'success' | 'warning' | 'message';
   link?: string;
+  metadata?: {
+    studentId?: string;
+    messageId?: string;
+    [key: string]: any;
+  };
 }
 
 export type MessageCategory =

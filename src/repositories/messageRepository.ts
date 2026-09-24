@@ -1,6 +1,7 @@
 import { StudentMessage } from '../types';
 import { getItem, setItem, STORAGE_KEYS, isSimulationModeActive } from './storage';
 import { studentRepository } from './studentRepository';
+import { notificationRepository } from './notificationRepository';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 export const initialStudentMessages: StudentMessage[] = [];
@@ -208,6 +209,35 @@ export class SupabaseMessageRepository implements IMessageRepository {
       );
     }
 
+    // Se a mensagem foi enviada por um aluno, gera notificação no sino do Personal
+    if (newMessage.senderRole === 'student') {
+      try {
+        let studentName = newMessage.senderName;
+        if (!studentName || studentName === 'Aluno') {
+          const student = await studentRepository.getById(canonicalStudentId);
+          if (student) studentName = student.name;
+        }
+
+        await notificationRepository.create({
+          recipientId: 'user-rafaela',
+          recipientRole: 'personal',
+          title: `Nova mensagem de ${studentName || 'Aluno'}`,
+          message:
+            newMessage.content.length > 90
+              ? `${newMessage.content.slice(0, 87)}...`
+              : newMessage.content,
+          type: 'message',
+          link: `/personal/students/${canonicalStudentId}?tab=conversa`,
+          metadata: {
+            studentId: canonicalStudentId,
+            messageId: newMessage.id,
+          },
+        });
+      } catch (notifErr) {
+        console.warn('Erro ao criar notificação para o personal:', notifErr);
+      }
+    }
+
     return newMessage;
   }
 
@@ -245,6 +275,15 @@ export class SupabaseMessageRepository implements IMessageRepository {
             detail: { studentId },
           })
         );
+      }
+    }
+
+    // Se o personal visualizou as mensagens deste aluno, apaga as notificações daquele aluno na central de notificações
+    if (readerRole === 'personal') {
+      try {
+        await notificationRepository.deleteChatNotificationsForStudent(studentId);
+      } catch (err) {
+        console.warn('Erro ao apagar notificações de mensagens do aluno:', err);
       }
     }
   }

@@ -8,7 +8,9 @@ export interface INotificationRepository {
   markAsRead(id: string): Promise<boolean>;
   markAllAsRead(recipientId: string): Promise<void>;
   create(notification: Omit<Notification, 'id' | 'timestamp' | 'read'>): Promise<Notification>;
-  getUnreadCount(recipientId: string): Promise<number>;
+  delete(id: string): Promise<boolean>;
+  deleteChatNotificationsForStudent(studentId: string): Promise<void>;
+  getUnreadCount(recipientId: string, role?: UserRole): Promise<number>;
 }
 
 function mapFromDb(row: any): Notification {
@@ -21,6 +23,7 @@ function mapFromDb(row: any): Notification {
     read: row.read ?? false,
     type: row.type || 'info',
     link: row.link || undefined,
+    metadata: row.metadata || undefined,
     timestamp: row.timestamp || row.created_at,
   };
 }
@@ -59,7 +62,12 @@ export class SupabaseNotificationRepository implements INotificationRepository {
     if (isSupabaseConfigured && !isSimulationModeActive()) {
       try {
         const { error } = await supabase.from('notifications').update({ read: true }).eq('id', id);
-        if (!error) return true;
+        if (!error) {
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('rafaela_notification_updated'));
+          }
+          return true;
+        }
       } catch (err) {
         // fallback
       }
@@ -70,6 +78,9 @@ export class SupabaseNotificationRepository implements INotificationRepository {
     if (index === -1) return false;
     list[index].read = true;
     setItem(STORAGE_KEYS.NOTIFICATIONS, list);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('rafaela_notification_updated'));
+    }
     return true;
   }
 
@@ -87,6 +98,60 @@ export class SupabaseNotificationRepository implements INotificationRepository {
       if (n.recipientId === recipientId) n.read = true;
     });
     setItem(STORAGE_KEYS.NOTIFICATIONS, list);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('rafaela_notification_updated'));
+    }
+  }
+
+  async delete(id: string): Promise<boolean> {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
+      try {
+        await supabase.from('notifications').delete().eq('id', id);
+      } catch (err) {
+        // fallback
+      }
+    }
+
+    const list = getItem<Notification[]>(STORAGE_KEYS.NOTIFICATIONS, initialNotifications);
+    const filtered = list.filter((n) => n.id !== id);
+    if (filtered.length !== list.length) {
+      setItem(STORAGE_KEYS.NOTIFICATIONS, filtered);
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('rafaela_notification_updated'));
+      }
+      return true;
+    }
+    return false;
+  }
+
+  async deleteChatNotificationsForStudent(studentId: string): Promise<void> {
+    if (isSupabaseConfigured && !isSimulationModeActive()) {
+      try {
+        await supabase
+          .from('notifications')
+          .delete()
+          .or(`link.ilike.%/personal/students/${studentId}%,link.ilike.%${studentId}%`);
+      } catch (err) {
+        // fallback
+      }
+    }
+
+    const list = getItem<Notification[]>(STORAGE_KEYS.NOTIFICATIONS, initialNotifications);
+    const filtered = list.filter((n) => {
+      const isChatNotif = n.type === 'message' || (n.link && n.link.includes('tab=conversa'));
+      if (!isChatNotif) return true;
+
+      const matchLink = n.link && (n.link.includes(`/personal/students/${studentId}`) || n.link.includes(studentId));
+      const matchMeta = (n.metadata as any)?.studentId === studentId;
+      return !(matchLink || matchMeta);
+    });
+
+    if (filtered.length !== list.length) {
+      setItem(STORAGE_KEYS.NOTIFICATIONS, filtered);
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('rafaela_notification_updated'));
+      }
+    }
   }
 
   async create(data: Omit<Notification, 'id' | 'timestamp' | 'read'>): Promise<Notification> {
@@ -108,6 +173,7 @@ export class SupabaseNotificationRepository implements INotificationRepository {
           read: newNotification.read,
           type: newNotification.type,
           link: newNotification.link || null,
+          metadata: newNotification.metadata || null,
           timestamp: newNotification.timestamp,
         });
       } catch (err) {
@@ -118,18 +184,27 @@ export class SupabaseNotificationRepository implements INotificationRepository {
     const list = getItem<Notification[]>(STORAGE_KEYS.NOTIFICATIONS, initialNotifications);
     list.unshift(newNotification);
     setItem(STORAGE_KEYS.NOTIFICATIONS, list);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('rafaela_notification_updated'));
+    }
     return newNotification;
   }
 
-  async getUnreadCount(recipientId: string): Promise<number> {
+  async getUnreadCount(recipientId: string, role?: UserRole): Promise<number> {
     if (isSupabaseConfigured) {
       try {
-        const { count, error } = await supabase
+        let query = supabase
           .from('notifications')
           .select('*', { count: 'exact', head: true })
-          .eq('recipient_id', recipientId)
           .eq('read', false);
 
+        if (role) {
+          query = query.or(`recipient_id.eq.${recipientId},recipient_role.eq.${role}`);
+        } else {
+          query = query.eq('recipient_id', recipientId);
+        }
+
+        const { count, error } = await query;
         if (!error && typeof count === 'number') {
           return count;
         }
@@ -138,7 +213,7 @@ export class SupabaseNotificationRepository implements INotificationRepository {
       }
     }
 
-    const items = await this.getByRecipient(recipientId);
+    const items = await this.getByRecipient(recipientId, role);
     return items.filter((n) => !n.read).length;
   }
 }

@@ -16,9 +16,11 @@ import {
   X,
   ShieldCheck,
   ArrowLeft,
+  Bell,
 } from 'lucide-react';
 import { Student, StudentMessage, MessageCategory } from '../../types';
 import { messageRepository } from '../../repositories/messageRepository';
+import { notificationRepository } from '../../repositories/notificationRepository';
 import { useToast } from '../../context/ToastContext';
 
 interface StudentTrainerChatSectionProps {
@@ -131,12 +133,34 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
     }
   }, [loading, messages.length]);
 
+  const [notifUnreadCount, setNotifUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (currentUserRole !== 'personal') return;
+
+    const updateCount = () => {
+      notificationRepository.getUnreadCount('user-rafaela', 'personal').then(setNotifUnreadCount);
+    };
+
+    updateCount();
+    window.addEventListener('rafaela_notification_updated', updateCount);
+    window.addEventListener('storage', updateCount);
+
+    return () => {
+      window.removeEventListener('rafaela_notification_updated', updateCount);
+      window.removeEventListener('storage', updateCount);
+    };
+  }, [currentUserRole]);
+
   const loadMessages = async (isBackground = false) => {
     try {
       if (!isBackground) setLoading(true);
       const msgs = await messageRepository.getMessagesByStudentId(student.id);
       setMessages(msgs);
       await messageRepository.markAsRead(student.id, currentUserRole);
+      if (currentUserRole === 'personal') {
+        await notificationRepository.deleteChatNotificationsForStudent(student.id);
+      }
     } catch (err) {
       console.error('Erro ao carregar mensagens:', err);
     } finally {
@@ -342,6 +366,22 @@ export const StudentTrainerChatSection: React.FC<StudentTrainerChatSectionProps>
             >
               <RotateCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-emerald-500' : ''}`} />
             </button>
+
+            {currentUserRole === 'personal' && (
+              <button
+                type="button"
+                title="Notificações"
+                onClick={() => window.dispatchEvent(new CustomEvent('rafaela_open_notifications'))}
+                className="relative p-2 text-slate-500 dark:text-slate-400 hover:text-emerald-500 hover:bg-white dark:hover:bg-[#111b21] border border-slate-200 dark:border-dark-border rounded-xl transition-all cursor-pointer shadow-xs"
+              >
+                <Bell className="w-4 h-4" />
+                {notifUnreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] px-1 bg-emerald-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center ring-2 ring-white dark:ring-dark-card shadow-sm animate-pulse">
+                    {notifUnreadCount > 9 ? '9+' : notifUnreadCount}
+                  </span>
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>
