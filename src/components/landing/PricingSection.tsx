@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { Check, Star, Sparkles, Apple, Dumbbell, ShieldCheck, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Check, Star, Sparkles, Apple, Dumbbell, ShieldCheck, ArrowRight, CreditCard, QrCode } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { PlanItem } from './CheckoutModal';
+import { planRepository } from '../../repositories/planRepository';
+import { MembershipPlan } from '../../types';
 
 interface PricingSectionProps {
   onSelectPlan: (plan: PlanItem) => void;
@@ -12,103 +14,42 @@ interface PricingSectionProps {
 export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) => {
   const [activeTab, setActiveTab] = useState<'treino' | 'combo'>('treino');
   const [billingCycle, setBillingCycle] = useState<'mensal' | 'trimestral'>('mensal');
+  const [landingPlans, setLandingPlans] = useState<MembershipPlan[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    planRepository
+      .getLandingPagePlans()
+      .then((plans) => {
+        setLandingPlans(plans);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const discount = billingCycle === 'trimestral' ? 0.85 : 1; // 15% discount for quarterly
 
-  const workoutPlans: PlanItem[] = [
-    {
-      id: 'start-treino',
-      name: 'Start Essencial',
-      category: 'treino',
-      price: Math.round(89 * discount),
-      period: '/mês',
-      description: 'Ideal para quem busca autonomia com uma ficha estruturada e postura correta.',
-      features: [
-        'Ficha de treino individualizada (mensal)',
-        'Acesso total ao app com 302 exercícios animados',
-        'Registro de cargas e histórico de treinos',
-        'Instruções técnicas de execução da Rafaela',
-        'Bip e temporizador de descanso automático',
-        'Suporte via chat da plataforma a cada 15 dias',
-      ],
-    },
-    {
-      id: 'pro-treino',
-      name: 'Performance Pro',
-      category: 'treino',
-      popular: true,
-      tag: 'Mais Escolhido',
-      price: Math.round(149 * discount),
-      period: '/mês',
-      description: 'O método completo para hipertrofia, definição e evolução de cargas contínua.',
-      features: [
-        'Tudo do Plano Start Essencial',
-        'Periodização técnica atualizada a cada 4 semanas',
-        'Liberdade monitorada: trocas autorizadas pelo app',
-        'Análise de vídeos da sua execução postural por mensagem',
-        'Suporte prioritário via WhatsApp direto com a Rafaela',
-        'Módulo de evolução: dobras, peso e bioimpedância',
-        'Ajustes de carga registrados e auditados em tempo real',
-      ],
-    },
-    {
-      id: 'elite-treino',
-      name: 'Elite VIP 1-on-1',
-      category: 'treino',
-      tag: 'Exclusivo',
-      price: Math.round(279 * discount),
-      period: '/mês',
-      description: 'Acompanhamento VIP com contato contínuo e ajustes em tempo real.',
-      features: [
-        'Tudo do Plano Performance Pro',
-        'Ajustes ilimitados de treinos e rotinas',
-        'Avaliação física mensal por videoconferência',
-        'Análise profunda de mobilidade articular e encurtamentos',
-        'Treinos adaptados para viagens, hotéis e feriados',
-        'Linha direta de atendimento no mesmo dia',
-      ],
-    },
-  ];
+  // Transform dynamic plans from repository into PlanItem format
+  const mappedPlans: (PlanItem & { allowedPaymentMethods?: string[] })[] = landingPlans.map((p) => {
+    // If billingCycle is quarterly and plan is monthly, apply discount, otherwise use plan price
+    const basePrice = p.durationMonths === 1 ? Math.round(p.price * discount) : Math.round(p.price / p.durationMonths);
+    const period = p.durationMonths === 1 ? '/mês' : `/mês (${p.durationMonths}x)`;
 
-  const comboPlans: PlanItem[] = [
-    {
-      id: 'total-fit-combo',
-      name: 'Total Fit (Treino + Nutri)',
-      category: 'combo',
-      popular: true,
-      tag: 'Melhor Custo-Benefício',
-      price: Math.round(249 * discount),
-      period: '/mês',
-      description: 'Treino de alta performance e nutrição esportiva caminhando juntos para resultados 3x mais rápidos.',
-      features: [
-        'Todo o Treino Performance Pro da Rafaela',
-        'Plano alimentar sob medida com Nutricionista Esportiva (CFN)',
-        'Cálculo de calorias e distribuição precisa de macronutrientes',
-        'Tabela interativa de substituições de alimentos no app',
-        'Consulta online mensal de 45 min com a nutricionista',
-        'Ajuste das metas nutricionais de acordo com as fases do treino',
-        'Suporte unificado via WhatsApp com ambas as profissionais',
-      ],
-    },
-    {
-      id: 'transformacao-360-combo',
-      name: 'Transformação 360° VIP',
-      category: 'combo',
-      tag: 'Transformação Total',
-      price: Math.round(399 * discount),
-      period: '/mês',
-      description: 'O mais completo ecossistema de saúde, performance estética e modulação metabólica.',
-      features: [
-        'Todo o Treino Elite VIP 1-on-1 da Rafaela',
-        'Acompanhamento nutricional contínuo com a nutricionista parceira',
-        'Reuniões quinzenais conjuntas (Rafaela + Nutricionista)',
-        'Interpretação e acompanhamento de exames laboratoriais',
-        'Prescrição orientada de suplementação e fitoterápicos',
-        'Monitoramento semanal de medidas corporais e bioimpedância',
-        'Atendimento prioritário diário em canal exclusivo',
-      ],
-    },
-  ];
+    return {
+      id: p.id,
+      name: p.name,
+      category: p.category || 'treino',
+      price: basePrice,
+      period,
+      popular: p.isPopular,
+      tag: p.badgeText || (p.isPopular ? 'Mais Escolhido' : undefined),
+      description: p.description,
+      features: p.features || [],
+      allowedPaymentMethods: p.allowedPaymentMethods || ['pix', 'cartao_credito'],
+    };
+  });
+
+  const workoutPlans = mappedPlans.filter((p) => p.category === 'treino');
+  const comboPlans = mappedPlans.filter((p) => p.category === 'combo');
 
   const currentPlans = activeTab === 'treino' ? workoutPlans : comboPlans;
 
@@ -124,7 +65,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
             Escolha o nível de acompanhamento ideal para você.
           </h2>
           <p className="text-sm sm:text-base text-slate-600 dark:text-dark-muted">
-            Planos sem taxa de matrícula e sem fidelidade obrigatória. Cancele ou mude de plano quando desejar.
+            Planos com parcelamento facilitado em até 12x via PIX ou Cartão de Crédito. Sem taxas ocultas.
           </p>
         </div>
 
@@ -140,7 +81,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
               }`}
             >
               <Dumbbell className="w-4 h-4 text-emerald-500" />
-              <span>Apenas Treinamento (3 Planos)</span>
+              <span>Apenas Treinamento ({workoutPlans.length} Planos)</span>
             </button>
             <button
               onClick={() => setActiveTab('combo')}
@@ -151,7 +92,7 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
               }`}
             >
               <Apple className="w-4 h-4" />
-              <span>Treino + Nutricionista (2 Planos)</span>
+              <span>Treino + Nutricionista ({comboPlans.length} Planos)</span>
               <span className="text-[10px] uppercase font-black px-1.5 py-0.2 rounded bg-white/20 ml-1">
                 Combo
               </span>
@@ -237,6 +178,19 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
                       Cobrado trimestralmente com desconto
                     </span>
                   )}
+
+                  {/* Payment Options (PIX / Cartão) */}
+                  <div className="flex items-center gap-2 mt-2 pt-2 border-t border-dashed border-slate-100 dark:border-dark-border/40 text-[11px] text-slate-500 dark:text-dark-muted">
+                    <span className="font-medium">Formas de Pagamento:</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1 text-[10px]">
+                        <QrCode className="w-3 h-3" /> PIX
+                      </span>
+                      <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-dark-cardElevated text-slate-700 dark:text-slate-300 font-bold flex items-center gap-1 text-[10px]">
+                        <CreditCard className="w-3 h-3" /> Cartão
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
                 {/* Features List */}
@@ -277,12 +231,12 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ onSelectPlan }) 
             Garantia incondicional de 7 dias
           </span>
           <span className="flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-emerald-500" />
-            Pagamento seguro via Pix ou Cartão
+            <QrCode className="w-4 h-4 text-emerald-500" />
+            Pagamento instantâneo via PIX
           </span>
           <span className="flex items-center gap-1.5">
-            <ShieldCheck className="w-4 h-4 text-emerald-500" />
-            Cancelamento sem burocracia
+            <CreditCard className="w-4 h-4 text-emerald-500" />
+            Parcelamento no Cartão em até 12x
           </span>
         </div>
       </div>

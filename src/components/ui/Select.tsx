@@ -7,13 +7,14 @@ interface SelectOption {
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
-  options: SelectOption[];
+  options?: SelectOption[];
+  children?: React.ReactNode;
   error?: string;
   helperText?: string;
 }
 
 export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, options, error, helperText, className = '', id, ...props }, ref) => {
+  ({ label, options, children, error, helperText, className = '', id, ...props }, ref) => {
     const selectId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
 
     return (
@@ -33,11 +34,17 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           } text-slate-900 dark:text-slate-100 rounded-xl text-sm focus:outline-none focus:ring-2 transition-all py-2 px-3 shadow-2xs cursor-pointer ${className}`}
           {...props}
         >
-          {options.map((opt) => (
-            <option key={opt.value} value={opt.value} className="bg-white dark:bg-dark-card text-slate-900 dark:text-slate-100">
-              {opt.label}
-            </option>
-          ))}
+          {options
+            ? options.map((opt) => (
+                <option
+                  key={opt.value}
+                  value={opt.value}
+                  className="bg-white dark:bg-dark-card text-slate-900 dark:text-slate-100"
+                >
+                  {opt.label}
+                </option>
+              ))
+            : children}
         </select>
         {error && <span className="text-xs text-rose-500 font-medium">{error}</span>}
         {helperText && !error && <span className="text-xs text-slate-500 dark:text-slate-400">{helperText}</span>}

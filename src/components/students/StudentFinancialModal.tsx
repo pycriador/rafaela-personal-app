@@ -10,6 +10,12 @@ import {
   DollarSign,
   Send,
   HelpCircle,
+  Tag,
+  RefreshCw,
+  Sparkles,
+  Layers,
+  ArrowRight,
+  ShieldCheck,
 } from 'lucide-react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
@@ -23,15 +29,27 @@ import {
   PlanFrequency,
   PaymentMethod,
   PaymentStatus,
+  MembershipPlan,
+  DiscountType,
 } from '../../types';
 import { studentRepository } from '../../repositories/studentRepository';
+import { planRepository } from '../../repositories/planRepository';
+import { activityRepository } from '../../repositories/activityRepository';
 import { useToast } from '../../context/ToastContext';
+import {
+  generateInstallments,
+  recalculatePendingInstallmentsDueDay,
+  calculateDiscount,
+  recalculatePendingInstallmentAmounts,
+  calculateExpirationDate,
+} from '../../utils/financialCalculations';
 
 interface StudentFinancialModalProps {
   isOpen: boolean;
   onClose: () => void;
   student: Student;
   onFinancialUpdated: (updatedStudent: Student) => void;
+  initialMode?: 'default' | 'renew';
 }
 
 export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
@@ -39,18 +57,41 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
   onClose,
   student,
   onFinancialUpdated,
+  initialMode = 'default',
 }) => {
   const { success, error: toastError, info } = useToast();
 
+  const [catalogPlans, setCatalogPlans] = useState<MembershipPlan[]>([]);
   const existingPlan = student.financialPlan;
 
+  const [selectedCatalogPlanId, setSelectedCatalogPlanId] = useState<string>(
+    existingPlan?.planId || ''
+  );
   const [planName, setPlanName] = useState(
     existingPlan?.planName || 'Consultoria Mensal Personalizada'
   );
   const [frequency, setFrequency] = useState<PlanFrequency>(
     existingPlan?.frequency || 'mensal'
   );
+  const [durationMonths, setDurationMonths] = useState<number>(
+    existingPlan?.durationMonths || (existingPlan?.totalInstallments ?? 1)
+  );
+
+  // Prices and Discounts
+  const [originalPrice, setOriginalPrice] = useState<number>(
+    existingPlan?.originalPrice ?? existingPlan?.price ?? 280
+  );
   const [price, setPrice] = useState<number>(existingPlan?.price ?? 280);
+  const [discountType, setDiscountType] = useState<DiscountType>(
+    existingPlan?.discountType || 'none'
+  );
+  const [discountValue, setDiscountValue] = useState<number>(
+    existingPlan?.discountValue ?? 0
+  );
+  const [discountCouponCode, setDiscountCouponCode] = useState<string>(
+    existingPlan?.discountCouponCode || ''
+  );
+
   const [totalInstallments, setTotalInstallments] = useState<number>(
     existingPlan?.totalInstallments ?? 1
   );
@@ -74,27 +115,7 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
   const [payments, setPayments] = useState<StudentPaymentRecord[]>(
     existingPlan?.payments && existingPlan.payments.length > 0
       ? [...existingPlan.payments]
-      : [
-          {
-            id: `pay-${Date.now()}-1`,
-            referenceMonth: 'Março/2026',
-            amount: 280,
-            dueDate: '2026-03-10',
-            paidDate: '2026-03-09',
-            status: 'pago',
-            installments: '1x à vista',
-            paymentMethod: 'pix',
-          },
-          {
-            id: `pay-${Date.now()}-2`,
-            referenceMonth: 'Abril/2026',
-            amount: 280,
-            dueDate: '2026-04-10',
-            status: 'pendente',
-            installments: '1x à vista',
-            paymentMethod: 'pix',
-          },
-        ]
+      : []
   );
 
   const [isSaving, setIsSaving] = useState(false);
@@ -108,11 +129,26 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
   const [newPayMethod, setNewPayMethod] = useState<PaymentMethod>('pix');
   const [newPayStatus, setNewPayStatus] = useState<PaymentStatus>('pendente');
 
+  // Load catalog plans
+  useEffect(() => {
+    if (isOpen) {
+      planRepository.getPlans().then(setCatalogPlans);
+    }
+  }, [isOpen]);
+
+  // Initialize or reset state
   useEffect(() => {
     if (student.financialPlan) {
+      setSelectedCatalogPlanId(student.financialPlan.planId || '');
       setPlanName(student.financialPlan.planName);
       setFrequency(student.financialPlan.frequency);
+      const months = student.financialPlan.durationMonths || student.financialPlan.totalInstallments || 1;
+      setDurationMonths(months);
+      setOriginalPrice(student.financialPlan.originalPrice ?? student.financialPlan.price);
       setPrice(student.financialPlan.price);
+      setDiscountType(student.financialPlan.discountType || 'none');
+      setDiscountValue(student.financialPlan.discountValue ?? 0);
+      setDiscountCouponCode(student.financialPlan.discountCouponCode || '');
       setTotalInstallments(student.financialPlan.totalInstallments);
       setBillingDay(student.financialPlan.billingDay);
       setStartDate(student.financialPlan.startDate);
@@ -121,31 +157,155 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
       setNotes(student.financialPlan.notes || '');
       setPayments([...student.financialPlan.payments]);
     } else {
+      setSelectedCatalogPlanId('');
       setPlanName('Consultoria Mensal Personalizada');
       setFrequency('mensal');
+      setDurationMonths(1);
+      setOriginalPrice(280);
       setPrice(280);
+      setDiscountType('none');
+      setDiscountValue(0);
+      setDiscountCouponCode('');
       setTotalInstallments(1);
       setBillingDay(10);
-      setStartDate(new Date().toISOString().split('T')[0]);
+      const todayStr = new Date().toISOString().split('T')[0];
+      setStartDate(todayStr);
       setExpiresAt(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
       setPaymentMethod('pix');
       setNotes('');
+      setPayments(
+        generateInstallments({
+          durationMonths: 1,
+          totalPrice: 280,
+          billingDay: 10,
+          startDate: todayStr,
+          paymentMethod: 'pix',
+        })
+      );
     }
     setIsAddingPayment(false);
-  }, [student, isOpen]);
+
+    // If modal opened in renew mode
+    if (initialMode === 'renew') {
+      handlePrepareRenewal();
+    }
+  }, [student, isOpen, initialMode]);
+
+  // When personal selects a plan from the catalog
+  const handleSelectCatalogPlan = (planId: string) => {
+    setSelectedCatalogPlanId(planId);
+    if (!planId) return;
+
+    const found = catalogPlans.find((p) => p.id === planId);
+    if (!found) return;
+
+    setPlanName(found.name);
+    setFrequency(found.frequency);
+    setDurationMonths(found.durationMonths);
+    setOriginalPrice(found.price);
+    setPrice(found.price);
+    setTotalInstallments(found.durationMonths);
+    if (found.allowedPaymentMethods && found.allowedPaymentMethods.length > 0) {
+      setPaymentMethod(found.allowedPaymentMethods[0]);
+    }
+
+    // Auto-calculate expiration date
+    const calculatedExpires = calculateExpirationDate(startDate, found.durationMonths);
+    setExpiresAt(calculatedExpires);
+
+    // Automatically generate the N installments
+    const newPayments = generateInstallments({
+      durationMonths: found.durationMonths,
+      totalPrice: found.price,
+      billingDay,
+      startDate,
+      paymentMethod: found.allowedPaymentMethods[0] || paymentMethod,
+      firstMonthPaid: false,
+    });
+    setPayments(newPayments);
+
+    info(`Plano "${found.name}" carregado! ${found.durationMonths} parcelas foram geradas automaticamente.`);
+  };
+
+  // Change billingDay: automatically update all pending installments to the new day!
+  const handleBillingDayChange = (newDay: number) => {
+    setBillingDay(newDay);
+    setPayments((prev) => recalculatePendingInstallmentsDueDay(prev, newDay));
+  };
+
+  // Reapply discount and recalculate pending installment amounts
+  const handleApplyDiscount = (
+    type: DiscountType,
+    val: number,
+    code: string,
+    basePrice: number = originalPrice
+  ) => {
+    setDiscountType(type);
+    setDiscountValue(val);
+    setDiscountCouponCode(code);
+
+    const result = calculateDiscount({
+      originalPrice: basePrice,
+      discountType: type,
+      discountValue: val,
+      couponCode: code,
+    });
+
+    setPrice(result.finalPrice);
+    // Automatically recalculate pending installments with the new total
+    setPayments((prev) => recalculatePendingInstallmentAmounts(prev, result.finalPrice));
+  };
 
   // Frequency auto-adjust helper
   const handleFrequencyChange = (newFreq: PlanFrequency) => {
     setFrequency(newFreq);
-    if (newFreq === 'mensal') {
-      setTotalInstallments(1);
-    } else if (newFreq === 'trimestral') {
-      setTotalInstallments(3);
-    } else if (newFreq === 'semestral') {
-      setTotalInstallments(6);
-    } else if (newFreq === 'anual') {
-      setTotalInstallments(12);
-    }
+    let months = 1;
+    if (newFreq === 'mensal') months = 1;
+    else if (newFreq === 'trimestral') months = 3;
+    else if (newFreq === 'semestral') months = 6;
+    else if (newFreq === 'anual') months = 12;
+
+    setDurationMonths(months);
+    setTotalInstallments(months);
+    const newExp = calculateExpirationDate(startDate, months);
+    setExpiresAt(newExp);
+  };
+
+  // Regeneration of all installments from scratch
+  const handleRegenerateAllInstallments = () => {
+    const fresh = generateInstallments({
+      durationMonths,
+      totalPrice: price,
+      billingDay,
+      startDate,
+      paymentMethod,
+      firstMonthPaid: false,
+    });
+    setPayments(fresh);
+    success(`${durationMonths} parcelas recalculadas e geradas com sucesso!`);
+  };
+
+  // Prepare Renewal Mode
+  const handlePrepareRenewal = () => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const newStart = todayStr;
+    const newExp = calculateExpirationDate(newStart, durationMonths);
+    setStartDate(newStart);
+    setExpiresAt(newExp);
+
+    // Keep previously paid installments and generate new cycle installments
+    const paidPast = payments.filter((p) => p.status === 'pago');
+    const newCycle = generateInstallments({
+      durationMonths,
+      totalPrice: price,
+      billingDay,
+      startDate: newStart,
+      paymentMethod,
+      firstMonthPaid: false,
+    });
+
+    setPayments([...newCycle, ...paidPast]);
+    info(`Modo de Renovação ativo! Nova vigência calculada até ${new Date(newExp).toLocaleDateString()}.`);
   };
 
   // Toggle payment status between 'pago' and 'pendente'
@@ -168,7 +328,7 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
     setPayments((prev) => prev.filter((p) => p.id !== payId));
   };
 
-  // Add new payment entry
+  // Add custom payment entry
   const handleAddPaymentRecord = () => {
     if (!newPayMonth.trim() || !newPayDueDate) {
       toastError('Informe o mês de referência e a data de vencimento.');
@@ -176,7 +336,7 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
     }
 
     const newRecord: StudentPaymentRecord = {
-      id: `pay-${Date.now()}`,
+      id: `pay-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       referenceMonth: newPayMonth.trim(),
       amount: newPayAmount || price,
       dueDate: newPayDueDate,
@@ -208,9 +368,15 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
     setIsSaving(true);
     try {
       const updatedPlan: StudentFinancialPlan = {
+        planId: selectedCatalogPlanId || undefined,
         planName: planName.trim(),
         frequency,
+        durationMonths,
+        originalPrice,
         price: Number(price),
+        discountType,
+        discountValue: discountType !== 'none' ? discountValue : undefined,
+        discountCouponCode: discountType === 'coupon' ? discountCouponCode.toUpperCase().trim() : undefined,
         totalInstallments: Number(totalInstallments),
         billingDay: Number(billingDay),
         startDate,
@@ -233,6 +399,16 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
         hasActivePlan: true,
       };
 
+      await activityRepository.log({
+        actorId: 'user-rafaela',
+        actorName: 'Rafaela Personal',
+        actorRole: 'personal',
+        studentId: student.id,
+        action: 'Plano atualizado',
+        description: `Plano financeiro de ${student.name} atualizado: ${planName} (R$ ${price.toFixed(2)} em ${payments.length} parcelas).`,
+        iconType: 'nutrition',
+      });
+
       onFinancialUpdated(finalStudent);
       success('Plano e controle financeiro atualizados com sucesso!');
       onClose();
@@ -243,16 +419,19 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
     }
   };
 
+  const isExpired = student.planExpiresAt ? new Date(student.planExpiresAt) < new Date() : false;
+
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       title="Gestão de Planos & Mensalidades do Aluno"
+      description="Gerencie vigência, parcelas automáticas, dia do vencimento e cupons de desconto"
       size="xl"
     >
       <form onSubmit={handleSave} className="space-y-6">
-        {/* Banner do Aluno */}
-        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between gap-4">
+        {/* Banner do Aluno & Status */}
+        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/80 dark:border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <img
               src={
@@ -271,20 +450,63 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
               </p>
             </div>
           </div>
-          <Badge variant={student.status === 'Ativo' ? 'success' : 'warning'} size="sm">
-            {student.status}
-          </Badge>
+
+          <div className="flex items-center gap-2">
+            {isExpired && (
+              <Button
+                type="button"
+                variant="primary"
+                size="sm"
+                onClick={handlePrepareRenewal}
+                leftIcon={<RefreshCw className="w-3.5 h-3.5" />}
+                className="text-xs py-1"
+              >
+                Renovar Plano Agora
+              </Button>
+            )}
+
+            <Badge variant={isExpired ? 'danger' : 'success'} size="sm">
+              {isExpired ? 'Plano Vencido' : 'Plano Vigente'}
+            </Badge>
+          </div>
         </div>
 
-        {/* 1. Configuração do Plano */}
+        {/* 1. Seleção Rápida de Plano do Catálogo */}
+        <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 space-y-2">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
+              <Layers className="w-4 h-4 text-emerald-500" />
+              <span>Vincular Plano Pré-cadastrado do Catálogo</span>
+            </label>
+            <span className="text-[11px] text-emerald-600 dark:text-emerald-400">
+              Gera parcelas e vigência automaticamente
+            </span>
+          </div>
+
+          <Select
+            value={selectedCatalogPlanId}
+            onChange={(e) => handleSelectCatalogPlan(e.target.value)}
+            className="text-xs bg-white dark:bg-dark-card font-medium"
+          >
+            <option value="">-- Personalizar Manualmente (Sem modelo fixo) --</option>
+            {catalogPlans.map((cp) => (
+              <option key={cp.id} value={cp.id}>
+                {cp.name} ({cp.durationMonths} {cp.durationMonths === 1 ? 'mês' : 'meses'} • R${' '}
+                {cp.price.toFixed(2)}) {cp.isPopular ? '★ Destaque' : ''}
+              </option>
+            ))}
+          </Select>
+        </div>
+
+        {/* 2. Configuração do Plano */}
         <div className="space-y-4">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-white/[0.06] pb-2">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
               <CreditCard className="w-4 h-4 text-emerald-500" />
-              Dados do Plano Vigente
+              Dados do Plano & Vigência
             </h3>
             <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 font-mono">
-              Valor: R$ {Number(price).toFixed(2)}
+              Valor Líquido: R$ {Number(price).toFixed(2)}
             </span>
           </div>
 
@@ -293,7 +515,7 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
               label="Nome do Plano *"
               value={planName}
               onChange={(e) => setPlanName(e.target.value)}
-              placeholder="Ex: Consultoria Premium Presencial"
+              placeholder="Ex: Semestral Foco & Consistência"
               required
             />
 
@@ -302,121 +524,263 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
               value={frequency}
               onChange={(e) => handleFrequencyChange(e.target.value as PlanFrequency)}
               options={[
-                { value: 'mensal', label: 'Mensal (Renovação a cada mês)' },
-                { value: 'trimestral', label: 'Trimestral (Plano de 3 meses)' },
-                { value: 'semestral', label: 'Semestral (Plano de 6 meses)' },
-                { value: 'anual', label: 'Anual (Plano de 12 meses)' },
-                { value: 'personalizado', label: 'Personalizado / Avulso' },
+                { value: 'mensal', label: 'Mensal (1 Mês)' },
+                { value: 'trimestral', label: 'Trimestral (3 Meses)' },
+                { value: 'semestral', label: 'Semestral (6 Meses)' },
+                { value: 'anual', label: 'Anual (12 Meses)' },
+                { value: 'personalizado', label: 'Personalizado' },
               ]}
             />
 
+            {/* Duração em Meses & Parcelas */}
             <div className="grid grid-cols-2 gap-2">
               <Input
-                label="Valor Total (R$) *"
+                label="Duração (Meses) *"
                 type="number"
-                min="0"
-                step="0.01"
-                value={price}
-                onChange={(e) => setPrice(parseFloat(e.target.value) || 0)}
+                min="1"
+                max="36"
+                value={durationMonths}
+                onChange={(e) => {
+                  const m = parseInt(e.target.value, 10) || 1;
+                  setDurationMonths(m);
+                  setTotalInstallments(m);
+                  setExpiresAt(calculateExpirationDate(startDate, m));
+                }}
                 required
               />
 
-              <Select
-                label="Parcelas"
-                value={String(totalInstallments)}
+              <Input
+                label="Qtd. Parcelas *"
+                type="number"
+                min="1"
+                max="36"
+                value={totalInstallments}
                 onChange={(e) => setTotalInstallments(parseInt(e.target.value, 10) || 1)}
-                options={[
-                  { value: '1', label: '1x à vista' },
-                  { value: '2', label: '2x parcelas' },
-                  { value: '3', label: '3x parcelas' },
-                  { value: '4', label: '4x parcelas' },
-                  { value: '6', label: '6x parcelas' },
-                  { value: '10', label: '10x parcelas' },
-                  { value: '12', label: '12x parcelas' },
-                ]}
+                required
               />
             </div>
 
+            {/* Forma de Pagamento & Dia de Vencimento com Automação */}
             <div className="grid grid-cols-2 gap-2">
               <Select
                 label="Forma Principal"
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
                 options={[
-                  { value: 'pix', label: 'PIX' },
+                  { value: 'pix', label: 'PIX Instantâneo' },
                   { value: 'cartao_credito', label: 'Cartão de Crédito' },
                   { value: 'cartao_debito', label: 'Cartão de Débito' },
                   { value: 'boleto', label: 'Boleto Bancário' },
                   { value: 'dinheiro', label: 'Dinheiro' },
-                  { value: 'outro', label: 'Outro' },
                 ]}
               />
 
-              <Input
-                label="Dia de Vencimento"
-                type="number"
-                min="1"
-                max="31"
-                value={billingDay}
-                onChange={(e) => setBillingDay(parseInt(e.target.value, 10) || 10)}
-                helperText="Dia fixo no mês"
-              />
+              <div>
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+                  Dia de Vencimento *
+                </label>
+                <Select
+                  value={billingDay}
+                  onChange={(e) => handleBillingDayChange(parseInt(e.target.value, 10))}
+                  className="text-xs"
+                >
+                  {[1, 5, 10, 15, 20, 25, 28, 30].map((d) => (
+                    <option key={d} value={d}>
+                      Todo dia {d} do mês
+                    </option>
+                  ))}
+                </Select>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 block mt-0.5">
+                  Atualiza parcelas pendentes automaticamente!
+                </span>
+              </div>
             </div>
 
+            {/* Data de Início e Data Fim */}
             <Input
-              label="Data de Início do Plano"
+              label="Data de Início do Plano *"
               type="date"
               value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              onChange={(e) => {
+                const newStart = e.target.value;
+                setStartDate(newStart);
+                setExpiresAt(calculateExpirationDate(newStart, durationMonths));
+              }}
+              required
             />
 
             <Input
-              label="Data de Término / Vencimento do Plano *"
+              label="Data de Fim / Vencimento do Plano *"
               type="date"
               value={expiresAt}
               onChange={(e) => setExpiresAt(e.target.value)}
               required
-              helperText="Determina se o plano está em dia ou vencido"
+              helperText="Calculado automaticamente com base na duração"
             />
           </div>
         </div>
 
-        {/* 2. Histórico de Mensalidades & Controle de Quem Pagou */}
+        {/* 3. Módulo de Cupons e Descontos (Atualiza automaticamente parcelas pendentes) */}
+        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200/80 dark:border-white/[0.08] space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <Tag className="w-4 h-4 text-emerald-500" />
+              <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                Descontos & Cupons Promocionais
+              </h4>
+            </div>
+            <span className="text-[11px] text-slate-400">
+              Muda automaticamente os valores das parcelas pendentes
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label className="text-[11px] font-medium text-slate-500 dark:text-dark-muted block mb-1">
+                Tipo de Desconto
+              </label>
+              <Select
+                value={discountType}
+                onChange={(e) => {
+                  const t = e.target.value as DiscountType;
+                  handleApplyDiscount(t, discountValue, discountCouponCode);
+                }}
+                className="text-xs"
+              >
+                <option value="none">Sem desconto</option>
+                <option value="coupon">Cupom de Desconto</option>
+                <option value="percentage">Porcentagem (%)</option>
+                <option value="fixed">Valor Fixo (R$)</option>
+              </Select>
+            </div>
+
+            {discountType === 'coupon' && (
+              <div className="sm:col-span-2">
+                <label className="text-[11px] font-medium text-slate-500 dark:text-dark-muted block mb-1">
+                  Cupom (ex: PROMO10, RAFAELA15, BLACKFRIDAY, OFF50)
+                </label>
+                <Input
+                  type="text"
+                  placeholder="Código do cupom..."
+                  value={discountCouponCode}
+                  onChange={(e) => {
+                    const code = e.target.value.toUpperCase();
+                    handleApplyDiscount('coupon', discountValue, code);
+                  }}
+                  className="text-xs font-mono font-bold tracking-wider"
+                />
+              </div>
+            )}
+
+            {discountType === 'percentage' && (
+              <div className="sm:col-span-2">
+                <label className="text-[11px] font-medium text-slate-500 dark:text-dark-muted block mb-1">
+                  Porcentagem de Desconto (%)
+                </label>
+                <Input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={discountValue}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    handleApplyDiscount('percentage', val, discountCouponCode);
+                  }}
+                  className="text-xs font-mono font-bold"
+                />
+              </div>
+            )}
+
+            {discountType === 'fixed' && (
+              <div className="sm:col-span-2">
+                <label className="text-[11px] font-medium text-slate-500 dark:text-dark-muted block mb-1">
+                  Valor do Desconto (R$)
+                </label>
+                <Input
+                  type="number"
+                  min="0"
+                  max={originalPrice}
+                  value={discountValue}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value) || 0;
+                    handleApplyDiscount('fixed', val, discountCouponCode);
+                  }}
+                  className="text-xs font-mono font-bold"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Resumo com Desconto */}
+          <div className="pt-2 border-t border-slate-200/60 dark:border-white/[0.06] flex items-center justify-between text-xs">
+            <span className="text-slate-500 dark:text-dark-muted">
+              Preço Bruto: <span className={discountType !== 'none' ? 'line-through' : 'font-mono'}>R$ {originalPrice.toFixed(2)}</span>
+            </span>
+            {discountType !== 'none' && (
+              <span className="font-bold text-rose-500">
+                Desconto Aplicado: -R$ {(originalPrice - price).toFixed(2)}
+              </span>
+            )}
+            <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono text-sm">
+              Valor Final Líquido: R$ {price.toFixed(2)}
+            </span>
+          </div>
+        </div>
+
+        {/* 4. Histórico de Mensalidades & Controle de Quem Pagou */}
         <div className="space-y-4 pt-2 border-t border-slate-100 dark:border-white/[0.06]">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-emerald-500" />
-                Controle de Mensalidades & Meses Pagos / Pendentes
+                Parcelas do Plano ({payments.length})
               </h3>
               <p className="text-xs text-slate-500 dark:text-dark-muted mt-0.5">
-                Clique no botão de status para alternar entre &ldquo;Pago&rdquo; e &ldquo;Pendente&rdquo;
+                Clique no botão de status para dar baixa ou alternar entre &ldquo;Pago&rdquo; e &ldquo;Pendente&rdquo;
               </p>
             </div>
 
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              onClick={() => {
-                setIsAddingPayment(true);
-                setNewPayMonth(`Mês ${payments.length + 1}/2026`);
-                setNewPayAmount(totalInstallments > 1 ? Math.round(price / totalInstallments) : price);
-                setNewPayDueDate(new Date().toISOString().split('T')[0]);
-                setNewPayInstallment(totalInstallments > 1 ? `${payments.length + 1} de ${totalInstallments}x` : '1x à vista');
-              }}
-              leftIcon={<Plus className="w-3.5 h-3.5" />}
-              className="text-xs py-1"
-            >
-              Adicionar Mês / Parcela
-            </Button>
+            <div className="flex items-center gap-2 flex-wrap">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleRegenerateAllInstallments}
+                leftIcon={<RefreshCw className="w-3.5 h-3.5" />}
+                className="text-xs py-1"
+                title="Regera todas as parcelas do zero com base na duração e preço atual"
+              >
+                Regerar Parcelas
+              </Button>
+
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setIsAddingPayment(true);
+                  setNewPayMonth(`Mês ${payments.length + 1}/2026`);
+                  setNewPayAmount(totalInstallments > 1 ? Math.round(price / totalInstallments) : price);
+                  setNewPayDueDate(new Date().toISOString().split('T')[0]);
+                  setNewPayInstallment(
+                    totalInstallments > 1
+                      ? `Parcela ${payments.length + 1} de ${totalInstallments}`
+                      : '1x à vista'
+                  );
+                }}
+                leftIcon={<Plus className="w-3.5 h-3.5" />}
+                className="text-xs py-1"
+              >
+                Adicionar Parcela Manual
+              </Button>
+            </div>
           </div>
 
           {/* Sub-form to add payment record */}
           {isAddingPayment && (
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-dark-cardElevated border border-emerald-500/30 space-y-3 animate-in fade-in">
               <span className="text-xs font-bold text-slate-900 dark:text-white block">
-                Nova Cobrança de Mensalidade
+                Nova Parcela de Mensalidade
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 <Input
@@ -465,7 +829,7 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
                   onClick={handleAddPaymentRecord}
                   className="text-xs"
                 >
-                  Confirmar Mês
+                  Confirmar Parcela
                 </Button>
               </div>
             </div>
@@ -476,7 +840,7 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
             <div className="max-h-64 overflow-y-auto divide-y divide-slate-100 dark:divide-white/[0.06]">
               {payments.length === 0 ? (
                 <div className="p-6 text-center text-xs text-slate-400">
-                  Nenhum registro de mensalidade lançado. Clique em &ldquo;Adicionar Mês / Parcela&rdquo;.
+                  Nenhuma parcela lançada. Clique em &ldquo;Regerar Parcelas&rdquo; ou &ldquo;Adicionar Parcela Manual&rdquo;.
                 </div>
               ) : (
                 payments.map((p) => {
@@ -560,14 +924,14 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
                           }`}
                           title="Clique para alternar o status do pagamento"
                         >
-                          {isPaid ? '✓ Pago' : isOverdue ? '⚠️ Vencido (Pagar)' : 'Pendente (Pagar)'}
+                          {isPaid ? '✓ Pago' : isOverdue ? '⚠️ Vencido (Dar baixa)' : 'Pendente (Dar baixa)'}
                         </button>
 
                         <button
                           type="button"
                           onClick={() => handleDeletePayment(p.id)}
                           className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg transition-colors cursor-pointer"
-                          title="Remover este lançamento"
+                          title="Remover esta parcela"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -585,8 +949,8 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
           <Button type="button" variant="secondary" onClick={onClose} disabled={isSaving}>
             Cancelar
           </Button>
-          <Button type="submit" variant="primary" isLoading={isSaving}>
-            Salvar Plano & Financeiro
+          <Button type="submit" variant="primary" isLoading={isSaving} leftIcon={<ShieldCheck className="w-4 h-4" />}>
+            Salvar Plano & Mensalidades
           </Button>
         </div>
       </form>

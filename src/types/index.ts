@@ -54,10 +54,37 @@ export interface StudentPaymentRecord {
   notes?: string;
 }
 
+export interface MembershipPlan {
+  id: string;
+  name: string; // e.g. "Start Essencial", "Performance Pro", "Semestral Foco", "Anual VIP"
+  description: string;
+  category: 'treino' | 'combo';
+  durationMonths: number; // 1, 3, 6, 12, etc.
+  frequency: PlanFrequency; // 'mensal' | 'trimestral' | 'semestral' | 'anual' | 'personalizado'
+  price: number; // Preço total do plano (ex: R$ 1500)
+  monthlyEquivalentPrice?: number; // Preço por mês (ex: R$ 250)
+  allowedPaymentMethods: PaymentMethod[]; // ['pix', 'cartao_credito', 'boleto']
+  features: string[]; // Lista de benefícios
+  showOnLandingPage: boolean; // Exibir na vitrine do site
+  isPopular?: boolean; // Tag "Mais Escolhido"
+  badgeText?: string; // ex: "Melhor Custo-Benefício"
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type DiscountType = 'none' | 'coupon' | 'percentage' | 'fixed';
+
 export interface StudentFinancialPlan {
+  planId?: string; // ID do MembershipPlan vinculado
   planName: string; // e.g. "Consultoria VIP Presencial", "Treino Online Mensal"
   frequency: PlanFrequency;
-  price: number; // valor total do plano
+  durationMonths?: number;
+  originalPrice?: number; // Preço bruto antes dos descontos
+  price: number; // valor final líquido do plano
+  discountType?: DiscountType;
+  discountValue?: number; // valor ou porcentagem de desconto
+  discountCouponCode?: string; // código do cupom aplicado (ex: PROMO10)
   totalInstallments: number; // 1, 2, 3, 6, 12 parcelas
   billingDay: number; // dia do vencimento (e.g. 10)
   startDate: string; // YYYY-MM-DD

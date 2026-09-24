@@ -31,6 +31,7 @@ import { FormsListPage } from './pages/personal/anamnesis/FormsListPage';
 import { FormEditorPage } from './pages/personal/anamnesis/FormEditorPage';
 import { ApplicationsListPage } from './pages/personal/anamnesis/ApplicationsListPage';
 import { ResponseViewerPage } from './pages/personal/anamnesis/ResponseViewerPage';
+import { PlansManagementPage } from './pages/personal/PlansManagementPage';
 
 // Student Pages
 import { StudentDashboardPage } from './pages/student/StudentDashboardPage';
@@ -100,6 +101,7 @@ export const App: React.FC = () => {
                   <Route path="evolution" element={<EvolutionOverviewPage />} />
                   <Route path="reports" element={<ReportsPage />} />
                   <Route path="ranking" element={<RankingManagementPage />} />
+                  <Route path="plans" element={<PlansManagementPage />} />
                   <Route path="settings" element={<SettingsPage />} />
                   <Route path="anamnesis" element={<AnamnesisDashboardPage />} />
                   <Route path="anamnesis/forms" element={<FormsListPage />} />

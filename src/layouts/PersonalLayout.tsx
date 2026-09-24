@@ -29,6 +29,7 @@ import {
   Send,
   Database,
   Trophy,
+  CreditCard,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -193,6 +194,7 @@ export const PersonalLayout: React.FC = () => {
     { name: 'Evolução', path: '/personal/evolution', icon: TrendingUp },
     { name: 'Relatórios', path: '/personal/reports', icon: FileText },
     { name: 'Grupos & Ranking', path: '/personal/ranking', icon: Trophy },
+    { name: 'Gestão de Planos', path: '/personal/plans', icon: CreditCard },
     { name: 'Configurações', path: '/personal/settings', icon: Settings },
   ];
 
