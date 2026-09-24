@@ -506,5 +506,73 @@ export interface PaymentSettings {
   updatedAt: string;
 }
 
+// HBAC (Hierarchical / Role-Based Access Control) Types
+export type PlatformModule =
+  | 'alunos'
+  | 'treinos'
+  | 'nutricao'
+  | 'anamnese'
+  | 'planos'
+  | 'financeiro'
+  | 'relatorios'
+  | 'copilot';
+
+export interface ModulePermissions {
+  read: boolean;
+  create: boolean;
+  update: boolean;
+  delete: boolean;
+}
+
+export interface TrainerHbacConfig {
+  trainerId: string;
+  trainerName: string;
+  modules: Record<PlatformModule, ModulePermissions>;
+  updatedAt: string;
+  updatedBy?: string;
+}
+
+// Trainer Landing Page CMS Types
+export interface TrainerLandingFeaturedPlan {
+  id: string;
+  name: string;
+  price: number;
+  billing: string;
+  description: string;
+  highlight?: boolean;
+  features: string[];
+  checkoutUrl?: string;
+}
+
+export interface TrainerLandingTestimonial {
+  name: string;
+  result: string;
+  comment: string;
+  avatarUrl?: string;
+}
+
+export interface TrainerLandingPageConfig {
+  id: string;
+  trainerId: string;
+  trainerName: string;
+  slug: string;
+  headline: string;
+  subheadline?: string;
+  bio: string;
+  photoUrl?: string;
+  coverUrl?: string;
+  specialties: string[];
+  cref: string;
+  whatsapp: string;
+  instagram?: string;
+  experienceYears: number;
+  accentColor: 'emerald' | 'blue' | 'purple' | 'amber' | 'rose';
+  featuredPlans: TrainerLandingFeaturedPlan[];
+  testimonials: TrainerLandingTestimonial[];
+  isPublished: boolean;
+  updatedAt: string;
+}
+
 export * from './anamnesis';
 export * from './ai';
+

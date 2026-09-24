@@ -10,6 +10,8 @@ import {
   Sun,
   Database,
   ShieldCheck,
+  Shield,
+  Globe,
   Download,
   Users,
   Dumbbell,
@@ -30,6 +32,8 @@ import { exerciseRepository } from '../../repositories/exerciseRepository';
 import { activityRepository } from '../../repositories/activityRepository';
 import { userRepository } from '../../repositories/userRepository';
 import { StudentManagerSection } from '../../components/settings/StudentManagerSection';
+import { HbacManagerSection } from '../../components/settings/HbacManagerSection';
+import { TrainerLandingCmsSection } from '../../components/settings/TrainerLandingCmsSection';
 import { AISettingsView } from './settings/ai/AISettingsView';
 import { AIUsageDashboard } from './settings/ai/AIUsageDashboard';
 import { AIPlaygroundPage } from './settings/ai/AIPlaygroundPage';
@@ -94,10 +98,14 @@ export const SettingsPage: React.FC = () => {
   const [loadingStats, setLoadingStats] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
 
-  // Sync activeTab with URL search parameters (?tab=usuarios, ?tab=backup, ?tab=sistema, ?tab=ia)
+  // Sync activeTab with URL search parameters (?tab=usuarios, ?tab=permissoes, ?tab=landing-page, ?tab=backup, ?tab=sistema, ?tab=ia)
   const rawTab = searchParams.get('tab') || 'usuarios';
-  const activeTab: 'usuarios' | 'backup' | 'sistema' | 'ia' =
-    rawTab === 'backup' || rawTab === 'exportacao' || rawTab === 'backups'
+  const activeTab: 'usuarios' | 'permissoes' | 'landing-page' | 'backup' | 'sistema' | 'ia' =
+    rawTab === 'permissoes' || rawTab === 'hbac' || rawTab === 'acesso'
+      ? 'permissoes'
+      : rawTab === 'landing-page' || rawTab === 'landing' || rawTab === 'cms'
+      ? 'landing-page'
+      : rawTab === 'backup' || rawTab === 'exportacao' || rawTab === 'backups'
       ? 'backup'
       : rawTab === 'sistema' || rawTab === 'system' || rawTab === 'aparencia'
       ? 'sistema'
@@ -115,7 +123,7 @@ export const SettingsPage: React.FC = () => {
       ? 'history'
       : 'config';
 
-  const handleTabChange = (newTab: 'usuarios' | 'backup' | 'sistema' | 'ia') => {
+  const handleTabChange = (newTab: 'usuarios' | 'permissoes' | 'landing-page' | 'backup' | 'sistema' | 'ia') => {
     const next = new URLSearchParams(searchParams);
     next.set('tab', newTab);
     if (newTab !== 'usuarios') {
@@ -506,7 +514,7 @@ export const SettingsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Navigation Tabs (URL Synced: ?tab=usuarios | ?tab=backup | ?tab=sistema) */}
+      {/* Navigation Tabs (URL Synced: ?tab=usuarios | ?tab=permissoes | ?tab=landing-page | ?tab=backup | ?tab=sistema | ?tab=ia) */}
       <div className="flex items-center gap-2 border-b border-slate-200 dark:border-dark-border pb-1 overflow-x-auto">
         <button
           type="button"
@@ -522,6 +530,32 @@ export const SettingsPage: React.FC = () => {
           <span className={`text-xs px-2 py-0.5 rounded-full font-bold ml-1 ${activeTab === 'usuarios' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-dark-border text-slate-700 dark:text-slate-300'}`}>
             {users.length || students.length}
           </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleTabChange('permissoes')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'permissoes'
+              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
+          }`}
+        >
+          <Shield className="w-4 h-4" />
+          <span>Permissões (HBAC)</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleTabChange('landing-page')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === 'landing-page'
+              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
+          }`}
+        >
+          <Globe className="w-4 h-4" />
+          <span>Mini CMS Landing Page</span>
         </button>
 
         <button
@@ -564,9 +598,19 @@ export const SettingsPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Tab 1: User & Student Management (Full CRUD, Photos in Supabase Storage, Passwords, Archive, Delete) */}
+      {/* Tab 1: User & Student Management */}
       {activeTab === 'usuarios' && (
         <StudentManagerSection />
+      )}
+
+      {/* Tab HBAC: Permissions Matrix */}
+      {activeTab === 'permissoes' && (
+        <HbacManagerSection />
+      )}
+
+      {/* Tab Landing Page CMS */}
+      {activeTab === 'landing-page' && (
+        <TrainerLandingCmsSection />
       )}
 
       {/* Tab 2: Backups & Data Governance */}

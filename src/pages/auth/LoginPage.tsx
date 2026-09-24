@@ -52,15 +52,41 @@ export const LoginPage: React.FC = () => {
     }
   };
 
-  const trainerUser = {
-    id: 'user-rafaela',
-    name: 'Rafaela Personal',
-    email: 'rafaela@rafaelapersonal.com.br',
-    role: 'personal' as const,
-    tag: 'Personal Trainer',
-    desc: 'Visão do Professor: gestão de alunos, fichas, biblioteca de exercícios e financeiro',
-    color: 'border-slate-200/90 dark:border-white/[0.08] bg-slate-50/70 dark:bg-dark-cardElevated/50 hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors shadow-2xs',
-  };
+  const trainerUsers = [
+    {
+      id: 'user-rafaela',
+      name: 'Rafaela Silva',
+      email: 'rafaela@rafaelapersonal.com.br',
+      role: 'personal' as const,
+      tag: 'Admin Global • 8 Alunos',
+      desc: 'Super Administradora: acesso total, gestão de personais, alunos globais, financeiro e IA',
+      avatarUrl: 'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=150&auto=format&fit=crop&q=80',
+      badgeVariant: 'brand' as const,
+      color: 'border-emerald-500/30 bg-emerald-50/70 dark:bg-emerald-950/20 hover:bg-emerald-100/60 dark:hover:bg-emerald-900/30 transition-all shadow-2xs',
+    },
+    {
+      id: 'user-carlos',
+      name: 'Carlos Mendes',
+      email: 'carlos@mendesfit.com.br',
+      role: 'personal' as const,
+      tag: 'Personal Trainer • 6 Alunos',
+      desc: 'Especialista em Força & Hipertrofia Masculina: 6 alunos alocados',
+      avatarUrl: 'https://images.unsplash.com/photo-1567013127542-490d757e51fc?w=150&auto=format&fit=crop&q=80',
+      badgeVariant: 'info' as const,
+      color: 'border-blue-500/30 bg-blue-50/70 dark:bg-blue-950/20 hover:bg-blue-100/60 dark:hover:bg-blue-900/30 transition-all shadow-2xs',
+    },
+    {
+      id: 'user-mariana',
+      name: 'Mariana Duarte',
+      email: 'mariana@duartepersonal.com.br',
+      role: 'personal' as const,
+      tag: 'Personal Trainer • 6 Alunos',
+      desc: 'Especialista em Funcional & Pilates: 6 alunos alocados',
+      avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+      badgeVariant: 'neutral' as const,
+      color: 'border-purple-500/30 bg-purple-50/70 dark:bg-purple-950/20 hover:bg-purple-100/60 dark:hover:bg-purple-900/30 transition-all shadow-2xs',
+    },
+  ];
 
   const studentUsers = [
     {
@@ -124,32 +150,49 @@ export const LoginPage: React.FC = () => {
             Acesso Rápido com 1 Clique
           </div>
 
-          {/* Section 1: Professor */}
-          <div className="space-y-1.5">
-            <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider block">
-              Entrar como Profissional (Personal Trainer)
-            </span>
-            <button
-              type="button"
-              onClick={() => handleQuick(trainerUser.id, trainerUser.role)}
-              disabled={loading}
-              className={`w-full text-left p-3 rounded-xl border transition-all duration-150 flex items-center justify-between group ${trainerUser.color}`}
-            >
-              <div className="min-w-0 pr-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold text-slate-900 dark:text-white">
-                    {trainerUser.name}
-                  </span>
-                  <Badge variant="brand" size="sm">
-                    {trainerUser.tag}
-                  </Badge>
-                </div>
-                <p className="text-[11px] text-slate-500 dark:text-dark-muted truncate mt-0.5 font-normal">
-                  {trainerUser.desc}
-                </p>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all shrink-0" />
-            </button>
+          {/* Section 1: Professores / Personais */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                Personais & Administradores
+              </span>
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
+                3 Personais Cadastrados
+              </span>
+            </div>
+            <div className="space-y-2">
+              {trainerUsers.map((trainer) => (
+                <button
+                  key={trainer.id}
+                  type="button"
+                  onClick={() => handleQuick(trainer.id, trainer.role)}
+                  disabled={loading}
+                  className={`w-full text-left p-2.5 rounded-xl border transition-all duration-150 flex items-center justify-between group ${trainer.color}`}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                    <img
+                      src={trainer.avatarUrl}
+                      alt={trainer.name}
+                      className="w-8 h-8 rounded-full object-cover border border-white/20 shrink-0"
+                    />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-semibold text-slate-900 dark:text-white truncate">
+                          {trainer.name}
+                        </span>
+                        <Badge variant={trainer.badgeVariant} size="sm">
+                          {trainer.tag}
+                        </Badge>
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-dark-muted truncate mt-0.5 font-normal">
+                        {trainer.desc}
+                      </p>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all shrink-0 ml-1" />
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Section 2: Alunos */}

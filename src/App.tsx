@@ -51,6 +51,7 @@ import { StudentFinancialPage } from './pages/student/StudentFinancialPage';
 
 // Public Pages
 import { LandingPage } from './pages/public/LandingPage';
+import { PersonalLandingPage } from './pages/public/PersonalLandingPage';
 
 const RootRedirect: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -87,6 +88,8 @@ export const App: React.FC = () => {
                 {/* Public Routes */}
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/home" element={<LandingPage />} />
+                <Route path="/p/:slug" element={<PersonalLandingPage />} />
+                <Route path="/treinador/:slug" element={<PersonalLandingPage />} />
                 <Route path="/app" element={<RootRedirect />} />
                 <Route path="/login" element={<LoginPage />} />
 

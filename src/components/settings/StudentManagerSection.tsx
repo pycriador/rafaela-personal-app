@@ -37,9 +37,10 @@ import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
 import { Badge } from '../ui/Badge';
 import { Modal } from '../ui/Modal';
-import { Student, StudentGoal, DayOfWeek, User } from '../../types';
+import { Student, StudentGoal, DayOfWeek, User, TrainerHbacConfig } from '../../types';
 import { studentRepository } from '../../repositories/studentRepository';
 import { userRepository } from '../../repositories/userRepository';
+import { hbacRepository, ALL_PLATFORM_MODULES } from '../../repositories/hbacRepository';
 import { useToast } from '../../context/ToastContext';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { getAssetUrl } from '../../utils/assets';
@@ -85,6 +86,8 @@ export interface ManagedUserItem {
   role: 'admin' | 'personal' | 'student';
   avatarUrl?: string;
   studentProfile?: Student;
+  trainerId?: string;
+  trainerName?: string;
   status: 'Ativo' | 'Atenção' | 'Pausado' | 'Arquivado' | 'Inativo';
   level?: string;
   goals?: StudentGoal[];
@@ -128,6 +131,7 @@ export const StudentManagerSection: React.FC = () => {
   const currentRole = searchParams.get('role') || 'all';
   const currentStatus = searchParams.get('status') || 'all';
   const currentLevel = searchParams.get('level') || 'all';
+  const currentTrainer = searchParams.get('trainer') || 'all';
 
   const [searchInput, setSearchInput] = useState(currentSearch);
 
@@ -194,6 +198,8 @@ export const StudentManagerSection: React.FC = () => {
   const [formPreferences, setFormPreferences] = useState('');
   const [formAvatarUrl, setFormAvatarUrl] = useState('');
   const [formInitialPassword, setFormInitialPassword] = useState('Rafaela@2026');
+  const [formTrainerId, setFormTrainerId] = useState<string>('user-rafaela');
+  const [personalHbacConfig, setPersonalHbacConfig] = useState<TrainerHbacConfig | null>(null);
 
   // Photo upload state
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
@@ -332,6 +338,8 @@ export const StudentManagerSection: React.FC = () => {
         role: u.role,
         avatarUrl: u.avatarUrl || st?.avatarUrl,
         studentProfile: st,
+        trainerId: st?.trainerId || (u.role === 'personal' ? u.id : 'user-rafaela'),
+        trainerName: st?.trainerName || (u.role === 'personal' ? u.name : 'Rafaela Silva'),
         status: st ? st.status : 'Ativo',
         level: st?.level,
         goals: st?.goals,
@@ -353,6 +361,8 @@ export const StudentManagerSection: React.FC = () => {
           role: 'student',
           avatarUrl: s.avatarUrl,
           studentProfile: s,
+          trainerId: s.trainerId || 'user-rafaela',
+          trainerName: s.trainerName || 'Rafaela Silva',
           status: s.status,
           level: s.level,
           goals: s.goals,
@@ -379,7 +389,8 @@ export const StudentManagerSection: React.FC = () => {
         const matchRole = (item.role === 'personal' ? 'personal trainer professor' : 'aluno estudante').includes(q);
         const matchGoals = item.goals?.some((g) => g.toLowerCase().includes(q)) ?? false;
         const matchStudentId = item.studentProfile?.id.toLowerCase().includes(q) ?? false;
-        if (!matchName && !matchEmail && !matchPhone && !matchId && !matchRole && !matchGoals && !matchStudentId) {
+        const matchTrainer = (item.trainerName || '').toLowerCase().includes(q);
+        if (!matchName && !matchEmail && !matchPhone && !matchId && !matchRole && !matchGoals && !matchStudentId && !matchTrainer) {
           return false;
         }
       }
@@ -399,9 +410,19 @@ export const StudentManagerSection: React.FC = () => {
         return false;
       }
 
+      // 5. Personal Trainer Filter
+      if (currentTrainer !== 'all') {
+        if (item.role === 'student' && item.trainerId !== currentTrainer) {
+          return false;
+        }
+        if ((item.role === 'personal' || item.role === 'admin') && item.id !== currentTrainer) {
+          return false;
+        }
+      }
+
       return true;
     });
-  }, [allUserItems, currentSearch, currentRole, currentStatus, currentLevel]);
+  }, [allUserItems, currentSearch, currentRole, currentStatus, currentLevel, currentTrainer]);
 
   // Pagination calculation
   const totalItems = filteredUsers.length;
@@ -412,7 +433,7 @@ export const StudentManagerSection: React.FC = () => {
   const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
 
   // Counts for pills
-  const personalCount = allUserItems.filter((u) => u.role === 'personal').length;
+  const personalCount = allUserItems.filter((u) => u.role === 'personal' || u.role === 'admin').length;
   const activeStudentsCount = allUserItems.filter((u) => u.role === 'student' && u.status === 'Ativo').length;
   const attentionStudentsCount = allUserItems.filter((u) => u.status === 'Atenção').length;
   const archivedStudentsCount = allUserItems.filter((u) => u.status === 'Arquivado').length;
@@ -421,7 +442,8 @@ export const StudentManagerSection: React.FC = () => {
     currentSearch ||
     currentRole !== 'all' ||
     currentStatus !== 'all' ||
-    currentLevel !== 'all'
+    currentLevel !== 'all' ||
+    currentTrainer !== 'all'
   );
 
   const handleClearFilters = () => {
@@ -431,6 +453,7 @@ export const StudentManagerSection: React.FC = () => {
       role: null,
       status: null,
       level: null,
+      trainer: null,
       page: '1',
     });
   };
@@ -439,6 +462,8 @@ export const StudentManagerSection: React.FC = () => {
   const handleOpenCreate = () => {
     setEditingStudent(null);
     setEditingUser(null);
+    setPersonalHbacConfig(null);
+    setFormTrainerId('user-rafaela');
     setFormName('');
     setFormEmail('');
     setFormPhone('(11) 98765-4321');
@@ -462,6 +487,8 @@ export const StudentManagerSection: React.FC = () => {
     if (item.studentProfile) {
       setEditingUser(null);
       setEditingStudent(item.studentProfile);
+      setPersonalHbacConfig(null);
+      setFormTrainerId(item.studentProfile.trainerId || item.trainerId || 'user-rafaela');
       setFormName(item.studentProfile.name);
       setFormEmail(item.studentProfile.email);
       setFormPhone(item.studentProfile.phone);
@@ -485,6 +512,9 @@ export const StudentManagerSection: React.FC = () => {
       setFormPhone(item.phone);
       setFormRole(item.role);
       setFormAvatarUrl(item.avatarUrl || '');
+      hbacRepository.getForTrainer(item.id, item.name).then((cfg) => {
+        setPersonalHbacConfig(cfg);
+      });
     }
     setIsEditModalOpen(true);
   };
@@ -515,6 +545,13 @@ export const StudentManagerSection: React.FC = () => {
       return;
     }
 
+    const trainerNameMap: Record<string, string> = {
+      'user-rafaela': 'Rafaela Silva',
+      'user-carlos': 'Carlos Mendes',
+      'user-mariana': 'Mariana Duarte',
+    };
+    const selectedTrainerName = trainerNameMap[formTrainerId] || 'Rafaela Silva';
+
     try {
       if (editingUser) {
         // UPDATE PERSONAL / GENERAL USER
@@ -531,6 +568,8 @@ export const StudentManagerSection: React.FC = () => {
           name: formName.trim(),
           email: formEmail.trim().toLowerCase(),
           phone: formPhone.trim(),
+          trainerId: formTrainerId,
+          trainerName: selectedTrainerName,
           birthDate: formBirthDate,
           gender: formGender,
           level: formLevel,
@@ -570,10 +609,12 @@ export const StudentManagerSection: React.FC = () => {
             gender: formGender,
             phone: formPhone.trim(),
             email: formEmail.trim().toLowerCase(),
+            trainerId: formTrainerId,
+            trainerName: selectedTrainerName,
             goals: formGoals,
             availableDays: formAvailableDays,
             level: formLevel,
-            experience: 'Iniciando acompanhamento com Rafaela',
+            experience: `Iniciando acompanhamento com ${selectedTrainerName}`,
             notes: formNotes.trim(),
             restrictions: formRestrictions.trim(),
             preferences: formPreferences.trim(),
@@ -815,7 +856,7 @@ export const StudentManagerSection: React.FC = () => {
       <Card className="p-4 bg-slate-50/60 dark:bg-dark-cardElevated/40 border-slate-200/80 dark:border-dark-border/60">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-end">
           {/* Campo de Busca */}
-          <div className="lg:col-span-4 relative">
+          <div className="lg:col-span-3 relative">
             <label className="text-[11px] font-bold text-slate-500 dark:text-dark-muted block mb-1">
               Buscar Usuário
             </label>
@@ -823,7 +864,7 @@ export const StudentManagerSection: React.FC = () => {
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
-                placeholder="Nome, e-mail, telefone, cargo ou ID..."
+                placeholder="Nome, e-mail, telefone..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 className="w-full pl-9 pr-8 py-2 rounded-xl text-xs bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
@@ -852,7 +893,22 @@ export const StudentManagerSection: React.FC = () => {
               options={[
                 { value: 'all', label: 'Todos os Perfis' },
                 { value: 'student', label: 'Alunos' },
-                { value: 'personal', label: 'Personal Trainers' },
+                { value: 'personal', label: 'Personais' },
+              ]}
+            />
+          </div>
+
+          {/* Filtro por Personal Responsável */}
+          <div className="lg:col-span-3">
+            <Select
+              label="Personal Responsável"
+              value={currentTrainer}
+              onChange={(e) => updateParams({ trainer: e.target.value, page: '1' })}
+              options={[
+                { value: 'all', label: 'Todos os Personais' },
+                { value: 'user-rafaela', label: 'Rafaela Silva (Admin)' },
+                { value: 'user-carlos', label: 'Carlos Mendes' },
+                { value: 'user-mariana', label: 'Mariana Duarte' },
               ]}
             />
           </div>
@@ -870,22 +926,6 @@ export const StudentManagerSection: React.FC = () => {
                 { value: 'Pausado', label: 'Pausado' },
                 { value: 'Arquivado', label: 'Arquivado' },
                 { value: 'Inativo', label: 'Inativo' },
-              ]}
-            />
-          </div>
-
-          {/* Filtro por Nível */}
-          <div className="lg:col-span-2">
-            <Select
-              label="Nível"
-              value={currentLevel}
-              onChange={(e) => updateParams({ level: e.target.value, page: '1' })}
-              options={[
-                { value: 'all', label: 'Todos os Níveis' },
-                { value: 'Iniciante', label: 'Iniciante' },
-                { value: 'Intermediário', label: 'Intermediário' },
-                { value: 'Avançado', label: 'Avançado' },
-                { value: 'Atleta', label: 'Atleta' },
               ]}
             />
           </div>
@@ -1021,15 +1061,23 @@ export const StudentManagerSection: React.FC = () => {
                         </div>
                       </td>
 
-                      {/* Role & Level */}
+                      {/* Role & Level & Personal Responsável */}
                       <td className="py-3 px-4">
-                        <div className="space-y-1">
-                          <Badge
-                            variant={item.role === 'personal' ? 'success' : 'info'}
-                            size="sm"
-                          >
-                            {item.role === 'personal' ? 'Personal Trainer' : 'Aluno'}
-                          </Badge>
+                        <div className="space-y-1.5">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <Badge
+                              variant={item.role === 'personal' || item.role === 'admin' ? 'success' : 'info'}
+                              size="sm"
+                            >
+                              {item.role === 'admin' ? 'Admin Global' : item.role === 'personal' ? 'Personal Trainer' : 'Aluno'}
+                            </Badge>
+                            {item.role === 'student' && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border border-indigo-500/20 shadow-2xs">
+                                <UserCheck className="w-3 h-3 text-indigo-500 shrink-0" />
+                                <span>Personal: {item.trainerName || 'Rafaela Silva'}</span>
+                              </span>
+                            )}
+                          </div>
                           {item.level && (
                             <span className="text-[11px] text-slate-500 dark:text-dark-muted block">
                               Nível: {item.level} {age > 0 ? `• ${age} anos` : ''}
@@ -1435,6 +1483,86 @@ export const StudentManagerSection: React.FC = () => {
               </div>
             )}
           </div>
+
+          {/* Student Personal Trainer Selection */}
+          {formRole === 'student' && (
+            <div className="p-3 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200/60 dark:border-indigo-900/40">
+              <Select
+                label="Personal Trainer Responsável pelo Aluno *"
+                value={formTrainerId}
+                onChange={(e) => setFormTrainerId(e.target.value)}
+                options={[
+                  { value: 'user-rafaela', label: 'Rafaela Silva (Admin Global)' },
+                  { value: 'user-carlos', label: 'Carlos Mendes (Personal Trainer - Força & Hipertrofia)' },
+                  { value: 'user-mariana', label: 'Mariana Duarte (Personal Trainer - Funcional & Pilates)' },
+                ]}
+              />
+            </div>
+          )}
+
+          {/* Personal Trainer HBAC Permissions View */}
+          {(formRole === 'personal' || formRole === 'admin') && (
+            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                  <span className="text-xs font-bold text-slate-900 dark:text-white">
+                    Permissões Ativas na Plataforma (HBAC)
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsEditModalOpen(false);
+                    navigate('/personal/settings?tab=permissoes');
+                  }}
+                  className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Gerenciar no HBAC</span>
+                  <ExternalLink className="w-3 h-3" />
+                </button>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-dark-muted">
+                Status de Leitura (L), Criação (C), Edição (E) e Deleção (D) por módulo. Alterações são centralizadas pelo Administrador Global.
+              </p>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                {ALL_PLATFORM_MODULES.map((mod) => {
+                  const perms = personalHbacConfig?.modules[mod.id] || {
+                    read: true,
+                    create: true,
+                    update: true,
+                    delete: formRole === 'admin',
+                  };
+
+                  return (
+                    <div
+                      key={mod.id}
+                      className="p-2.5 rounded-xl bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-[11px] space-y-1.5"
+                    >
+                      <span className="font-bold text-slate-800 dark:text-white block truncate">
+                        {mod.label.split('&')[0].trim()}
+                      </span>
+                      <div className="flex items-center gap-1 flex-wrap text-[9px] font-mono">
+                        <span className={`px-1.5 py-0.5 rounded font-bold ${perms.read ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-slate-200 dark:bg-dark-border text-slate-400'}`} title={perms.read ? 'Leitura permitida' : 'Leitura bloqueada'}>
+                          L
+                        </span>
+                        <span className={`px-1.5 py-0.5 rounded font-bold ${perms.create ? 'bg-blue-500/20 text-blue-600 dark:text-blue-400' : 'bg-slate-200 dark:bg-dark-border text-slate-400'}`} title={perms.create ? 'Criação permitida' : 'Criação bloqueada'}>
+                          C
+                        </span>
+                        <span className={`px-1.5 py-0.5 rounded font-bold ${perms.update ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400' : 'bg-slate-200 dark:bg-dark-border text-slate-400'}`} title={perms.update ? 'Edição permitida' : 'Edição bloqueada'}>
+                          E
+                        </span>
+                        <span className={`px-1.5 py-0.5 rounded font-bold ${perms.delete ? 'bg-rose-500/20 text-rose-600 dark:text-rose-400' : 'bg-slate-200 dark:bg-dark-border text-slate-400'}`} title={perms.delete ? 'Deleção permitida' : 'Deleção bloqueada'}>
+                          D
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Student Specific Fields */}
           {formRole === 'student' && (

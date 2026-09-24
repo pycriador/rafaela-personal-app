@@ -67,6 +67,8 @@ const ANAMNESIS_SUB_NAV_ITEMS = [
 
 const SETTINGS_SUB_NAV_ITEMS = [
   { id: 'usuarios', label: 'Gestão de Usuários', path: '/personal/settings?tab=usuarios', icon: Users },
+  { id: 'permissoes', label: 'Permissões (HBAC)', path: '/personal/settings?tab=permissoes', icon: Shield },
+  { id: 'landing-page', label: 'Mini CMS Landing Page', path: '/personal/settings?tab=landing-page', icon: LayoutDashboard },
   { id: 'backup', label: 'Exportação & Backups', path: '/personal/settings?tab=backup', icon: Database },
   { id: 'sistema', label: 'Aparência & Sistema', path: '/personal/settings?tab=sistema', icon: Layers },
   { id: 'ia', label: 'AI Copilot', path: '/personal/settings?tab=ia', icon: Sparkles },
