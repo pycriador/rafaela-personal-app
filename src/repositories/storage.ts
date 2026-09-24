@@ -21,7 +21,7 @@ import { initialDiscountCoupons } from '../data/discountCoupons';
 
 export const STORAGE_KEYS = {
   USERS: 'rafaela_app_users_v2',
-  STUDENTS: 'rafaela_app_students_v2',
+  STUDENTS: 'rafaela_app_students_v3',
   EXERCISES: 'rafaela_app_exercises_v3', // bumped to v3 for cartoon vector illustrations
   WORKOUT_PLANS: 'rafaela_app_workout_plans_v2',
   SESSIONS: 'rafaela_app_sessions_v2',

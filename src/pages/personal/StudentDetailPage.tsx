@@ -1281,9 +1281,9 @@ export const StudentDetailPage: React.FC = () => {
             const phoneWithCountry = cleanPhone.startsWith('55') ? cleanPhone : `55${cleanPhone}`;
             let whatsappMsg = '';
             if (isPlanExpired || overduePayments.length > 0) {
-              whatsappMsg = `Olá ${student.name.split(' ')[0]}! Tudo bem? Aqui é a Rafaela Personal. Passando para te lembrar que a sua mensalidade de ${urgentPending?.referenceMonth || 'treino'} (R$ ${urgentPending ? Number(urgentPending.amount).toFixed(2) : (student.financialPlan ? Number(student.financialPlan.price).toFixed(2) : '280,00')}) venceu no dia ${urgentPending?.dueDate ? new Date(urgentPending.dueDate).toLocaleDateString() : 'recente'}. Segue nossa chave PIX para acerto: rafaela.personal@email.com. Qualquer dúvida só me avisar! Bons treinos! 💪`;
+              whatsappMsg = `Olá ${student.name.split(' ')[0]}! Tudo bem? Aqui é a Rafaela Personal. Passando para te lembrar que a sua mensalidade de ${urgentPending?.referenceMonth || 'treino'} (R$ ${urgentPending ? Number(urgentPending.amount).toFixed(2) : (student.financialPlan ? Number(student.financialPlan.price).toFixed(2) : '0,00')}) venceu no dia ${urgentPending?.dueDate ? new Date(urgentPending.dueDate).toLocaleDateString() : 'recente'}. Segue nossa chave PIX para acerto: rafaela.personal@email.com. Qualquer dúvida só me avisar! Bons treinos! 💪`;
             } else if (isExpiringSoon || urgentPending) {
-              whatsappMsg = `Olá ${student.name.split(' ')[0]}! Tudo bem? Aqui é a Rafaela Personal. Lembrando que a sua mensalidade de ${urgentPending?.referenceMonth || 'treino'} (R$ ${urgentPending ? Number(urgentPending.amount).toFixed(2) : (student.financialPlan ? Number(student.financialPlan.price).toFixed(2) : '280,00')}) vence em ${urgentPending?.dueDate ? new Date(urgentPending.dueDate).toLocaleDateString() : 'breve'}. Qualquer dúvida estou à disposição! 💪`;
+              whatsappMsg = `Olá ${student.name.split(' ')[0]}! Tudo bem? Aqui é a Rafaela Personal. Lembrando que a sua mensalidade de ${urgentPending?.referenceMonth || 'treino'} (R$ ${urgentPending ? Number(urgentPending.amount).toFixed(2) : (student.financialPlan ? Number(student.financialPlan.price).toFixed(2) : '0,00')}) vence em ${urgentPending?.dueDate ? new Date(urgentPending.dueDate).toLocaleDateString() : 'breve'}. Qualquer dúvida estou à disposição! 💪`;
             } else {
               whatsappMsg = `Olá ${student.name.split(' ')[0]}! Tudo bem? Passando para confirmar que seu plano de treinos está 100% ativo e em dia. Vamos manter o foco! 💪`;
             }
@@ -1441,7 +1441,7 @@ export const StudentDetailPage: React.FC = () => {
                       </h4>
 
                       <p className="text-xs text-emerald-600 dark:text-emerald-400 font-bold font-mono">
-                        R$ {Number(student.financialPlan?.price || 280).toFixed(2)}{' '}
+                        R$ {Number(student.financialPlan?.price || 0).toFixed(2)}{' '}
                         <span className="text-[11px] font-normal text-slate-500 dark:text-dark-muted">
                           ({student.financialPlan?.totalInstallments || 1}x no{' '}
                           {(student.financialPlan?.paymentMethod || 'pix').replace('_', ' ').toUpperCase()})

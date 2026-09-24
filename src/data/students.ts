@@ -1,7 +1,7 @@
 import { Student } from '../types';
 
 export const initialStudents: Student[] = [
-  // 1. Lucas Oliveira - 100% Treinos em Dia / Financeiro em Dia
+  // 1. Lucas Oliveira - 100% Treinos em Dia / Financeiro em Dia (Semestral: 3 pagas, 3 pendentes)
   {
     id: 'student-1',
     userId: 'user-student-1',
@@ -25,23 +25,29 @@ export const initialStudents: Student[] = [
     hasActivePlan: true,
     planExpiresAt: '2026-12-10',
     financialPlan: {
+      planId: 'plan-semestral-foco',
       planName: 'Consultoria Semestral VIP',
       frequency: 'semestral',
-      price: 320,
+      durationMonths: 6,
+      originalPrice: 1920,
+      price: 1920,
       totalInstallments: 6,
       billingDay: 10,
-      startDate: '2026-02-10',
-      expiresAt: '2026-12-10',
+      startDate: '2026-07-10',
+      expiresAt: '2027-01-10',
       paymentMethod: 'pix',
       payments: [
-        { id: 'pay-1-1', referenceMonth: 'Julho/2026', amount: 320, dueDate: '2026-07-10', paidDate: '2026-07-09', status: 'pago', installments: '5 de 6x', paymentMethod: 'pix' },
-        { id: 'pay-1-2', referenceMonth: 'Agosto/2026', amount: 320, dueDate: '2026-08-10', paidDate: '2026-08-10', status: 'pago', installments: '6 de 6x', paymentMethod: 'pix' },
-        { id: 'pay-1-3', referenceMonth: 'Setembro/2026', amount: 320, dueDate: '2026-09-10', paidDate: '2026-09-08', status: 'pago', installments: '1 de 6x (renovação)', paymentMethod: 'pix' },
+        { id: 'pay-1-1', referenceMonth: 'Julho/2026', amount: 320, dueDate: '2026-07-10', paidDate: '2026-07-09', status: 'pago', installments: '1 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-1-2', referenceMonth: 'Agosto/2026', amount: 320, dueDate: '2026-08-10', paidDate: '2026-08-10', status: 'pago', installments: '2 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-1-3', referenceMonth: 'Setembro/2026', amount: 320, dueDate: '2026-09-10', paidDate: '2026-09-08', status: 'pago', installments: '3 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-1-4', referenceMonth: 'Outubro/2026', amount: 320, dueDate: '2026-10-10', status: 'pendente', installments: '4 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-1-5', referenceMonth: 'Novembro/2026', amount: 320, dueDate: '2026-11-10', status: 'pendente', installments: '5 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-1-6', referenceMonth: 'Dezembro/2026', amount: 320, dueDate: '2026-12-10', status: 'pendente', installments: '6 de 6x', paymentMethod: 'pix' },
       ],
     },
   },
 
-  // 2. Beatriz Mendes - Treinos em Dia (98%) / Financeiro em Dia
+  // 2. Beatriz Mendes - Treinos em Dia (98%) / Financeiro em Dia (Anual: 7 pagas, 5 pendentes com Cupom VIP20)
   {
     id: 'student-2',
     userId: 'user-student-2',
@@ -65,18 +71,33 @@ export const initialStudents: Student[] = [
     hasActivePlan: true,
     planExpiresAt: '2027-03-15',
     financialPlan: {
+      planId: 'plan-anual-vip',
       planName: 'Plano Anual Recorrente',
       frequency: 'anual',
-      price: 250,
+      durationMonths: 12,
+      originalPrice: 3000,
+      price: 2400,
+      discountType: 'coupon',
+      discountValue: 20,
+      discountCouponCode: 'VIP20',
       totalInstallments: 12,
       billingDay: 15,
       startDate: '2026-03-15',
       expiresAt: '2027-03-15',
       paymentMethod: 'cartao_credito',
       payments: [
-        { id: 'pay-2-1', referenceMonth: 'Julho/2026', amount: 250, dueDate: '2026-07-15', paidDate: '2026-07-15', status: 'pago', installments: '5 de 12x', paymentMethod: 'cartao_credito' },
-        { id: 'pay-2-2', referenceMonth: 'Agosto/2026', amount: 250, dueDate: '2026-08-15', paidDate: '2026-08-15', status: 'pago', installments: '6 de 12x', paymentMethod: 'cartao_credito' },
-        { id: 'pay-2-3', referenceMonth: 'Setembro/2026', amount: 250, dueDate: '2026-09-15', paidDate: '2026-09-15', status: 'pago', installments: '7 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-2-1', referenceMonth: 'Março/2026', amount: 200, dueDate: '2026-03-15', paidDate: '2026-03-15', status: 'pago', installments: '1 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-2-2', referenceMonth: 'Abril/2026', amount: 200, dueDate: '2026-04-15', paidDate: '2026-04-15', status: 'pago', installments: '2 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-2-3', referenceMonth: 'Maio/2026', amount: 200, dueDate: '2026-05-15', paidDate: '2026-05-15', status: 'pago', installments: '3 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-2-4', referenceMonth: 'Junho/2026', amount: 200, dueDate: '2026-06-15', paidDate: '2026-06-15', status: 'pago', installments: '4 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-2-5', referenceMonth: 'Julho/2026', amount: 200, dueDate: '2026-07-15', paidDate: '2026-07-15', status: 'pago', installments: '5 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-2-6', referenceMonth: 'Agosto/2026', amount: 200, dueDate: '2026-08-15', paidDate: '2026-08-15', status: 'pago', installments: '6 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-2-7', referenceMonth: 'Setembro/2026', amount: 200, dueDate: '2026-09-15', paidDate: '2026-09-15', status: 'pago', installments: '7 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-2-8', referenceMonth: 'Outubro/2026', amount: 200, dueDate: '2026-10-15', status: 'pendente', installments: '8 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-2-9', referenceMonth: 'Novembro/2026', amount: 200, dueDate: '2026-11-15', status: 'pendente', installments: '9 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-2-10', referenceMonth: 'Dezembro/2026', amount: 200, dueDate: '2026-12-15', status: 'pendente', installments: '10 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-2-11', referenceMonth: 'Janeiro/2027', amount: 200, dueDate: '2027-01-15', status: 'pendente', installments: '11 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-2-12', referenceMonth: 'Fevereiro/2027', amount: 200, dueDate: '2027-02-15', status: 'pendente', installments: '12 de 12x', paymentMethod: 'cartao_credito' },
       ],
     },
   },
@@ -105,12 +126,15 @@ export const initialStudents: Student[] = [
     hasActivePlan: false,
     planExpiresAt: '2026-09-10',
     financialPlan: {
+      planId: 'plan-start-1m',
       planName: 'Consultoria Mensal Presencial',
       frequency: 'mensal',
+      durationMonths: 1,
+      originalPrice: 290,
       price: 290,
       totalInstallments: 1,
       billingDay: 10,
-      startDate: '2026-01-20',
+      startDate: '2026-08-10',
       expiresAt: '2026-09-10',
       paymentMethod: 'pix',
       payments: [
@@ -121,7 +145,7 @@ export const initialStudents: Student[] = [
     },
   },
 
-  // 4. Camila Ferreira - Várias Faltas (Adesão 42%) / Financeiro em Dia
+  // 4. Camila Ferreira - Várias Faltas (Adesão 42%) / Financeiro em Dia (Trimestral: 2 pagas, 1 pendente)
   {
     id: 'student-4',
     userId: 'user-student-4',
@@ -145,17 +169,21 @@ export const initialStudents: Student[] = [
     hasActivePlan: true,
     planExpiresAt: '2026-11-02',
     financialPlan: {
+      planId: 'plan-pro-3m',
       planName: 'Consultoria Trimestral',
       frequency: 'trimestral',
-      price: 260,
+      durationMonths: 3,
+      originalPrice: 780,
+      price: 780,
       totalInstallments: 3,
       billingDay: 5,
-      startDate: '2026-05-02',
-      expiresAt: '2026-11-02',
+      startDate: '2026-08-05',
+      expiresAt: '2026-11-05',
       paymentMethod: 'cartao_credito',
       payments: [
         { id: 'pay-4-1', referenceMonth: 'Agosto/2026', amount: 260, dueDate: '2026-08-05', paidDate: '2026-08-05', status: 'pago', installments: '1 de 3x', paymentMethod: 'cartao_credito' },
         { id: 'pay-4-2', referenceMonth: 'Setembro/2026', amount: 260, dueDate: '2026-09-05', paidDate: '2026-09-05', status: 'pago', installments: '2 de 3x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-4-3', referenceMonth: 'Outubro/2026', amount: 260, dueDate: '2026-10-05', status: 'pendente', installments: '3 de 3x', paymentMethod: 'cartao_credito' },
       ],
     },
   },
@@ -186,15 +214,18 @@ export const initialStudents: Student[] = [
     financialPlan: {
       planName: 'Consultoria Performance 5x',
       frequency: 'mensal',
+      durationMonths: 1,
+      originalPrice: 350,
       price: 350,
       totalInstallments: 1,
       billingDay: 18,
-      startDate: '2026-02-18',
-      expiresAt: '2026-11-18',
+      startDate: '2026-09-18',
+      expiresAt: '2026-10-18',
       paymentMethod: 'pix',
       payments: [
         { id: 'pay-5-1', referenceMonth: 'Agosto/2026', amount: 350, dueDate: '2026-08-18', paidDate: '2026-08-17', status: 'pago', installments: '1x', paymentMethod: 'pix' },
         { id: 'pay-5-2', referenceMonth: 'Setembro/2026', amount: 350, dueDate: '2026-09-18', paidDate: '2026-09-18', status: 'pago', installments: '1x', paymentMethod: 'pix' },
+        { id: 'pay-5-3', referenceMonth: 'Outubro/2026', amount: 350, dueDate: '2026-10-18', status: 'pendente', installments: '1x', paymentMethod: 'pix' },
       ],
     },
   },
@@ -225,6 +256,8 @@ export const initialStudents: Student[] = [
     financialPlan: {
       planName: 'Consultoria Básica 2x',
       frequency: 'mensal',
+      durationMonths: 1,
+      originalPrice: 220,
       price: 220,
       totalInstallments: 1,
       billingDay: 28,
@@ -239,7 +272,7 @@ export const initialStudents: Student[] = [
     },
   },
 
-  // 7. Matheus Silveira - 100% Treinos em Dia / Top Ranking / Financeiro em Dia
+  // 7. Matheus Silveira - 100% Treinos em Dia / Top Ranking / Financeiro em Dia (Anual Quitado)
   {
     id: 'student-7',
     userId: 'user-student-7',
@@ -263,8 +296,11 @@ export const initialStudents: Student[] = [
     hasActivePlan: true,
     planExpiresAt: '2027-01-15',
     financialPlan: {
+      planId: 'plan-anual-vip',
       planName: 'Consultoria Anual Atleta',
       frequency: 'anual',
+      durationMonths: 12,
+      originalPrice: 3600,
       price: 3600,
       totalInstallments: 1,
       billingDay: 15,
@@ -272,12 +308,12 @@ export const initialStudents: Student[] = [
       expiresAt: '2027-01-15',
       paymentMethod: 'pix',
       payments: [
-        { id: 'pay-7-1', referenceMonth: 'Anuidade 2026/2027', amount: 3600, dueDate: '2026-01-15', paidDate: '2026-01-15', status: 'pago', installments: 'À vista com desconto', paymentMethod: 'pix' },
+        { id: 'pay-7-1', referenceMonth: 'Anuidade 2026/2027', amount: 3600, dueDate: '2026-01-15', paidDate: '2026-01-15', status: 'pago', installments: '1x à vista com desconto', paymentMethod: 'pix' },
       ],
     },
   },
 
-  // 8. Larissa Rocha - Treinos Atrasados (2 treinos) / Financeiro em Dia
+  // 8. Larissa Rocha - Treinos Atrasados (2 treinos) / Financeiro em Dia (Semestral: 5 pagas, 1 pendente)
   {
     id: 'student-8',
     userId: 'user-student-8',
@@ -301,17 +337,24 @@ export const initialStudents: Student[] = [
     hasActivePlan: true,
     planExpiresAt: '2026-10-10',
     financialPlan: {
+      planId: 'plan-semestral-foco',
       planName: 'Consultoria Semestral Online',
       frequency: 'semestral',
-      price: 240,
+      durationMonths: 6,
+      originalPrice: 1440,
+      price: 1440,
       totalInstallments: 6,
       billingDay: 10,
       startDate: '2026-04-10',
       expiresAt: '2026-10-10',
       paymentMethod: 'cartao_credito',
       payments: [
-        { id: 'pay-8-1', referenceMonth: 'Agosto/2026', amount: 240, dueDate: '2026-08-10', paidDate: '2026-08-10', status: 'pago', installments: '4 de 6x', paymentMethod: 'cartao_credito' },
-        { id: 'pay-8-2', referenceMonth: 'Setembro/2026', amount: 240, dueDate: '2026-09-10', paidDate: '2026-09-10', status: 'pago', installments: '5 de 6x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-8-1', referenceMonth: 'Maio/2026', amount: 240, dueDate: '2026-05-10', paidDate: '2026-05-10', status: 'pago', installments: '1 de 6x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-8-2', referenceMonth: 'Junho/2026', amount: 240, dueDate: '2026-06-10', paidDate: '2026-06-10', status: 'pago', installments: '2 de 6x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-8-3', referenceMonth: 'Julho/2026', amount: 240, dueDate: '2026-07-10', paidDate: '2026-07-10', status: 'pago', installments: '3 de 6x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-8-4', referenceMonth: 'Agosto/2026', amount: 240, dueDate: '2026-08-10', paidDate: '2026-08-10', status: 'pago', installments: '4 de 6x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-8-5', referenceMonth: 'Setembro/2026', amount: 240, dueDate: '2026-09-10', paidDate: '2026-09-10', status: 'pago', installments: '5 de 6x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-8-6', referenceMonth: 'Outubro/2026', amount: 240, dueDate: '2026-10-10', status: 'pendente', installments: '6 de 6x', paymentMethod: 'cartao_credito' },
       ],
     },
   },
@@ -342,6 +385,8 @@ export const initialStudents: Student[] = [
     financialPlan: {
       planName: 'Consultoria Presencial 4x',
       frequency: 'mensal',
+      durationMonths: 1,
+      originalPrice: 310,
       price: 310,
       totalInstallments: 1,
       billingDay: 15,
@@ -356,7 +401,7 @@ export const initialStudents: Student[] = [
     },
   },
 
-  // 10. Aline Nogueira - Várias Faltas (48% Adesão) / Financeiro em Dia
+  // 10. Aline Nogueira - Várias Faltas (48% Adesão) / Financeiro em Dia (Trimestral: 2 pagas, 1 pendente)
   {
     id: 'student-10',
     userId: 'user-student-10',
@@ -380,22 +425,26 @@ export const initialStudents: Student[] = [
     hasActivePlan: true,
     planExpiresAt: '2026-11-10',
     financialPlan: {
+      planId: 'plan-pro-3m',
       planName: 'Consultoria Trimestral Saúde',
       frequency: 'trimestral',
-      price: 270,
+      durationMonths: 3,
+      originalPrice: 810,
+      price: 810,
       totalInstallments: 3,
       billingDay: 10,
-      startDate: '2026-05-10',
+      startDate: '2026-08-10',
       expiresAt: '2026-11-10',
       paymentMethod: 'cartao_credito',
       payments: [
         { id: 'pay-10-1', referenceMonth: 'Agosto/2026', amount: 270, dueDate: '2026-08-10', paidDate: '2026-08-10', status: 'pago', installments: '1 de 3x', paymentMethod: 'cartao_credito' },
         { id: 'pay-10-2', referenceMonth: 'Setembro/2026', amount: 270, dueDate: '2026-09-10', paidDate: '2026-09-10', status: 'pago', installments: '2 de 3x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-10-3', referenceMonth: 'Outubro/2026', amount: 270, dueDate: '2026-10-10', status: 'pendente', installments: '3 de 3x', paymentMethod: 'cartao_credito' },
       ],
     },
   },
 
-  // 11. Felipe Guimarães - Treinos em Dia (92%) / Financeiro em Dia
+  // 11. Felipe Guimarães - Treinos em Dia (92%) / Financeiro em Dia (Semestral: 2 pagas, 4 pendentes com Cupom BEMVINDO)
   {
     id: 'student-11',
     userId: 'user-student-11',
@@ -419,17 +468,27 @@ export const initialStudents: Student[] = [
     hasActivePlan: true,
     planExpiresAt: '2026-12-01',
     financialPlan: {
+      planId: 'plan-semestral-foco',
       planName: 'Consultoria Semestral Híbrida',
       frequency: 'semestral',
-      price: 300,
+      durationMonths: 6,
+      originalPrice: 1800,
+      price: 1770,
+      discountType: 'coupon',
+      discountValue: 30,
+      discountCouponCode: 'BEMVINDO',
       totalInstallments: 6,
       billingDay: 1,
-      startDate: '2026-02-01',
-      expiresAt: '2026-12-01',
+      startDate: '2026-08-01',
+      expiresAt: '2027-02-01',
       paymentMethod: 'pix',
       payments: [
-        { id: 'pay-11-1', referenceMonth: 'Agosto/2026', amount: 300, dueDate: '2026-08-01', paidDate: '2026-08-01', status: 'pago', installments: '7 de 12x', paymentMethod: 'pix' },
-        { id: 'pay-11-2', referenceMonth: 'Setembro/2026', amount: 300, dueDate: '2026-09-01', paidDate: '2026-08-31', status: 'pago', installments: '8 de 12x', paymentMethod: 'pix' },
+        { id: 'pay-11-1', referenceMonth: 'Agosto/2026', amount: 295, dueDate: '2026-08-01', paidDate: '2026-08-01', status: 'pago', installments: '1 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-11-2', referenceMonth: 'Setembro/2026', amount: 295, dueDate: '2026-09-01', paidDate: '2026-08-31', status: 'pago', installments: '2 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-11-3', referenceMonth: 'Outubro/2026', amount: 295, dueDate: '2026-10-01', status: 'pendente', installments: '3 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-11-4', referenceMonth: 'Novembro/2026', amount: 295, dueDate: '2026-11-01', status: 'pendente', installments: '4 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-11-5', referenceMonth: 'Dezembro/2026', amount: 295, dueDate: '2026-12-01', status: 'pendente', installments: '5 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-11-6', referenceMonth: 'Janeiro/2027', amount: 295, dueDate: '2027-01-01', status: 'pendente', installments: '6 de 6x', paymentMethod: 'pix' },
       ],
     },
   },
@@ -460,6 +519,8 @@ export const initialStudents: Student[] = [
     financialPlan: {
       planName: 'Consultoria Mensal',
       frequency: 'mensal',
+      durationMonths: 1,
+      originalPrice: 280,
       price: 280,
       totalInstallments: 1,
       billingDay: 5,
@@ -474,7 +535,7 @@ export const initialStudents: Student[] = [
     },
   },
 
-  // 13. Bruno Carvalho - Treinos Atrasados e Faltas (50% Adesão) / Financeiro em Dia
+  // 13. Bruno Carvalho - Treinos Atrasados e Faltas (50% Adesão) / Financeiro em Dia (Semestral: 4 pagas, 2 pendentes)
   {
     id: 'student-13',
     userId: 'user-student-13',
@@ -498,23 +559,29 @@ export const initialStudents: Student[] = [
     hasActivePlan: true,
     planExpiresAt: '2026-12-01',
     financialPlan: {
+      planId: 'plan-semestral-foco',
       planName: 'Consultoria Semestral Emagrecimento',
       frequency: 'semestral',
-      price: 290,
+      durationMonths: 6,
+      originalPrice: 1740,
+      price: 1740,
       totalInstallments: 6,
       billingDay: 20,
       startDate: '2026-06-01',
       expiresAt: '2026-12-01',
       paymentMethod: 'pix',
       payments: [
-        { id: 'pay-13-1', referenceMonth: 'Julho/2026', amount: 290, dueDate: '2026-07-20', paidDate: '2026-07-20', status: 'pago', installments: '2 de 6x', paymentMethod: 'pix' },
-        { id: 'pay-13-2', referenceMonth: 'Agosto/2026', amount: 290, dueDate: '2026-08-20', paidDate: '2026-08-19', status: 'pago', installments: '3 de 6x', paymentMethod: 'pix' },
-        { id: 'pay-13-3', referenceMonth: 'Setembro/2026', amount: 290, dueDate: '2026-09-20', paidDate: '2026-09-20', status: 'pago', installments: '4 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-13-1', referenceMonth: 'Junho/2026', amount: 290, dueDate: '2026-06-20', paidDate: '2026-06-20', status: 'pago', installments: '1 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-13-2', referenceMonth: 'Julho/2026', amount: 290, dueDate: '2026-07-20', paidDate: '2026-07-20', status: 'pago', installments: '2 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-13-3', referenceMonth: 'Agosto/2026', amount: 290, dueDate: '2026-08-20', paidDate: '2026-08-19', status: 'pago', installments: '3 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-13-4', referenceMonth: 'Setembro/2026', amount: 290, dueDate: '2026-09-20', paidDate: '2026-09-20', status: 'pago', installments: '4 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-13-5', referenceMonth: 'Outubro/2026', amount: 290, dueDate: '2026-10-20', status: 'pendente', installments: '5 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-13-6', referenceMonth: 'Novembro/2026', amount: 290, dueDate: '2026-11-20', status: 'pendente', installments: '6 de 6x', paymentMethod: 'pix' },
       ],
     },
   },
 
-  // 14. Renata Vasconcelos - 100% Treinos em Dia (98%) / Financeiro em Dia
+  // 14. Renata Vasconcelos - 100% Treinos em Dia (98%) / Financeiro em Dia (Anual: 7 pagas, 5 pendentes com Cupom RAFAELA15)
   {
     id: 'student-14',
     userId: 'user-student-14',
@@ -538,23 +605,38 @@ export const initialStudents: Student[] = [
     hasActivePlan: true,
     planExpiresAt: '2027-02-14',
     financialPlan: {
+      planId: 'plan-anual-vip',
       planName: 'Consultoria Anual VIP',
       frequency: 'anual',
-      price: 320,
+      durationMonths: 12,
+      originalPrice: 3840,
+      price: 3264,
+      discountType: 'coupon',
+      discountValue: 15,
+      discountCouponCode: 'RAFAELA15',
       totalInstallments: 12,
       billingDay: 14,
       startDate: '2026-02-14',
       expiresAt: '2027-02-14',
       paymentMethod: 'cartao_credito',
       payments: [
-        { id: 'pay-14-1', referenceMonth: 'Julho/2026', amount: 320, dueDate: '2026-07-14', paidDate: '2026-07-14', status: 'pago', installments: '5 de 12x', paymentMethod: 'cartao_credito' },
-        { id: 'pay-14-2', referenceMonth: 'Agosto/2026', amount: 320, dueDate: '2026-08-14', paidDate: '2026-08-14', status: 'pago', installments: '6 de 12x', paymentMethod: 'cartao_credito' },
-        { id: 'pay-14-3', referenceMonth: 'Setembro/2026', amount: 320, dueDate: '2026-09-14', paidDate: '2026-09-14', status: 'pago', installments: '7 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-14-1', referenceMonth: 'Março/2026', amount: 272, dueDate: '2026-03-14', paidDate: '2026-03-14', status: 'pago', installments: '1 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-14-2', referenceMonth: 'Abril/2026', amount: 272, dueDate: '2026-04-14', paidDate: '2026-04-14', status: 'pago', installments: '2 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-14-3', referenceMonth: 'Maio/2026', amount: 272, dueDate: '2026-05-14', paidDate: '2026-05-14', status: 'pago', installments: '3 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-14-4', referenceMonth: 'Junho/2026', amount: 272, dueDate: '2026-06-14', paidDate: '2026-06-14', status: 'pago', installments: '4 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-14-5', referenceMonth: 'Julho/2026', amount: 272, dueDate: '2026-07-14', paidDate: '2026-07-14', status: 'pago', installments: '5 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-14-6', referenceMonth: 'Agosto/2026', amount: 272, dueDate: '2026-08-14', paidDate: '2026-08-14', status: 'pago', installments: '6 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-14-7', referenceMonth: 'Setembro/2026', amount: 272, dueDate: '2026-09-14', paidDate: '2026-09-14', status: 'pago', installments: '7 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-14-8', referenceMonth: 'Outubro/2026', amount: 272, dueDate: '2026-10-14', status: 'pendente', installments: '8 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-14-9', referenceMonth: 'Novembro/2026', amount: 272, dueDate: '2026-11-14', status: 'pendente', installments: '9 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-14-10', referenceMonth: 'Dezembro/2026', amount: 272, dueDate: '2026-12-14', status: 'pendente', installments: '10 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-14-11', referenceMonth: 'Janeiro/2027', amount: 272, dueDate: '2027-01-14', status: 'pendente', installments: '11 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-14-12', referenceMonth: 'Fevereiro/2027', amount: 272, dueDate: '2027-02-14', status: 'pendente', installments: '12 de 12x', paymentMethod: 'cartao_credito' },
       ],
     },
   },
 
-  // 15. Daniel Moreira - Treinos Atrasados (2 sessões) / Financeiro em Dia
+  // 15. Daniel Moreira - Treinos Atrasados (2 sessões) / Financeiro em Dia (Semestral: 5 pagas, 1 pendente)
   {
     id: 'student-15',
     userId: 'user-student-15',
@@ -578,17 +660,24 @@ export const initialStudents: Student[] = [
     hasActivePlan: true,
     planExpiresAt: '2026-11-20',
     financialPlan: {
+      planId: 'plan-semestral-foco',
       planName: 'Consultoria Semestral Presencial',
       frequency: 'semestral',
-      price: 280,
+      durationMonths: 6,
+      originalPrice: 1680,
+      price: 1680,
       totalInstallments: 6,
       billingDay: 20,
-      startDate: '2026-03-20',
+      startDate: '2026-05-20',
       expiresAt: '2026-11-20',
       paymentMethod: 'pix',
       payments: [
-        { id: 'pay-15-1', referenceMonth: 'Agosto/2026', amount: 280, dueDate: '2026-08-20', paidDate: '2026-08-20', status: 'pago', installments: '5 de 6x', paymentMethod: 'pix' },
-        { id: 'pay-15-2', referenceMonth: 'Setembro/2026', amount: 280, dueDate: '2026-09-20', paidDate: '2026-09-19', status: 'pago', installments: '6 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-15-1', referenceMonth: 'Maio/2026', amount: 280, dueDate: '2026-05-20', paidDate: '2026-05-20', status: 'pago', installments: '1 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-15-2', referenceMonth: 'Junho/2026', amount: 280, dueDate: '2026-06-20', paidDate: '2026-06-20', status: 'pago', installments: '2 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-15-3', referenceMonth: 'Julho/2026', amount: 280, dueDate: '2026-07-20', paidDate: '2026-07-20', status: 'pago', installments: '3 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-15-4', referenceMonth: 'Agosto/2026', amount: 280, dueDate: '2026-08-20', paidDate: '2026-08-20', status: 'pago', installments: '4 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-15-5', referenceMonth: 'Setembro/2026', amount: 280, dueDate: '2026-09-20', paidDate: '2026-09-19', status: 'pago', installments: '5 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-15-6', referenceMonth: 'Outubro/2026', amount: 280, dueDate: '2026-10-20', status: 'pendente', installments: '6 de 6x', paymentMethod: 'pix' },
       ],
     },
   },
@@ -619,6 +708,8 @@ export const initialStudents: Student[] = [
     financialPlan: {
       planName: 'Consultoria Mensal Leve',
       frequency: 'mensal',
+      durationMonths: 1,
+      originalPrice: 210,
       price: 210,
       totalInstallments: 1,
       billingDay: 20,
@@ -628,12 +719,12 @@ export const initialStudents: Student[] = [
       payments: [
         { id: 'pay-16-1', referenceMonth: 'Julho/2026', amount: 210, dueDate: '2026-07-20', paidDate: '2026-07-21', status: 'pago', installments: '1x', paymentMethod: 'pix' },
         { id: 'pay-16-2', referenceMonth: 'Agosto/2026', amount: 210, dueDate: '2026-08-20', status: 'vencido', installments: '1x', paymentMethod: 'pix', notes: 'Atraso de mais de 30 dias' },
-        { id: 'pay-16-3', referenceMonth: 'Setembro/2026', amount: 210, dueDate: '2026-09-20', status: 'vencido', installments: '1x', paymentMethod: 'pix' },
+        { id: 'pay-16-3', referenceMonth: 'Setembro/2026', amount: 210, dueDate: '2026-09-20', status: 'vencido', installments: '1x', paymentMethod: 'pix', notes: 'Segunda fatura consecutiva pendente' },
       ],
     },
   },
 
-  // 17. Eduardo Martins - Várias Faltas (38% Adesão) / Financeiro em Dia
+  // 17. Eduardo Martins - Várias Faltas (38% Adesão) / Financeiro em Dia (Trimestral: 2 pagas, 1 pendente)
   {
     id: 'student-17',
     userId: 'user-student-17',
@@ -657,22 +748,26 @@ export const initialStudents: Student[] = [
     hasActivePlan: true,
     planExpiresAt: '2026-10-05',
     financialPlan: {
+      planId: 'plan-pro-3m',
       planName: 'Consultoria Trimestral Saúde',
       frequency: 'trimestral',
-      price: 270,
+      durationMonths: 3,
+      originalPrice: 810,
+      price: 810,
       totalInstallments: 3,
       billingDay: 5,
-      startDate: '2026-04-05',
+      startDate: '2026-07-05',
       expiresAt: '2026-10-05',
       paymentMethod: 'cartao_credito',
       payments: [
-        { id: 'pay-17-1', referenceMonth: 'Agosto/2026', amount: 270, dueDate: '2026-08-05', paidDate: '2026-08-05', status: 'pago', installments: '1 de 3x', paymentMethod: 'cartao_credito' },
-        { id: 'pay-17-2', referenceMonth: 'Setembro/2026', amount: 270, dueDate: '2026-09-05', paidDate: '2026-09-05', status: 'pago', installments: '2 de 3x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-17-1', referenceMonth: 'Julho/2026', amount: 270, dueDate: '2026-07-05', paidDate: '2026-07-05', status: 'pago', installments: '1 de 3x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-17-2', referenceMonth: 'Agosto/2026', amount: 270, dueDate: '2026-08-05', paidDate: '2026-08-05', status: 'pago', installments: '2 de 3x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-17-3', referenceMonth: 'Setembro/2026', amount: 270, dueDate: '2026-09-05', paidDate: '2026-09-05', status: 'pago', installments: '3 de 3x', paymentMethod: 'cartao_credito' },
       ],
     },
   },
 
-  // 18. Isabela Fontes - Treinos em Dia (94%) / Financeiro em Dia
+  // 18. Isabela Fontes - Treinos em Dia (94%) / Financeiro em Dia (Anual: 7 pagas, 5 pendentes com Cupom VERAO2026)
   {
     id: 'student-18',
     userId: 'user-student-18',
@@ -696,23 +791,38 @@ export const initialStudents: Student[] = [
     hasActivePlan: true,
     planExpiresAt: '2027-03-01',
     financialPlan: {
+      planId: 'plan-anual-vip',
       planName: 'Consultoria Anual 5x',
       frequency: 'anual',
-      price: 290,
+      durationMonths: 12,
+      originalPrice: 3480,
+      price: 2784,
+      discountType: 'coupon',
+      discountValue: 20,
+      discountCouponCode: 'VERAO2026',
       totalInstallments: 12,
       billingDay: 1,
       startDate: '2026-03-01',
       expiresAt: '2027-03-01',
       paymentMethod: 'cartao_credito',
       payments: [
-        { id: 'pay-18-1', referenceMonth: 'Julho/2026', amount: 290, dueDate: '2026-07-01', paidDate: '2026-07-01', status: 'pago', installments: '5 de 12x', paymentMethod: 'cartao_credito' },
-        { id: 'pay-18-2', referenceMonth: 'Agosto/2026', amount: 290, dueDate: '2026-08-01', paidDate: '2026-08-01', status: 'pago', installments: '6 de 12x', paymentMethod: 'cartao_credito' },
-        { id: 'pay-18-3', referenceMonth: 'Setembro/2026', amount: 290, dueDate: '2026-09-01', paidDate: '2026-09-01', status: 'pago', installments: '7 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-18-1', referenceMonth: 'Março/2026', amount: 232, dueDate: '2026-03-01', paidDate: '2026-03-01', status: 'pago', installments: '1 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-18-2', referenceMonth: 'Abril/2026', amount: 232, dueDate: '2026-04-01', paidDate: '2026-04-01', status: 'pago', installments: '2 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-18-3', referenceMonth: 'Maio/2026', amount: 232, dueDate: '2026-05-01', paidDate: '2026-05-01', status: 'pago', installments: '3 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-18-4', referenceMonth: 'Junho/2026', amount: 232, dueDate: '2026-06-01', paidDate: '2026-06-01', status: 'pago', installments: '4 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-18-5', referenceMonth: 'Julho/2026', amount: 232, dueDate: '2026-07-01', paidDate: '2026-07-01', status: 'pago', installments: '5 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-18-6', referenceMonth: 'Agosto/2026', amount: 232, dueDate: '2026-08-01', paidDate: '2026-08-01', status: 'pago', installments: '6 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-18-7', referenceMonth: 'Setembro/2026', amount: 232, dueDate: '2026-09-01', paidDate: '2026-09-01', status: 'pago', installments: '7 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-18-8', referenceMonth: 'Outubro/2026', amount: 232, dueDate: '2026-10-01', status: 'pendente', installments: '8 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-18-9', referenceMonth: 'Novembro/2026', amount: 232, dueDate: '2026-11-01', status: 'pendente', installments: '9 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-18-10', referenceMonth: 'Dezembro/2026', amount: 232, dueDate: '2026-12-01', status: 'pendente', installments: '10 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-18-11', referenceMonth: 'Janeiro/2027', amount: 232, dueDate: '2027-01-01', status: 'pendente', installments: '11 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-18-12', referenceMonth: 'Fevereiro/2027', amount: 232, dueDate: '2027-02-01', status: 'pendente', installments: '12 de 12x', paymentMethod: 'cartao_credito' },
       ],
     },
   },
 
-  // 19. Leonardo Cunha - Treinos Atrasados (1 treino) / Financeiro em Dia
+  // 19. Leonardo Cunha - Treinos Atrasados (1 treino) / Financeiro em Dia (Semestral: 2 pagas, 4 pendentes)
   {
     id: 'student-19',
     userId: 'user-student-19',
@@ -736,22 +846,29 @@ export const initialStudents: Student[] = [
     hasActivePlan: true,
     planExpiresAt: '2026-11-12',
     financialPlan: {
+      planId: 'plan-semestral-foco',
       planName: 'Consultoria Semestral Presencial',
       frequency: 'semestral',
-      price: 290,
+      durationMonths: 6,
+      originalPrice: 1740,
+      price: 1740,
       totalInstallments: 6,
       billingDay: 12,
-      startDate: '2026-03-12',
-      expiresAt: '2026-11-12',
+      startDate: '2026-08-12',
+      expiresAt: '2027-02-12',
       paymentMethod: 'pix',
       payments: [
-        { id: 'pay-19-1', referenceMonth: 'Agosto/2026', amount: 290, dueDate: '2026-08-12', paidDate: '2026-08-12', status: 'pago', installments: '5 de 6x', paymentMethod: 'pix' },
-        { id: 'pay-19-2', referenceMonth: 'Setembro/2026', amount: 290, dueDate: '2026-09-12', paidDate: '2026-09-11', status: 'pago', installments: '6 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-19-1', referenceMonth: 'Agosto/2026', amount: 290, dueDate: '2026-08-12', paidDate: '2026-08-12', status: 'pago', installments: '1 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-19-2', referenceMonth: 'Setembro/2026', amount: 290, dueDate: '2026-09-12', paidDate: '2026-09-11', status: 'pago', installments: '2 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-19-3', referenceMonth: 'Outubro/2026', amount: 290, dueDate: '2026-10-12', status: 'pendente', installments: '3 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-19-4', referenceMonth: 'Novembro/2026', amount: 290, dueDate: '2026-11-12', status: 'pendente', installments: '4 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-19-5', referenceMonth: 'Dezembro/2026', amount: 290, dueDate: '2026-12-12', status: 'pendente', installments: '5 de 6x', paymentMethod: 'pix' },
+        { id: 'pay-19-6', referenceMonth: 'Janeiro/2027', amount: 290, dueDate: '2027-01-12', status: 'pendente', installments: '6 de 6x', paymentMethod: 'pix' },
       ],
     },
   },
 
-  // 20. Sabrina Sato Dias - 100% Treinos em Dia / Top Ranking / Financeiro em Dia
+  // 20. Sabrina Sato Dias - 100% Treinos em Dia / Top Ranking / Financeiro em Dia (Anual: 9 pagas, 3 pendentes)
   {
     id: 'student-20',
     userId: 'user-student-20',
@@ -775,18 +892,30 @@ export const initialStudents: Student[] = [
     hasActivePlan: true,
     planExpiresAt: '2027-01-08',
     financialPlan: {
+      planId: 'plan-anual-vip',
       planName: 'Consultoria Elite Anual',
       frequency: 'anual',
-      price: 420,
+      durationMonths: 12,
+      originalPrice: 5040,
+      price: 5040,
       totalInstallments: 12,
       billingDay: 8,
       startDate: '2026-01-08',
       expiresAt: '2027-01-08',
       paymentMethod: 'cartao_credito',
       payments: [
-        { id: 'pay-20-1', referenceMonth: 'Julho/2026', amount: 420, dueDate: '2026-07-08', paidDate: '2026-07-08', status: 'pago', installments: '7 de 12x', paymentMethod: 'cartao_credito' },
-        { id: 'pay-20-2', referenceMonth: 'Agosto/2026', amount: 420, dueDate: '2026-08-08', paidDate: '2026-08-08', status: 'pago', installments: '8 de 12x', paymentMethod: 'cartao_credito' },
-        { id: 'pay-20-3', referenceMonth: 'Setembro/2026', amount: 420, dueDate: '2026-09-08', paidDate: '2026-09-08', status: 'pago', installments: '9 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-20-1', referenceMonth: 'Janeiro/2026', amount: 420, dueDate: '2026-01-08', paidDate: '2026-01-08', status: 'pago', installments: '1 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-20-2', referenceMonth: 'Fevereiro/2026', amount: 420, dueDate: '2026-02-08', paidDate: '2026-02-08', status: 'pago', installments: '2 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-20-3', referenceMonth: 'Março/2026', amount: 420, dueDate: '2026-03-08', paidDate: '2026-03-08', status: 'pago', installments: '3 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-20-4', referenceMonth: 'Abril/2026', amount: 420, dueDate: '2026-04-08', paidDate: '2026-04-08', status: 'pago', installments: '4 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-20-5', referenceMonth: 'Maio/2026', amount: 420, dueDate: '2026-05-08', paidDate: '2026-05-08', status: 'pago', installments: '5 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-20-6', referenceMonth: 'Junho/2026', amount: 420, dueDate: '2026-06-08', paidDate: '2026-06-08', status: 'pago', installments: '6 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-20-7', referenceMonth: 'Julho/2026', amount: 420, dueDate: '2026-07-08', paidDate: '2026-07-08', status: 'pago', installments: '7 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-20-8', referenceMonth: 'Agosto/2026', amount: 420, dueDate: '2026-08-08', paidDate: '2026-08-08', status: 'pago', installments: '8 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-20-9', referenceMonth: 'Setembro/2026', amount: 420, dueDate: '2026-09-08', paidDate: '2026-09-08', status: 'pago', installments: '9 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-20-10', referenceMonth: 'Outubro/2026', amount: 420, dueDate: '2026-10-08', status: 'pendente', installments: '10 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-20-11', referenceMonth: 'Novembro/2026', amount: 420, dueDate: '2026-11-08', status: 'pendente', installments: '11 de 12x', paymentMethod: 'cartao_credito' },
+        { id: 'pay-20-12', referenceMonth: 'Dezembro/2026', amount: 420, dueDate: '2026-12-08', status: 'pendente', installments: '12 de 12x', paymentMethod: 'cartao_credito' },
       ],
     },
   },

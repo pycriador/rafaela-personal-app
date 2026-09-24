@@ -48,10 +48,12 @@ export const StudentFinancialPage: React.FC = () => {
     if (!studentProfile) return;
     try {
       setLoading(true);
-      const targetId = studentProfile.userId || studentProfile.id;
-      let data = await studentRepository.getById(targetId);
-      if (!data && studentProfile.id) {
-        data = await studentRepository.getById(studentProfile.id);
+      let data = await studentRepository.getById(studentProfile.id);
+      if (!data && studentProfile.userId) {
+        data = await studentRepository.getById(studentProfile.userId);
+      }
+      if (!data && studentProfile.userId) {
+        data = await studentRepository.getByUserId(studentProfile.userId);
       }
       setStudent(data);
 
@@ -117,7 +119,7 @@ export const StudentFinancialPage: React.FC = () => {
 
     setIsValidatingCoupon(true);
     try {
-      const planPrice = financialPlan?.price || 280;
+      const planPrice = financialPlan?.price || 0;
       const res = await couponRepository.validateCoupon({
         code: clean,
         planPrice,
@@ -427,7 +429,13 @@ export const StudentFinancialPage: React.FC = () => {
         ) : (
           <div className="divide-y divide-slate-100 dark:divide-white/[0.04]">
             {pendingPayments.map((p) => {
-              const isLate = p.dueDate ? new Date(p.dueDate) < new Date() : false;
+              const todayDate = new Date();
+              todayDate.setHours(0, 0, 0, 0);
+              const pDueDate = p.dueDate ? new Date(p.dueDate + 'T00:00:00') : null;
+              const isLate = p.status === 'vencido' || (pDueDate ? pDueDate < todayDate : false);
+              const daysDiff = pDueDate && isLate
+                ? Math.max(1, Math.floor((todayDate.getTime() - pDueDate.getTime()) / (1000 * 60 * 60 * 24)))
+                : 0;
 
               return (
                 <div
@@ -441,7 +449,7 @@ export const StudentFinancialPage: React.FC = () => {
                       </span>
                       {isLate ? (
                         <Badge variant="danger" size="sm">
-                          Vencido
+                          Vencido {daysDiff > 0 ? `há ${daysDiff} ${daysDiff === 1 ? 'dia' : 'dias'}` : ''}
                         </Badge>
                       ) : (
                         <Badge variant="warning" size="sm">
