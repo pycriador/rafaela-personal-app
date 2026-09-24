@@ -8,7 +8,7 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     discountType: 'percentage',
     discountValue: 10,
     maxUses: 100,
-    usedCount: 14,
+    usedCount: 0,
     expiresAt: null, // Sem validade
     minPlanPrice: 100,
     isCumulative: false, // Uso exclusivo / não acumulativo
@@ -24,7 +24,7 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     discountType: 'percentage',
     discountValue: 15,
     maxUses: 50,
-    usedCount: 8,
+    usedCount: 0,
     expiresAt: '2026-12-31',
     minPlanPrice: 150,
     isCumulative: true, // Acumulativo
@@ -40,7 +40,7 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     discountType: 'percentage',
     discountValue: 20,
     maxUses: 30,
-    usedCount: 12,
+    usedCount: 0,
     expiresAt: '2026-12-31',
     minPlanPrice: 300,
     isCumulative: false, // Uso exclusivo
@@ -56,7 +56,7 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     discountType: 'percentage',
     discountValue: 20,
     maxUses: 40,
-    usedCount: 6,
+    usedCount: 0,
     expiresAt: '2026-04-30',
     minPlanPrice: 200,
     isCumulative: false,
@@ -72,7 +72,7 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     discountType: 'fixed',
     discountValue: 50,
     maxUses: 25,
-    usedCount: 5,
+    usedCount: 0,
     expiresAt: '2026-11-30',
     minPlanPrice: 250,
     isCumulative: true, // Acumulativo
@@ -88,7 +88,7 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     discountType: 'fixed',
     discountValue: 100,
     maxUses: 15,
-    usedCount: 3,
+    usedCount: 0,
     expiresAt: '2026-12-31',
     minPlanPrice: 600,
     isCumulative: false,
@@ -104,7 +104,7 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     discountType: 'fixed',
     discountValue: 30,
     maxUses: null, // Ilimitado
-    usedCount: 22,
+    usedCount: 0,
     expiresAt: null,
     minPlanPrice: 150,
     isCumulative: true,
@@ -120,7 +120,7 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     discountType: 'percentage',
     discountValue: 25,
     maxUses: 50,
-    usedCount: 50, // Esgotado
+    usedCount: 0,
     expiresAt: '2025-11-30', // Expirado
     minPlanPrice: 200,
     isCumulative: false,

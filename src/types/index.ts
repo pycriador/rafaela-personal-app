@@ -428,5 +428,64 @@ export interface StudentLeaderboardEntry {
   rank: number;
 }
 
+// Payment Methods & Gateway Settings
+export type ExternalPaymentProvider =
+  | 'infinitepay'
+  | 'pagbank'
+  | 'pagseguro'
+  | 'mercadopago'
+  | 'asaas'
+  | 'stone_ton'
+  | 'outro';
+
+export interface ExternalPaymentLink {
+  id: string;
+  provider: ExternalPaymentProvider;
+  title: string;
+  url: string;
+  active: boolean;
+  description?: string;
+  applicablePlanIds?: string[];
+  createdAt: string;
+}
+
+export interface PixPaymentConfig {
+  enabled: boolean;
+  keyType: 'cpf' | 'cnpj' | 'email' | 'phone' | 'random';
+  keyValue: string;
+  beneficiaryName: string;
+  beneficiaryCity: string;
+  bankName: string;
+  instructions?: string;
+}
+
+export interface BoletoPaymentConfig {
+  enabled: boolean;
+  provider: string;
+  daysUntilDue: number;
+  lateFinePercentage?: number;
+  monthlyInterestPercentage?: number;
+  instructions?: string;
+}
+
+export interface PosMachineConfig {
+  enabled: boolean;
+  provider: 'pagbank_celular' | 'infinitetap' | 'mercadopago_tap' | 'ton_tap' | 'maquininha_fisica';
+  providerName: string;
+  acceptedBrands: string[]; // ['Visa', 'Mastercard', 'Elo', 'Amex', 'Hipercard', 'Alelo', 'VR', 'Sodexo']
+  maxInstallments: number; // 12
+  passFeeToStudent: boolean;
+  instructions?: string;
+}
+
+export interface PaymentSettings {
+  id: string;
+  pix: PixPaymentConfig;
+  externalLinks: ExternalPaymentLink[];
+  boleto: BoletoPaymentConfig;
+  posMachine: PosMachineConfig;
+  updatedAt: string;
+}
+
 export * from './anamnesis';
 export * from './ai';

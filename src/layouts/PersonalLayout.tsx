@@ -30,6 +30,8 @@ import {
   Database,
   Trophy,
   CreditCard,
+  Tag,
+  Wallet,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -65,6 +67,12 @@ const SETTINGS_SUB_NAV_ITEMS = [
   { id: 'backup', label: 'Exportação & Backups', path: '/personal/settings?tab=backup', icon: Database },
   { id: 'sistema', label: 'Aparência & Sistema', path: '/personal/settings?tab=sistema', icon: Layers },
   { id: 'ia', label: 'AI Copilot', path: '/personal/settings?tab=ia', icon: Sparkles },
+];
+
+const PLANS_SUB_NAV_ITEMS = [
+  { id: 'planos', label: 'Catálogo de Planos', path: '/personal/plans?tab=planos', icon: CreditCard },
+  { id: 'cupons', label: 'Cupons de Desconto', path: '/personal/plans?tab=cupons', icon: Tag },
+  { id: 'pagamentos', label: 'Opções de Pagamento', path: '/personal/plans?tab=pagamentos', icon: Wallet },
 ];
 
 export const PersonalLayout: React.FC = () => {
@@ -124,6 +132,32 @@ export const PersonalLayout: React.FC = () => {
       const next = !prev;
       try {
         localStorage.setItem('rafaela_nav_settings_open', String(next));
+      } catch (err) {
+        console.warn('Erro ao salvar preferencia de menu no localStorage', err);
+      }
+      return next;
+    });
+  };
+
+  // Local persistent state for Gestão de Planos sub-menus (open by default)
+  const [plansSubMenuOpen, setPlansSubMenuOpen] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('rafaela_nav_plans_open');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
+
+  const togglePlansSubMenu = (e?: React.MouseEvent | React.KeyboardEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setPlansSubMenuOpen((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('rafaela_nav_plans_open', String(next));
       } catch (err) {
         console.warn('Erro ao salvar preferencia de menu no localStorage', err);
       }
@@ -308,6 +342,8 @@ export const PersonalLayout: React.FC = () => {
               const isInsideAnamnesis = isAnamnesisItem && location.pathname.startsWith('/personal/anamnesis');
               const isSettingsItem = item.path === '/personal/settings';
               const isInsideSettings = isSettingsItem && location.pathname.startsWith('/personal/settings');
+              const isPlansItem = item.path === '/personal/plans';
+              const isInsidePlans = isPlansItem && location.pathname.startsWith('/personal/plans');
 
               return (
                 <div key={item.path} className="space-y-0.5">
@@ -316,7 +352,7 @@ export const PersonalLayout: React.FC = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className={({ isActive }) =>
                       `flex items-center justify-between px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all duration-150 ${
-                        isActive || isInsideStudent || isInsideAnamnesis || isInsideSettings
+                        isActive || isInsideStudent || isInsideAnamnesis || isInsideSettings || isInsidePlans
                           ? 'bg-slate-900 text-white dark:bg-emerald-500/15 dark:text-emerald-300 shadow-2xs font-medium'
                           : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100/70 dark:hover:bg-dark-cardElevated/70 hover:text-slate-900 dark:hover:text-white'
                       }`
@@ -328,6 +364,32 @@ export const PersonalLayout: React.FC = () => {
                     </div>
                     {isInsideStudent && (
                       <ChevronDown className="w-3.5 h-3.5 text-white/80" />
+                    )}
+                    {isPlansItem && (
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        onClick={togglePlansSubMenu}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            togglePlansSubMenu();
+                          }
+                        }}
+                        className={`p-1 -mr-1 rounded-md transition-colors cursor-pointer ${
+                          location.pathname.startsWith('/personal/plans')
+                            ? 'text-white/90 hover:text-white hover:bg-emerald-600/60'
+                            : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-dark-card'
+                        }`}
+                        title={plansSubMenuOpen ? 'Ocultar sub-menus de gestão de planos' : 'Expandir sub-menus de gestão de planos'}
+                      >
+                        {plansSubMenuOpen ? (
+                          <ChevronDown className="w-3.5 h-3.5" />
+                        ) : (
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        )}
+                      </span>
                     )}
                     {isAnamnesisItem && (
                       <span
@@ -568,6 +630,70 @@ export const PersonalLayout: React.FC = () => {
                             location.pathname === '/personal/settings' &&
                             (currentSettingsTab === sub.id ||
                               (sub.id === 'usuarios' && !searchParams.get('tab')));
+
+                          return (
+                            <button
+                              key={sub.id}
+                              type="button"
+                              onClick={() => {
+                                setMobileMenuOpen(false);
+                                navigate(sub.path);
+                              }}
+                              className={`w-full flex items-center justify-between px-2 py-1.5 rounded-lg text-xs transition-all cursor-pointer text-left ${
+                                isSubActive
+                                  ? 'bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 font-medium'
+                                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100/60 dark:hover:bg-white/[0.04] hover:text-slate-900 dark:hover:text-white font-normal'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 truncate">
+                                <SubIcon
+                                  className={`w-3.5 h-3.5 shrink-0 ${
+                                    isSubActive
+                                      ? 'text-emerald-600 dark:text-emerald-400'
+                                      : 'text-slate-400 dark:text-slate-500'
+                                  }`}
+                                />
+                                <span className="truncate">{sub.label}</span>
+                              </div>
+                              {isSubActive && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* SUBMENU FIXO DE GESTÃO DE PLANOS COM PERSISTÊNCIA LOCAL */}
+                  {isPlansItem && plansSubMenuOpen && (
+                    <div className="my-1 ml-3 pl-2.5 border-l border-slate-200 dark:border-white/[0.08] space-y-0.5 py-1 bg-slate-50/50 dark:bg-white/[0.02] rounded-r-xl">
+                      <div className="flex items-center justify-between pr-2 py-0.5 mb-1">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <CreditCard className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
+                          <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider truncate">
+                            Gestão de Planos
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={(e) => togglePlansSubMenu(e)}
+                          className="text-[10px] font-medium text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer"
+                          title="Ocultar sub-menus de gestão de planos"
+                        >
+                          Ocultar
+                        </button>
+                      </div>
+
+                      {/* 3 Opções de Planos: Catálogo, Cupons, Pagamentos */}
+                      <div className="space-y-0.5">
+                        {PLANS_SUB_NAV_ITEMS.map((sub) => {
+                          const SubIcon = sub.icon;
+                          const currentPlansTab = searchParams.get('tab') || 'planos';
+                          const isSubActive =
+                            location.pathname === '/personal/plans' &&
+                            (currentPlansTab === sub.id ||
+                              (sub.id === 'planos' && !searchParams.get('tab')));
 
                           return (
                             <button

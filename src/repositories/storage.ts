@@ -47,7 +47,8 @@ export const STORAGE_KEYS = {
   AI_STUDENT_CONSENTS: 'rafaela_app_ai_student_consents_v1',
   RANKING_GROUPS: 'rafaela_app_ranking_groups_v2',
   MEMBERSHIP_PLANS: 'rafaela_app_membership_plans_v1',
-  DISCOUNT_COUPONS: 'rafaela_app_discount_coupons_v1',
+  DISCOUNT_COUPONS: 'rafaela_app_discount_coupons_v2',
+  PAYMENT_SETTINGS: 'rafaela_app_payment_settings_v1',
 };
 
 /**

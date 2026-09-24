@@ -25,6 +25,7 @@ import {
   Infinity as InfinityIcon,
   ShieldCheck,
   AlertCircle,
+  Wallet,
 } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -40,6 +41,8 @@ import { useToast } from '../../context/ToastContext';
 import { PlanEditorModal } from '../../components/plans/PlanEditorModal';
 import { AssignPlanModal } from '../../components/plans/AssignPlanModal';
 import { CouponEditorModal } from '../../components/plans/CouponEditorModal';
+import { PaymentMethodsManagement } from '../../components/plans/PaymentMethodsManagement';
+import { CouponStudentsModal } from '../../components/plans/CouponStudentsModal';
 
 const PLANS_PER_PAGE = 6;
 const COUPONS_PER_PAGE = 6;
@@ -48,10 +51,12 @@ export const PlansManagementPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { success, error: toastError, info } = useToast();
 
-  // URL Tab: 'planos' or 'cupons'
-  const currentTab = (searchParams.get('tab') as 'planos' | 'cupons') || 'planos';
+  // URL Tab: 'planos', 'cupons' or 'pagamentos'
+  const currentTab = (searchParams.get('tab') as 'planos' | 'cupons' | 'pagamentos') || 'planos';
   // URL Page: defaults to 1
   const currentPageParam = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+
+  const [couponForStudentsModal, setCouponForStudentsModal] = useState<DiscountCoupon | null>(null);
 
   const [plans, setPlans] = useState<MembershipPlan[]>([]);
   const [coupons, setCoupons] = useState<DiscountCoupon[]>([]);
@@ -111,7 +116,7 @@ export const PlansManagementPage: React.FC = () => {
   }, []);
 
   // Tab change handler (updates URL)
-  const handleTabChange = (newTab: 'planos' | 'cupons') => {
+  const handleTabChange = (newTab: 'planos' | 'cupons' | 'pagamentos') => {
     setSearchParams({ tab: newTab, page: '1' });
   };
 
@@ -198,6 +203,19 @@ export const PlansManagementPage: React.FC = () => {
     return filteredPlans.slice(start, start + PLANS_PER_PAGE);
   }, [filteredPlans, validPlanPage]);
 
+  // Mapeamento real dos cupons aplicados a alunos no banco de dados
+  const couponRealUsageMap = useMemo(() => {
+    const map: Record<string, { count: number; students: Student[] }> = {};
+    coupons.forEach((c) => {
+      const cleanCode = c.code.trim().toUpperCase();
+      const match = students.filter(
+        (s) => s.financialPlan?.discountCouponCode?.trim().toUpperCase() === cleanCode
+      );
+      map[cleanCode] = { count: match.length, students: match };
+    });
+    return map;
+  }, [students, coupons]);
+
   // Filtered coupons
   const filteredCoupons = useMemo(() => {
     const today = new Date().toISOString().split('T')[0];
@@ -222,12 +240,13 @@ export const PlansManagementPage: React.FC = () => {
         if (!isExp) return false;
       }
       if (couponStatusFilter === 'exhausted') {
-        const isExhausted = c.maxUses !== null && c.maxUses > 0 && c.usedCount >= c.maxUses;
+        const realCount = couponRealUsageMap[c.code.trim().toUpperCase()]?.count || 0;
+        const isExhausted = c.maxUses !== null && c.maxUses > 0 && realCount >= c.maxUses;
         if (!isExhausted) return false;
       }
       return true;
     });
-  }, [coupons, couponSearch, couponTypeFilter, couponStatusFilter]);
+  }, [coupons, couponSearch, couponTypeFilter, couponStatusFilter, couponRealUsageMap]);
 
   // Paginated coupons
   const totalCouponPages = Math.max(1, Math.ceil(filteredCoupons.length / COUPONS_PER_PAGE));
@@ -316,13 +335,17 @@ export const PlansManagementPage: React.FC = () => {
   const totalSubscribers = Object.values(planStudentCounts).reduce((a, b) => a + b, 0);
 
   const activeCouponsCount = coupons.filter((c) => c.active).length;
-  const totalCouponUses = coupons.reduce((acc, c) => acc + (c.usedCount || 0), 0);
+  const totalCouponUses = useMemo(() => {
+    return Object.values(couponRealUsageMap).reduce((acc, curr) => acc + curr.count, 0);
+  }, [couponRealUsageMap]);
   const todayStr = new Date().toISOString().split('T')[0];
-  const expiredOrExhaustedCount = coupons.filter(
-    (c) =>
+  const expiredOrExhaustedCount = coupons.filter((c) => {
+    const realUses = couponRealUsageMap[c.code.trim().toUpperCase()]?.count || 0;
+    return (
       (c.expiresAt && c.expiresAt < todayStr) ||
-      (c.maxUses !== null && c.maxUses > 0 && c.usedCount >= c.maxUses)
-  ).length;
+      (c.maxUses !== null && c.maxUses > 0 && realUses >= c.maxUses)
+    );
+  }).length;
 
   return (
     <div className="space-y-6 pb-12">
@@ -332,19 +355,25 @@ export const PlansManagementPage: React.FC = () => {
           <div className="flex items-center gap-2 mb-1">
             {currentTab === 'planos' ? (
               <CreditCard className="w-5 h-5 text-emerald-500" />
-            ) : (
+            ) : currentTab === 'cupons' ? (
               <Tag className="w-5 h-5 text-emerald-500" />
+            ) : (
+              <Wallet className="w-5 h-5 text-emerald-500" />
             )}
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
               {currentTab === 'planos'
                 ? 'Central de Gestão de Planos'
-                : 'Gestão de Cupons de Desconto'}
+                : currentTab === 'cupons'
+                ? 'Gestão de Cupons de Desconto'
+                : 'Opções e Formas de Pagamento'}
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-dark-muted">
             {currentTab === 'planos'
               ? 'Cadastre planos, gere parcelas automáticas por duração em meses e sincronize com a vitrine do site.'
-              : 'Crie cupons promocionais em R$ ou %, defina limite de utilizações, validade e regras mínimas.'}
+              : currentTab === 'cupons'
+              ? 'Crie cupons promocionais em R$ ou %, defina limite de utilizações, validade e regras mínimas.'
+              : 'Cadastre links de pagamento externo (InfinitePay, PagBank, PagSeguro, Mercado Pago, Asaas, Ton), PIX com QR Code, Boleto e Máquinas no Celular.'}
           </p>
         </div>
 
@@ -377,7 +406,7 @@ export const PlansManagementPage: React.FC = () => {
                 + Novo Plano
               </Button>
             </>
-          ) : (
+          ) : currentTab === 'cupons' ? (
             <Button
               type="button"
               variant="primary"
@@ -391,16 +420,16 @@ export const PlansManagementPage: React.FC = () => {
             >
               + Novo Cupom
             </Button>
-          )}
+          ) : null}
         </div>
       </div>
 
       {/* Submenu / Abas de Navegação (URL Sync) */}
-      <div className="flex items-center gap-2 border-b border-slate-200/80 dark:border-white/[0.08] pb-1">
+      <div className="flex items-center gap-2 border-b border-slate-200/80 dark:border-white/[0.08] pb-1 overflow-x-auto">
         <button
           type="button"
           onClick={() => handleTabChange('planos')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all relative ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all relative shrink-0 ${
             currentTab === 'planos'
               ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/15'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.04]'
@@ -425,7 +454,7 @@ export const PlansManagementPage: React.FC = () => {
         <button
           type="button"
           onClick={() => handleTabChange('cupons')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all relative ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all relative shrink-0 ${
             currentTab === 'cupons'
               ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/15'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.04]'
@@ -443,6 +472,22 @@ export const PlansManagementPage: React.FC = () => {
             {activeCouponsCount} ativos
           </span>
           {currentTab === 'cupons' && (
+            <span className="absolute bottom-[-5px] left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleTabChange('pagamentos')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all relative shrink-0 ${
+            currentTab === 'pagamentos'
+              ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/15'
+              : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.04]'
+          }`}
+        >
+          <Wallet className="w-4 h-4" />
+          <span>Opções de Pagamento</span>
+          {currentTab === 'pagamentos' && (
             <span className="absolute bottom-[-5px] left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
           )}
         </button>
@@ -981,14 +1026,16 @@ export const PlansManagementPage: React.FC = () => {
                 {paginatedCoupons.map((coupon) => {
                   const today = new Date().toISOString().split('T')[0];
                   const isExpired = coupon.expiresAt && coupon.expiresAt < today;
+                  const cleanCode = coupon.code.trim().toUpperCase();
+                  const realUsage = couponRealUsageMap[cleanCode] || { count: 0, students: [] };
                   const isExhausted =
-                    coupon.maxUses !== null && coupon.maxUses > 0 && coupon.usedCount >= coupon.maxUses;
+                    coupon.maxUses !== null && coupon.maxUses > 0 && realUsage.count >= coupon.maxUses;
                   const isAvailable = coupon.active && !isExpired && !isExhausted;
 
-                  // Usage percentage
+                  // Usage percentage based on real database records
                   const usagePct =
                     coupon.maxUses !== null && coupon.maxUses > 0
-                      ? Math.min(100, Math.round((coupon.usedCount / coupon.maxUses) * 100))
+                      ? Math.min(100, Math.round((realUsage.count / coupon.maxUses) * 100))
                       : null;
 
                   return (
@@ -1064,19 +1111,19 @@ export const PlansManagementPage: React.FC = () => {
                             </p>
                           </div>
 
-                          {/* Caixa de Regras de Quantidade / Resgates */}
+                          {/* Caixa de Regras de Quantidade / Resgates Reais */}
                           <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-dark-cardElevated/70 border border-slate-200/60 dark:border-white/[0.06] space-y-2">
                             <div className="flex items-center justify-between text-xs">
                               <span className="text-[11px] font-semibold text-slate-500 dark:text-dark-muted flex items-center gap-1.5">
                                 <Users className="w-3.5 h-3.5 text-violet-500" />
-                                Limite de Resgates:
+                                Resgates no Banco:
                               </span>
                               <span className="font-bold text-slate-800 dark:text-slate-200">
                                 {coupon.maxUses !== null && coupon.maxUses > 0 ? (
-                                  `${coupon.usedCount} de ${coupon.maxUses} usados`
+                                  `${realUsage.count} de ${coupon.maxUses} alunos`
                                 ) : (
                                   <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
-                                    <InfinityIcon className="w-3.5 h-3.5" /> Ilimitado ({coupon.usedCount} usados)
+                                    <InfinityIcon className="w-3.5 h-3.5" /> Ilimitado ({realUsage.count} alunos)
                                   </span>
                                 )}
                               </span>
@@ -1099,10 +1146,26 @@ export const PlansManagementPage: React.FC = () => {
                                 </div>
                                 <div className="flex justify-between text-[10px] text-slate-400">
                                   <span>{usagePct}% resgatado</span>
-                                  <span>{Math.max(0, coupon.maxUses - coupon.usedCount)} restantes</span>
+                                  <span>{Math.max(0, coupon.maxUses - realUsage.count)} restantes</span>
                                 </div>
                               </div>
                             )}
+
+                            {/* Botão para ver os alunos reais */}
+                            <div className="pt-1 border-t border-slate-200/40 dark:border-white/[0.04] flex items-center justify-between">
+                              <button
+                                type="button"
+                                onClick={() => setCouponForStudentsModal(coupon)}
+                                className="text-[11px] text-emerald-600 dark:text-emerald-400 hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+                              >
+                                <Users className="w-3 h-3" />
+                                {realUsage.count === 0
+                                  ? 'Nenhum aluno utilizou ainda (0)'
+                                  : `Ver ${realUsage.count} ${
+                                      realUsage.count === 1 ? 'aluno vinculado' : 'alunos vinculados'
+                                    }`}
+                              </button>
+                            </div>
                           </div>
 
                           {/* Validade e Regra Mínima */}
@@ -1259,6 +1322,13 @@ export const PlansManagementPage: React.FC = () => {
         </div>
       )}
 
+      {/* ========================================================================= */}
+      {/* ABA 3: OPÇÕES E MEIOS DE PAGAMENTO */}
+      {/* ========================================================================= */}
+      {currentTab === 'pagamentos' && (
+        <PaymentMethodsManagement plans={plans} />
+      )}
+
       {/* Modal Criar / Editar Plano */}
       <PlanEditorModal
         isOpen={isEditorOpen}
@@ -1361,6 +1431,14 @@ export const PlansManagementPage: React.FC = () => {
           </div>
         </Modal>
       )}
+
+      {/* Modal Lista de Alunos com Cupom Aplicado */}
+      <CouponStudentsModal
+        isOpen={!!couponForStudentsModal}
+        onClose={() => setCouponForStudentsModal(null)}
+        coupon={couponForStudentsModal}
+        students={students}
+      />
     </div>
   );
 };
