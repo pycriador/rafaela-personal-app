@@ -9,11 +9,18 @@ import { activityRepository } from '../../repositories/activityRepository';
 import { useToast } from '../../context/ToastContext';
 import { ArrowLeft, Check, ShieldAlert } from 'lucide-react';
 import { DayOfWeek, StudentGoal } from '../../types';
+import { useAuth } from '../../context/AuthContext';
+import { useTrainerFilter } from '../../context/TrainerFilterContext';
 
 export const StudentCreateEditPage: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { trainers, effectiveTrainerId } = useTrainerFilter();
   const { success, error } = useToast();
 
+  const [selectedTrainer, setSelectedTrainer] = useState<string>(() => {
+    return effectiveTrainerId || user?.id || 'user-rafaela';
+  });
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [gender, setGender] = useState<'Feminino' | 'Masculino' | 'Outro'>('Feminino');
@@ -74,8 +81,14 @@ export const StudentCreateEditPage: React.FC = () => {
 
     setLoading(true);
     try {
+      const assignedTrainerObj = trainers.find((t) => t.id === selectedTrainer) || user;
+      const assignedTrainerId = assignedTrainerObj?.id || user?.id || 'user-rafaela';
+      const assignedTrainerName = assignedTrainerObj?.name || user?.name || 'Rafaela Silva';
+
       const newSt = await studentRepository.create({
         userId: `user-${Date.now()}`,
+        trainerId: assignedTrainerId,
+        trainerName: assignedTrainerName,
         name,
         birthDate: birthDate || '2000-01-01',
         gender,
@@ -92,17 +105,17 @@ export const StudentCreateEditPage: React.FC = () => {
       });
 
       await activityRepository.log({
-        actorId: 'user-rafaela',
-        actorName: 'Rafaela Personal',
-        actorRole: 'personal',
+        actorId: user?.id || 'user-rafaela',
+        actorName: user?.name || 'Rafaela Personal',
+        actorRole: (user?.role as any) || 'personal',
         action: 'Aluno cadastrado',
-        description: `Novo aluno cadastrado: ${name} (${selectedGoals.join(', ')}).`,
+        description: `Novo aluno cadastrado: ${name} (${selectedGoals.join(', ')}). Personal: ${assignedTrainerName}.`,
         studentId: newSt.id,
         iconType: 'edit',
       });
 
-      success('Aluno cadastrado com sucesso!');
-      navigate(`/personal/students/${newSt.id}`);
+      success(`Aluno ${name} cadastrado com sucesso para o personal ${assignedTrainerName}!`);
+      navigate(`/personal/students/${newSt.userId || newSt.id}`);
     } catch (err) {
       error('Erro ao cadastrar aluno.');
     } finally {
@@ -138,6 +151,19 @@ export const StudentCreateEditPage: React.FC = () => {
             <CardTitle>1. Dados Pessoais</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {user?.role === 'admin' && trainers.length > 0 && (
+              <div className="sm:col-span-2">
+                <Select
+                  label="Personal Trainer Responsável *"
+                  value={selectedTrainer}
+                  onChange={(e) => setSelectedTrainer(e.target.value)}
+                  options={trainers.map((t) => ({
+                    value: t.id,
+                    label: `${t.name} (${t.cref || 'CREF pendente'})`,
+                  }))}
+                />
+              </div>
+            )}
             <div className="sm:col-span-2">
               <Input
                 label="Nome Completo *"

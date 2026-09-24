@@ -10,11 +10,13 @@ import {
   CheckCircle2,
   DollarSign,
   ArrowRight,
+  ExternalLink,
 } from 'lucide-react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
-import { StudentPaymentRecord, Student } from '../../types';
+import { StudentPaymentRecord, Student, PaymentSettings } from '../../types';
 import { studentRepository } from '../../repositories/studentRepository';
+import { paymentMethodRepository, generatePixEmvPayload } from '../../repositories/paymentMethodRepository';
 import { useToast } from '../../context/ToastContext';
 
 interface AdvancePaymentModalProps {
@@ -60,14 +62,31 @@ export const AdvancePaymentModal: React.FC<AdvancePaymentModalProps> = ({
     }
   };
 
-  const pixKey = '00020126580014BR.GOV.BCB.PIX0136rafaela.personal.treinos@gmail.com520400005303986540' +
-    totalAdvanceAmount.toFixed(2).replace('.', '') +
-    '5802BR5925RAFAELA PERSONAL TRAINING6009SAO PAULO62070503***6304';
+  const [paymentSettings, setPaymentSettings] = useState<PaymentSettings | null>(null);
+
+  React.useEffect(() => {
+    paymentMethodRepository.getSettings(student.trainerId).then(setPaymentSettings);
+  }, [student.trainerId]);
+
+  const beneficiary = paymentSettings?.pix?.beneficiaryName || student.trainerName || 'Personal Trainer';
+  const pixKey = paymentSettings?.pix?.keyValue
+    ? generatePixEmvPayload({
+        pixKey: paymentSettings.pix.keyValue,
+        beneficiaryName: beneficiary,
+        beneficiaryCity: paymentSettings.pix.beneficiaryCity || 'Sao Paulo',
+        amount: totalAdvanceAmount > 0 ? totalAdvanceAmount : undefined,
+        txId: 'ADIANTAMENTO',
+      })
+    : '';
 
   const handleCopyPix = () => {
+    if (!pixKey) {
+      toastError('Chave PIX não configurada pelo personal.');
+      return;
+    }
     navigator.clipboard.writeText(pixKey);
     setCopiedPix(true);
-    success('Código PIX Copia e Cola copiado com sucesso!');
+    success('Código PIX Copia e Cola oficial copiado com sucesso!');
     setTimeout(() => setCopiedPix(false), 2500);
   };
 
@@ -268,9 +287,34 @@ export const AdvancePaymentModal: React.FC<AdvancePaymentModalProps> = ({
                     {copiedPix ? 'Copiado!' : 'Copiar'}
                   </Button>
                 </div>
-                <span className="text-[10px] text-slate-400 block">
-                  Chave PIX: rafaela.personal.treinos@gmail.com
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block">
+                  Beneficiário: <strong>{beneficiary}</strong> • Chave: <strong>{paymentSettings?.pix?.keyValue || 'Não configurada'}</strong>
                 </span>
+              </div>
+            )}
+
+            {/* Links de Pagamento Externos Cadastrados pelo Personal */}
+            {paymentSettings?.externalLinks && paymentSettings.externalLinks.filter((l) => l.active).length > 0 && (
+              <div className="space-y-1.5 pt-1">
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 block">
+                  Links de Pagamento ({student.trainerName || 'Personal'}):
+                </span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {paymentSettings.externalLinks
+                    .filter((l) => l.active)
+                    .map((link) => (
+                      <a
+                        key={link.id}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2.5 rounded-xl border border-slate-200/80 dark:border-white/[0.08] hover:border-emerald-500 bg-white dark:bg-dark-card flex items-center justify-between text-xs text-slate-700 dark:text-slate-300 font-medium group transition-colors shadow-2xs"
+                      >
+                        <span className="truncate">{link.title}</span>
+                        <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-500 shrink-0 ml-1" />
+                      </a>
+                    ))}
+                </div>
               </div>
             )}
 

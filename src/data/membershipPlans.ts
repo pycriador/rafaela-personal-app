@@ -1,6 +1,6 @@
 import { MembershipPlan } from '../types';
 
-export const initialMembershipPlans: MembershipPlan[] = [
+const rawMembershipPlans: MembershipPlan[] = [
   {
     id: 'plan-start-1m',
     name: 'Start Essencial',
@@ -154,3 +154,9 @@ export const initialMembershipPlans: MembershipPlan[] = [
     updatedAt: '2026-09-10T10:00:00Z',
   },
 ];
+
+export const initialMembershipPlans: MembershipPlan[] = rawMembershipPlans.map((p) => ({
+  ...p,
+  isGlobal: true,
+  trainerId: 'user-rafaela',
+}));

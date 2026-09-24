@@ -1,6 +1,6 @@
 import { Student } from '../types';
 
-export const initialStudents: Student[] = [
+const rawInitialStudents: Student[] = [
   // 1. Lucas Oliveira - 100% Treinos em Dia / Financeiro em Dia (Semestral: 3 pagas, 3 pendentes)
   {
     id: 'student-1',
@@ -920,3 +920,13 @@ export const initialStudents: Student[] = [
     },
   },
 ];
+
+export const initialStudents: Student[] = rawInitialStudents.map((st, idx) => {
+  if (idx < 8) {
+    return { ...st, trainerId: 'user-rafaela', trainerName: 'Rafaela Silva' };
+  } else if (idx < 14) {
+    return { ...st, trainerId: 'user-carlos', trainerName: 'Carlos Mendes' };
+  } else {
+    return { ...st, trainerId: 'user-mariana', trainerName: 'Mariana Duarte' };
+  }
+});

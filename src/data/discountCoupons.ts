@@ -1,6 +1,6 @@
 import { DiscountCoupon } from '../types';
 
-export const initialDiscountCoupons: DiscountCoupon[] = [
+const rawDiscountCoupons: DiscountCoupon[] = [
   {
     id: 'coupon-promo10',
     code: 'PROMO10',
@@ -130,3 +130,9 @@ export const initialDiscountCoupons: DiscountCoupon[] = [
     updatedAt: '2025-11-30T10:00:00.000Z',
   },
 ];
+
+export const initialDiscountCoupons: DiscountCoupon[] = rawDiscountCoupons.map((c) => ({
+  ...c,
+  isGlobal: true,
+  trainerId: 'user-rafaela',
+}));

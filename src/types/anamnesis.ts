@@ -72,6 +72,8 @@ export interface Form {
   status: FormStatus;
   currentVersionId: string;
   createdBy: string;
+  trainerId?: string; // ID do personal criador ou null para formulário global da plataforma
+  isGlobal?: boolean; // Se é um modelo padrão oficial da plataforma
   createdAt: string;
   updatedAt: string;
 }

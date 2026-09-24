@@ -38,6 +38,7 @@ import { planRepository } from '../../repositories/planRepository';
 import { studentRepository } from '../../repositories/studentRepository';
 import { couponRepository } from '../../repositories/couponRepository';
 import { useToast } from '../../context/ToastContext';
+import { useTrainerFilter } from '../../context/TrainerFilterContext';
 import { PlanEditorModal } from '../../components/plans/PlanEditorModal';
 import { AssignPlanModal } from '../../components/plans/AssignPlanModal';
 import { CouponEditorModal } from '../../components/plans/CouponEditorModal';
@@ -91,14 +92,15 @@ export const PlansManagementPage: React.FC = () => {
 
   // Copied code feedback
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const { effectiveTrainerId } = useTrainerFilter();
 
   const loadData = async () => {
     try {
       setLoading(true);
       const [allPlans, allStudents, allCoupons] = await Promise.all([
-        planRepository.getPlans(),
-        studentRepository.getAll(),
-        couponRepository.getCoupons(),
+        planRepository.getPlans(effectiveTrainerId),
+        studentRepository.getAll(effectiveTrainerId ? { trainerId: effectiveTrainerId } : undefined),
+        couponRepository.getCoupons(effectiveTrainerId),
       ]);
       setPlans(allPlans);
       setStudents(allStudents);
@@ -113,7 +115,7 @@ export const PlansManagementPage: React.FC = () => {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [effectiveTrainerId]);
 
   // Tab change handler (updates URL)
   const handleTabChange = (newTab: 'planos' | 'cupons' | 'pagamentos') => {

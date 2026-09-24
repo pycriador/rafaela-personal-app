@@ -22,10 +22,12 @@ import { Select } from '../../components/ui/Select';
 import { Badge } from '../../components/ui/Badge';
 import { studentRepository } from '../../repositories/studentRepository';
 import { Student, StudentGoal } from '../../types';
+import { useTrainerFilter } from '../../context/TrainerFilterContext';
 
 export const StudentsListPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { effectiveTrainerId, selectedTrainerId, setSelectedTrainerId, trainers } = useTrainerFilter();
 
   const [allStudents, setAllStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
@@ -69,7 +71,9 @@ export const StudentsListPage: React.FC = () => {
     async function load() {
       setLoading(true);
       try {
-        const data = await studentRepository.getAll();
+        const data = await studentRepository.getAll(
+          effectiveTrainerId ? { trainerId: effectiveTrainerId } : undefined
+        );
         setAllStudents(data);
       } catch (err) {
         console.error('Erro ao carregar alunos:', err);
@@ -78,7 +82,7 @@ export const StudentsListPage: React.FC = () => {
       }
     }
     load();
-  }, []);
+  }, [effectiveTrainerId]);
 
   // Calculate plan status, payment status, and expiration
   const getPlanStatus = (student: Student) => {
@@ -513,6 +517,11 @@ export const StudentsListPage: React.FC = () => {
                         <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/[0.06] text-slate-500 dark:text-slate-400 font-medium" title="ID do Usuário no Banco de Dados">
                           UID: {student.userId || student.id}
                         </span>
+                        {student.trainerName && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-700 dark:text-blue-300 font-semibold" title="Personal Trainer Responsável">
+                            Personal: {student.trainerName}
+                          </span>
+                        )}
                         <span className="text-[11px] text-slate-400 dark:text-dark-muted font-normal truncate">
                           {student.level} • {student.goals.join(', ')}
                         </span>

@@ -8,6 +8,7 @@ export interface StudentFilters {
   goal?: string;
   status?: string;
   frequency?: string;
+  trainerId?: string;
 }
 
 export interface IStudentRepository {
@@ -25,6 +26,8 @@ function mapFromDb(row: any): Student {
   return {
     id: row.id,
     userId: row.user_id || row.userId,
+    trainerId: row.trainer_id || row.trainerId,
+    trainerName: row.trainer_name || row.trainerName,
     name: row.name,
     birthDate: row.birth_date || row.birthDate,
     gender: row.gender,
@@ -58,6 +61,14 @@ function mapFromDb(row: any): Student {
 
 function mapToDb(student: Partial<Student>): any {
   const row: any = { ...student };
+  if (student.trainerId !== undefined) {
+    row.trainer_id = student.trainerId;
+    delete row.trainerId;
+  }
+  if (student.trainerName !== undefined) {
+    row.trainer_name = student.trainerName;
+    delete row.trainerName;
+  }
   if (student.userId !== undefined) {
     row.user_id = student.userId;
     delete row.userId;
@@ -112,6 +123,9 @@ export class SupabaseStudentRepository implements IStudentRepository {
         if (filters?.status && filters.status !== 'all') {
           query = query.eq('status', filters.status);
         }
+        if (filters?.trainerId && filters.trainerId !== 'all') {
+          query = query.eq('trainer_id', filters.trainerId);
+        }
 
         const { data, error } = await query;
         if (!error && data && data.length > 0) {
@@ -127,8 +141,11 @@ export class SupabaseStudentRepository implements IStudentRepository {
       students = getItem<Student[]>(STORAGE_KEYS.STUDENTS, initialStudents);
     }
 
-    // Apply in-memory filters for search, goal, frequency
+    // Apply in-memory filters for search, goal, frequency, trainerId
     if (filters) {
+      if (filters.trainerId && filters.trainerId !== 'all') {
+        students = students.filter((s) => s.trainerId === filters.trainerId);
+      }
       if (filters.search) {
         const q = filters.search.toLowerCase().trim();
         students = students.filter(

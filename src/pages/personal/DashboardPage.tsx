@@ -35,6 +35,7 @@ import { formApplicationRepository } from '../../repositories/formApplicationRep
 import { formResponseRepository } from '../../repositories/formResponseRepository';
 import { Student, ActivityLog, WorkoutModification, WorkoutSession } from '../../types';
 import { FormApplication } from '../../types/anamnesis';
+import { useTrainerFilter } from '../../context/TrainerFilterContext';
 
 // Unified Attention Item definition
 export type AttentionCategory = 'all' | 'skipped' | 'substituted' | 'weight' | 'difficulty' | 'adherence' | 'forms';
@@ -192,6 +193,7 @@ function formatFriendlyDate(timestampStr: string) {
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { effectiveTrainerId } = useTrainerFilter();
 
   const [students, setStudents] = useState<Student[]>([]);
   const [activities, setActivities] = useState<ActivityLog[]>([]);
@@ -222,7 +224,7 @@ export const DashboardPage: React.FC = () => {
     async function loadData() {
       try {
         const [allStudents, allActivities, allMods, allSessions, allApps, allResps] = await Promise.all([
-          studentRepository.getAll(),
+          studentRepository.getAll(effectiveTrainerId ? { trainerId: effectiveTrainerId } : undefined),
           activityRepository.getAll(150),
           workoutRepository.getModifications(),
           workoutRepository.getSessions(),
@@ -245,7 +247,7 @@ export const DashboardPage: React.FC = () => {
       }
     }
     loadData();
-  }, []);
+  }, [effectiveTrainerId]);
 
   // Map students by ID for quick lookup
   const studentMap = useMemo(() => {

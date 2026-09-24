@@ -3,8 +3,8 @@ import { initialMembershipPlans } from '../data/membershipPlans';
 import { getItem, setItem, STORAGE_KEYS } from './storage';
 
 export interface IPlanRepository {
-  getPlans(): Promise<MembershipPlan[]>;
-  getActivePlans(): Promise<MembershipPlan[]>;
+  getPlans(trainerId?: string): Promise<MembershipPlan[]>;
+  getActivePlans(trainerId?: string): Promise<MembershipPlan[]>;
   getLandingPagePlans(): Promise<MembershipPlan[]>;
   getPlanById(id: string): Promise<MembershipPlan | null>;
   createPlan(plan: Omit<MembershipPlan, 'id' | 'createdAt' | 'updatedAt'>): Promise<MembershipPlan>;
@@ -15,13 +15,16 @@ export interface IPlanRepository {
 }
 
 export class LocalPlanRepository implements IPlanRepository {
-  async getPlans(): Promise<MembershipPlan[]> {
+  async getPlans(trainerId?: string): Promise<MembershipPlan[]> {
     const list = getItem<MembershipPlan[]>(STORAGE_KEYS.MEMBERSHIP_PLANS, initialMembershipPlans);
+    if (trainerId && trainerId !== 'all') {
+      return list.filter((p) => p.isGlobal || p.trainerId === trainerId);
+    }
     return list;
   }
 
-  async getActivePlans(): Promise<MembershipPlan[]> {
-    const list = await this.getPlans();
+  async getActivePlans(trainerId?: string): Promise<MembershipPlan[]> {
+    const list = await this.getPlans(trainerId);
     return list.filter((p) => p.active);
   }
 

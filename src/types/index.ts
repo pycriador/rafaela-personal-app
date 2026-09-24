@@ -1,4 +1,4 @@
-export type UserRole = 'personal' | 'student';
+export type UserRole = 'admin' | 'personal' | 'student';
 
 export interface User {
   id: string;
@@ -8,6 +8,11 @@ export interface User {
   avatarUrl?: string;
   phone?: string;
   studentProfileId?: string;
+  cref?: string;
+  specialties?: string[];
+  bio?: string;
+  status?: 'Ativo' | 'Inativo';
+  studentsCount?: number;
 }
 
 export type StudentGoal =
@@ -68,6 +73,8 @@ export interface MembershipPlan {
   showOnLandingPage: boolean; // Exibir na vitrine do site
   isPopular?: boolean; // Tag "Mais Escolhido"
   badgeText?: string; // ex: "Melhor Custo-Benefício"
+  trainerId?: string | null; // null ou 'global' para planos da plataforma, ou ID do personal
+  isGlobal?: boolean; // Se é um plano global da plataforma
   active: boolean;
   createdAt: string;
   updatedAt: string;
@@ -87,6 +94,8 @@ export interface DiscountCoupon {
   minPlanPrice?: number | null; // Preço mínimo do plano para aplicação
   isCumulative?: boolean; // Permite acumular com outros descontos/cupons (false = uso exclusivo / não acumulativo)
   singleUsePerStudent?: boolean; // Cupom de uso único por aluno (true = cada aluno só usa 1 vez na conta)
+  trainerId?: string | null; // ID do personal ou null para cupom global da plataforma
+  isGlobal?: boolean;
   active: boolean;
   createdAt: string;
   updatedAt: string;
@@ -114,6 +123,8 @@ export interface StudentFinancialPlan {
 export interface Student {
   id: string;
   userId: string;
+  trainerId?: string; // ID do personal trainer responsável pelo aluno
+  trainerName?: string; // Nome de exibição do personal responsável
   name: string;
   birthDate: string;
   gender: 'Feminino' | 'Masculino' | 'Outro';
@@ -394,6 +405,8 @@ export interface WorkoutTemplate {
   versionTag?: string;
   parentId?: string;
   notes?: string;
+  trainerId?: string | null; // ID do personal ou null para template global da plataforma
+  isGlobal?: boolean; // Se é uma série pronta oficial da plataforma
   createdAt: string;
   updatedAt: string;
 }
@@ -485,6 +498,7 @@ export interface PosMachineConfig {
 
 export interface PaymentSettings {
   id: string;
+  trainerId?: string; // ID do personal proprietário das credenciais
   pix: PixPaymentConfig;
   externalLinks: ExternalPaymentLink[];
   boleto: BoletoPaymentConfig;

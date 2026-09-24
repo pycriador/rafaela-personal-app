@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { ToastProvider } from './context/ToastContext';
 import { LanguageProvider } from './context/LanguageContext';
+import { TrainerFilterProvider } from './context/TrainerFilterContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
 // Layouts
@@ -15,6 +16,7 @@ import { LoginPage } from './pages/auth/LoginPage';
 
 // Personal Pages
 import { DashboardPage as PersonalDashboard } from './pages/personal/DashboardPage';
+import { TrainersManagementPage } from './pages/personal/TrainersManagementPage';
 import { StudentsListPage } from './pages/personal/StudentsListPage';
 import { StudentCreateEditPage } from './pages/personal/StudentCreateEditPage';
 import { StudentDetailPage } from './pages/personal/StudentDetailPage';
@@ -65,7 +67,7 @@ const RootRedirect: React.FC = () => {
     return <Navigate to="/login" replace />;
   }
 
-  if (user.role === 'personal') {
+  if (user.role === 'personal' || user.role === 'admin') {
     return <Navigate to="/personal/dashboard" replace />;
   }
 
@@ -78,68 +80,71 @@ export const App: React.FC = () => {
       <LanguageProvider>
         <ToastProvider>
           <AuthProvider>
-            <BrowserRouter basename={import.meta.env.BASE_URL}>
-              <Routes>
+            <TrainerFilterProvider>
+              <BrowserRouter basename={import.meta.env.BASE_URL}>
+                <Routes>
 
-              {/* Public Routes */}
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/home" element={<LandingPage />} />
-              <Route path="/app" element={<RootRedirect />} />
-              <Route path="/login" element={<LoginPage />} />
+                {/* Public Routes */}
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/home" element={<LandingPage />} />
+                <Route path="/app" element={<RootRedirect />} />
+                <Route path="/login" element={<LoginPage />} />
 
-              {/* Personal Trainer Routes */}
-              <Route element={<ProtectedRoute requiredRole="personal" />}>
-                <Route path="/personal" element={<PersonalLayout />}>
-                  <Route index element={<Navigate to="dashboard" replace />} />
-                  <Route path="dashboard" element={<PersonalDashboard />} />
-                  <Route path="students" element={<StudentsListPage />} />
-                  <Route path="students/new" element={<StudentCreateEditPage />} />
-                  <Route path="students/:id" element={<StudentDetailPage />} />
-                  <Route path="exercises" element={<ExercisesPage />} />
-                  <Route path="templates" element={<WorkoutTemplatesPage />} />
-                  <Route path="workouts/new" element={<WorkoutBuilderPage />} />
-                  <Route path="nutrition" element={<NutritionManagementPage />} />
-                  <Route path="evolution" element={<EvolutionOverviewPage />} />
-                  <Route path="reports" element={<ReportsPage />} />
-                  <Route path="ranking" element={<RankingManagementPage />} />
-                  <Route path="plans" element={<PlansManagementPage />} />
-                  <Route path="settings" element={<SettingsPage />} />
-                  <Route path="anamnesis" element={<AnamnesisDashboardPage />} />
-                  <Route path="anamnesis/forms" element={<FormsListPage />} />
-                  <Route path="anamnesis/forms/new" element={<FormEditorPage />} />
-                  <Route path="anamnesis/forms/:id/edit" element={<FormEditorPage />} />
-                  <Route path="forms/applications" element={<ApplicationsListPage />} />
-                  <Route path="anamnesis/applications" element={<Navigate to="/personal/forms/applications" replace />} />
-                  <Route path="forms/responses/:id" element={<ResponseViewerPage />} />
-                  <Route path="anamnesis/responses/:id" element={<ResponseViewerPage />} />
+                {/* Personal Trainer Routes */}
+                <Route element={<ProtectedRoute requiredRole="personal" />}>
+                  <Route path="/personal" element={<PersonalLayout />}>
+                    <Route index element={<Navigate to="dashboard" replace />} />
+                    <Route path="dashboard" element={<PersonalDashboard />} />
+                    <Route path="trainers" element={<TrainersManagementPage />} />
+                    <Route path="students" element={<StudentsListPage />} />
+                    <Route path="students/new" element={<StudentCreateEditPage />} />
+                    <Route path="students/:id" element={<StudentDetailPage />} />
+                    <Route path="exercises" element={<ExercisesPage />} />
+                    <Route path="templates" element={<WorkoutTemplatesPage />} />
+                    <Route path="workouts/new" element={<WorkoutBuilderPage />} />
+                    <Route path="nutrition" element={<NutritionManagementPage />} />
+                    <Route path="evolution" element={<EvolutionOverviewPage />} />
+                    <Route path="reports" element={<ReportsPage />} />
+                    <Route path="ranking" element={<RankingManagementPage />} />
+                    <Route path="plans" element={<PlansManagementPage />} />
+                    <Route path="settings" element={<SettingsPage />} />
+                    <Route path="anamnesis" element={<AnamnesisDashboardPage />} />
+                    <Route path="anamnesis/forms" element={<FormsListPage />} />
+                    <Route path="anamnesis/forms/new" element={<FormEditorPage />} />
+                    <Route path="anamnesis/forms/:id/edit" element={<FormEditorPage />} />
+                    <Route path="forms/applications" element={<ApplicationsListPage />} />
+                    <Route path="anamnesis/applications" element={<Navigate to="/personal/forms/applications" replace />} />
+                    <Route path="forms/responses/:id" element={<ResponseViewerPage />} />
+                    <Route path="anamnesis/responses/:id" element={<ResponseViewerPage />} />
+                  </Route>
                 </Route>
-              </Route>
 
-              {/* Student Routes */}
-              <Route element={<ProtectedRoute requiredRole="student" />}>
-                <Route path="/student" element={<StudentLayout />}>
-                  <Route index element={<Navigate to="dashboard" replace />} />
-                  <Route path="dashboard" element={<StudentDashboardPage />} />
-                  <Route path="workouts" element={<StudentWorkoutsListPage />} />
-                  <Route path="workout/today" element={<StudentActiveWorkoutPage />} />
-                  <Route path="workout/active/:dayId" element={<StudentActiveWorkoutPage />} />
-                  <Route path="ranking" element={<StudentRankingPage />} />
-                  <Route path="anamnesis" element={<StudentAnamnesisPage />} />
-                  <Route path="anamnesis/fill/:applicationId" element={<StudentFillFormPage />} />
-                  <Route path="anamnesis/responses/:responseId" element={<StudentResponseDetailPage />} />
-                  <Route path="chat" element={<StudentHistoryPage />} />
-                  <Route path="history" element={<StudentHistoryPage />} />
-                  <Route path="evolution" element={<StudentEvolutionPage />} />
-                  <Route path="nutrition" element={<StudentNutritionPage />} />
-                  <Route path="financial" element={<StudentFinancialPage />} />
-                  <Route path="profile" element={<StudentProfilePage />} />
+                {/* Student Routes */}
+                <Route element={<ProtectedRoute requiredRole="student" />}>
+                  <Route path="/student" element={<StudentLayout />}>
+                    <Route index element={<Navigate to="dashboard" replace />} />
+                    <Route path="dashboard" element={<StudentDashboardPage />} />
+                    <Route path="workouts" element={<StudentWorkoutsListPage />} />
+                    <Route path="workout/today" element={<StudentActiveWorkoutPage />} />
+                    <Route path="workout/active/:dayId" element={<StudentActiveWorkoutPage />} />
+                    <Route path="ranking" element={<StudentRankingPage />} />
+                    <Route path="anamnesis" element={<StudentAnamnesisPage />} />
+                    <Route path="anamnesis/fill/:applicationId" element={<StudentFillFormPage />} />
+                    <Route path="anamnesis/responses/:responseId" element={<StudentResponseDetailPage />} />
+                    <Route path="chat" element={<StudentHistoryPage />} />
+                    <Route path="history" element={<StudentHistoryPage />} />
+                    <Route path="evolution" element={<StudentEvolutionPage />} />
+                    <Route path="nutrition" element={<StudentNutritionPage />} />
+                    <Route path="financial" element={<StudentFinancialPage />} />
+                    <Route path="profile" element={<StudentProfilePage />} />
+                  </Route>
                 </Route>
-              </Route>
 
-              {/* Fallback */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </BrowserRouter>
+                {/* Fallback */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </BrowserRouter>
+          </TrainerFilterProvider>
         </AuthProvider>
       </ToastProvider>
     </LanguageProvider>

@@ -5,6 +5,7 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 export interface IUserRepository {
   getAll(): Promise<User[]>;
+  getTrainers(): Promise<User[]>;
   getById(id: string): Promise<User | null>;
   getByEmail(email: string): Promise<User | null>;
   create(user: User): Promise<User>;
@@ -22,6 +23,11 @@ function mapFromDb(row: any): User {
     avatarUrl: row.avatar_url || row.avatarUrl,
     phone: row.phone,
     studentProfileId: row.student_profile_id || row.studentProfileId,
+    cref: row.cref,
+    specialties: row.specialties ? (Array.isArray(row.specialties) ? row.specialties : JSON.parse(row.specialties)) : undefined,
+    bio: row.bio,
+    status: row.status,
+    studentsCount: row.students_count ?? row.studentsCount,
   };
 }
 
@@ -34,6 +40,10 @@ function mapToDb(u: Partial<User>): any {
   if (u.studentProfileId !== undefined) {
     row.student_profile_id = u.studentProfileId;
     delete row.studentProfileId;
+  }
+  if (u.studentsCount !== undefined) {
+    row.students_count = u.studentsCount;
+    delete row.studentsCount;
   }
   return row;
 }
@@ -53,6 +63,11 @@ export class SupabaseUserRepository implements IUserRepository {
       }
     }
     return getItem<User[]>(STORAGE_KEYS.USERS, initialUsers);
+  }
+
+  async getTrainers(): Promise<User[]> {
+    const users = await this.getAll();
+    return users.filter((u) => u.role === 'personal' || u.role === 'admin');
   }
 
   async getById(id: string): Promise<User | null> {

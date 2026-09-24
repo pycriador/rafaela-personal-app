@@ -32,10 +32,12 @@ import {
   CreditCard,
   Tag,
   Wallet,
+  Shield,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useToast } from '../context/ToastContext';
+import { useTrainerFilter } from '../context/TrainerFilterContext';
 import { notificationRepository } from '../repositories/notificationRepository';
 import { studentRepository } from '../repositories/studentRepository';
 import { userRepository } from '../repositories/userRepository';
@@ -83,6 +85,7 @@ export const PersonalLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
+  const { selectedTrainerId, setSelectedTrainerId, trainers, effectiveTrainerId } = useTrainerFilter();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -258,7 +261,7 @@ export const PersonalLayout: React.FC = () => {
 
     const interval = setInterval(handleNotifUpdate, 3500);
 
-    studentRepository.getAll().then((list) => {
+    studentRepository.getAll(effectiveTrainerId ? { trainerId: effectiveTrainerId } : undefined).then((list) => {
       setStudents(list);
       if (list.length > 0) {
         setSelectedStudentId(list[0].id);
@@ -273,10 +276,13 @@ export const PersonalLayout: React.FC = () => {
       window.removeEventListener('storage', handleNotifUpdate);
       clearInterval(interval);
     };
-  }, [user, isNotifOpen]);
+  }, [user, isNotifOpen, effectiveTrainerId]);
 
   const navItems = [
     { name: 'Dashboard', path: '/personal/dashboard', icon: LayoutDashboard },
+    ...(user?.role === 'admin'
+      ? [{ name: 'Gestão de Personais', path: '/personal/trainers', icon: UserCheck }]
+      : []),
     { name: 'Alunos', path: '/personal/students', icon: Users },
     { name: 'Treinos', path: '/personal/workouts/new', icon: Dumbbell },
     { name: 'Séries Prontas', path: '/personal/templates', icon: Layers },
@@ -379,8 +385,8 @@ export const PersonalLayout: React.FC = () => {
                 <h1 className="font-semibold tracking-tight text-sm text-slate-900 dark:text-white leading-tight">
                   RAFAELA
                 </h1>
-                <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider">
-                  Personal Trainer
+                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                  {user?.role === 'admin' ? 'Administrador Global' : 'Personal Trainer'}
                 </p>
               </div>
             </div>
@@ -403,9 +409,16 @@ export const PersonalLayout: React.FC = () => {
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute -bottom-0.5 -right-0.5 ring-2 ring-white dark:ring-dark-card" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                {personalName}
-              </p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                  {personalName}
+                </p>
+                {user?.role === 'admin' && (
+                  <span className="shrink-0 px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">
+                    Admin
+                  </span>
+                )}
+              </div>
               <p className="text-[11px] font-medium text-slate-500 dark:text-dark-muted truncate" title={personalEmail}>
                 {personalEmail}
               </p>
@@ -918,12 +931,42 @@ export const PersonalLayout: React.FC = () => {
       <div className={`flex-1 flex flex-col min-w-0 ${isPersonalChatTab ? 'h-full overflow-hidden' : 'overflow-x-hidden'}`}>
         {/* Desktop Topbar */}
         {!isPersonalChatTab && (
-          <header className="hidden md:flex items-center justify-between px-8 py-3.5 bg-white/80 dark:bg-dark-card/80 backdrop-blur-md border-b border-slate-200/70 dark:border-white/[0.06] sticky top-0 z-20">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span className="text-xs font-medium text-slate-600 dark:text-slate-400">
-                Painel de Gestão
-              </span>
+          <header className="hidden md:flex items-center justify-between px-8 py-3 bg-white/80 dark:bg-dark-card/80 backdrop-blur-md border-b border-slate-200/70 dark:border-white/[0.06] sticky top-0 z-20">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  {user?.role === 'admin' ? 'Painel Global Admin' : 'Painel de Gestão'}
+                </span>
+              </div>
+
+              {/* Seletor de Escopo de Personal (Exclusivo para Global Admin) */}
+              {user?.role === 'admin' && (
+                <div className="flex items-center gap-2 bg-slate-100 dark:bg-dark-cardElevated/80 border border-slate-200/80 dark:border-white/[0.08] px-2.5 py-1 rounded-xl text-xs">
+                  <Shield className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                    Personal:
+                  </span>
+                  <select
+                    value={selectedTrainerId}
+                    onChange={(e) => setSelectedTrainerId(e.target.value)}
+                    className="text-xs font-semibold bg-transparent border-none text-slate-900 dark:text-white focus:outline-none cursor-pointer pr-1"
+                  >
+                    <option value="all" className="bg-white dark:bg-dark-card text-slate-900 dark:text-white">
+                      🏢 Todos os Personais (Visão Global)
+                    </option>
+                    {trainers.map((t) => (
+                      <option
+                        key={t.id}
+                        value={t.id}
+                        className="bg-white dark:bg-dark-card text-slate-900 dark:text-white"
+                      >
+                        👤 {t.name} {t.role === 'admin' ? '(Admin)' : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
 
             <div className="flex items-center gap-2">

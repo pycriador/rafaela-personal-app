@@ -82,7 +82,7 @@ export interface ManagedUserItem {
   name: string;
   email: string;
   phone: string;
-  role: 'personal' | 'student';
+  role: 'admin' | 'personal' | 'student';
   avatarUrl?: string;
   studentProfile?: Student;
   status: 'Ativo' | 'Atenção' | 'Pausado' | 'Arquivado' | 'Inativo';
@@ -178,7 +178,7 @@ export const StudentManagerSection: React.FC = () => {
   const [formName, setFormName] = useState('');
   const [formEmail, setFormEmail] = useState('');
   const [formPhone, setFormPhone] = useState('');
-  const [formRole, setFormRole] = useState<'personal' | 'student'>('student');
+  const [formRole, setFormRole] = useState<'admin' | 'personal' | 'student'>('student');
   const [formBirthDate, setFormBirthDate] = useState('1998-05-15');
   const [formGender, setFormGender] = useState<'Feminino' | 'Masculino' | 'Outro'>('Feminino');
   const [formLevel, setFormLevel] = useState<Student['level']>('Iniciante');

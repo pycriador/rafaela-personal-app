@@ -20,7 +20,7 @@ export interface CouponValidationResult {
 }
 
 export interface CouponRepository {
-  getCoupons(): Promise<DiscountCoupon[]>;
+  getCoupons(trainerId?: string): Promise<DiscountCoupon[]>;
   getCouponById(id: string): Promise<DiscountCoupon | null>;
   getCouponByCode(code: string): Promise<DiscountCoupon | null>;
   saveCoupon(coupon: Partial<DiscountCoupon> & { code: string; discountType: 'percentage' | 'fixed'; discountValue: number }): Promise<DiscountCoupon>;
@@ -49,8 +49,12 @@ class LocalCouponRepository implements CouponRepository {
     setItem(STUDENT_COUPONS_STORAGE_KEY, map);
   }
 
-  async getCoupons(): Promise<DiscountCoupon[]> {
-    return this.getStoredCoupons();
+  async getCoupons(trainerId?: string): Promise<DiscountCoupon[]> {
+    const list = this.getStoredCoupons();
+    if (trainerId && trainerId !== 'all') {
+      return list.filter((c) => c.isGlobal || c.trainerId === trainerId);
+    }
+    return list;
   }
 
   async getCouponById(id: string): Promise<DiscountCoupon | null> {

@@ -18,6 +18,7 @@ import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
 import { Badge } from '../ui/Badge';
 import { useToast } from '../../context/ToastContext';
+import { useTrainerFilter } from '../../context/TrainerFilterContext';
 import { ExternalLinkModal, PROVIDERS_META } from './ExternalLinkModal';
 import {
   CreditCard,
@@ -57,6 +58,7 @@ const POPULAR_BRANDS = [
 
 export const PaymentMethodsManagement: React.FC<PaymentMethodsManagementProps> = ({ plans }) => {
   const { success, error: toastError, info } = useToast();
+  const { effectiveTrainerId } = useTrainerFilter();
   const [settings, setSettings] = useState<PaymentSettings | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -114,7 +116,7 @@ export const PaymentMethodsManagement: React.FC<PaymentMethodsManagementProps> =
   const loadSettings = async () => {
     try {
       setLoading(true);
-      const data = await paymentMethodRepository.getSettings();
+      const data = await paymentMethodRepository.getSettings(effectiveTrainerId);
       setSettings(data);
       setPixForm(data.pix);
       setBoletoForm(data.boleto);
@@ -128,7 +130,7 @@ export const PaymentMethodsManagement: React.FC<PaymentMethodsManagementProps> =
 
   useEffect(() => {
     loadSettings();
-  }, []);
+  }, [effectiveTrainerId]);
 
   // Compute live PIX EMV Payload
   const livePixPayload = (() => {
@@ -169,10 +171,10 @@ export const PaymentMethodsManagement: React.FC<PaymentMethodsManagementProps> =
     data: Omit<ExternalPaymentLink, 'id' | 'createdAt'>
   ) => {
     if (linkToEdit) {
-      await paymentMethodRepository.updateExternalLink(linkToEdit.id, data);
+      await paymentMethodRepository.updateExternalLink(linkToEdit.id, data, effectiveTrainerId);
       success('Link de pagamento atualizado com sucesso!');
     } else {
-      await paymentMethodRepository.addExternalLink(data);
+      await paymentMethodRepository.addExternalLink(data, effectiveTrainerId);
       success('Novo link de pagamento cadastrado com sucesso!');
     }
     await loadSettings();
@@ -180,14 +182,14 @@ export const PaymentMethodsManagement: React.FC<PaymentMethodsManagementProps> =
 
   const handleDeleteExternalLink = async (id: string, title: string) => {
     if (!window.confirm(`Deseja realmente excluir o link de pagamento "${title}"?`)) return;
-    await paymentMethodRepository.deleteExternalLink(id);
+    await paymentMethodRepository.deleteExternalLink(id, effectiveTrainerId);
     success('Link de pagamento excluído.');
     await loadSettings();
   };
 
   const handleToggleLinkActive = async (link: ExternalPaymentLink) => {
     const updated = !link.active;
-    await paymentMethodRepository.toggleExternalLink(link.id, updated);
+    await paymentMethodRepository.toggleExternalLink(link.id, updated, effectiveTrainerId);
     setSettings((prev) => {
       if (!prev) return prev;
       return {
@@ -209,7 +211,7 @@ export const PaymentMethodsManagement: React.FC<PaymentMethodsManagementProps> =
     }
     setIsSavingPix(true);
     try {
-      const updated = await paymentMethodRepository.updatePix(pixForm);
+      const updated = await paymentMethodRepository.updatePix(pixForm, effectiveTrainerId);
       setSettings(updated);
       success('Configurações de PIX salvas com sucesso!');
     } catch {
@@ -223,7 +225,7 @@ export const PaymentMethodsManagement: React.FC<PaymentMethodsManagementProps> =
     e.preventDefault();
     setIsSavingBoleto(true);
     try {
-      const updated = await paymentMethodRepository.updateBoleto(boletoForm);
+      const updated = await paymentMethodRepository.updateBoleto(boletoForm, effectiveTrainerId);
       setSettings(updated);
       success('Configurações de Boleto salvas com sucesso!');
     } catch {
@@ -237,7 +239,7 @@ export const PaymentMethodsManagement: React.FC<PaymentMethodsManagementProps> =
     e.preventDefault();
     setIsSavingPos(true);
     try {
-      const updated = await paymentMethodRepository.updatePosMachine(posForm);
+      const updated = await paymentMethodRepository.updatePosMachine(posForm, effectiveTrainerId);
       setSettings(updated);
       success('Configurações de Maquininha no Celular e Cartão salvas com sucesso!');
     } catch {

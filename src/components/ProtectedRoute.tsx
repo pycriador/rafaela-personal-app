@@ -26,8 +26,12 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ requiredRole }) 
   }
 
   if (requiredRole && user.role !== requiredRole) {
+    // Admin has superuser access to personal routes
+    if (requiredRole === 'personal' && user.role === 'admin') {
+      return <Outlet />;
+    }
     // Redirect to matching role dashboard
-    return <Navigate to={user.role === 'personal' ? '/personal/dashboard' : '/student/dashboard'} replace />;
+    return <Navigate to={user.role === 'student' ? '/student/dashboard' : '/personal/dashboard'} replace />;
   }
 
   return <Outlet />;

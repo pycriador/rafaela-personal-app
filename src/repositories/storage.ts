@@ -20,8 +20,8 @@ import { initialMembershipPlans } from '../data/membershipPlans';
 import { initialDiscountCoupons } from '../data/discountCoupons';
 
 export const STORAGE_KEYS = {
-  USERS: 'rafaela_app_users_v2',
-  STUDENTS: 'rafaela_app_students_v3',
+  USERS: 'rafaela_app_users_v3',
+  STUDENTS: 'rafaela_app_students_v4',
   EXERCISES: 'rafaela_app_exercises_v3', // bumped to v3 for cartoon vector illustrations
   WORKOUT_PLANS: 'rafaela_app_workout_plans_v2',
   SESSIONS: 'rafaela_app_sessions_v2',
@@ -46,8 +46,8 @@ export const STORAGE_KEYS = {
   AI_REQUESTS: 'rafaela_app_ai_requests_v2',
   AI_STUDENT_CONSENTS: 'rafaela_app_ai_student_consents_v1',
   RANKING_GROUPS: 'rafaela_app_ranking_groups_v2',
-  MEMBERSHIP_PLANS: 'rafaela_app_membership_plans_v1',
-  DISCOUNT_COUPONS: 'rafaela_app_discount_coupons_v2',
+  MEMBERSHIP_PLANS: 'rafaela_app_membership_plans_v2',
+  DISCOUNT_COUPONS: 'rafaela_app_discount_coupons_v3',
   PAYMENT_SETTINGS: 'rafaela_app_payment_settings_v1',
 };
 

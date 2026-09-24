@@ -206,35 +206,51 @@ export function generatePixEmvPayload(options: GeneratePixPayloadOptions): strin
   return `${payloadBeforeCrc}${crc}`;
 }
 
+function getStorageKey(trainerId?: string): string {
+  if (!trainerId || trainerId === 'user-rafaela' || trainerId === 'all') {
+    return STORAGE_KEYS.PAYMENT_SETTINGS;
+  }
+  return `${STORAGE_KEYS.PAYMENT_SETTINGS}_${trainerId}`;
+}
+
 export interface IPaymentMethodRepository {
-  getSettings(): Promise<PaymentSettings>;
-  saveSettings(settings: PaymentSettings): Promise<PaymentSettings>;
-  updatePix(config: Partial<PixPaymentConfig>): Promise<PaymentSettings>;
-  addExternalLink(link: Omit<ExternalPaymentLink, 'id' | 'createdAt'>): Promise<ExternalPaymentLink>;
-  updateExternalLink(id: string, updates: Partial<ExternalPaymentLink>): Promise<ExternalPaymentLink | null>;
-  deleteExternalLink(id: string): Promise<boolean>;
-  toggleExternalLink(id: string, active: boolean): Promise<ExternalPaymentLink | null>;
-  updateBoleto(config: Partial<BoletoPaymentConfig>): Promise<PaymentSettings>;
-  updatePosMachine(config: Partial<PosMachineConfig>): Promise<PaymentSettings>;
+  getSettings(trainerId?: string): Promise<PaymentSettings>;
+  saveSettings(settings: PaymentSettings, trainerId?: string): Promise<PaymentSettings>;
+  updatePix(config: Partial<PixPaymentConfig>, trainerId?: string): Promise<PaymentSettings>;
+  addExternalLink(link: Omit<ExternalPaymentLink, 'id' | 'createdAt'>, trainerId?: string): Promise<ExternalPaymentLink>;
+  updateExternalLink(id: string, updates: Partial<ExternalPaymentLink>, trainerId?: string): Promise<ExternalPaymentLink | null>;
+  deleteExternalLink(id: string, trainerId?: string): Promise<boolean>;
+  toggleExternalLink(id: string, active: boolean, trainerId?: string): Promise<ExternalPaymentLink | null>;
+  updateBoleto(config: Partial<BoletoPaymentConfig>, trainerId?: string): Promise<PaymentSettings>;
+  updatePosMachine(config: Partial<PosMachineConfig>, trainerId?: string): Promise<PaymentSettings>;
 }
 
 export class LocalPaymentMethodRepository implements IPaymentMethodRepository {
-  async getSettings(): Promise<PaymentSettings> {
-    const settings = getItem<PaymentSettings>(STORAGE_KEYS.PAYMENT_SETTINGS, INITIAL_PAYMENT_SETTINGS);
+  async getSettings(trainerId?: string): Promise<PaymentSettings> {
+    const key = getStorageKey(trainerId);
+    const defaultSettings: PaymentSettings = {
+      ...INITIAL_PAYMENT_SETTINGS,
+      id: trainerId ? `payment-settings-${trainerId}` : INITIAL_PAYMENT_SETTINGS.id,
+      trainerId: trainerId || 'user-rafaela',
+    };
+    const settings = getItem<PaymentSettings>(key, defaultSettings);
     return settings;
   }
 
-  async saveSettings(settings: PaymentSettings): Promise<PaymentSettings> {
+  async saveSettings(settings: PaymentSettings, trainerId?: string): Promise<PaymentSettings> {
+    const effectiveTrainerId = trainerId || settings.trainerId;
+    const key = getStorageKey(effectiveTrainerId);
     const updated: PaymentSettings = {
       ...settings,
+      trainerId: effectiveTrainerId,
       updatedAt: new Date().toISOString(),
     };
-    setItem(STORAGE_KEYS.PAYMENT_SETTINGS, updated);
+    setItem(key, updated);
     return updated;
   }
 
-  async updatePix(config: Partial<PixPaymentConfig>): Promise<PaymentSettings> {
-    const current = await this.getSettings();
+  async updatePix(config: Partial<PixPaymentConfig>, trainerId?: string): Promise<PaymentSettings> {
+    const current = await this.getSettings(trainerId);
     const updated: PaymentSettings = {
       ...current,
       pix: {
@@ -243,12 +259,12 @@ export class LocalPaymentMethodRepository implements IPaymentMethodRepository {
       },
       updatedAt: new Date().toISOString(),
     };
-    setItem(STORAGE_KEYS.PAYMENT_SETTINGS, updated);
+    setItem(getStorageKey(trainerId), updated);
     return updated;
   }
 
-  async addExternalLink(data: Omit<ExternalPaymentLink, 'id' | 'createdAt'>): Promise<ExternalPaymentLink> {
-    const current = await this.getSettings();
+  async addExternalLink(data: Omit<ExternalPaymentLink, 'id' | 'createdAt'>, trainerId?: string): Promise<ExternalPaymentLink> {
+    const current = await this.getSettings(trainerId);
     const newLink: ExternalPaymentLink = {
       ...data,
       id: `ext-link-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
@@ -260,12 +276,12 @@ export class LocalPaymentMethodRepository implements IPaymentMethodRepository {
       externalLinks: [...current.externalLinks, newLink],
       updatedAt: new Date().toISOString(),
     };
-    setItem(STORAGE_KEYS.PAYMENT_SETTINGS, updated);
+    setItem(getStorageKey(trainerId), updated);
     return newLink;
   }
 
-  async updateExternalLink(id: string, updates: Partial<ExternalPaymentLink>): Promise<ExternalPaymentLink | null> {
-    const current = await this.getSettings();
+  async updateExternalLink(id: string, updates: Partial<ExternalPaymentLink>, trainerId?: string): Promise<ExternalPaymentLink | null> {
+    const current = await this.getSettings(trainerId);
     const index = current.externalLinks.findIndex((l) => l.id === id);
     if (index === -1) return null;
 
@@ -282,12 +298,12 @@ export class LocalPaymentMethodRepository implements IPaymentMethodRepository {
       externalLinks: links,
       updatedAt: new Date().toISOString(),
     };
-    setItem(STORAGE_KEYS.PAYMENT_SETTINGS, updated);
+    setItem(getStorageKey(trainerId), updated);
     return updatedLink;
   }
 
-  async deleteExternalLink(id: string): Promise<boolean> {
-    const current = await this.getSettings();
+  async deleteExternalLink(id: string, trainerId?: string): Promise<boolean> {
+    const current = await this.getSettings(trainerId);
     const filtered = current.externalLinks.filter((l) => l.id !== id);
     if (filtered.length === current.externalLinks.length) return false;
 
@@ -296,16 +312,16 @@ export class LocalPaymentMethodRepository implements IPaymentMethodRepository {
       externalLinks: filtered,
       updatedAt: new Date().toISOString(),
     };
-    setItem(STORAGE_KEYS.PAYMENT_SETTINGS, updated);
+    setItem(getStorageKey(trainerId), updated);
     return true;
   }
 
-  async toggleExternalLink(id: string, active: boolean): Promise<ExternalPaymentLink | null> {
-    return this.updateExternalLink(id, { active });
+  async toggleExternalLink(id: string, active: boolean, trainerId?: string): Promise<ExternalPaymentLink | null> {
+    return this.updateExternalLink(id, { active }, trainerId);
   }
 
-  async updateBoleto(config: Partial<BoletoPaymentConfig>): Promise<PaymentSettings> {
-    const current = await this.getSettings();
+  async updateBoleto(config: Partial<BoletoPaymentConfig>, trainerId?: string): Promise<PaymentSettings> {
+    const current = await this.getSettings(trainerId);
     const updated: PaymentSettings = {
       ...current,
       boleto: {
@@ -314,12 +330,12 @@ export class LocalPaymentMethodRepository implements IPaymentMethodRepository {
       },
       updatedAt: new Date().toISOString(),
     };
-    setItem(STORAGE_KEYS.PAYMENT_SETTINGS, updated);
+    setItem(getStorageKey(trainerId), updated);
     return updated;
   }
 
-  async updatePosMachine(config: Partial<PosMachineConfig>): Promise<PaymentSettings> {
-    const current = await this.getSettings();
+  async updatePosMachine(config: Partial<PosMachineConfig>, trainerId?: string): Promise<PaymentSettings> {
+    const current = await this.getSettings(trainerId);
     const updated: PaymentSettings = {
       ...current,
       posMachine: {
@@ -328,7 +344,7 @@ export class LocalPaymentMethodRepository implements IPaymentMethodRepository {
       },
       updatedAt: new Date().toISOString(),
     };
-    setItem(STORAGE_KEYS.PAYMENT_SETTINGS, updated);
+    setItem(getStorageKey(trainerId), updated);
     return updated;
   }
 }
