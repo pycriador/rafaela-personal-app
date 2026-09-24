@@ -291,7 +291,7 @@ export const StudentManagerSection: React.FC = () => {
               .getPublicUrl(filePath);
             if (publicUrlData?.publicUrl) {
               finalUrl = publicUrlData.publicUrl;
-              info('Foto enviada com sucesso para o Supabase Storage!');
+              info('Foto enviada com sucesso!');
             }
           }
         } catch (storageErr) {
@@ -731,7 +731,7 @@ export const StudentManagerSection: React.FC = () => {
               </span>
             </h3>
             <p className="text-xs text-slate-400 mt-0.5">
-              Filtre por perfil, pesquise por nome/e-mail, edite credenciais, fotos no Supabase Storage e redefina senhas
+              Filtre por perfil, pesquise por nome/e-mail, edite credenciais, fotos de perfil e redefina senhas
             </p>
           </div>
         </div>
@@ -1277,7 +1277,7 @@ export const StudentManagerSection: React.FC = () => {
             ? `Editar Usuário: ${editingUser.name}`
             : 'Cadastrar Novo Usuário'
         }
-        description="Configure foto de perfil, dados de acesso, telefone, WhatsApp e preferências"
+        description="Configure foto de perfil, dados de acesso, WhatsApp e preferências"
         size="lg"
       >
         <form onSubmit={handleSaveUserOrStudent} className="space-y-4 max-h-[75vh] overflow-y-auto pr-1">
@@ -1297,7 +1297,7 @@ export const StudentManagerSection: React.FC = () => {
 
             <div className="flex-1 space-y-1.5 text-center sm:text-left">
               <span className="text-xs font-bold text-slate-800 dark:text-white block">
-                Foto de Perfil (Supabase Storage / Otimizada)
+                Foto de Perfil
               </span>
               <p className="text-[11px] text-slate-500 dark:text-dark-muted">
                 Envie uma foto em JPG ou PNG. O arquivo é redimensionado e processado com segurança.
@@ -1396,7 +1396,7 @@ export const StudentManagerSection: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Input
-              label="Telefone / WhatsApp *"
+              label="WhatsApp *"
               value={formPhone}
               onChange={(e) => setFormPhone(e.target.value)}
               placeholder="(11) 98765-4321"

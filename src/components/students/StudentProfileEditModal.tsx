@@ -374,7 +374,7 @@ export const StudentProfileEditModal: React.FC<StudentProfileEditModalProps> = (
             />
 
             <Input
-              label="Telefone / WhatsApp *"
+              label="WhatsApp *"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="(11) 98765-4321"

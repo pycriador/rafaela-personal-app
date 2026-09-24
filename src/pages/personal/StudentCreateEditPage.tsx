@@ -156,7 +156,7 @@ export const StudentCreateEditPage: React.FC = () => {
               required
             />
             <Input
-              label="Telefone / WhatsApp"
+              label="WhatsApp"
               placeholder="(11) 98765-4321"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
