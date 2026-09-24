@@ -75,6 +75,21 @@ export interface MembershipPlan {
 
 export type DiscountType = 'none' | 'coupon' | 'percentage' | 'fixed';
 
+export interface DiscountCoupon {
+  id: string;
+  code: string; // Ex: "VERAO2026", "BLACKFRIDAY"
+  description: string; // Ex: "Desconto especial de início de ano"
+  discountType: 'percentage' | 'fixed';
+  discountValue: number; // Porcentagem (ex: 20 para 20%) ou valor fixo (ex: 50 para R$ 50)
+  maxUses: number | null; // Limite total de utilizações (null = ilimitado)
+  usedCount: number; // Quantidade de vezes já utilizado
+  expiresAt?: string | null; // YYYY-MM-DD ou null/undefined se sem prazo
+  minPlanPrice?: number | null; // Preço mínimo do plano para aplicação
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface StudentFinancialPlan {
   planId?: string; // ID do MembershipPlan vinculado
   planName: string; // e.g. "Consultoria VIP Presencial", "Treino Online Mensal"

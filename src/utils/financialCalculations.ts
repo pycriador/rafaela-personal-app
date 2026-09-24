@@ -192,23 +192,70 @@ export function calculateDiscount(params: {
 
   if (discountType === 'coupon') {
     const cleanCode = couponCode.trim().toUpperCase();
-    const found = KNOWN_COUPONS[cleanCode];
 
-    if (found) {
-      if (found.type === 'percentage') {
-        discountAmount = (originalPrice * found.value) / 100;
-      } else {
-        discountAmount = found.value;
+    // Primeiro busca nos cupons cadastrados em storage
+    let dynamicCoupon: any = null;
+    try {
+      if (typeof localStorage !== 'undefined') {
+        const stored = localStorage.getItem('rafaela_app_discount_coupons_v1');
+        if (stored) {
+          const list = JSON.parse(stored);
+          dynamicCoupon = list.find((c: any) => c.code?.trim().toUpperCase() === cleanCode);
+        }
       }
-      appliedLabel = `${cleanCode} (${found.label})`;
-    } else if (cleanCode.length > 0) {
-      // Se não for pré-cadastrado mas foi informado um valor de desconto manual
-      if (discountValue > 0) {
-        discountAmount = discountValue;
-        appliedLabel = `Cupom ${cleanCode} (-R$ ${discountValue.toFixed(2)})`;
-      } else {
+    } catch {
+      // fallback
+    }
+
+    if (dynamicCoupon) {
+      const today = new Date().toISOString().split('T')[0];
+      if (!dynamicCoupon.active) {
         isValidCoupon = false;
-        appliedLabel = 'Cupom inválido ou expirado';
+        appliedLabel = `Cupom "${cleanCode}" está desativado`;
+      } else if (
+        dynamicCoupon.maxUses !== null &&
+        dynamicCoupon.maxUses > 0 &&
+        (dynamicCoupon.usedCount || 0) >= dynamicCoupon.maxUses
+      ) {
+        isValidCoupon = false;
+        appliedLabel = `Cupom "${cleanCode}" esgotado (${dynamicCoupon.maxUses} usos atingidos)`;
+      } else if (dynamicCoupon.expiresAt && dynamicCoupon.expiresAt < today) {
+        isValidCoupon = false;
+        appliedLabel = `Cupom "${cleanCode}" expirou em ${dynamicCoupon.expiresAt}`;
+      } else if (
+        dynamicCoupon.minPlanPrice &&
+        originalPrice < dynamicCoupon.minPlanPrice
+      ) {
+        isValidCoupon = false;
+        appliedLabel = `Válido apenas para planos a partir de R$ ${dynamicCoupon.minPlanPrice.toFixed(2)}`;
+      } else {
+        if (dynamicCoupon.discountType === 'percentage') {
+          const pct = Math.min(Math.max(0, dynamicCoupon.discountValue), 100);
+          discountAmount = (originalPrice * pct) / 100;
+          appliedLabel = `${cleanCode} (-${pct}%)`;
+        } else {
+          discountAmount = Math.max(0, dynamicCoupon.discountValue);
+          appliedLabel = `${cleanCode} (-R$ ${discountAmount.toFixed(2)})`;
+        }
+      }
+    } else {
+      const found = KNOWN_COUPONS[cleanCode];
+      if (found) {
+        if (found.type === 'percentage') {
+          discountAmount = (originalPrice * found.value) / 100;
+        } else {
+          discountAmount = found.value;
+        }
+        appliedLabel = `${cleanCode} (${found.label})`;
+      } else if (cleanCode.length > 0) {
+        // Se não for pré-cadastrado mas foi informado um valor de desconto manual
+        if (discountValue > 0) {
+          discountAmount = discountValue;
+          appliedLabel = `Cupom ${cleanCode} (-R$ ${discountValue.toFixed(2)})`;
+        } else {
+          isValidCoupon = false;
+          appliedLabel = 'Cupom inválido ou inexistente';
+        }
       }
     }
   } else if (discountType === 'percentage') {

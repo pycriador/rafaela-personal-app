@@ -35,6 +35,7 @@ import {
 import { studentRepository } from '../../repositories/studentRepository';
 import { planRepository } from '../../repositories/planRepository';
 import { activityRepository } from '../../repositories/activityRepository';
+import { couponRepository } from '../../repositories/couponRepository';
 import { useToast } from '../../context/ToastContext';
 import {
   generateInstallments,
@@ -408,6 +409,14 @@ export const StudentFinancialModal: React.FC<StudentFinancialModalProps> = ({
         description: `Plano financeiro de ${student.name} atualizado: ${planName} (R$ ${price.toFixed(2)} em ${payments.length} parcelas).`,
         iconType: 'nutrition',
       });
+
+      if (discountType === 'coupon' && discountCouponCode?.trim()) {
+        try {
+          await couponRepository.recordUsage(discountCouponCode.trim());
+        } catch {
+          // ignore
+        }
+      }
 
       onFinancialUpdated(finalStudent);
       success('Plano e controle financeiro atualizados com sucesso!');

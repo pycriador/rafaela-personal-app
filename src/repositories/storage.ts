@@ -17,6 +17,7 @@ import { initialAIProposals } from '../data/ai/aiProposals';
 import { initialAIRequests } from '../data/ai/aiRequests';
 import { initialRankingGroups } from '../data/rankingGroups';
 import { initialMembershipPlans } from '../data/membershipPlans';
+import { initialDiscountCoupons } from '../data/discountCoupons';
 
 export const STORAGE_KEYS = {
   USERS: 'rafaela_app_users_v2',
@@ -46,6 +47,7 @@ export const STORAGE_KEYS = {
   AI_STUDENT_CONSENTS: 'rafaela_app_ai_student_consents_v1',
   RANKING_GROUPS: 'rafaela_app_ranking_groups_v2',
   MEMBERSHIP_PLANS: 'rafaela_app_membership_plans_v1',
+  DISCOUNT_COUPONS: 'rafaela_app_discount_coupons_v1',
 };
 
 /**
@@ -239,6 +241,9 @@ export function initStorage() {
   }
   if (!localStorage.getItem(STORAGE_KEYS.MEMBERSHIP_PLANS)) {
     localStorage.setItem(STORAGE_KEYS.MEMBERSHIP_PLANS, JSON.stringify(initialMembershipPlans));
+  }
+  if (!localStorage.getItem(STORAGE_KEYS.DISCOUNT_COUPONS)) {
+    localStorage.setItem(STORAGE_KEYS.DISCOUNT_COUPONS, JSON.stringify(initialDiscountCoupons));
   }
 }
 

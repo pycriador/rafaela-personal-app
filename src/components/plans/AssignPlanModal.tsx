@@ -24,6 +24,7 @@ import {
 } from '../../types';
 import { studentRepository } from '../../repositories/studentRepository';
 import { activityRepository } from '../../repositories/activityRepository';
+import { couponRepository } from '../../repositories/couponRepository';
 import { useToast } from '../../context/ToastContext';
 import {
   generateInstallments,
@@ -183,6 +184,14 @@ export const AssignPlanModal: React.FC<AssignPlanModalProps> = ({
         ).toFixed(2)}) atribuído a ${selectedStudent?.name || 'aluno'}.`,
         iconType: 'nutrition',
       });
+
+      if (discountType === 'coupon' && couponCode.trim()) {
+        try {
+          await couponRepository.recordUsage(couponCode.trim());
+        } catch {
+          // ignore
+        }
+      }
 
       success(`Plano "${plan.name}" vinculado com sucesso a ${selectedStudent?.name}! As ${durationMonths} parcelas foram geradas.`);
       if (onPlanAssigned) onPlanAssigned();
