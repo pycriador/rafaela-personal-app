@@ -38,7 +38,8 @@ import { useTheme } from '../context/ThemeContext';
 import { useToast } from '../context/ToastContext';
 import { notificationRepository } from '../repositories/notificationRepository';
 import { studentRepository } from '../repositories/studentRepository';
-import { Student } from '../types';
+import { userRepository } from '../repositories/userRepository';
+import { Student, User } from '../types';
 import { NotificationDrawer } from '../components/NotificationDrawer';
 import { BrandLogo } from '../components/ui/BrandLogo';
 import { LanguageSelector } from '../components/ui/LanguageSelector';
@@ -86,6 +87,38 @@ export const PersonalLayout: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  // Informações reativas do Personal logado (foto, email, nome)
+  const [currentUserData, setCurrentUserData] = useState<User | null>(user);
+
+  useEffect(() => {
+    setCurrentUserData(user);
+    const targetUserId = user?.id || 'user-rafaela';
+    userRepository.getById(targetUserId).then((u) => {
+      if (u) setCurrentUserData(u);
+    });
+
+    const handleUserUpdate = () => {
+      userRepository.getById(targetUserId).then((u) => {
+        if (u) setCurrentUserData(u);
+      });
+    };
+
+    window.addEventListener('storage', handleUserUpdate);
+    window.addEventListener('rafaela_user_updated', handleUserUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleUserUpdate);
+      window.removeEventListener('rafaela_user_updated', handleUserUpdate);
+    };
+  }, [user]);
+
+  const personalName = currentUserData?.name || user?.name || 'Rafaela Personal';
+  const personalEmail = currentUserData?.email || user?.email || 'rafaela@rafaelapersonal.com.br';
+  const personalAvatar =
+    currentUserData?.avatarUrl ||
+    user?.avatarUrl ||
+    'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=150&auto=format&fit=crop&q=80';
 
   // Local persistent state for Formulários sub-menus (open by default)
   const [formsSubMenuOpen, setFormsSubMenuOpen] = useState<boolean>(() => {
@@ -337,9 +370,9 @@ export const PersonalLayout: React.FC = () => {
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
-        <div className="flex flex-col h-full overflow-y-auto">
-          {/* Logo & Brand */}
-          <div className="p-4 sm:p-5 flex items-center justify-between border-b border-slate-100 dark:border-white/[0.06]">
+        {/* Top Header: Logo & Brand + Destaque Perfil do Personal Logado */}
+        <div className="shrink-0 border-b border-slate-100 dark:border-white/[0.06]">
+          <div className="p-4 sm:p-5 pb-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <BrandLogo size="md" />
               <div>
@@ -353,14 +386,37 @@ export const PersonalLayout: React.FC = () => {
             </div>
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className="md:hidden p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg"
+              className="md:hidden p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
 
+          {/* Destaque do Perfil do Personal Logado (Foto, Nome e E-mail) */}
+          <div className="mx-3.5 mb-3 p-2.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated/80 border border-slate-200/80 dark:border-white/[0.06] flex items-center gap-3 shadow-2xs">
+            <div className="relative shrink-0">
+              <img
+                src={personalAvatar}
+                alt={personalName}
+                className="w-10 h-10 rounded-xl object-cover ring-2 ring-emerald-500/40 shadow-xs"
+              />
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute -bottom-0.5 -right-0.5 ring-2 ring-white dark:ring-dark-card" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                {personalName}
+              </p>
+              <p className="text-[11px] font-medium text-slate-500 dark:text-dark-muted truncate" title={personalEmail}>
+                {personalEmail}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Scrollable Navigation Area */}
+        <div className="flex-1 overflow-y-auto min-h-0 py-1">
           {/* Nav Links */}
-          <nav className="p-3 space-y-0.5 flex-1">
+          <nav className="p-3 space-y-0.5">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isStudentsItem = item.path === '/personal/students';
@@ -811,37 +867,41 @@ export const PersonalLayout: React.FC = () => {
           </div>
 
           {/* User Profile & Footer Controls */}
-          <div className="p-3.5 border-t border-slate-100 dark:border-white/[0.06] flex items-center justify-between">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <img
-                src={user?.avatarUrl || 'https://images.unsplash.com/photo-1594381898411-846e7d193883?w=150'}
-                alt={user?.name}
-                className="w-8 h-8 rounded-full object-cover ring-1 ring-slate-200 dark:ring-white/[0.1] shrink-0"
-              />
-              <div className="min-w-0">
-                <p className="text-xs font-medium text-slate-900 dark:text-slate-100 truncate">
-                  {user?.name || 'Rafaela Personal'}
-                </p>
-                <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate">{user?.email}</p>
-              </div>
-            </div>
+        </div>
 
-            <div className="flex items-center gap-0.5">
-              <button
-                onClick={toggleTheme}
-                className="hidden md:flex p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors"
-                title="Alternar tema"
-              >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-slate-400" /> : <Moon className="w-4 h-4" />}
-              </button>
-              <button
-                onClick={handleLogout}
-                className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors"
-                title="Sair"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
+        {/* Bottom Pinned Footer: Foto, Nome e E-mail do Personal Logado + Controles */}
+        <div className="shrink-0 p-3.5 border-t border-slate-100 dark:border-white/[0.06] bg-slate-50/50 dark:bg-dark-cardElevated/40 flex items-center justify-between">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <img
+              src={personalAvatar}
+              alt={personalName}
+              className="w-8 h-8 rounded-full object-cover ring-1 ring-slate-200 dark:ring-white/[0.1] shrink-0"
+            />
+            <div className="min-w-0">
+              <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate">
+                {personalName}
+              </p>
+              <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate" title={personalEmail}>
+                {personalEmail}
+              </p>
             </div>
+          </div>
+
+          <div className="flex items-center gap-0.5">
+            <button
+              onClick={toggleTheme}
+              className="hidden md:flex p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors cursor-pointer"
+              title="Alternar tema"
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4 text-slate-400" /> : <Moon className="w-4 h-4" />}
+            </button>
+            <button
+              onClick={handleLogout}
+              className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors cursor-pointer"
+              title="Sair"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </aside>
