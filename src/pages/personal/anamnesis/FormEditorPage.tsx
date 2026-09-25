@@ -16,6 +16,17 @@ import {
   MoveUp,
   MoveDown,
   Copy,
+  Type,
+  AlignLeft,
+  ListChecks,
+  ToggleLeft,
+  Hash,
+  Activity,
+  Star,
+  Calendar,
+  ShieldCheck,
+  CheckSquare,
+  X,
 } from 'lucide-react';
 import { Card } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
@@ -32,11 +43,42 @@ import {
   FormSection,
   FormField,
   FormFieldType,
+  FormFieldOption,
 } from '../../../types';
 import { FormStatusBadge } from '../../../components/forms/FormStatusBadge';
 import { FormRenderer } from '../../../components/forms/FormRenderer';
 import { FormApplicationModal } from '../../../components/forms/FormApplicationModal';
 import { useToast } from '../../../context/ToastContext';
+
+const OPTION_PRESETS = [
+  { label: 'Sim / Não / Às vezes', options: ['Sim', 'Não', 'Às vezes'] },
+  { label: 'Baixo / Moderado / Alto', options: ['Baixo', 'Moderado', 'Alto'] },
+  { label: 'Nível de Experiência', options: ['Iniciante', 'Intermediário', 'Avançado'] },
+  { label: 'Frequência de Treino', options: ['1 a 2x na semana', '3 a 4x na semana', '5x ou mais'] },
+  { label: 'Objetivo Principal', options: ['Hipertrofia / Ganho de Massa', 'Emagrecimento / Queima de Gordura', 'Condicionamento & Saúde', 'Reabilitação / Postura'] },
+];
+
+interface FieldTypeDescriptor {
+  value: FormFieldType;
+  label: string;
+  category: 'Texto' | 'Escolha' | 'Numérico' | 'Outros';
+  icon: React.ComponentType<{ className?: string }>;
+  hint: string;
+}
+
+const FIELD_TYPES: FieldTypeDescriptor[] = [
+  { value: 'text', label: 'Texto curto', category: 'Texto', icon: Type, hint: '1 linha (nome, profissão)' },
+  { value: 'textarea', label: 'Texto longo', category: 'Texto', icon: AlignLeft, hint: 'Parágrafo (rotina, histórico)' },
+  { value: 'select', label: 'Seleção única', category: 'Escolha', icon: CheckCircle2, hint: 'Escolha 1 de várias opções' },
+  { value: 'multiselect', label: 'Múltipla escolha', category: 'Escolha', icon: ListChecks, hint: 'Marcar várias opções' },
+  { value: 'boolean', label: 'Sim / Não', category: 'Escolha', icon: ToggleLeft, hint: 'Pergunta direta Sim/Não' },
+  { value: 'number', label: 'Número inteiro', category: 'Numérico', icon: Hash, hint: 'Sem casas decimais' },
+  { value: 'decimal', label: 'Número decimal', category: 'Numérico', icon: Activity, hint: 'Com vírgula (peso, altura)' },
+  { value: 'scale', label: 'Escala 1 a 5', category: 'Numérico', icon: Star, hint: 'Nível de intensidade / dor' },
+  { value: 'date', label: 'Data', category: 'Outros', icon: Calendar, hint: 'Seleção de data no calendário' },
+  { value: 'terms', label: 'Termo de Aceite', category: 'Outros', icon: ShieldCheck, hint: 'Concordância obrigatória' },
+  { value: 'checkbox', label: 'Checkbox simples', category: 'Outros', icon: CheckSquare, hint: 'Confirmação individual' },
+];
 
 export const FormEditorPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -70,7 +112,8 @@ export const FormEditorPage: React.FC = () => {
   const [fieldDescription, setFieldDescription] = useState('');
   const [fieldPlaceholder, setFieldPlaceholder] = useState('');
   const [fieldRequired, setFieldRequired] = useState(true);
-  const [fieldOptionsText, setFieldOptionsText] = useState(''); // separadas por vírgula
+  const [fieldOptions, setFieldOptions] = useState<string[]>(['', '']);
+  const [typeCategoryFilter, setTypeCategoryFilter] = useState<'Todos' | 'Texto' | 'Escolha' | 'Numérico' | 'Outros'>('Todos');
 
   // Regra Condicional
   const [hasCondition, setHasCondition] = useState(false);
@@ -245,6 +288,30 @@ export const FormEditorPage: React.FC = () => {
     }
   };
 
+  // Opções para Campos de Seleção (Radio / Checkbox / Multiselect)
+  const handleAddOption = () => {
+    setFieldOptions((prev) => [...prev, '']);
+  };
+
+  const handleUpdateOption = (index: number, val: string) => {
+    setFieldOptions((prev) => {
+      const next = [...prev];
+      next[index] = val;
+      return next;
+    });
+  };
+
+  const handleRemoveOption = (index: number) => {
+    setFieldOptions((prev) => {
+      if (prev.length <= 1) return [''];
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
+  const handleApplyPreset = (presetOptions: string[]) => {
+    setFieldOptions([...presetOptions]);
+  };
+
   // Campo CRUD
   const handleOpenAddField = (secId: string) => {
     setEditingField(null);
@@ -254,10 +321,11 @@ export const FormEditorPage: React.FC = () => {
     setFieldDescription('');
     setFieldPlaceholder('');
     setFieldRequired(true);
-    setFieldOptionsText('');
+    setFieldOptions(['', '']);
     setHasCondition(false);
     setConditionFieldId('');
     setConditionValue('true');
+    setTypeCategoryFilter('Todos');
     setIsFieldModalOpen(true);
   };
 
@@ -269,7 +337,11 @@ export const FormEditorPage: React.FC = () => {
     setFieldDescription(field.description || '');
     setFieldPlaceholder(field.placeholder || '');
     setFieldRequired(field.required);
-    setFieldOptionsText((field.options || []).map((o) => o.label).join(', '));
+    if (field.options && field.options.length > 0) {
+      setFieldOptions(field.options.map((o) => o.label));
+    } else {
+      setFieldOptions(['', '']);
+    }
     if (field.condition) {
       setHasCondition(true);
       setConditionFieldId(field.condition.fieldId);
@@ -279,6 +351,7 @@ export const FormEditorPage: React.FC = () => {
       setHasCondition(false);
       setConditionFieldId('');
     }
+    setTypeCategoryFilter('Todos');
     setIsFieldModalOpen(true);
   };
 
@@ -286,15 +359,22 @@ export const FormEditorPage: React.FC = () => {
     e.preventDefault();
     if (!currentVersion || !fieldLabel.trim()) return;
 
-    const options = fieldOptionsText
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean)
-      .map((label, idx) => ({
-        id: `opt-${idx + 1}-${label.toLowerCase().replace(/\s+/g, '-')}`,
-        label,
-        value: label,
-      }));
+    const isChoiceType = fieldType === 'select' || fieldType === 'multiselect';
+    const cleanOptions: FormFieldOption[] = isChoiceType
+      ? fieldOptions
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .map((label, idx) => ({
+            id: `opt-${idx + 1}-${label.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'opt'}`,
+            label,
+            value: label,
+          }))
+      : [];
+
+    if (isChoiceType && cleanOptions.length === 0) {
+      toastError('Adicione pelo menos uma opção para a pergunta de seleção.');
+      return;
+    }
 
     let condition = undefined;
     if (hasCondition && conditionFieldId) {
@@ -320,11 +400,11 @@ export const FormEditorPage: React.FC = () => {
           description: fieldDescription.trim() || undefined,
           placeholder: fieldPlaceholder.trim() || undefined,
           required: fieldRequired,
-          options: options.length > 0 ? options : undefined,
+          options: cleanOptions.length > 0 ? cleanOptions : undefined,
           condition,
         };
         await formBuilderService.updateField(updated);
-        success('Campo atualizado!');
+        success('Pergunta atualizada com sucesso!');
       } else {
         const sectionFields = fields.filter((f) => f.sectionId === targetSectionId);
         await formBuilderService.addField({
@@ -335,19 +415,19 @@ export const FormEditorPage: React.FC = () => {
           description: fieldDescription.trim() || undefined,
           placeholder: fieldPlaceholder.trim() || undefined,
           required: fieldRequired,
-          options: options.length > 0 ? options : undefined,
+          options: cleanOptions.length > 0 ? cleanOptions : undefined,
           order: sectionFields.length + 1,
           condition,
           active: true,
         });
-        success('Novo campo adicionado!');
+        success('Nova pergunta adicionada!');
       }
 
       const updatedFields = await formVersionService.getFieldsForVersion(currentVersion.id);
       setFields(updatedFields);
       setIsFieldModalOpen(false);
     } catch {
-      toastError('Erro ao salvar campo.');
+      toastError('Erro ao salvar pergunta.');
     }
   };
 
@@ -724,48 +804,236 @@ export const FormEditorPage: React.FC = () => {
         isOpen={isFieldModalOpen}
         onClose={() => setIsFieldModalOpen(false)}
         title={editingField ? 'Editar Pergunta' : 'Adicionar Pergunta'}
-        description="Defina a pergunta, tipo de entrada e regras condicionais."
-        size="md"
+        description="Defina o enunciado, escolha o tipo de resposta visual e gerencie as opções."
+        size="lg"
       >
-        <form onSubmit={handleSaveField} className="space-y-4">
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
-              Enunciado da Pergunta
+        <form onSubmit={handleSaveField} className="space-y-5">
+          {/* Enunciado da Pergunta */}
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center justify-between">
+              <span>
+                Enunciado da Pergunta <strong className="text-rose-500">*</strong>
+              </span>
+              <span className="text-[11px] font-normal text-slate-400">
+                Texto principal exibido para o aluno
+              </span>
             </label>
             <input
               type="text"
               required
               value={fieldLabel}
               onChange={(e) => setFieldLabel(e.target.value)}
-              placeholder="Ex: Você possui alguma lesão anterior?"
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-card text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              placeholder="Ex: Você possui alguma lesão anterior, cirurgia ou dor articular?"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-card text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-medium"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                Tipo do Campo
-              </label>
-              <select
-                value={fieldType}
-                onChange={(e) => setFieldType(e.target.value as FormFieldType)}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-card text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
-              >
-                <option value="text">Texto curto</option>
-                <option value="textarea">Texto longo</option>
-                <option value="number">Número inteiro</option>
-                <option value="decimal">Número decimal (ex: peso/altura)</option>
-                <option value="date">Data</option>
-                <option value="boolean">Sim / Não</option>
-                <option value="select">Seleção única</option>
-                <option value="multiselect">Múltipla escolha</option>
-                <option value="scale">Escala 1 a 5</option>
-                <option value="checkbox">Checkbox individual</option>
-                <option value="terms">Termo de aceite legal</option>
-              </select>
+          {/* Tipo de Resposta Visual */}
+          <div className="space-y-2.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+              <div>
+                <label className="text-xs font-bold text-slate-800 dark:text-slate-200 block">
+                  Tipo de Resposta
+                </label>
+                <span className="text-[11px] text-slate-400">
+                  Como o aluno preencherá a resposta desta pergunta
+                </span>
+              </div>
+
+              {/* Categorias Rápidas */}
+              <div className="flex items-center gap-1 bg-slate-100 dark:bg-dark-cardElevated/50 p-1 rounded-xl">
+                {(['Todos', 'Texto', 'Escolha', 'Numérico', 'Outros'] as const).map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setTypeCategoryFilter(cat)}
+                    className={`px-2 py-0.5 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                      typeCategoryFilter === cat
+                        ? 'bg-emerald-500 text-white shadow-2xs'
+                        : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
             </div>
 
+            {/* Grid dos Tipos */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+              {FIELD_TYPES.filter(
+                (t) => typeCategoryFilter === 'Todos' || t.category === typeCategoryFilter
+              ).map((typeDef) => {
+                const Icon = typeDef.icon;
+                const isSelected = fieldType === typeDef.value;
+                return (
+                  <button
+                    key={typeDef.value}
+                    type="button"
+                    onClick={() => {
+                      setFieldType(typeDef.value);
+                      if (
+                        (typeDef.value === 'select' || typeDef.value === 'multiselect') &&
+                        fieldOptions.every((o) => !o.trim())
+                      ) {
+                        setFieldOptions(['', '']);
+                      }
+                    }}
+                    className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between gap-1.5 ${
+                      isSelected
+                        ? 'border-emerald-500 bg-emerald-50/80 dark:bg-emerald-950/25 ring-2 ring-emerald-500/20 text-emerald-950 dark:text-emerald-100 shadow-xs'
+                        : 'border-slate-200 dark:border-dark-border bg-white dark:bg-dark-card hover:border-slate-300 dark:hover:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50/50 dark:hover:bg-white/[0.02]'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <div
+                        className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
+                          isSelected
+                            ? 'bg-emerald-500 text-white'
+                            : 'bg-slate-100 dark:bg-white/[0.06] text-slate-500 dark:text-slate-400'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      {isSelected && (
+                        <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                      )}
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold block leading-snug">{typeDef.label}</span>
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 line-clamp-1 block leading-tight mt-0.5">
+                        {typeDef.hint}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* SESSÃO ELEGANTE DE OPÇÕES: SELEÇÃO ÚNICA OU MÚLTIPLA ESCOLHA */}
+          {(fieldType === 'select' || fieldType === 'multiselect') && (
+            <div className="p-4 rounded-2xl border border-emerald-500/30 dark:border-emerald-500/20 bg-gradient-to-b from-emerald-500/[0.04] to-transparent dark:from-emerald-500/[0.02] space-y-3.5 shadow-xs">
+              {/* Cabeçalho das Opções */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <div className="flex items-center gap-2">
+                    {fieldType === 'select' ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    ) : (
+                      <ListChecks className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    )}
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                      {fieldType === 'select' ? 'Opções de Seleção Única' : 'Opções de Múltipla Escolha'}
+                    </h4>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-bold">
+                      {fieldOptions.filter((o) => o.trim()).length} de {fieldOptions.length} preenchidas
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    {fieldType === 'select'
+                      ? 'O aluno poderá escolher exatamente 1 dentre as opções abaixo.'
+                      : 'O aluno poderá marcar 1 ou mais alternativas.'}
+                  </p>
+                </div>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleAddOption}
+                  leftIcon={<Plus className="w-3.5 h-3.5" />}
+                  className="text-xs shrink-0 self-start sm:self-auto border-emerald-500/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/20"
+                >
+                  Nova Opção
+                </Button>
+              </div>
+
+              {/* Presets Rápidos */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 mr-1 flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-amber-500" />
+                  Sugestões:
+                </span>
+                {OPTION_PRESETS.map((preset) => (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    onClick={() => handleApplyPreset(preset.options)}
+                    className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-dark-border bg-white dark:bg-dark-card hover:border-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 text-[11px] text-slate-600 dark:text-slate-300 transition-all cursor-pointer font-medium shadow-2xs"
+                    title={`Inserir: ${preset.options.join(', ')}`}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Lista de Opções Editáveis */}
+              <div className="space-y-2">
+                {fieldOptions.map((opt, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 p-1.5 rounded-xl border border-slate-200/80 dark:border-dark-border/80 bg-white dark:bg-dark-card focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all shadow-2xs"
+                  >
+                    {/* Indicador visual com número */}
+                    <div
+                      className={`w-6 h-6 shrink-0 flex items-center justify-center font-mono text-[11px] font-black ${
+                        fieldType === 'select'
+                          ? 'rounded-full bg-slate-100 dark:bg-white/[0.08] text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-dark-border'
+                          : 'rounded-md bg-slate-100 dark:bg-white/[0.08] text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-dark-border'
+                      }`}
+                    >
+                      {index + 1}
+                    </div>
+
+                    <input
+                      type="text"
+                      value={opt}
+                      onChange={(e) => handleUpdateOption(index, e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleAddOption();
+                        }
+                      }}
+                      placeholder={`Opção ${index + 1} (ex: ${index === 0 ? 'Baixo' : index === 1 ? 'Moderado' : 'Alto'})...`}
+                      className="flex-1 bg-transparent px-2 py-1 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveOption(index)}
+                      disabled={fieldOptions.length <= 1}
+                      title={fieldOptions.length <= 1 ? 'Mínimo de 1 opção' : 'Remover esta opção'}
+                      className={`p-1.5 rounded-lg transition-colors ${
+                        fieldOptions.length <= 1
+                          ? 'text-slate-300 dark:text-slate-600 cursor-not-allowed'
+                          : 'text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 cursor-pointer'
+                      }`}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+                <span>
+                  Dica: Pressione <kbd className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-dark-cardElevated font-mono text-[10px] text-slate-700 dark:text-slate-300">Enter</kbd> para criar rapidamente a próxima opção.
+                </span>
+                <button
+                  type="button"
+                  onClick={handleAddOption}
+                  className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline flex items-center gap-1 cursor-pointer"
+                >
+                  <Plus className="w-3 h-3" /> Adicionar mais uma
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Placeholder e Instrução Auxiliar */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
               <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
                 Texto de Exemplo (Placeholder)
@@ -774,52 +1042,57 @@ export const FormEditorPage: React.FC = () => {
                 type="text"
                 value={fieldPlaceholder}
                 onChange={(e) => setFieldPlaceholder(e.target.value)}
-                placeholder="Ex: Descreva resumidamente..."
+                placeholder={
+                  fieldType === 'select' || fieldType === 'multiselect'
+                    ? 'Ex: Selecione uma opção...'
+                    : 'Ex: Descreva resumidamente...'
+                }
                 className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-card text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
-          </div>
 
-          {(fieldType === 'select' || fieldType === 'multiselect') && (
             <div className="space-y-1">
               <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                Opções de Escolha (separadas por vírgula)
+                Instrução / Explicação auxiliar (opcional)
               </label>
               <input
                 type="text"
-                value={fieldOptionsText}
-                onChange={(e) => setFieldOptionsText(e.target.value)}
-                placeholder="Ex: Baixo, Moderado, Alto, Muito Alto"
+                value={fieldDescription}
+                onChange={(e) => setFieldDescription(e.target.value)}
+                placeholder="Ex: Marque apenas lesões diagnosticadas por médico..."
                 className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-card text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>
-          )}
-
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
-              Instrução / Explicação auxiliar (opcional)
-            </label>
-            <input
-              type="text"
-              value={fieldDescription}
-              onChange={(e) => setFieldDescription(e.target.value)}
-              placeholder="Ex: Marque apenas lesões diagnosticadas por médico..."
-              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50 dark:bg-dark-card text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            />
           </div>
 
           {/* Obrigatoriedade */}
-          <label className="flex items-center gap-2 cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={fieldRequired}
-              onChange={(e) => setFieldRequired(e.target.checked)}
-              className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 dark:border-slate-600 cursor-pointer"
-            />
-            <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
-              Pergunta de resposta obrigatória
-            </span>
-          </label>
+          <div className="p-3 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50/50 dark:bg-dark-cardElevated/30 flex items-center justify-between">
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={fieldRequired}
+                onChange={(e) => setFieldRequired(e.target.checked)}
+                className="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300 dark:border-slate-600 cursor-pointer"
+              />
+              <div>
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 block">
+                  Pergunta de resposta obrigatória
+                </span>
+                <span className="text-[10px] text-slate-400">
+                  O aluno não conseguirá prosseguir sem responder
+                </span>
+              </div>
+            </label>
+            {fieldRequired ? (
+              <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                Obrigatório
+              </span>
+            ) : (
+              <span className="text-[10px] font-bold text-slate-400 bg-slate-100 dark:bg-white/[0.05] px-2 py-0.5 rounded-full">
+                Opcional
+              </span>
+            )}
+          </div>
 
           {/* Regra Condicional */}
           <div className="p-3 rounded-xl border border-slate-200 dark:border-dark-border bg-slate-50/50 dark:bg-dark-cardElevated/30 space-y-2">
