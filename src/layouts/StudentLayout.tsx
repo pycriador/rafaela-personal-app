@@ -243,18 +243,6 @@ export const StudentLayout: React.FC = () => {
 
             {/* Right header actions */}
             <div className="flex items-center gap-1 shrink-0">
-              {/* Only show Encerrar Teste button on header if actively simulating in Sandbox */}
-              {isSimulationMode && (
-                <button
-                  onClick={handleSwitchToPersonal}
-                  className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 text-xs font-medium transition-colors cursor-pointer border border-amber-500/20"
-                  title="Encerrar teste de simulação e voltar para a visão da Rafaela"
-                >
-                  <ArrowLeftRight className="w-3.5 h-3.5" />
-                  <span className="hidden md:inline">Encerrar Teste</span>
-                </button>
-              )}
-
               <LanguageSelector />
 
               <button
