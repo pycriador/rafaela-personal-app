@@ -15,6 +15,13 @@ import {
   Trash2,
   Sparkles,
   Info,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  CheckCircle2,
+  UserCheck,
+  Filter,
 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -41,6 +48,12 @@ export const HbacManagerSection: React.FC = () => {
   const [currentConfig, setCurrentConfig] = useState<TrainerHbacConfig | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
+  // Table filters & pagination for trainers
+  const [searchTerm, setSearchTerm] = useState('');
+  const [roleFilter, setRoleFilter] = useState<'all' | 'admin' | 'personal'>('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 4;
 
   // Load trainers and HBAC configs
   const loadData = async () => {
@@ -210,6 +223,32 @@ export const HbacManagerSection: React.FC = () => {
 
   const selectedTrainerUser = trainers.find((t) => t.id === selectedTrainerId);
 
+  const adminCount = trainers.filter((t) => t.role === 'admin' || t.id === 'user-rafaela').length;
+  const personalOnlyCount = trainers.length - adminCount;
+
+  const filteredTrainers = trainers.filter((t) => {
+    const term = searchTerm.toLowerCase().trim();
+    const matchesSearch =
+      !term ||
+      t.name.toLowerCase().includes(term) ||
+      t.email.toLowerCase().includes(term) ||
+      (t.cref && t.cref.toLowerCase().includes(term));
+    const isUserAdmin = t.role === 'admin' || t.id === 'user-rafaela';
+    const matchesRole =
+      roleFilter === 'all'
+        ? true
+        : roleFilter === 'admin'
+        ? isUserAdmin
+        : !isUserAdmin;
+    return matchesSearch && matchesRole;
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filteredTrainers.length / itemsPerPage));
+  const safePage = Math.min(Math.max(1, currentPage), totalPages);
+  const startIndex = (safePage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, filteredTrainers.length);
+  const paginatedTrainers = filteredTrainers.slice(startIndex, endIndex);
+
   return (
     <div className="space-y-6">
       {/* Header Banner */}
@@ -268,61 +307,295 @@ export const HbacManagerSection: React.FC = () => {
         </div>
       )}
 
-      {/* Trainer Selection Tabs */}
-      <div className="space-y-3">
-        <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-dark-muted block">
-          Selecione o Personal Trainer para Gerenciar
-        </label>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {trainers.map((t) => {
-            const isSelected = t.id === selectedTrainerId;
-            const isUserAdmin = t.role === 'admin' || t.id === 'user-rafaela';
+      {/* Trainer Selection Table with Search, Filter & Pagination */}
+      <Card className="p-0 overflow-hidden border-slate-200 dark:border-dark-border shadow-xs space-y-0">
+        {/* Table Top Header & Search/Filter Toolbar */}
+        <div className="p-4 bg-slate-50/80 dark:bg-dark-cardElevated/80 border-b border-slate-200 dark:border-dark-border space-y-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+                  <Users className="w-4 h-4 text-indigo-500" />
+                  Selecione o Personal Trainer para Gerenciar
+                </h3>
+                <span className="text-[10px] px-2 py-0.5 rounded-full font-mono font-semibold bg-indigo-500/10 text-indigo-700 dark:text-indigo-300">
+                  {filteredTrainers.length} {filteredTrainers.length === 1 ? 'personal' : 'personais'}
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-dark-muted mt-0.5">
+                Clique na linha ou no botão para carregar e editar a matriz de acessos abaixo
+              </p>
+            </div>
 
-            return (
+            {/* Quick Role Filter Pills */}
+            <div className="flex items-center gap-1">
               <button
-                key={t.id}
                 type="button"
-                onClick={() => handleSelectTrainer(t.id)}
-                className={`p-4 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex items-center gap-3.5 relative overflow-hidden ${
-                  isSelected
-                    ? 'bg-white dark:bg-dark-card border-indigo-500 shadow-md ring-2 ring-indigo-500/20'
-                    : 'bg-slate-50/70 dark:bg-dark-cardElevated/40 border-slate-200 dark:border-dark-border hover:border-slate-300'
+                onClick={() => {
+                  setRoleFilter('all');
+                  setCurrentPage(1);
+                }}
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                  roleFilter === 'all'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-semibold shadow-2xs'
+                    : 'bg-white dark:bg-dark-card border border-slate-200/80 dark:border-dark-border text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >
-                <img
-                  src={t.avatarUrl}
-                  alt={t.name}
-                  className="w-12 h-12 rounded-xl object-cover border border-slate-200 dark:border-dark-border shrink-0"
-                />
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-black text-slate-900 dark:text-white truncate">
-                      {t.name}
-                    </span>
-                    {isUserAdmin && (
-                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-600 dark:text-amber-400">
-                        Admin
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-[11px] text-slate-500 dark:text-dark-muted block truncate mt-0.5">
-                    {t.email}
-                  </span>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-[10px] font-mono text-indigo-600 dark:text-indigo-400 font-bold">
-                      CREF: {t.cref || 'Ativo'}
-                    </span>
-                  </div>
+                Todos ({trainers.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRoleFilter('personal');
+                  setCurrentPage(1);
+                }}
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                  roleFilter === 'personal'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-semibold shadow-2xs'
+                    : 'bg-white dark:bg-dark-card border border-slate-200/80 dark:border-dark-border text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                Personais ({personalOnlyCount})
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setRoleFilter('admin');
+                  setCurrentPage(1);
+                }}
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                  roleFilter === 'admin'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-semibold shadow-2xs'
+                    : 'bg-white dark:bg-dark-card border border-slate-200/80 dark:border-dark-border text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                Admins ({adminCount})
+              </button>
+            </div>
+          </div>
+
+          {/* Search Bar */}
+          <div className="relative w-full sm:max-w-md">
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Buscar por nome, e-mail ou CREF..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full pl-8 pr-7 py-1.5 rounded-lg text-xs bg-white dark:bg-dark-card border border-slate-200/90 dark:border-dark-border text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400/20"
+            />
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchTerm('');
+                  setCurrentPage(1);
+                }}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Table Content */}
+        {paginatedTrainers.length === 0 ? (
+          <div className="p-8 text-center space-y-2">
+            <p className="text-xs text-slate-500 dark:text-dark-muted">
+              Nenhum personal trainer encontrado com os filtros aplicados.
+            </p>
+            {(searchTerm || roleFilter !== 'all') && (
+              <Button
+                variant="outline"
+                size="xs"
+                onClick={() => {
+                  setSearchTerm('');
+                  setRoleFilter('all');
+                  setCurrentPage(1);
+                }}
+              >
+                Limpar Filtros
+              </Button>
+            )}
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-100/70 dark:bg-dark-cardElevated/50 border-b border-slate-200 dark:border-dark-border text-slate-500 font-bold uppercase tracking-wider text-[10px]">
+                <tr>
+                  <th className="py-2.5 px-4">Personal Trainer</th>
+                  <th className="py-2.5 px-3">Perfil / Papel</th>
+                  <th className="py-2.5 px-3">Registro CREF</th>
+                  <th className="py-2.5 px-3">E-mail</th>
+                  <th className="py-2.5 px-3">Políticas HBAC</th>
+                  <th className="py-2.5 px-4 text-right">Ação</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-dark-border/60">
+                {paginatedTrainers.map((t) => {
+                  const isSelected = t.id === selectedTrainerId;
+                  const isUserAdmin = t.role === 'admin' || t.id === 'user-rafaela';
+                  const tConfig = configs[t.id];
+                  const hasCustom = !!tConfig;
+
+                  return (
+                    <tr
+                      key={t.id}
+                      onClick={() => handleSelectTrainer(t.id)}
+                      className={`cursor-pointer transition-colors duration-150 ${
+                        isSelected
+                          ? 'bg-indigo-50/70 dark:bg-indigo-950/30 font-medium'
+                          : 'hover:bg-slate-50/80 dark:hover:bg-dark-cardElevated/40'
+                      }`}
+                    >
+                      {/* Avatar, Name, ID */}
+                      <td className="py-2.5 px-4">
+                        <div className="flex items-center gap-3">
+                          <div className="relative">
+                            <img
+                              src={t.avatarUrl}
+                              alt={t.name}
+                              className="w-8 h-8 rounded-lg object-cover border border-slate-200 dark:border-dark-border shrink-0"
+                            />
+                            {isSelected && (
+                              <div className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-indigo-600 border-2 border-white dark:border-dark-card" />
+                            )}
+                          </div>
+                          <div>
+                            <span className="font-semibold text-slate-900 dark:text-white block text-xs">
+                              {t.name}
+                            </span>
+                            <span className="font-mono text-[10px] text-slate-400">
+                              {t.id}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Role */}
+                      <td className="py-2.5 px-3">
+                        <Badge
+                          variant={isUserAdmin ? 'warning' : 'info'}
+                          size="sm"
+                        >
+                          {isUserAdmin ? 'Admin Global' : 'Personal Trainer'}
+                        </Badge>
+                      </td>
+
+                      {/* CREF */}
+                      <td className="py-2.5 px-3">
+                        <span className="font-mono text-[11px] text-slate-600 dark:text-slate-300 font-medium">
+                          {t.cref || 'Ativo'}
+                        </span>
+                      </td>
+
+                      {/* Email */}
+                      <td className="py-2.5 px-3">
+                        <span className="font-mono text-[11px] text-slate-500 dark:text-dark-muted">
+                          {t.email}
+                        </span>
+                      </td>
+
+                      {/* HBAC Status */}
+                      <td className="py-2.5 px-3">
+                        <div className="flex items-center gap-1.5">
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              hasCustom ? 'bg-emerald-500' : 'bg-slate-400'
+                            }`}
+                          />
+                          <span className="text-[11px] text-slate-600 dark:text-slate-400 font-medium">
+                            {hasCustom ? 'Personalizado' : 'Padrão'}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Action */}
+                      <td className="py-2.5 px-4 text-right">
+                        {isSelected ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 border border-indigo-500/25">
+                            <Check className="w-3 h-3 text-indigo-600 dark:text-indigo-400" />
+                            <span>Ativo</span>
+                          </span>
+                        ) : (
+                          <Button
+                            variant="ghost"
+                            size="xs"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSelectTrainer(t.id);
+                            }}
+                          >
+                            Selecionar
+                          </Button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Pagination Footer */}
+        {filteredTrainers.length > 0 && (
+          <div className="p-3 bg-slate-50/50 dark:bg-dark-cardElevated/30 border-t border-slate-200 dark:border-dark-border flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <span className="text-slate-500 dark:text-dark-muted text-[11px]">
+              Mostrando <strong className="text-slate-900 dark:text-white">{startIndex + 1}</strong> a{' '}
+              <strong className="text-slate-900 dark:text-white">{endIndex}</strong> de{' '}
+              <strong className="text-slate-900 dark:text-white">{filteredTrainers.length}</strong> personais (Página{' '}
+              <strong className="text-slate-900 dark:text-white">{safePage}</strong> de{' '}
+              <strong className="text-slate-900 dark:text-white">{totalPages}</strong>)
+            </span>
+
+            {totalPages > 1 && (
+              <div className="flex items-center gap-1 self-center sm:self-auto">
+                <Button
+                  variant="secondary"
+                  size="xs"
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={safePage <= 1}
+                  leftIcon={<ChevronLeft className="w-3 h-3" />}
+                >
+                  Anterior
+                </Button>
+
+                <div className="flex items-center gap-1 px-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => setCurrentPage(p)}
+                      className={`w-6 h-6 rounded-md text-xs font-semibold transition-all cursor-pointer ${
+                        p === safePage
+                          ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs'
+                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/80 dark:hover:bg-slate-800'
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ))}
                 </div>
 
-                {isSelected && (
-                  <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-indigo-500" />
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+                <Button
+                  variant="secondary"
+                  size="xs"
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={safePage >= totalPages}
+                  rightIcon={<ChevronRight className="w-3 h-3" />}
+                >
+                  Próxima
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
+      </Card>
 
       {/* Quick Presets Bar (Admin Only) */}
       {isAdmin && (
