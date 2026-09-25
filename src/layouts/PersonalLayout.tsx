@@ -59,7 +59,7 @@ const STUDENT_SUB_NAV_ITEMS = [
 ];
 
 const ANAMNESIS_SUB_NAV_ITEMS = [
-  { id: 'visao-geral', label: 'Visão Geral', path: '/personal/anamnesis', icon: LayoutDashboard },
+  { id: 'visao-geral', label: 'Visão Geral', path: '/personal/forms/geral', icon: LayoutDashboard },
   { id: 'modelos', label: 'Modelos de Fichas', path: '/personal/forms', icon: FileText },
   { id: 'novo-formulario', label: 'Novo Formulário', path: '/personal/forms/new', icon: PlusCircle },
   { id: 'envios', label: 'Envios & Respostas', path: '/personal/forms/applications', icon: Send },
@@ -290,7 +290,7 @@ export const PersonalLayout: React.FC = () => {
     { name: 'Séries Prontas', path: '/personal/templates', icon: Layers },
     { name: 'Exercícios', path: '/personal/exercises', icon: Library },
     { name: 'Alimentação', path: '/personal/nutrition', icon: Apple },
-    { name: 'Formulários', path: '/personal/anamnesis', icon: ClipboardList },
+    { name: 'Formulários', path: '/personal/forms/geral', icon: ClipboardList },
     { name: 'Evolução', path: '/personal/evolution', icon: TrendingUp },
     { name: 'Relatórios', path: '/personal/reports', icon: FileText },
     { name: 'Grupos & Ranking', path: '/personal/ranking', icon: Trophy },
@@ -407,7 +407,7 @@ export const PersonalLayout: React.FC = () => {
               const Icon = item.icon;
               const isStudentsItem = item.path === '/personal/students';
               const isInsideStudent = isStudentsItem && !!currentStudentParam;
-              const isAnamnesisItem = item.path === '/personal/anamnesis';
+              const isAnamnesisItem = item.path === '/personal/forms/geral' || item.path === '/personal/anamnesis';
               const isInsideAnamnesis =
                 isAnamnesisItem &&
                 (location.pathname.startsWith('/personal/anamnesis') || location.pathname.startsWith('/personal/forms'));
@@ -615,7 +615,12 @@ export const PersonalLayout: React.FC = () => {
                           const SubIcon = sub.icon;
                           const isSubActive = (() => {
                             if (sub.id === 'visao-geral') {
-                              return location.pathname === '/personal/anamnesis' || location.pathname === '/personal/anamnesis/';
+                              return (
+                                location.pathname === '/personal/forms/geral' ||
+                                location.pathname === '/personal/forms/geral/' ||
+                                location.pathname === '/personal/anamnesis' ||
+                                location.pathname === '/personal/anamnesis/'
+                              );
                             }
                             if (sub.id === 'novo-formulario') {
                               return location.pathname === '/personal/forms/new' || location.pathname === '/personal/anamnesis/forms/new';

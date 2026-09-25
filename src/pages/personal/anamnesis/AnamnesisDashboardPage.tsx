@@ -279,7 +279,7 @@ export const AnamnesisDashboardPage: React.FC = () => {
                     return (
                       <div
                         key={resp.id}
-                        onClick={() => navigate(`/personal/anamnesis/responses/${resp.id}`)}
+                        onClick={() => navigate(`/personal/forms/responses/${resp.id}`)}
                         className="p-3.5 rounded-2xl border border-slate-200/70 dark:border-dark-border bg-white dark:bg-dark-card flex items-center justify-between gap-3 hover:border-emerald-500/40 transition-colors cursor-pointer shadow-xs"
                       >
                         <div className="flex items-center gap-3 min-w-0">
@@ -434,7 +434,7 @@ export const AnamnesisDashboardPage: React.FC = () => {
               return (
                 <div
                   key={resp.id}
-                  onClick={() => navigate(`/personal/anamnesis/responses/${resp.id}`)}
+                  onClick={() => navigate(`/personal/forms/responses/${resp.id}`)}
                   className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs hover:bg-slate-50 dark:hover:bg-dark-cardElevated/40 transition-colors cursor-pointer"
                 >
                   <div className="flex items-center gap-3">

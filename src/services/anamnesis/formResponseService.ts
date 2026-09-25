@@ -103,7 +103,7 @@ export const formResponseService = {
       title: 'Nova Anamnese Recebida',
       message: `${student?.name || 'O aluno'} enviou o formulário "${form?.name || 'Anamnese'}".`,
       type: 'success',
-      link: `/personal/anamnesis/responses/${savedResponse.id}`,
+      link: `/personal/forms/responses/${savedResponse.id}`,
     });
 
     // Auditoria

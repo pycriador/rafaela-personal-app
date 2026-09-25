@@ -384,7 +384,7 @@ export const DashboardPage: React.FC = () => {
           badgeText: 'Anamnese Pendente',
           badgeVariant: 'warning',
           timestamp: app.assignedAt,
-          actionUrl: '/personal/anamnesis',
+          actionUrl: '/personal/forms/geral',
           actionLabel: 'Acompanhar formulário',
         });
       }
@@ -649,7 +649,7 @@ export const DashboardPage: React.FC = () => {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => navigate('/personal/anamnesis')}
+            onClick={() => navigate('/personal/forms/geral')}
             rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
             className="shrink-0"
           >

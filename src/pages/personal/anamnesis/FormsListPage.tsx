@@ -174,7 +174,7 @@ export const FormsListPage: React.FC = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/personal/anamnesis')}
+            onClick={() => navigate('/personal/forms/geral')}
             leftIcon={<ArrowLeft className="w-4 h-4" />}
             className="text-xs"
           >

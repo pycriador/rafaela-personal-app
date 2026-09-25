@@ -2352,7 +2352,7 @@ export const StudentDetailPage: React.FC = () => {
                         <Button
                           variant="secondary"
                           size="sm"
-                          onClick={() => navigate(`/personal/anamnesis/responses/${resp.id}`)}
+                          onClick={() => navigate(`/personal/forms/responses/${resp.id}`)}
                           leftIcon={<Eye className="w-4 h-4 text-emerald-500" />}
                           className="text-xs"
                         >
