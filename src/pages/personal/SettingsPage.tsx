@@ -496,7 +496,6 @@ export const SettingsPage: React.FC = () => {
             size="sm"
             onClick={loadAllData}
             leftIcon={<RefreshCw className={`w-3.5 h-3.5 ${loadingStats ? 'animate-spin' : ''}`} />}
-            className="text-xs"
           >
             Atualizar Contadores
           </Button>
@@ -507,7 +506,6 @@ export const SettingsPage: React.FC = () => {
             disabled={loadingStats || isExporting}
             isLoading={isExporting}
             leftIcon={<Download className="w-3.5 h-3.5" />}
-            className="text-xs"
           >
             Backup Geral (.JSON)
           </Button>

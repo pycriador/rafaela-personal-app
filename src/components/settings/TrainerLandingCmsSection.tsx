@@ -208,7 +208,6 @@ export const TrainerLandingCmsSection: React.FC = () => {
                 size="sm"
                 onClick={handleCopyLink}
                 leftIcon={copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
-                className="text-xs"
               >
                 {copiedLink ? 'Link Copiado!' : 'Copiar Link'}
               </Button>
@@ -217,7 +216,6 @@ export const TrainerLandingCmsSection: React.FC = () => {
                 size="sm"
                 onClick={() => window.open(publicUrl, '_blank')}
                 leftIcon={<ExternalLink className="w-3.5 h-3.5 text-blue-400" />}
-                className="text-xs"
               >
                 Ver Página Pública
               </Button>
@@ -229,7 +227,6 @@ export const TrainerLandingCmsSection: React.FC = () => {
             onClick={() => handleSave()}
             isLoading={saving}
             leftIcon={<Save className="w-3.5 h-3.5" />}
-            className="text-xs"
           >
             Salvar & Publicar
           </Button>

@@ -280,7 +280,6 @@ export const HbacManagerSection: React.FC = () => {
               onClick={handleReset}
               disabled={saving}
               leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
-              className="text-xs"
             >
               Restaurar Padrão
             </Button>
@@ -290,7 +289,6 @@ export const HbacManagerSection: React.FC = () => {
               onClick={handleSave}
               isLoading={saving}
               leftIcon={<Save className="w-3.5 h-3.5" />}
-              className="text-xs"
             >
               Salvar Políticas
             </Button>
@@ -609,31 +607,31 @@ export const HbacManagerSection: React.FC = () => {
                 Aplique perfis de permissão pré-configurados em um clique
               </p>
             </div>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-2">
               <Button
                 variant="outline"
-                size="xs"
+                size="sm"
                 onClick={() => applyPreset('full')}
               >
                 Acesso Total
               </Button>
               <Button
                 variant="outline"
-                size="xs"
+                size="sm"
                 onClick={() => applyPreset('standard')}
               >
                 Padrão (Sem Del. Financeira)
               </Button>
               <Button
                 variant="outline"
-                size="xs"
+                size="sm"
                 onClick={() => applyPreset('no_financial')}
               >
                 Sem Módulos Financeiros
               </Button>
               <Button
                 variant="outline"
-                size="xs"
+                size="sm"
                 onClick={() => applyPreset('read_only')}
               >
                 Somente Leitura

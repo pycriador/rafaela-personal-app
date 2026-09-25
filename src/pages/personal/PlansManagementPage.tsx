@@ -402,8 +402,7 @@ export const PlansManagementPage: React.FC = () => {
                   setPlanToEdit(null);
                   setIsEditorOpen(true);
                 }}
-                leftIcon={<Plus className="w-4 h-4" />}
-                className="text-xs"
+                leftIcon={<Plus className="w-3.5 h-3.5" />}
               >
                 + Novo Plano
               </Button>
@@ -417,8 +416,7 @@ export const PlansManagementPage: React.FC = () => {
                 setCouponToEdit(null);
                 setIsCouponEditorOpen(true);
               }}
-              leftIcon={<Plus className="w-4 h-4" />}
-              className="text-xs"
+              leftIcon={<Plus className="w-3.5 h-3.5" />}
             >
               + Novo Cupom
             </Button>

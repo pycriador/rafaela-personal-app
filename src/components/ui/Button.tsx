@@ -25,11 +25,11 @@ export const Button: React.FC<ButtonProps> = ({
     'inline-flex items-center justify-center font-medium transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100 select-none cursor-pointer tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-slate-400 dark:focus-visible:ring-slate-600';
 
   const sizeStyles = {
-    xs: 'h-6 px-2 text-[10px] gap-1 rounded-md',
-    sm: 'h-7 px-2.5 text-[11px] gap-1.5 rounded-lg',
-    md: 'h-8 px-3 text-xs gap-1.5 rounded-lg',
-    lg: 'h-9 px-3.5 text-xs sm:text-sm gap-2 rounded-lg',
-    xl: 'h-10 px-4 text-sm gap-2 rounded-xl',
+    xs: 'min-h-[28px] px-3 py-1 text-xs gap-1.5 rounded-md',
+    sm: 'min-h-[34px] px-3.5 py-1.5 text-xs font-medium gap-2 rounded-lg',
+    md: 'min-h-[38px] px-4 py-2 text-xs sm:text-sm font-medium gap-2 rounded-lg',
+    lg: 'min-h-[42px] px-5 py-2.5 text-sm font-medium gap-2.5 rounded-lg',
+    xl: 'min-h-[46px] px-6 py-3 text-base font-medium gap-2.5 rounded-xl',
   };
 
   const variantStyles = {
