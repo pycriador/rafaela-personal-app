@@ -60,8 +60,8 @@ const STUDENT_SUB_NAV_ITEMS = [
 
 const ANAMNESIS_SUB_NAV_ITEMS = [
   { id: 'visao-geral', label: 'Visão Geral', path: '/personal/forms/geral', icon: LayoutDashboard },
-  { id: 'modelos', label: 'Modelos de Fichas', path: '/personal/forms', icon: FileText },
-  { id: 'novo-formulario', label: 'Novo Formulário', path: '/personal/forms/new', icon: PlusCircle },
+  { id: 'modelos', label: 'Modelos de Fichas', path: '/personal/forms/fichas', icon: FileText },
+  { id: 'novo-formulario', label: 'Novo Formulário', path: '/personal/forms/fichas/new', icon: PlusCircle },
   { id: 'envios', label: 'Envios & Respostas', path: '/personal/forms/applications', icon: Send },
 ];
 
@@ -623,18 +623,19 @@ export const PersonalLayout: React.FC = () => {
                               );
                             }
                             if (sub.id === 'novo-formulario') {
-                              return location.pathname === '/personal/forms/new' || location.pathname === '/personal/anamnesis/forms/new';
+                              return (
+                                location.pathname === '/personal/forms/fichas/new' ||
+                                location.pathname === '/personal/forms/new' ||
+                                location.pathname === '/personal/anamnesis/forms/new'
+                              );
                             }
                             if (sub.id === 'modelos') {
                               return (
-                                location.pathname === '/personal/forms' ||
-                                location.pathname === '/personal/anamnesis/forms' ||
-                                ((location.pathname.startsWith('/personal/forms/') ||
-                                  location.pathname.startsWith('/personal/anamnesis/forms/')) &&
-                                  location.pathname !== '/personal/forms/new' &&
-                                  location.pathname !== '/personal/anamnesis/forms/new' &&
-                                  !location.pathname.startsWith('/personal/forms/applications') &&
-                                  !location.pathname.startsWith('/personal/forms/responses'))
+                                (location.pathname === '/personal/forms/fichas' ||
+                                  location.pathname === '/personal/forms' ||
+                                  location.pathname === '/personal/anamnesis/forms' ||
+                                  location.pathname.startsWith('/personal/forms/fichas/')) &&
+                                location.pathname !== '/personal/forms/fichas/new'
                               );
                             }
                             if (sub.id === 'envios') {

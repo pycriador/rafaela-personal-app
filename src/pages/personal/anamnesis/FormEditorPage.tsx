@@ -144,7 +144,7 @@ export const FormEditorPage: React.FC = () => {
         const found = await formService.getFormById(id);
         if (!found) {
           toastError('Formulário não encontrado');
-          navigate('/personal/forms');
+          navigate('/personal/forms/fichas');
           return;
         }
         setForm(found);
@@ -462,7 +462,7 @@ export const FormEditorPage: React.FC = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/personal/forms')}
+            onClick={() => navigate('/personal/forms/fichas')}
             leftIcon={<ArrowLeft className="w-4 h-4" />}
             className="text-xs"
           >

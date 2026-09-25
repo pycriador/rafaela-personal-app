@@ -193,7 +193,7 @@ export const FormsListPage: React.FC = () => {
         <Button
           variant="primary"
           size="sm"
-          onClick={() => navigate('/personal/forms/new')}
+          onClick={() => navigate('/personal/forms/fichas/new')}
           leftIcon={<Plus className="w-4 h-4" />}
           className="text-xs font-bold self-start sm:self-auto"
         >
@@ -287,7 +287,7 @@ export const FormsListPage: React.FC = () => {
                     variant="outline"
                     size="sm"
                     fullWidth
-                    onClick={() => navigate(`/personal/forms/${form.id}/edit`)}
+                    onClick={() => navigate(`/personal/forms/fichas/${form.id}/edit`)}
                     className="text-xs"
                   >
                     Editar

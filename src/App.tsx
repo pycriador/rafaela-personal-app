@@ -113,12 +113,15 @@ export const App: React.FC = () => {
                     <Route path="settings" element={<SettingsPage />} />
                     <Route path="forms/geral" element={<AnamnesisDashboardPage />} />
                     <Route path="anamnesis" element={<Navigate to="/personal/forms/geral" replace />} />
-                    <Route path="forms" element={<FormsListPage />} />
-                    <Route path="forms/new" element={<FormEditorPage />} />
+                    <Route path="forms/fichas" element={<FormsListPage />} />
+                    <Route path="forms/fichas/new" element={<FormEditorPage />} />
+                    <Route path="forms/fichas/:id/edit" element={<FormEditorPage />} />
+                    <Route path="forms" element={<Navigate to="/personal/forms/fichas" replace />} />
+                    <Route path="forms/new" element={<Navigate to="/personal/forms/fichas/new" replace />} />
                     <Route path="forms/:id/edit" element={<FormEditorPage />} />
-                    <Route path="anamnesis/forms" element={<Navigate to="/personal/forms" replace />} />
-                    <Route path="anamnesis/forms/new" element={<Navigate to="/personal/forms/new" replace />} />
-                    <Route path="anamnesis/forms/:id/edit" element={<Navigate to="/personal/forms" replace />} />
+                    <Route path="anamnesis/forms" element={<Navigate to="/personal/forms/fichas" replace />} />
+                    <Route path="anamnesis/forms/new" element={<Navigate to="/personal/forms/fichas/new" replace />} />
+                    <Route path="anamnesis/forms/:id/edit" element={<Navigate to="/personal/forms/fichas" replace />} />
                     <Route path="forms/applications" element={<ApplicationsListPage />} />
                     <Route path="anamnesis/applications" element={<Navigate to="/personal/forms/applications" replace />} />
                     <Route path="forms/responses/:id" element={<ResponseViewerPage />} />
