@@ -29,9 +29,9 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           className={`w-full bg-white dark:bg-dark-card border ${
             error
-              ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/15'
-              : 'border-slate-200/90 dark:border-dark-border focus:border-emerald-600 dark:focus:border-emerald-400 focus:ring-emerald-500/15'
-          } text-slate-900 dark:text-slate-100 rounded-xl text-sm focus:outline-none focus:ring-2 transition-all py-2 px-3 shadow-2xs cursor-pointer ${className}`}
+              ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/20'
+              : 'border-slate-200/90 dark:border-white/[0.1] focus:border-slate-400 dark:focus:border-slate-500 focus:ring-slate-400/20 dark:focus:ring-white/10'
+          } text-slate-900 dark:text-slate-100 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 transition-all py-1.5 px-2.5 shadow-2xs cursor-pointer ${className}`}
           {...props}
         >
           {options

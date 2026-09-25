@@ -759,15 +759,15 @@ export const StudentManagerSection: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Banner with Stats & New User Button */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-3xl bg-slate-900 border border-slate-800 text-white shadow-xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl bg-slate-900 border border-slate-800 text-white shadow-lg">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
-            <Users className="w-6 h-6" />
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+            <Users className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
+            <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
               Gestão de Usuários & Contas
-              <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-mono font-bold">
+              <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[11px] font-mono font-medium">
                 {allUserItems.length} cadastrados
               </span>
             </h3>
@@ -780,8 +780,9 @@ export const StudentManagerSection: React.FC = () => {
         <div className="flex items-center gap-2">
           <Button
             variant="primary"
+            size="sm"
             onClick={handleOpenCreate}
-            leftIcon={<Plus className="w-4 h-4" />}
+            leftIcon={<Plus className="w-3.5 h-3.5" />}
             className="text-xs"
           >
             Cadastrar Novo Usuário
@@ -794,10 +795,10 @@ export const StudentManagerSection: React.FC = () => {
         <button
           type="button"
           onClick={() => updateParams({ role: null, status: null, page: '1' })}
-          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+          className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
             currentRole === 'all' && currentStatus === 'all'
-              ? 'bg-emerald-500 text-white shadow-sm'
-              : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-semibold shadow-2xs'
+              : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200/80 dark:hover:bg-slate-800'
           }`}
         >
           Todos ({allUserItems.length})
@@ -806,10 +807,10 @@ export const StudentManagerSection: React.FC = () => {
         <button
           type="button"
           onClick={() => updateParams({ role: 'personal', status: null, page: '1' })}
-          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+          className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
             currentRole === 'personal'
-              ? 'bg-emerald-500 text-white shadow-sm'
-              : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-semibold shadow-2xs'
+              : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200/80 dark:hover:bg-slate-800'
           }`}
         >
           Personal Trainers ({personalCount})
@@ -818,10 +819,10 @@ export const StudentManagerSection: React.FC = () => {
         <button
           type="button"
           onClick={() => updateParams({ role: 'student', status: 'Ativo', page: '1' })}
-          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+          className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
             currentRole === 'student' && currentStatus === 'Ativo'
-              ? 'bg-emerald-500 text-white shadow-sm'
-              : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-semibold shadow-2xs'
+              : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200/80 dark:hover:bg-slate-800'
           }`}
         >
           Alunos Ativos ({activeStudentsCount})
@@ -830,10 +831,10 @@ export const StudentManagerSection: React.FC = () => {
         <button
           type="button"
           onClick={() => updateParams({ status: 'Atenção', page: '1' })}
-          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+          className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
             currentStatus === 'Atenção'
-              ? 'bg-amber-500 text-white shadow-sm'
-              : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+              ? 'bg-amber-600 text-white font-semibold shadow-2xs'
+              : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200/80 dark:hover:bg-slate-800'
           }`}
         >
           Atenção ({attentionStudentsCount})
@@ -842,10 +843,10 @@ export const StudentManagerSection: React.FC = () => {
         <button
           type="button"
           onClick={() => updateParams({ status: 'Arquivado', page: '1' })}
-          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+          className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
             currentStatus === 'Arquivado'
-              ? 'bg-slate-700 text-white shadow-sm'
-              : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+              ? 'bg-slate-700 text-white font-semibold shadow-2xs'
+              : 'bg-slate-100 dark:bg-dark-cardElevated text-slate-600 dark:text-slate-400 hover:bg-slate-200/80 dark:hover:bg-slate-800'
           }`}
         >
           Arquivados ({archivedStudentsCount})
@@ -1151,10 +1152,9 @@ export const StudentManagerSection: React.FC = () => {
                           {/* Edit Button */}
                           <Button
                             variant="ghost"
-                            size="sm"
+                            size="xs"
                             onClick={() => handleOpenEdit(item)}
-                            leftIcon={<Edit2 className="w-3.5 h-3.5 text-blue-500" />}
-                            className="text-xs h-8 px-2"
+                            leftIcon={<Edit2 className="w-3 h-3 text-slate-500" />}
                             title="Editar dados cadastrais"
                           >
                             Editar
@@ -1163,10 +1163,9 @@ export const StudentManagerSection: React.FC = () => {
                           {/* Reset Password Button */}
                           <Button
                             variant="ghost"
-                            size="sm"
+                            size="xs"
                             onClick={() => handleOpenPasswordReset(item)}
-                            leftIcon={<KeyRound className="w-3.5 h-3.5 text-amber-500" />}
-                            className="text-xs h-8 px-2"
+                            leftIcon={<KeyRound className="w-3 h-3 text-amber-500" />}
                             title="Redefinir senha de acesso"
                           >
                             Senha
@@ -1176,16 +1175,15 @@ export const StudentManagerSection: React.FC = () => {
                           {item.studentProfile && (
                             <Button
                               variant="ghost"
-                              size="sm"
+                              size="xs"
                               onClick={() => handleToggleArchive(item)}
                               leftIcon={
                                 item.status === 'Arquivado' ? (
-                                  <ArchiveRestore className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                                  <ArchiveRestore className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                                 ) : (
-                                  <Archive className="w-3.5 h-3.5 text-slate-500" />
+                                  <Archive className="w-3 h-3 text-slate-400" />
                                 )
                               }
-                              className="text-xs h-8 px-2 text-slate-600 dark:text-slate-400"
                               title={item.status === 'Arquivado' ? 'Desarquivar aluno' : 'Arquivar aluno'}
                             >
                               {item.status === 'Arquivado' ? 'Desarquivar' : 'Arquivar'}
@@ -1195,13 +1193,13 @@ export const StudentManagerSection: React.FC = () => {
                           {/* Delete Button */}
                           <Button
                             variant="ghost"
-                            size="sm"
+                            size="xs"
                             onClick={() => {
                               setDeletingUserItem(item);
                               setIsDeleteModalOpen(true);
                             }}
-                            leftIcon={<Trash2 className="w-3.5 h-3.5 text-rose-500" />}
-                            className="text-xs h-8 px-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20"
+                            leftIcon={<Trash2 className="w-3 h-3 text-rose-500" />}
+                            className="text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20"
                             title="Excluir usuário"
                             disabled={item.id === 'user-rafaela'}
                           >

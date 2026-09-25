@@ -213,21 +213,21 @@ export const HbacManagerSection: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 text-white shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
-            <Shield className="w-6 h-6" />
+      <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-white shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shrink-0">
+            <Shield className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-black tracking-tight text-white">
+              <h2 className="text-base font-bold tracking-tight text-white">
                 Controle de Acesso Hierárquico (HBAC)
               </h2>
               <Badge variant={isAdmin ? 'success' : 'info'} size="sm">
-                {isAdmin ? 'Admin Global: Controle Total' : 'Modo Leitura: Personal'}
+                {isAdmin ? 'Admin Global' : 'Modo Leitura'}
               </Badge>
             </div>
-            <p className="text-xs text-slate-400 mt-1 max-w-2xl leading-relaxed">
+            <p className="text-xs text-slate-400 mt-0.5 max-w-2xl leading-relaxed">
               Defina as permissões granulares por módulo (Leitura, Criação/Escrita, Edição e Deleção) para cada Personal Trainer ativo na plataforma.
             </p>
           </div>
@@ -241,7 +241,7 @@ export const HbacManagerSection: React.FC = () => {
               onClick={handleReset}
               disabled={saving}
               leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
-              className="text-xs text-slate-300 hover:text-white"
+              className="text-xs"
             >
               Restaurar Padrão
             </Button>
@@ -251,7 +251,7 @@ export const HbacManagerSection: React.FC = () => {
               onClick={handleSave}
               isLoading={saving}
               leftIcon={<Save className="w-3.5 h-3.5" />}
-              className="text-xs bg-emerald-600 hover:bg-emerald-500"
+              className="text-xs"
             >
               Salvar Políticas
             </Button>
@@ -336,36 +336,32 @@ export const HbacManagerSection: React.FC = () => {
                 Aplique perfis de permissão pré-configurados em um clique
               </p>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5">
               <Button
-                variant="secondary"
-                size="sm"
+                variant="outline"
+                size="xs"
                 onClick={() => applyPreset('full')}
-                className="text-xs bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/20"
               >
                 Acesso Total
               </Button>
               <Button
-                variant="secondary"
-                size="sm"
+                variant="outline"
+                size="xs"
                 onClick={() => applyPreset('standard')}
-                className="text-xs bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30 hover:bg-blue-500/20"
               >
                 Padrão (Sem Del. Financeira)
               </Button>
               <Button
-                variant="secondary"
-                size="sm"
+                variant="outline"
+                size="xs"
                 onClick={() => applyPreset('no_financial')}
-                className="text-xs bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30 hover:bg-purple-500/20"
               >
                 Sem Módulos Financeiros
               </Button>
               <Button
-                variant="secondary"
-                size="sm"
+                variant="outline"
+                size="xs"
                 onClick={() => applyPreset('read_only')}
-                className="text-xs bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-500/30 hover:bg-slate-500/20"
               >
                 Somente Leitura
               </Button>

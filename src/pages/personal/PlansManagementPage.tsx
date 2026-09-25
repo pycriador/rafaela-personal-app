@@ -427,71 +427,62 @@ export const PlansManagementPage: React.FC = () => {
       </div>
 
       {/* Submenu / Abas de Navegação (URL Sync) */}
-      <div className="flex items-center gap-2 border-b border-slate-200/80 dark:border-white/[0.08] pb-1 overflow-x-auto">
+      <div className="flex items-center gap-1.5 border-b border-slate-200/80 dark:border-white/[0.08] pb-1 overflow-x-auto">
         <button
           type="button"
           onClick={() => handleTabChange('planos')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all relative shrink-0 ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             currentTab === 'planos'
-              ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/15'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs font-semibold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.04]'
           }`}
         >
-          <CreditCard className="w-4 h-4" />
+          <CreditCard className="w-3.5 h-3.5" />
           <span>Catálogo de Planos</span>
           <span
-            className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+            className={`px-1.5 py-0.2 rounded-full text-[10px] font-semibold ${
               currentTab === 'planos'
-                ? 'bg-emerald-500 text-white'
+                ? 'bg-white/20 text-white dark:bg-slate-900/20 dark:text-slate-900'
                 : 'bg-slate-200 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300'
             }`}
           >
             {plans.length}
           </span>
-          {currentTab === 'planos' && (
-            <span className="absolute bottom-[-5px] left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
-          )}
         </button>
 
         <button
           type="button"
           onClick={() => handleTabChange('cupons')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all relative shrink-0 ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             currentTab === 'cupons'
-              ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/15'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs font-semibold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.04]'
           }`}
         >
-          <Tag className="w-4 h-4" />
+          <Tag className="w-3.5 h-3.5" />
           <span>Cupons de Desconto</span>
           <span
-            className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+            className={`px-1.5 py-0.2 rounded-full text-[10px] font-semibold ${
               currentTab === 'cupons'
-                ? 'bg-emerald-500 text-white'
+                ? 'bg-white/20 text-white dark:bg-slate-900/20 dark:text-slate-900'
                 : 'bg-slate-200 dark:bg-white/[0.08] text-slate-700 dark:text-slate-300'
             }`}
           >
             {activeCouponsCount} ativos
           </span>
-          {currentTab === 'cupons' && (
-            <span className="absolute bottom-[-5px] left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
-          )}
         </button>
 
         <button
           type="button"
           onClick={() => handleTabChange('pagamentos')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all relative shrink-0 ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer whitespace-nowrap shrink-0 ${
             currentTab === 'pagamentos'
-              ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/15'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs font-semibold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.04]'
           }`}
         >
-          <Wallet className="w-4 h-4" />
+          <Wallet className="w-3.5 h-3.5" />
           <span>Opções de Pagamento</span>
-          {currentTab === 'pagamentos' && (
-            <span className="absolute bottom-[-5px] left-0 right-0 h-0.5 bg-emerald-500 rounded-full" />
-          )}
         </button>
       </div>
 

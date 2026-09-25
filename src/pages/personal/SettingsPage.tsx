@@ -515,19 +515,19 @@ export const SettingsPage: React.FC = () => {
       </div>
 
       {/* Navigation Tabs (URL Synced: ?tab=usuarios | ?tab=permissoes | ?tab=landing-page | ?tab=backup | ?tab=sistema | ?tab=ia) */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-dark-border pb-1 overflow-x-auto">
+      <div className="flex items-center gap-1.5 border-b border-slate-200 dark:border-dark-border pb-1 overflow-x-auto">
         <button
           type="button"
           onClick={() => handleTabChange('usuarios')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'usuarios'
-              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs font-semibold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
           }`}
         >
-          <Users className="w-4 h-4" />
+          <Users className="w-3.5 h-3.5" />
           <span>Gestão de Usuários & Contas</span>
-          <span className={`text-xs px-2 py-0.5 rounded-full font-bold ml-1 ${activeTab === 'usuarios' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-dark-border text-slate-700 dark:text-slate-300'}`}>
+          <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-semibold ml-0.5 ${activeTab === 'usuarios' ? 'bg-white/20 text-white dark:bg-slate-900/20 dark:text-slate-900' : 'bg-slate-200 dark:bg-dark-border text-slate-700 dark:text-slate-300'}`}>
             {users.length || students.length}
           </span>
         </button>
@@ -535,65 +535,65 @@ export const SettingsPage: React.FC = () => {
         <button
           type="button"
           onClick={() => handleTabChange('permissoes')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'permissoes'
-              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs font-semibold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
           }`}
         >
-          <Shield className="w-4 h-4" />
+          <Shield className="w-3.5 h-3.5" />
           <span>Permissões (HBAC)</span>
         </button>
 
         <button
           type="button"
           onClick={() => handleTabChange('landing-page')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'landing-page'
-              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs font-semibold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
           }`}
         >
-          <Globe className="w-4 h-4" />
+          <Globe className="w-3.5 h-3.5" />
           <span>Mini CMS Landing Page</span>
         </button>
 
         <button
           type="button"
           onClick={() => handleTabChange('backup')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'backup'
-              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs font-semibold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
           }`}
         >
-          <Database className="w-4 h-4" />
+          <Database className="w-3.5 h-3.5" />
           <span>Exportação & Backups</span>
         </button>
 
         <button
           type="button"
           onClick={() => handleTabChange('sistema')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'sistema'
-              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs font-semibold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
           }`}
         >
-          <Layers className="w-4 h-4" />
+          <Layers className="w-3.5 h-3.5" />
           <span>Aparência & Infraestrutura</span>
         </button>
 
         <button
           type="button"
           onClick={() => handleTabChange('ia')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all cursor-pointer whitespace-nowrap ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'ia'
-              ? 'bg-emerald-600 dark:bg-emerald-500 text-white shadow-2xs'
+              ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs font-semibold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-dark-card'
           }`}
         >
-          <Sparkles className="w-4 h-4" />
+          <Sparkles className="w-3.5 h-3.5" />
           <span>Inteligência Artificial (Copilot)</span>
         </button>
       </div>

@@ -30,11 +30,11 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             className={`w-full bg-white dark:bg-dark-card border ${
               error
-                ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/15'
-                : 'border-slate-200/90 dark:border-dark-border focus:border-emerald-600 dark:focus:border-emerald-400 focus:ring-emerald-500/15'
-            } text-slate-900 dark:text-slate-100 rounded-xl text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 transition-all py-2 shadow-2xs ${
-              leftIcon ? 'pl-9' : 'pl-3'
-            } ${rightIcon ? 'pr-9' : 'pr-3'} ${className}`}
+                ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/20'
+                : 'border-slate-200/90 dark:border-white/[0.1] focus:border-slate-400 dark:focus:border-slate-500 focus:ring-slate-400/20 dark:focus:ring-white/10'
+            } text-slate-900 dark:text-slate-100 rounded-lg text-xs sm:text-sm placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 transition-all py-1.5 shadow-2xs ${
+              leftIcon ? 'pl-8' : 'pl-2.5'
+            } ${rightIcon ? 'pr-8' : 'pr-2.5'} ${className}`}
             {...props}
           />
           {rightIcon && (

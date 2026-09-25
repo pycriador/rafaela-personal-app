@@ -167,16 +167,16 @@ export const LoginPage: React.FC = () => {
                   type="button"
                   onClick={() => handleQuick(trainer.id, trainer.role)}
                   disabled={loading}
-                  className={`w-full text-left p-2.5 rounded-xl border transition-all duration-150 flex items-center justify-between group ${trainer.color}`}
+                  className={`w-full text-left p-2 rounded-lg border transition-all duration-150 flex items-center justify-between group cursor-pointer ${trainer.color}`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0 pr-2">
                     <img
                       src={trainer.avatarUrl}
                       alt={trainer.name}
-                      className="w-8 h-8 rounded-full object-cover border border-white/20 shrink-0"
+                      className="w-7 h-7 rounded-full object-cover border border-white/20 shrink-0"
                     />
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
+                      <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="text-xs font-semibold text-slate-900 dark:text-white truncate">
                           {trainer.name}
                         </span>
@@ -189,7 +189,7 @@ export const LoginPage: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all shrink-0 ml-1" />
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-700 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0 ml-1" />
                 </button>
               ))}
             </div>
@@ -207,10 +207,10 @@ export const LoginPage: React.FC = () => {
                   type="button"
                   onClick={() => handleQuick(u.id, u.role)}
                   disabled={loading}
-                  className={`w-full text-left p-2.5 rounded-xl border transition-all duration-150 flex items-center justify-between group ${u.color}`}
+                  className={`w-full text-left p-2 rounded-lg border transition-all duration-150 flex items-center justify-between group cursor-pointer ${u.color}`}
                 >
                   <div className="min-w-0 pr-2">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
                       <span className="text-xs font-semibold text-slate-900 dark:text-white">
                         {u.name}
                       </span>
@@ -222,7 +222,7 @@ export const LoginPage: React.FC = () => {
                       {u.desc}
                     </p>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all shrink-0" />
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-700 dark:group-hover:text-white group-hover:translate-x-0.5 transition-all shrink-0" />
                 </button>
               ))}
             </div>

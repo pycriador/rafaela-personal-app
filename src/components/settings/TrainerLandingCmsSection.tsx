@@ -180,21 +180,21 @@ export const TrainerLandingCmsSection: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Banner */}
-      <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 text-white shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
-            <Globe className="w-6 h-6" />
+      <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 text-white shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+            <Globe className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-lg font-black tracking-tight text-white">
+              <h2 className="text-base font-bold tracking-tight text-white">
                 Mini CMS • Landing Page do Personal
               </h2>
               <Badge variant="success" size="sm">
                 {landingConfig?.isPublished ? 'Publicada Online' : 'Modo Rascunho'}
               </Badge>
             </div>
-            <p className="text-xs text-slate-400 mt-1 max-w-xl leading-relaxed">
+            <p className="text-xs text-slate-400 mt-0.5 max-w-xl leading-relaxed">
               Crie e customize a sua própria página de vendas com link exclusivo, bio, fotos, depoimentos reais e tabela de preços com checkout direto.
             </p>
           </div>
@@ -229,7 +229,7 @@ export const TrainerLandingCmsSection: React.FC = () => {
             onClick={() => handleSave()}
             isLoading={saving}
             leftIcon={<Save className="w-3.5 h-3.5" />}
-            className="text-xs bg-emerald-600 hover:bg-emerald-500"
+            className="text-xs"
           >
             Salvar & Publicar
           </Button>
@@ -238,23 +238,23 @@ export const TrainerLandingCmsSection: React.FC = () => {
 
       {/* Admin Multi-Trainer Switcher */}
       {isAdmin && trainers.length > 0 && (
-        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-dark-cardElevated border border-slate-200 dark:border-dark-border flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Award className="w-4 h-4 text-emerald-500" />
-            <span className="text-xs font-bold text-slate-800 dark:text-white">
+            <span className="text-xs font-semibold text-slate-800 dark:text-white">
               Editando Landing Page de:
             </span>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5">
             {trainers.map((t) => (
               <button
                 key={t.id}
                 type="button"
                 onClick={() => handleTrainerChange(t.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer flex items-center gap-1.5 ${
                   activeTrainerId === t.id
-                    ? 'bg-emerald-600 text-white shadow-xs'
-                    : 'bg-white dark:bg-dark-card border border-slate-200 dark:border-dark-border text-slate-700 dark:text-slate-300'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-semibold shadow-2xs'
+                    : 'bg-white dark:bg-dark-card border border-slate-200/90 dark:border-dark-border text-slate-700 dark:text-slate-300 hover:bg-slate-50'
                 }`}
               >
                 <img
@@ -270,30 +270,30 @@ export const TrainerLandingCmsSection: React.FC = () => {
       )}
 
       {/* Editor & Preview Toggle Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-dark-border pb-1">
+      <div className="flex items-center gap-1.5 border-b border-slate-200 dark:border-dark-border pb-1">
         <button
           type="button"
           onClick={() => setPreviewTab('editor')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
             previewTab === 'editor'
-              ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
+              ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-2xs font-semibold'
               : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-card'
           }`}
         >
-          <Layout className="w-4 h-4" />
+          <Layout className="w-3.5 h-3.5" />
           <span>Painel CMS de Conteúdo</span>
         </button>
 
         <button
           type="button"
           onClick={() => setPreviewTab('preview')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
             previewTab === 'preview'
-              ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xs'
+              ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-2xs font-semibold'
               : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-dark-card'
           }`}
         >
-          <Eye className="w-4 h-4" />
+          <Eye className="w-3.5 h-3.5" />
           <span>Prévia em Tempo Real</span>
         </button>
       </div>

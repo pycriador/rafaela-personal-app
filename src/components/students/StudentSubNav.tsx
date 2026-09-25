@@ -277,30 +277,30 @@ export const StudentSubNav: React.FC<StudentSubNavProps> = ({
       </div>
 
       {/* MAIN NAVIGATION BAR (Responsive on all viewports) */}
-      <div className="relative flex items-center gap-2 p-1.5 bg-slate-100 dark:bg-dark-cardElevated/90 rounded-2xl border border-slate-200/80 dark:border-dark-border/80 shadow-xs">
+      <div className="relative flex items-center gap-1.5 p-1 bg-slate-100/90 dark:bg-dark-cardElevated/80 rounded-xl border border-slate-200/70 dark:border-white/[0.06] shadow-2xs">
         {/* Left Arrow for Overflow */}
         {canScrollLeft && (
           <button
             type="button"
             onClick={() => handleScroll('left')}
-            className="absolute left-1.5 z-10 p-1.5 rounded-xl bg-white/95 dark:bg-slate-800/95 text-slate-700 dark:text-slate-200 shadow-md border border-slate-200 dark:border-slate-700 hover:bg-emerald-500 hover:text-white dark:hover:bg-emerald-500 dark:hover:text-white transition-all cursor-pointer flex items-center justify-center"
+            className="absolute left-1 z-10 p-1 rounded-lg bg-white/95 dark:bg-slate-800/95 text-slate-700 dark:text-slate-200 shadow-xs border border-slate-200/80 dark:border-slate-700 hover:bg-slate-50 transition-all cursor-pointer flex items-center justify-center"
             title="Rolar para a esquerda"
             aria-label="Rolar para a esquerda"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-3.5 h-3.5" />
           </button>
         )}
 
         {/* Gradient Left */}
         {canScrollLeft && (
-          <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-slate-100 dark:from-dark-cardElevated to-transparent pointer-events-none z-5 rounded-l-2xl" />
+          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-slate-100 dark:from-dark-cardElevated to-transparent pointer-events-none z-5 rounded-l-xl" />
         )}
 
         {/* Scrollable Tabs Track */}
         <div
           ref={containerRef}
           onScroll={checkScroll}
-          className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scroll-smooth w-full px-1 py-0.5"
+          className="flex items-center gap-1 overflow-x-auto no-scrollbar scroll-smooth w-full px-0.5 py-0.5"
         >
           {visibleTabs.map((tab) => {
             const isActive = normalizedActiveTab === tab.id;
@@ -310,27 +310,27 @@ export const StudentSubNav: React.FC<StudentSubNavProps> = ({
                 type="button"
                 data-active={isActive}
                 onClick={() => handleSelectTab(tab.id)}
-                className={`flex items-center gap-2 px-3 sm:px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl whitespace-nowrap transition-all duration-200 cursor-pointer shrink-0 ${
+                className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-medium rounded-lg whitespace-nowrap transition-all duration-150 cursor-pointer shrink-0 ${
                   isActive
-                    ? 'bg-white dark:bg-emerald-500 text-slate-900 dark:text-white shadow-sm font-bold ring-1 ring-slate-200/80 dark:ring-emerald-400/50'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-800/50'
-                } ${tab.highlight && !isActive ? 'ring-1 ring-amber-500/40 bg-amber-500/5' : ''}`}
+                    ? 'bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-2xs font-semibold ring-1 ring-slate-200/70 dark:ring-white/10'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/40'
+                } ${tab.highlight && !isActive ? 'ring-1 ring-amber-500/30 bg-amber-500/5' : ''}`}
                 title={tab.description}
               >
-                <span className="shrink-0">{tab.icon('w-4 h-4')}</span>
+                <span className="shrink-0">{tab.icon('w-3.5 h-3.5')}</span>
                 <span className="hidden sm:inline">{tab.label}</span>
                 <span className="sm:hidden">{tab.shortLabel}</span>
 
                 {tab.badge !== undefined && (
                   <span
-                    className={`px-1.5 py-0.5 text-[10px] rounded-full font-bold transition-colors ${
+                    className={`px-1.5 py-0.2 text-[10px] rounded-md font-semibold transition-colors ${
                       isActive
-                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200'
+                        ? 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-200'
                         : tab.badgeVariant === 'warning'
                         ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300'
                         : tab.badgeVariant === 'primary'
                         ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300'
-                        : 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300'
+                        : 'bg-slate-200/80 text-slate-700 dark:bg-slate-700 dark:text-slate-300'
                     }`}
                   >
                     {tab.badge}
@@ -343,7 +343,7 @@ export const StudentSubNav: React.FC<StudentSubNavProps> = ({
 
         {/* Gradient Right */}
         {canScrollRight && (
-          <div className="absolute right-12 sm:right-32 top-0 bottom-0 w-8 bg-gradient-to-l from-slate-100 dark:from-dark-cardElevated to-transparent pointer-events-none z-5" />
+          <div className="absolute right-12 sm:right-32 top-0 bottom-0 w-6 bg-gradient-to-l from-slate-100 dark:from-dark-cardElevated to-transparent pointer-events-none z-5" />
         )}
 
         {/* Right Arrow for Overflow */}
@@ -351,11 +351,11 @@ export const StudentSubNav: React.FC<StudentSubNavProps> = ({
           <button
             type="button"
             onClick={() => handleScroll('right')}
-            className="absolute right-12 sm:right-32 z-10 p-1.5 rounded-xl bg-white/95 dark:bg-slate-800/95 text-slate-700 dark:text-slate-200 shadow-md border border-slate-200 dark:border-slate-700 hover:bg-emerald-500 hover:text-white dark:hover:bg-emerald-500 dark:hover:text-white transition-all cursor-pointer flex items-center justify-center"
+            className="absolute right-12 sm:right-32 z-10 p-1 rounded-lg bg-white/95 dark:bg-slate-800/95 text-slate-700 dark:text-slate-200 shadow-xs border border-slate-200/80 dark:border-slate-700 hover:bg-slate-50 transition-all cursor-pointer flex items-center justify-center"
             title="Rolar para a direita"
             aria-label="Rolar para a direita"
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-3.5 h-3.5" />
           </button>
         )}
 
@@ -364,14 +364,14 @@ export const StudentSubNav: React.FC<StudentSubNavProps> = ({
           <button
             type="button"
             onClick={() => setIsAllTabsMenuOpen(!isAllTabsMenuOpen)}
-            className={`px-2.5 sm:px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+            className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
               isAllTabsMenuOpen
-                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xs'
-                : 'bg-white dark:bg-dark-card hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-dark-border'
+                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-2xs font-semibold'
+                : 'bg-white dark:bg-dark-card hover:bg-slate-50 dark:hover:bg-slate-700/60 text-slate-700 dark:text-slate-200 border border-slate-200/90 dark:border-dark-border'
             }`}
             title="Ver mapa completo com as 9 abas organizadas por categoria"
           >
-            <LayoutGrid className="w-3.5 h-3.5 text-emerald-500" />
+            <LayoutGrid className="w-3.5 h-3.5 text-slate-500" />
             <span className="hidden sm:inline">Todas as Abas (9)</span>
             <span className="sm:hidden">Menu</span>
             <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isAllTabsMenuOpen ? 'rotate-180' : ''}`} />
