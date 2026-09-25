@@ -378,54 +378,25 @@ export const PersonalLayout: React.FC = () => {
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
-        {/* Top Header: Logo & Brand + Destaque Perfil do Personal Logado */}
-        <div className="shrink-0 border-b border-slate-100 dark:border-white/[0.06]">
-          <div className="p-4 sm:p-5 pb-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <BrandLogo size="md" />
-              <div>
-                <h1 className="font-semibold tracking-tight text-sm text-slate-900 dark:text-white leading-tight">
-                  RAFAELA
-                </h1>
-                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-                  {user?.role === 'admin' ? 'Administrador Global' : 'Personal Trainer'}
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => setMobileMenuOpen(false)}
-              className="md:hidden p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Destaque do Perfil do Personal Logado (Foto, Nome e E-mail) */}
-          <div className="mx-3.5 mb-3 p-2.5 rounded-2xl bg-slate-50 dark:bg-dark-cardElevated/80 border border-slate-200/80 dark:border-white/[0.06] flex items-center gap-3 shadow-2xs">
-            <div className="relative shrink-0">
-              <img
-                src={personalAvatar}
-                alt={personalName}
-                className="w-10 h-10 rounded-xl object-cover ring-2 ring-emerald-500/40 shadow-xs"
-              />
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute -bottom-0.5 -right-0.5 ring-2 ring-white dark:ring-dark-card" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5">
-                <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                  {personalName}
-                </p>
-                {user?.role === 'admin' && (
-                  <span className="shrink-0 px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">
-                    Admin
-                  </span>
-                )}
-              </div>
-              <p className="text-[11px] font-medium text-slate-500 dark:text-dark-muted truncate" title={personalEmail}>
-                {personalEmail}
+        {/* Top Header: Logo & Brand */}
+        <div className="shrink-0 p-4 sm:p-5 flex items-center justify-between border-b border-slate-100 dark:border-white/[0.06]">
+          <div className="flex items-center gap-3">
+            <BrandLogo size="md" />
+            <div>
+              <h1 className="font-semibold tracking-tight text-sm text-slate-900 dark:text-white leading-tight">
+                RAFAELA
+              </h1>
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                {user?.role === 'admin' ? 'Administrador Global' : 'Personal Trainer'}
               </p>
             </div>
           </div>
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="md:hidden p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-lg cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
         {/* Scrollable Navigation Area */}
@@ -884,25 +855,35 @@ export const PersonalLayout: React.FC = () => {
           {/* User Profile & Footer Controls */}
         </div>
 
-        {/* Bottom Pinned Footer: Foto, Nome e E-mail do Personal Logado + Controles */}
-        <div className="shrink-0 p-3.5 border-t border-slate-100 dark:border-white/[0.06] bg-slate-50/50 dark:bg-dark-cardElevated/40 flex items-center justify-between">
+        {/* Bottom Pinned Footer: Perfil Consolidado do Personal Logado (Foto, Nome, Perfil, E-mail) + Controles */}
+        <div className="shrink-0 p-3.5 border-t border-slate-100 dark:border-white/[0.06] bg-slate-50/50 dark:bg-dark-cardElevated/40 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5 min-w-0">
-            <img
-              src={personalAvatar}
-              alt={personalName}
-              className="w-8 h-8 rounded-full object-cover ring-1 ring-slate-200 dark:ring-white/[0.1] shrink-0"
-            />
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-slate-900 dark:text-slate-100 truncate">
-                {personalName}
-              </p>
-              <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate" title={personalEmail}>
+            <div className="relative shrink-0">
+              <img
+                src={personalAvatar}
+                alt={personalName}
+                className="w-9 h-9 rounded-xl object-cover ring-2 ring-emerald-500/40 shadow-xs"
+              />
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 absolute -bottom-0.5 -right-0.5 ring-2 ring-white dark:ring-dark-card" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5">
+                <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                  {personalName}
+                </p>
+                {user?.role === 'admin' && (
+                  <span className="shrink-0 px-1 py-0.2 rounded text-[9px] font-bold bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">
+                    Admin
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] font-medium text-slate-500 dark:text-dark-muted truncate" title={personalEmail}>
                 {personalEmail}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center gap-0.5 shrink-0">
             <button
               onClick={toggleTheme}
               className="hidden md:flex p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded-lg hover:bg-slate-100 dark:hover:bg-dark-cardElevated transition-colors cursor-pointer"
