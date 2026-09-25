@@ -130,7 +130,7 @@ export const AnamnesisDashboardPage: React.FC = () => {
           <Button
             variant="primary"
             size="sm"
-            onClick={() => navigate('/personal/anamnesis/forms/new')}
+            onClick={() => navigate('/personal/forms/new')}
             leftIcon={<Plus className="w-4 h-4" />}
             className="text-xs font-bold"
           >
@@ -195,7 +195,7 @@ export const AnamnesisDashboardPage: React.FC = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => navigate('/personal/anamnesis/forms')}
+                  onClick={() => navigate('/personal/forms')}
                   rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
                   className="text-xs text-emerald-600 dark:text-emerald-400"
                 >
@@ -225,7 +225,7 @@ export const AnamnesisDashboardPage: React.FC = () => {
                       <Button
                         variant="secondary"
                         size="sm"
-                        onClick={() => navigate(`/personal/anamnesis/forms/${form.id}/edit`)}
+                        onClick={() => navigate(`/personal/forms/${form.id}/edit`)}
                         className="text-xs"
                       >
                         Editar
@@ -344,7 +344,7 @@ export const AnamnesisDashboardPage: React.FC = () => {
                   variant="outline"
                   size="sm"
                   fullWidth
-                  onClick={() => navigate(`/personal/anamnesis/forms/${form.id}/edit`)}
+                  onClick={() => navigate(`/personal/forms/${form.id}/edit`)}
                   className="text-xs"
                 >
                   Editar

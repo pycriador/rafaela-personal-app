@@ -60,8 +60,8 @@ const STUDENT_SUB_NAV_ITEMS = [
 
 const ANAMNESIS_SUB_NAV_ITEMS = [
   { id: 'visao-geral', label: 'Visão Geral', path: '/personal/anamnesis', icon: LayoutDashboard },
-  { id: 'modelos', label: 'Modelos de Fichas', path: '/personal/anamnesis/forms', icon: FileText },
-  { id: 'novo-formulario', label: 'Novo Formulário', path: '/personal/anamnesis/forms/new', icon: PlusCircle },
+  { id: 'modelos', label: 'Modelos de Fichas', path: '/personal/forms', icon: FileText },
+  { id: 'novo-formulario', label: 'Novo Formulário', path: '/personal/forms/new', icon: PlusCircle },
   { id: 'envios', label: 'Envios & Respostas', path: '/personal/forms/applications', icon: Send },
 ];
 
@@ -408,7 +408,9 @@ export const PersonalLayout: React.FC = () => {
               const isStudentsItem = item.path === '/personal/students';
               const isInsideStudent = isStudentsItem && !!currentStudentParam;
               const isAnamnesisItem = item.path === '/personal/anamnesis';
-              const isInsideAnamnesis = isAnamnesisItem && location.pathname.startsWith('/personal/anamnesis');
+              const isInsideAnamnesis =
+                isAnamnesisItem &&
+                (location.pathname.startsWith('/personal/anamnesis') || location.pathname.startsWith('/personal/forms'));
               const isSettingsItem = item.path === '/personal/settings';
               const isInsideSettings = isSettingsItem && location.pathname.startsWith('/personal/settings');
               const isPlansItem = item.path === '/personal/plans';
@@ -473,7 +475,7 @@ export const PersonalLayout: React.FC = () => {
                           }
                         }}
                         className={`p-1 -mr-1 rounded-md transition-colors cursor-pointer ${
-                          location.pathname.startsWith('/personal/anamnesis')
+                          location.pathname.startsWith('/personal/anamnesis') || location.pathname.startsWith('/personal/forms')
                             ? 'text-white/90 hover:text-white hover:bg-emerald-600/60'
                             : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-dark-card'
                         }`}
@@ -616,13 +618,18 @@ export const PersonalLayout: React.FC = () => {
                               return location.pathname === '/personal/anamnesis' || location.pathname === '/personal/anamnesis/';
                             }
                             if (sub.id === 'novo-formulario') {
-                              return location.pathname === '/personal/anamnesis/forms/new';
+                              return location.pathname === '/personal/forms/new' || location.pathname === '/personal/anamnesis/forms/new';
                             }
                             if (sub.id === 'modelos') {
                               return (
+                                location.pathname === '/personal/forms' ||
                                 location.pathname === '/personal/anamnesis/forms' ||
-                                (location.pathname.startsWith('/personal/anamnesis/forms/') &&
-                                  location.pathname !== '/personal/anamnesis/forms/new')
+                                ((location.pathname.startsWith('/personal/forms/') ||
+                                  location.pathname.startsWith('/personal/anamnesis/forms/')) &&
+                                  location.pathname !== '/personal/forms/new' &&
+                                  location.pathname !== '/personal/anamnesis/forms/new' &&
+                                  !location.pathname.startsWith('/personal/forms/applications') &&
+                                  !location.pathname.startsWith('/personal/forms/responses'))
                               );
                             }
                             if (sub.id === 'envios') {

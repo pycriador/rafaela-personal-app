@@ -3,6 +3,8 @@ import { initialForms } from '../data/anamnesis/forms';
 import { STORAGE_KEYS, getItem, setItem, isSimulationModeActive } from './storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
+const DELETED_FORMS_KEY = 'rafaela_app_deleted_forms_v1';
+
 function mapFromDb(row: any): Form {
   return {
     id: row.id,
@@ -18,13 +20,15 @@ function mapFromDb(row: any): Form {
 
 export const formRepository = {
   async getAll(): Promise<Form[]> {
+    const deletedIds = new Set(getItem<string[]>(DELETED_FORMS_KEY, []));
+
     if (isSupabaseConfigured) {
       try {
         const { data, error } = await supabase.from('forms').select('*').order('created_at', { ascending: false });
         if (!error && data && data.length > 0) {
-          const loaded = data.map(mapFromDb);
+          const loaded = data.map(mapFromDb).filter((f) => !deletedIds.has(f.id));
           const existingIds = new Set(loaded.map((f) => f.id));
-          const missing = initialForms.filter((f) => !existingIds.has(f.id));
+          const missing = initialForms.filter((f) => !existingIds.has(f.id) && !deletedIds.has(f.id));
           if (missing.length > 0) {
             for (const f of missing) {
               await supabase.from('forms').upsert({
@@ -46,9 +50,9 @@ export const formRepository = {
         // fallback
       }
     }
-    const list = getItem<Form[]>(STORAGE_KEYS.FORMS, initialForms);
+    const list = getItem<Form[]>(STORAGE_KEYS.FORMS, initialForms).filter((f) => !deletedIds.has(f.id));
     const existingIds = new Set(list.map((f) => f.id));
-    const missing = initialForms.filter((f) => !existingIds.has(f.id));
+    const missing = initialForms.filter((f) => !existingIds.has(f.id) && !deletedIds.has(f.id));
     if (missing.length > 0) {
       const merged = [...list, ...missing];
       setItem(STORAGE_KEYS.FORMS, merged);
@@ -123,6 +127,11 @@ export const formRepository = {
       } catch (err) {
         // fallback
       }
+    }
+
+    const deletedIds = getItem<string[]>(DELETED_FORMS_KEY, []);
+    if (!deletedIds.includes(id)) {
+      setItem(DELETED_FORMS_KEY, [...deletedIds, id]);
     }
 
     const list = getItem<Form[]>(STORAGE_KEYS.FORMS, initialForms);

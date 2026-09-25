@@ -11,10 +11,13 @@ import {
   ChevronLeft,
   ChevronRight,
   Filter,
+  Trash2,
+  AlertTriangle,
 } from 'lucide-react';
 import { Card } from '../../../components/ui/Card';
 import { Button } from '../../../components/ui/Button';
 import { Badge } from '../../../components/ui/Badge';
+import { Modal } from '../../../components/ui/Modal';
 import { formService } from '../../../services/anamnesis/formService';
 import { formVersionRepository } from '../../../repositories/formVersionRepository';
 import { formApplicationRepository } from '../../../repositories/formApplicationRepository';
@@ -35,8 +38,10 @@ export const FormsListPage: React.FC = () => {
   const [applicationsCountMap, setApplicationsCountMap] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
 
-  // Modal para aplicar
+  // Modal para aplicar e excluir
   const [selectedFormToApply, setSelectedFormToApply] = useState<Form | null>(null);
+  const [formToDelete, setFormToDelete] = useState<Form | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Filtros & Paginação via URL
   const searchQuery = searchParams.get('q') || '';
@@ -116,6 +121,27 @@ export const FormsListPage: React.FC = () => {
     }
   };
 
+  const handleConfirmDelete = async () => {
+    if (!formToDelete) return;
+    setIsDeleting(true);
+    try {
+      const ok = await formService.deleteForm(formToDelete.id);
+      if (ok) {
+        success('Formulário excluído com sucesso.');
+        const updated = await formService.getForms();
+        setForms(updated);
+        setFormToDelete(null);
+      } else {
+        toastError('Não foi possível excluir o formulário.');
+      }
+    } catch (err) {
+      console.error('Erro ao excluir formulário:', err);
+      toastError('Erro ao excluir formulário.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   const filteredForms = useMemo(() => {
     return forms.filter((f) => {
       const matchesSearch = f.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -167,7 +193,7 @@ export const FormsListPage: React.FC = () => {
         <Button
           variant="primary"
           size="sm"
-          onClick={() => navigate('/personal/anamnesis/forms/new')}
+          onClick={() => navigate('/personal/forms/new')}
           leftIcon={<Plus className="w-4 h-4" />}
           className="text-xs font-bold self-start sm:self-auto"
         >
@@ -261,7 +287,7 @@ export const FormsListPage: React.FC = () => {
                     variant="outline"
                     size="sm"
                     fullWidth
-                    onClick={() => navigate(`/personal/anamnesis/forms/${form.id}/edit`)}
+                    onClick={() => navigate(`/personal/forms/${form.id}/edit`)}
                     className="text-xs"
                   >
                     Editar
@@ -274,6 +300,15 @@ export const FormsListPage: React.FC = () => {
                     className="text-xs"
                   >
                     Aplicar
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setFormToDelete(form)}
+                    className="text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 p-2 shrink-0 text-xs"
+                    title="Excluir formulário"
+                  >
+                    <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
               </Card>
@@ -323,6 +358,49 @@ export const FormsListPage: React.FC = () => {
           }}
         />
       )}
+
+      {/* Modal de Confirmação de Exclusão */}
+      <Modal
+        isOpen={!!formToDelete}
+        onClose={() => !isDeleting && setFormToDelete(null)}
+        title="Excluir Formulário"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div className="flex items-start gap-3 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-900/30 text-rose-800 dark:text-rose-300">
+            <AlertTriangle className="w-5 h-5 shrink-0 text-rose-600 dark:text-rose-400 mt-0.5" />
+            <div className="text-xs space-y-1">
+              <p className="font-bold">Atenção: Ação irreversível!</p>
+              <p className="text-rose-700/90 dark:text-rose-300/90 leading-relaxed">
+                Deseja realmente excluir o formulário <strong className="font-semibold text-rose-950 dark:text-white">"{formToDelete?.name}"</strong>?
+                Esta ação removerá o modelo permanentemente da lista.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 dark:border-dark-border">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setFormToDelete(null)}
+              disabled={isDeleting}
+              className="text-xs"
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={handleConfirmDelete}
+              isLoading={isDeleting}
+              leftIcon={<Trash2 className="w-3.5 h-3.5" />}
+              className="text-xs font-bold"
+            >
+              Excluir Formulário
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

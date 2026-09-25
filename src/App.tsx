@@ -112,9 +112,12 @@ export const App: React.FC = () => {
                     <Route path="plans" element={<PlansManagementPage />} />
                     <Route path="settings" element={<SettingsPage />} />
                     <Route path="anamnesis" element={<AnamnesisDashboardPage />} />
-                    <Route path="anamnesis/forms" element={<FormsListPage />} />
-                    <Route path="anamnesis/forms/new" element={<FormEditorPage />} />
-                    <Route path="anamnesis/forms/:id/edit" element={<FormEditorPage />} />
+                    <Route path="forms" element={<FormsListPage />} />
+                    <Route path="forms/new" element={<FormEditorPage />} />
+                    <Route path="forms/:id/edit" element={<FormEditorPage />} />
+                    <Route path="anamnesis/forms" element={<Navigate to="/personal/forms" replace />} />
+                    <Route path="anamnesis/forms/new" element={<Navigate to="/personal/forms/new" replace />} />
+                    <Route path="anamnesis/forms/:id/edit" element={<Navigate to="/personal/forms" replace />} />
                     <Route path="forms/applications" element={<ApplicationsListPage />} />
                     <Route path="anamnesis/applications" element={<Navigate to="/personal/forms/applications" replace />} />
                     <Route path="forms/responses/:id" element={<ResponseViewerPage />} />

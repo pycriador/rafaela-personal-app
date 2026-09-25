@@ -103,6 +103,22 @@ export const formService = {
     return archived;
   },
 
+  async deleteForm(id: string): Promise<boolean> {
+    const form = await formRepository.getById(id);
+    const success = await formRepository.delete(id);
+    if (success && form) {
+      await activityRepository.log({
+        actorId: 'user-rafaela',
+        actorName: 'Rafaela Personal',
+        actorRole: 'personal',
+        action: 'Formulário excluído',
+        description: `Rafaela excluiu o formulário "${form.name}".`,
+        iconType: 'skip',
+      });
+    }
+    return success;
+  },
+
   async getStats(): Promise<AnamnesisStats> {
     const [forms, applications, responses] = await Promise.all([
       formRepository.getAll(),
